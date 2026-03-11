@@ -266,7 +266,7 @@ const CounterFormation = () => {
       {/* NAVBAR */}
       <nav className="nav-fade fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[100] w-[94%] max-w-5xl px-4 py-3 md:px-5 md:py-4 bg-[#0D0D12]/80 backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center justify-between">
         <a href="#top" className="flex items-center gap-2 md:gap-3">
-          <SafeImg src="/helmet.png" className="h-6 w-6 md:h-8 md:w-8 object-contain" alt="Counter Formation" />
+          <SafeImg src="/helmet.png" className="w-8 h-8 md:w-10 md:h-10 object-contain flex-shrink-0" alt="Counter Formation" />
           <span className="font-brand text-[9px] md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase whitespace-nowrap">Counter Formation</span>
         </a>
         <div className="flex items-center gap-4">
@@ -620,7 +620,7 @@ const CounterFormation = () => {
         <div className="footer-reveal max-w-7xl mx-auto py-14 px-6 grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-20">
           <div className="col-span-2 md:col-span-1 space-y-5">
             <div className="flex items-center gap-3">
-              <SafeImg src="/helmet.png" className="w-8 h-8 md:w-10 md:h-10" alt="" />
+              <SafeImg src="/helmet.png" className="w-12 h-12 md:w-14 md:h-14 object-contain flex-shrink-0" alt="" />
               <span className="font-brand text-lg md:text-xl text-[#C9A84C]">Counter Formation</span>
             </div>
             <p className="text-[9px] uppercase tracking-widest opacity-30 leading-relaxed max-w-[180px]">
