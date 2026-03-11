@@ -474,7 +474,7 @@ const CounterFormation = () => {
               {
                 type: "Practice", rhythm: "Sabbath",
                 title: "Practicing Rest",
-                img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=800",
+                img: "https://images.unsplash.com/photo-1511988617509-a57c8a288659?q=80&w=800",
                 desc: "A weekly rhythm of trust, delight, and resistance to production without end.",
                 date: "February 2026",
               },
@@ -491,9 +491,9 @@ const CounterFormation = () => {
                 <div className="aspect-video overflow-hidden rounded-2xl md:rounded-[2rem] bg-white/5 border border-white/[0.06] relative">
                   <SafeImg
                     src={art.img} alt={art.title}
-                    className="w-full h-full object-cover grayscale opacity-40 group-hover:opacity-75 group-hover:scale-105 transition-all duration-1000"
+                    className="w-full h-full object-cover grayscale opacity-60 group-hover:opacity-90 group-hover:scale-105 transition-all duration-1000"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D12]/80 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D12]/60 via-transparent to-transparent" />
                   {/* Issue number */}
                   <span className="absolute top-4 right-4 font-mono text-[8px] text-white/25 tracking-[0.2em]">
                     {String(i + 1).padStart(2, "0")}
