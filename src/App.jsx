@@ -143,18 +143,18 @@ function CinematicHero() {
       /* ── REVEAL TIMELINE ── */
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-      // 0.0 – 1.2s  Background glow breathes in
+      // 0.0 – 1.4s  Background glow breathes in
       tl.to(bgGlowRef.current, { opacity: 1, duration: 1.4 })
 
-        // 0.8 – 2.0s  Vertical light beam descends
+        // 0.8 – 2.2s  Vertical beam descends — long, full height (Latin cross proportion)
         .to(vBeamRef.current,
-          { opacity: 0.82, height: "70vh", duration: 1.4 },
+          { opacity: 0.82, height: "84vh", duration: 1.6 },
           "-=0.6"
         )
 
-        // 1.4 – 2.5s  Horizontal beam cuts across
+        // 1.6 – 2.7s  Horizontal bar cuts across — shorter than half-width (crossbar, not crosshair)
         .to(hBeamRef.current,
-          { opacity: 0.55, width: "38vw", duration: 1.2 },
+          { opacity: 0.52, width: "28vw", duration: 1.1 },
           "-=0.6"
         )
 
@@ -229,23 +229,18 @@ function CinematicHero() {
         y: -14, duration: 11, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 4.5
       });
 
+      // ── CROSS FADE OUT at ~20s — graceful departure, very slow ──
+      gsap.to(
+        [vBeamRef.current, hBeamRef.current, bloomRef.current],
+        { opacity: 0, duration: 3.5, ease: "power2.inOut", delay: 20 }
+      );
+
       // Scroll indicator — gentle bounce loop
       gsap.to(scrollIndicatorRef.current, {
         y: 8, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 5.2
       });
 
-      // Hide scroll indicator once user scrolls
-      const onScroll = () => {
-        if (window.scrollY > 60) {
-          gsap.to(scrollIndicatorRef.current, { opacity: 0, duration: 0.4 });
-        }
-      };
-      window.addEventListener("scroll", onScroll, { passive: true });
-      return () => {
-        window.removeEventListener("scroll", onScroll);
-      };
-
-      /* ── MOUSE MICRO-PARALLAX ── */
+      // ── MOUSE MICRO-PARALLAX ──
       const hero = heroRef.current;
       const onMouseMove = (e) => {
         const rect = hero.getBoundingClientRect();
@@ -261,7 +256,20 @@ function CinematicHero() {
         gsap.to(logoGroupRef.current, { x: x * 5,  y: y * 4,  ...{ ...dur, duration: 1.3 } });
       };
 
+      // Hide scroll indicator once user scrolls
+      const onScroll = () => {
+        if (window.scrollY > 60) {
+          gsap.to(scrollIndicatorRef.current, { opacity: 0, duration: 0.4 });
+        }
+      };
+
       hero.addEventListener("mousemove", onMouseMove);
+      window.addEventListener("scroll", onScroll, { passive: true });
+
+      return () => {
+        hero.removeEventListener("mousemove", onMouseMove);
+        window.removeEventListener("scroll", onScroll);
+      };
 
     }, heroRef);
 
@@ -287,12 +295,12 @@ function CinematicHero() {
         }}
       />
 
-      {/* ── CROSS BLOOM HAZE — sits behind logo, upper-center ── */}
+      {/* ── CROSS BLOOM HAZE — sits at the crossbar intersection ── */}
       <div
         ref={bloomRef}
         className="absolute left-1/2 pointer-events-none opacity-0"
         style={{
-          top: "38%",
+          top: "28%",
           transform: "translate(-50%, -50%)",
           width: "44rem", height: "44rem",
           borderRadius: "50%",
@@ -301,28 +309,37 @@ function CinematicHero() {
         }}
       />
 
-      {/* ── VERTICAL LIGHT BEAM — anchored to logo level ── */}
+      {/* ── CHRISTIAN CROSS LIGHT BEAMS ──
+           The cross is built as a single positioned unit.
+           Vertical beam: full height, centered.
+           Horizontal bar: sits 28% down from top of vertical — upper third,
+           which is the correct proportion of a Latin cross (not a plus/crosshair).
+           Both fade out together at ~20s.
+      ── */}
+
+      {/* Vertical beam — full height of hero */}
       <div
         ref={vBeamRef}
         className="absolute left-1/2 -translate-x-1/2 w-[2px] pointer-events-none opacity-0"
         style={{
-          top: "38%",
-          transform: "translateX(-50%) translateY(-50%)",
+          top: "8%",
           height: "0vh",
-          background: "linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.80) 22%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0.74) 78%, transparent 100%)",
+          background: "linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.55) 8%, rgba(255,255,255,0.88) 28%, rgba(255,255,255,0.92) 42%, rgba(255,255,255,0.70) 72%, rgba(255,255,255,0.40) 88%, transparent 100%)",
           boxShadow: "0 0 20px rgba(255,255,255,0.48), 0 0 40px rgba(180,210,255,0.20)",
           filter: "blur(0.4px)",
+          transformOrigin: "top center",
         }}
       />
 
-      {/* ── HORIZONTAL LIGHT BEAM — anchored to logo level ── */}
+      {/* Horizontal bar — positioned at 28% down from viewport top,
+          which places it in the upper third of the vertical beam */}
       <div
         ref={hBeamRef}
         className="absolute left-1/2 -translate-x-1/2 h-[2px] pointer-events-none opacity-0"
         style={{
-          top: "38%",
+          top: "28%",
           width: "0vw",
-          background: "linear-gradient(to right, transparent 0%, rgba(255,255,255,0.16) 10%, rgba(255,255,255,0.72) 50%, rgba(255,255,255,0.16) 90%, transparent 100%)",
+          background: "linear-gradient(to right, transparent 0%, rgba(255,255,255,0.14) 8%, rgba(255,255,255,0.68) 50%, rgba(255,255,255,0.14) 92%, transparent 100%)",
           boxShadow: "0 0 14px rgba(255,255,255,0.24), 0 0 28px rgba(180,210,255,0.14)",
         }}
       />
