@@ -110,7 +110,7 @@ function SectionDivider() {
   );
 }
 
-const SHOPIFY_URL = "https://shop.counterformed.com";
+const SHOPIFY_URL = "https://shop.counterformed.com/collections/the-gear";
 
 const CounterFormation = () => {
   const mainRef = useRef(null);
