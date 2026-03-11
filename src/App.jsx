@@ -273,6 +273,7 @@ const CounterFormation = () => {
           <div className="hidden md:flex gap-8 mr-4 text-[10px] uppercase tracking-widest font-brand font-bold">
             <a href="#architecture" className="hover:text-[#C9A84C] transition-colors">Mission</a>
             <a href="#rule"         className="hover:text-[#C9A84C] transition-colors">Rule</a>
+            <a href="#field-guide"  className="hover:text-[#C9A84C] transition-colors">Field Guide</a>
             <a href="#shop"         className="hover:text-[#C9A84C] transition-colors text-[#C9A84C]">Gear</a>
           </div>
           <a href={SHOPIFY_URL} className="px-4 py-2 md:px-6 md:py-2 bg-white text-black rounded-full text-[9px] md:text-[10px] hidden md:block hover:bg-[#C9A84C] transition-all uppercase tracking-widest font-bold">
@@ -425,6 +426,135 @@ const CounterFormation = () => {
         </div>
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1px] h-20 bg-gradient-to-t from-transparent to-white/10 pointer-events-none" />
       </section>
+
+      <SectionDivider />
+
+      {/* FIELD GUIDE */}
+      <section id="field-guide" className="py-24 md:py-40 px-4 md:px-6 bg-[#0D0D12] relative overflow-hidden">
+        {/* Subtle warm glow */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse at 50% 80%, rgba(201,168,76,0.04) 0%, transparent 60%)" }} />
+        {/* Faint vertical grid lines */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.025]">
+          <div className="max-w-7xl mx-auto h-full grid grid-cols-3 gap-10">
+            <div className="border-x border-white/20 h-full" />
+            <div className="border-x border-white/20 h-full" />
+            <div className="border-x border-white/20 h-full" />
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-8">
+            <div className="space-y-4 md:space-y-6">
+              <span className="text-[8px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] md:tracking-[0.5em] uppercase font-bold">Dispatches from the Field</span>
+              <h2 className="font-brand text-3xl md:text-7xl uppercase tracking-[0.1em] md:tracking-[0.12em] text-white leading-none">Field Guide</h2>
+              <p className="text-xs md:text-sm opacity-50 leading-relaxed font-light max-w-xl">
+                Devotions, practices, and media designed to carry the life of Counter Formation beyond the garment. Each release opens a deeper layer of formation.
+              </p>
+            </div>
+            <a href="#" className="self-start md:self-auto text-[9px] md:text-[10px] text-[#C9A84C] border border-white/10 px-6 md:px-8 py-3 hover:bg-white/5 transition-all whitespace-nowrap rounded-full uppercase tracking-[0.25em] font-bold">
+              Explore Archive
+            </a>
+          </div>
+
+          {/* Divider rule */}
+          <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-12 md:mb-16" />
+
+          {/* Article cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16 mb-12 md:mb-20">
+            {[
+              {
+                type: "Devotion", rhythm: "Scripture",
+                title: "Scripture Before Scroll",
+                img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800",
+                desc: "Reclaim the architecture of your first hour through scripture before the algorithm.",
+                date: "March 2026",
+              },
+              {
+                type: "Practice", rhythm: "Sabbath",
+                title: "Practicing Rest",
+                img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=800",
+                desc: "A weekly rhythm of trust, delight, and resistance to production without end.",
+                date: "February 2026",
+              },
+              {
+                type: "Video", rhythm: "Community",
+                title: "Formation Together",
+                img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=800",
+                desc: "Why apprenticeship to Jesus requires shared life, mutual love, and practiced presence.",
+                date: "January 2026",
+              },
+            ].map((art, i) => (
+              <div key={art.title} className="journal-card group cursor-pointer space-y-6">
+                {/* Thumbnail */}
+                <div className="aspect-video overflow-hidden rounded-2xl md:rounded-[2rem] bg-white/5 border border-white/[0.06] relative">
+                  <SafeImg
+                    src={art.img} alt={art.title}
+                    className="w-full h-full object-cover grayscale opacity-40 group-hover:opacity-75 group-hover:scale-105 transition-all duration-1000"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D12]/80 via-transparent to-transparent" />
+                  {/* Issue number */}
+                  <span className="absolute top-4 right-4 font-mono text-[8px] text-white/25 tracking-[0.2em]">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
+                {/* Text */}
+                <div className="space-y-3 px-1">
+                  <div className="flex items-center gap-3 text-[8px] md:text-[9px] uppercase tracking-[0.35em]">
+                    <span className="text-[#C9A84C]">{art.type}</span>
+                    <span className="text-white/20">•</span>
+                    <span className="text-white/35">{art.rhythm}</span>
+                    <span className="text-white/20">•</span>
+                    <span className="text-white/25">{art.date}</span>
+                  </div>
+                  <h3 className="font-brand text-xl md:text-2xl uppercase tracking-[0.08em] text-white leading-snug">
+                    {art.title}
+                  </h3>
+                  <p className="text-[10px] md:text-[11px] leading-relaxed text-white/45 max-w-sm">{art.desc}</p>
+                  <div className="flex items-center gap-2 text-[9px] text-[#C9A84C] opacity-0 group-hover:opacity-100 transition-opacity pt-1 uppercase tracking-[0.25em] font-bold">
+                    Open Guide <ArrowRight size={12} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* From Garment to Practice callout */}
+          <div className="rounded-2xl md:rounded-[2rem] border border-white/10 bg-white/[0.03] px-6 md:px-10 py-8 md:py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-10">
+            {/* Bronze top accent */}
+            <div className="absolute top-0 left-0 right-0 h-[1px] rounded-t-[2rem] bg-gradient-to-r from-transparent via-[#C9A84C]/30 to-transparent pointer-events-none" />
+            <div className="space-y-3 max-w-2xl">
+              <span className="text-[9px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] uppercase font-bold">Linked to the Gear</span>
+              <h3 className="font-brand text-2xl md:text-4xl uppercase tracking-[0.1em] text-white">From Garment to Practice</h3>
+              <p className="text-xs md:text-sm text-white/45 leading-relaxed max-w-xl">
+                Every new release unlocks a hub of formation content — product story, devotion, practice, reflection, video, audio, and community challenge — accessed through QR touchpoints built into the gear.
+              </p>
+            </div>
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+              <div className="flex items-center gap-2 md:gap-3 text-[8px] md:text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold">
+                <span>Gear</span>
+                <span className="text-[#C9A84C]">→</span>
+                <span>QR</span>
+                <span className="text-[#C9A84C]">→</span>
+                <span>Guide</span>
+                <span className="text-[#C9A84C]">→</span>
+                <span>Practice</span>
+              </div>
+              <div className="shrink-0 rounded-2xl border border-white/10 bg-[#0D0D12] p-3">
+                <img
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=96x96&data=https%3A%2F%2Fcounterformed.com%2Ffield-guide"
+                  alt="Field Guide QR code"
+                  className="w-20 h-20 md:w-24 md:h-24 opacity-70"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider />
 
       {/* THE GEAR — warm #F5F2EC, grain texture, premium */}
       <section id="shop" className="py-24 md:py-48 px-4 md:px-6 relative overflow-hidden"
