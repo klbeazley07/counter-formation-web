@@ -574,7 +574,6 @@ const CounterFormation = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {[
               { name: "Technical Tee", img: "/DriFit_Black.png",    link: "/collections/the-gear", copy: "Performance tech for training." },
               { name: "Everyday Tee",  img: "/Tshirt_Studio.png",   link: "/collections/the-gear", copy: "Premium soft-wash cotton." },
