@@ -117,7 +117,7 @@ function CinematicHero() {
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
       tl.to(bgGlowRef.current,          { opacity: 1,    duration: 1.4 })
-        .to(vBeamRef.current,           { opacity: 0.82, height: "84vh", duration: 1.6 }, "-=0.6")
+        .to(vBeamRef.current,           { opacity: 0.82, height: window.innerWidth < 768 ? "52vh" : "84vh", duration: 1.6 }, "-=0.6")
         .to(hBeamRef.current,           { opacity: 0.52, width: "28vw",  duration: 1.1 }, "-=0.6")
         .to(bloomRef.current,           { opacity: 0.7,  scale: 1,       duration: 1.6 }, "-=0.8")
         .to(particlesRef.current,       { opacity: 0.55,                 duration: 1.2 }, "-=0.9")
@@ -195,7 +195,7 @@ function CinematicHero() {
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 pt-20 pb-10 text-center">
         <div ref={logoGroupRef} className="mb-6 md:mb-8 opacity-0">
           <SafeImg src="/full-logo.png"
-            className="w-[200px] md:w-[500px] mx-auto drop-shadow-[0_20px_60px_rgba(0,0,0,0.9)] max-h-[38vh] object-contain"
+            className="w-[260px] md:w-[500px] mx-auto drop-shadow-[0_20px_60px_rgba(0,0,0,0.9)] max-h-[42vh] object-contain"
             alt="Counter Formation" />
         </div>
         <h1 ref={headingRef} className="font-brand text-xl md:text-5xl uppercase tracking-[0.28em] md:tracking-[0.4em] leading-tight text-white px-2 opacity-0">
@@ -323,7 +323,7 @@ const CounterFormation = () => {
                 <SafeImg src="/Identity_8k.png" alt="Identity" className="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000" />
               </div>
             </div>
-            <div className="pillar-reveal flex flex-col-reverse md:flex-row-reverse items-center gap-10 md:gap-24 group text-center md:text-left">
+            <div className="pillar-reveal flex flex-col md:flex-row-reverse items-center gap-10 md:gap-24 group text-center md:text-left">
               <div className="relative md:w-3/5">
                 <span className="absolute -top-10 md:-top-16 right-0 md:left-20 text-[6rem] md:text-[18rem] font-brand opacity-[0.03] select-none pointer-events-none group-hover:opacity-[0.06] transition-opacity duration-1000">II</span>
                 <h3 className="font-brand text-3xl md:text-6xl uppercase tracking-widest mb-4 md:mb-8 relative z-10 text-white">Practice</h3>
@@ -406,25 +406,57 @@ const CounterFormation = () => {
 
       <SectionDivider />
 
-      {/* BRAND STATEMENT BRIDGE */}
-      <section className="relative bg-[#0D0D12] py-28 md:py-44 px-6 overflow-hidden">
+      {/* GEAR STATEMENT — merged bridge + garment callout */}
+      <section className="relative bg-[#0D0D12] py-24 md:py-40 px-6 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.05) 0%, transparent 58%)" }} />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-20 bg-gradient-to-b from-transparent to-white/10 pointer-events-none" />
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <div className="bridge-reveal">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-b from-transparent to-white/10 pointer-events-none" />
+
+        <div className="relative z-10 max-w-5xl mx-auto">
+          {/* Central statement */}
+          <div className="text-center mb-16 md:mb-20 bridge-reveal">
             <p className="text-[9px] md:text-[10px] uppercase tracking-[0.5em] text-[#C9A84C]/70 font-bold mb-8">On the Gear</p>
-            <h2 className="font-brand text-4xl md:text-6xl lg:text-7xl uppercase leading-none tracking-[0.15em] md:tracking-[0.2em] text-white mb-6">
+            <h2 className="font-brand text-4xl md:text-6xl lg:text-7xl uppercase leading-none tracking-[0.15em] md:tracking-[0.2em] text-white mb-5">
               The Gear Is Not<br /><span className="text-[#C9A84C]">The Mission.</span>
             </h2>
-            <p className="font-brand italic text-xl md:text-3xl opacity-35 tracking-normal lowercase mb-10">It's a marker of it.</p>
-            <p className="text-[9px] md:text-xs opacity-45 tracking-[0.22em] uppercase leading-loose font-light max-w-md mx-auto">
-              What you wear is a declaration. Apparel as a visual anchor — a daily reminder of who you are and what you're formed for.
-            </p>
-            <div className="mt-10 text-[0.6rem] uppercase tracking-[0.4em] text-white/20">Ephesians 6:10–18</div>
+            <p className="font-brand italic text-xl md:text-3xl opacity-30 tracking-normal lowercase mb-8">It's a marker of it.</p>
+            <div className="w-12 h-[1px] bg-[#C9A84C]/40 mx-auto" />
           </div>
+
+          {/* Garment → Practice row */}
+          <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 md:gap-16 bridge-reveal">
+            <div className="space-y-4 max-w-xl text-center md:text-left">
+              <span className="text-[9px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] uppercase font-bold">Linked to the Gear</span>
+              <p className="text-xs md:text-sm text-white/45 leading-relaxed">
+                Every release unlocks a hub of formation content — devotion, practice, reflection, video, and community challenge — accessed through QR touchpoints built into the gear itself.
+              </p>
+              <div className="flex items-center justify-center md:justify-start gap-2 md:gap-3 text-[8px] md:text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold pt-2">
+                <span>Gear</span>
+                <span className="text-[#C9A84C]">→</span>
+                <span>QR</span>
+                <span className="text-[#C9A84C]">→</span>
+                <span>Guide</span>
+                <span className="text-[#C9A84C]">→</span>
+                <span>Practice</span>
+              </div>
+            </div>
+            <div className="shrink-0 flex flex-col items-center gap-3">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                <img
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fcounterformed.com%2Ffield-guide"
+                  alt="Field Guide QR code"
+                  className="w-24 h-24 md:w-28 md:h-28 opacity-70"
+                  loading="lazy"
+                />
+              </div>
+              <span className="text-[7px] uppercase tracking-[0.3em] text-white/20">Scan to access</span>
+            </div>
+          </div>
+
+          <div className="mt-14 text-center text-[0.6rem] uppercase tracking-[0.4em] text-white/15">Ephesians 6:10–18</div>
         </div>
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1px] h-20 bg-gradient-to-t from-transparent to-white/10 pointer-events-none" />
+
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-t from-transparent to-white/10 pointer-events-none" />
       </section>
 
       <SectionDivider />
@@ -520,37 +552,6 @@ const CounterFormation = () => {
             ))}
           </div>
 
-          {/* From Garment to Practice callout */}
-          <div className="rounded-2xl md:rounded-[2rem] border border-white/10 bg-white/[0.03] px-6 md:px-10 py-8 md:py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-10">
-            {/* Bronze top accent */}
-            <div className="absolute top-0 left-0 right-0 h-[1px] rounded-t-[2rem] bg-gradient-to-r from-transparent via-[#C9A84C]/30 to-transparent pointer-events-none" />
-            <div className="space-y-3 max-w-2xl">
-              <span className="text-[9px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] uppercase font-bold">Linked to the Gear</span>
-              <h3 className="font-brand text-2xl md:text-4xl uppercase tracking-[0.1em] text-white">From Garment to Practice</h3>
-              <p className="text-xs md:text-sm text-white/45 leading-relaxed max-w-xl">
-                Every new release unlocks a hub of formation content — product story, devotion, practice, reflection, video, audio, and community challenge — accessed through QR touchpoints built into the gear.
-              </p>
-            </div>
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-              <div className="flex items-center gap-2 md:gap-3 text-[8px] md:text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold">
-                <span>Gear</span>
-                <span className="text-[#C9A84C]">→</span>
-                <span>QR</span>
-                <span className="text-[#C9A84C]">→</span>
-                <span>Guide</span>
-                <span className="text-[#C9A84C]">→</span>
-                <span>Practice</span>
-              </div>
-              <div className="shrink-0 rounded-2xl border border-white/10 bg-[#0D0D12] p-3">
-                <img
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=96x96&data=https%3A%2F%2Fcounterformed.com%2Ffield-guide"
-                  alt="Field Guide QR code"
-                  className="w-20 h-20 md:w-24 md:h-24 opacity-70"
-                  loading="lazy"
-                />
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
