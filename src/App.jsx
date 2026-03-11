@@ -212,27 +212,18 @@ function CinematicHero() {
           "-=0.3"
         );
 
-      /* ── AMBIENT BREATHING (after reveal settles) ── */
+      /* ── AMBIENT BREATHING — background glow and particles only (cross fades out at 5s) ── */
       gsap.to(bgGlowRef.current, {
         x: 12, y: -10, duration: 9, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 4.5
-      });
-      gsap.to(bloomRef.current, {
-        scale: 1.07, opacity: 0.78, duration: 6.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 4.5
-      });
-      gsap.to(vBeamRef.current, {
-        opacity: 0.74, duration: 5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 4.5
-      });
-      gsap.to(hBeamRef.current, {
-        opacity: 0.45, duration: 6, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 5
       });
       gsap.to(particlesRef.current, {
         y: -14, duration: 11, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 4.5
       });
 
-      // ── CROSS FADE OUT at ~20s — graceful departure, very slow ──
+      // ── CROSS FADE OUT at 5s — overwrite kills the breathing loops so they can't fight it ──
       gsap.to(
         [vBeamRef.current, hBeamRef.current, bloomRef.current],
-        { opacity: 0, duration: 3.5, ease: "power2.inOut", delay: 20 }
+        { opacity: 0, duration: 2.5, ease: "power2.inOut", delay: 5, overwrite: true }
       );
 
       // Scroll indicator — gentle bounce loop
