@@ -105,8 +105,8 @@ function CinematicHero() {
         bloomRef.current, logoGroupRef.current, headingRef.current,
         sublineRef.current, microcopyRef.current, ctaRef.current,
         scriptureRef.current, scrollIndicatorRef.current], { opacity: 0 });
-      gsap.set(vBeamRef.current,     { height: "0vh" });
-      gsap.set(hBeamRef.current,     { width: "0vw" });
+      gsap.set(vBeamRef.current, { height: "0vh", xPercent: -50 });
+      gsap.set(hBeamRef.current, { width: "0vw",  xPercent: -50 });
       gsap.set(bloomRef.current,     { scale: 0.7 });
       gsap.set(logoGroupRef.current, { y: 18, filter: "blur(10px)" });
       gsap.set(headingRef.current,   { y: 28, filter: "blur(12px)" });
@@ -175,12 +175,13 @@ function CinematicHero() {
         style={{ top: "28%", transform: "translate(-50%, -50%)", width: "44rem", height: "44rem", borderRadius: "50%",
           background: "radial-gradient(circle, rgba(255,255,255,0.14) 0%, rgba(145,172,255,0.07) 20%, rgba(171,122,68,0.05) 36%, transparent 60%)",
           filter: "blur(48px)" }} />
-      <div ref={vBeamRef} className="absolute left-1/2 -translate-x-1/2 w-[2px] pointer-events-none opacity-0"
-        style={{ top: "8%", height: "0vh", transformOrigin: "top center",
+      <div ref={vBeamRef} className="absolute w-[2px] pointer-events-none opacity-0"
+        style={{ top: "8%", left: "50%", height: "0vh",
+          transformOrigin: "top center",
           background: "linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.55) 8%, rgba(255,255,255,0.88) 28%, rgba(255,255,255,0.92) 42%, rgba(255,255,255,0.70) 72%, rgba(255,255,255,0.40) 88%, transparent 100%)",
           boxShadow: "0 0 20px rgba(255,255,255,0.48), 0 0 40px rgba(180,210,255,0.20)", filter: "blur(0.4px)" }} />
-      <div ref={hBeamRef} className="absolute left-1/2 -translate-x-1/2 h-[2px] pointer-events-none opacity-0"
-        style={{ top: "28%", width: "0vw",
+      <div ref={hBeamRef} className="absolute h-[2px] pointer-events-none opacity-0"
+        style={{ top: "28%", left: "50%", width: "0vw",
           background: "linear-gradient(to right, transparent 0%, rgba(255,255,255,0.14) 8%, rgba(255,255,255,0.68) 50%, rgba(255,255,255,0.14) 92%, transparent 100%)",
           boxShadow: "0 0 14px rgba(255,255,255,0.24), 0 0 28px rgba(180,210,255,0.14)" }} />
       <div ref={particlesRef} className="absolute inset-0 pointer-events-none opacity-0"
