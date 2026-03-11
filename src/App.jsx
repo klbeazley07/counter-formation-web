@@ -474,7 +474,7 @@ const CounterFormation = () => {
               {
                 type: "Practice", rhythm: "Sabbath",
                 title: "Practicing Rest",
-                img: "https://images.unsplash.com/photo-1511988617509-a57c8a288659?q=80&w=800",
+                img: "https://images.unsplash.com/photo-1472396961693-142e6e269027?q=80&w=800",
                 desc: "A weekly rhythm of trust, delight, and resistance to production without end.",
                 date: "February 2026",
               },
