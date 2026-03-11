@@ -574,10 +574,11 @@ const CounterFormation = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {[
-              { name: "Technical Tee", img: "/DriFit_Black.png", link: "/collections/the-gear", copy: "Performance tech for training." },
-              { name: "Everyday Tee",  img: "/Tshirt_1.jpg",     link: "/collections/the-gear", copy: "Premium soft-wash cotton." },
-              { name: "Hoodies",       img: "/shield-black.png", link: "/collections/the-gear", copy: "Heavyweight anchors.", comingSoon: true },
+              { name: "Technical Tee", img: "/DriFit_Black.png",    link: "/collections/the-gear", copy: "Performance tech for training." },
+              { name: "Everyday Tee",  img: "/Tshirt_Studio.png",   link: "/collections/the-gear", copy: "Premium soft-wash cotton." },
+              { name: "Hoodies",       img: "/shield-black.png",    link: "/collections/the-gear", copy: "Heavyweight anchors.", comingSoon: true },
             ].map(cat => (
               <TiltCard key={cat.name} disabled={cat.comingSoon}
                 className="product-card group relative overflow-hidden bg-black aspect-[3/4] rounded-[2rem] md:rounded-[3rem] transition-transform duration-700 hover:-translate-y-2 md:hover:-translate-y-4 shadow-2xl shadow-black/25">
