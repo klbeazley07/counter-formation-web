@@ -397,7 +397,6 @@ function LightTransition() {
         onEnter: () => {
           gsap.to(beamRef.current, { opacity: 1, y: 0, duration: 1.8, ease: "power2.out" });
           gsap.to(textRef.current, { opacity: 1, y: 0, duration: 1.2, ease: "power3.out", delay: 0.5 });
-          gsap.to(beamRef.current, { opacity: 0, duration: 1.5, ease: "power2.inOut", delay: 5 });
         },
       });
     }, sectionRef);
@@ -680,19 +679,95 @@ function GearBridgeSection() {
 }
 
 /* ─── THE GEAR ────────────────────────────────────────────────────── */
-// FIX #7 — gradient transition div from dark → cream
+// Tab toggle — Men (Counter Formation) / Women (Collective)
+// Men accent:   #C9A84C  bronze gold
+// Women accent: #8FAF8A  sage green
+// FIX #7 — gradient transition from dark → cream
 // FIX #2 — Shopify URL no longer doubled
 
+const GEAR_TABS = {
+  men: {
+    label:    "Counter Formation",
+    sublabel: "Men",
+    accent:   "#C9A84C",
+    accentMuted: "rgba(201,168,76,0.18)",
+    phrase:   "Apparel as a visual anchor.",
+    sub:      "Wear the pattern.",
+    shopUrl:  SHOPIFY_URL,
+    products: [
+      {
+        name: "Technical Tee",
+        img:  "/DriFit_Black.png",
+        copy: "Performance tech for training.",
+      },
+      {
+        name: "Everyday Tee",
+        img:  "/Tshirt_Studio.png",
+        copy: "Premium soft-wash cotton.",
+      },
+      {
+        name: "Hoodies",
+        img:  "/shield-black.png",
+        copy: "Heavyweight anchors.",
+        comingSoon: true,
+      },
+    ],
+  },
+  women: {
+    label:    "The Collective",
+    sublabel: "Women",
+    accent:   "#8FAF8A",
+    accentMuted: "rgba(143,175,138,0.18)",
+    phrase:   "Rooted. Rising. Set Apart.",
+    sub:      "Wear the formation.",
+    shopUrl:  SHOPIFY_URL,          // update when women's store is live
+    products: [
+      {
+        name: "Rooted Hoodie",
+        img:  "/placeholder.png",
+        copy: "Heavyweight. Oversized. Anchored.",
+        phrase: "Psalm 1",
+      },
+      {
+        name: "Set Apart Tee",
+        img:  "/placeholder.png",
+        copy: "Premium soft-wash cotton.",
+        phrase: "Romans 12:2",
+        comingSoon: true,
+      },
+      {
+        name: "Rise Athletic Set",
+        img:  "/placeholder.png",
+        copy: "Cropped hoodie + shorts.",
+        comingSoon: true,
+      },
+    ],
+  },
+};
+
 function GearSection() {
-  const products = [
-    { name: "Technical Tee", img: "/DriFit_Black.png",  copy: "Performance tech for training." },
-    { name: "Everyday Tee",  img: "/Tshirt_Studio.png", copy: "Premium soft-wash cotton." },
-    { name: "Hoodies",       img: "/shield-black.png",  copy: "Heavyweight anchors.", comingSoon: true },
-  ];
+  const [active, setActive] = useState("men");
+  const panelRef = useRef(null);
+
+  const tab = GEAR_TABS[active];
+
+  // Fade panel on tab switch
+  const switchTab = (key) => {
+    if (key === active) return;
+    gsap.to(panelRef.current, {
+      opacity: 0, y: 8, duration: 0.22, ease: "power2.in",
+      onComplete: () => {
+        setActive(key);
+        gsap.fromTo(panelRef.current,
+          { opacity: 0, y: 8 },
+          { opacity: 1, y: 0, duration: 0.38, ease: "power2.out" });
+      },
+    });
+  };
 
   return (
     <>
-      {/* FIX #7 — gradient bridge from dark to cream */}
+      {/* Gradient bridge from dark → cream */}
       <div className="h-24 md:h-32 w-full pointer-events-none"
         style={{ background: `linear-gradient(to bottom,${C.darkBg},${C.gearBg})` }} />
 
@@ -702,39 +777,115 @@ function GearSection() {
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E")`,
           backgroundSize: "200px 200px",
         }}>
+
         <div className="max-w-7xl mx-auto relative z-10 text-[#0D0D12]">
-          <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 md:gap-12 mb-12 md:mb-20 pt-4">
-            <h2 className="font-brand text-4xl md:text-7xl uppercase tracking-[0.08em]">The Gear</h2>
-            <p className="text-[8px] md:text-[10px] uppercase tracking-[0.22em] opacity-40 max-w-sm text-left md:text-right font-bold leading-relaxed">
-              Apparel as a visual anchor.<br className="hidden md:block" />Wear the pattern.
-            </p>
+
+          {/* ── Header row ── */}
+          <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 md:gap-12 mb-10 md:mb-14 pt-4">
+            <h2 className="font-brand text-4xl md:text-7xl uppercase tracking-[0.08em]">
+              The Gear
+            </h2>
+            {/* Tab toggle */}
+            <div className="flex items-center gap-1 p-1 rounded-full"
+              style={{ background: "rgba(0,0,0,0.08)" }}>
+              {Object.entries(GEAR_TABS).map(([key, t]) => {
+                const isActive = active === key;
+                return (
+                  <button key={key} onClick={() => switchTab(key)}
+                    className="relative px-5 py-2 rounded-full text-[9px] md:text-[10px] uppercase tracking-[0.22em] font-bold transition-all duration-300"
+                    style={{
+                      background:  isActive ? "#0D0D12" : "transparent",
+                      color:       isActive ? t.accent  : "rgba(13,13,18,0.45)",
+                      boxShadow:   isActive ? "0 2px 12px rgba(0,0,0,0.18)" : "none",
+                    }}>
+                    {t.sublabel}
+                    {/* Active indicator dot */}
+                    {isActive && (
+                      <span className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full"
+                        style={{ backgroundColor: t.accent }} />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            {products.map(cat => (
-              <TiltCard key={cat.name} disabled={cat.comingSoon}
-                className="product-card group relative overflow-hidden bg-black aspect-[3/4] rounded-[2rem] md:rounded-[3rem] transition-transform duration-700 hover:-translate-y-2 md:hover:-translate-y-4 shadow-2xl shadow-black/25">
-                {/* FIX #2 — links directly to SHOPIFY_URL, no path doubling */}
-                <a href={cat.comingSoon ? undefined : SHOPIFY_URL}
-                  target="_blank" rel="noopener noreferrer"
-                  className={cx("block h-full relative", cat.comingSoon && "pointer-events-none")}>
-                  <div className="absolute inset-0 opacity-60 group-hover:opacity-90 grayscale group-hover:grayscale-0 transition-all duration-1000">
-                    <SafeImg src={cat.img} className="w-full h-full object-cover" alt={cat.name} />
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
-                  <div className="relative z-10 h-full p-8 md:p-12 flex flex-col justify-end text-white">
-                    <h3 className="font-brand text-2xl md:text-4xl uppercase italic">{cat.name}</h3>
-                    <p className="text-[9px] md:text-[10px] opacity-60 uppercase mt-2 tracking-widest">{cat.copy}</p>
-                    {cat.comingSoon ? (
-                      <p className="text-[8px] tracking-widest text-[#C9A84C]/70 uppercase mt-3">Coming Soon</p>
-                    ) : (
-                      <div className="flex items-center gap-3 text-[9px] text-[#C9A84C] pt-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                        Shop <ArrowRight size={14} />
+
+          {/* ── Animated panel ── */}
+          <div ref={panelRef}>
+            {/* Sub-header */}
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-10 md:mb-14">
+              <div className="flex items-center gap-3">
+                {/* Collective badge for women's tab */}
+                {active === "women" && (
+                  <span className="text-[8px] uppercase tracking-[0.38em] font-bold px-3 py-1 rounded-full"
+                    style={{ background: "rgba(143,175,138,0.15)", color: "#8FAF8A", border: "1px solid rgba(143,175,138,0.25)" }}>
+                    Collective
+                  </span>
+                )}
+                <p className="font-brand text-sm md:text-base uppercase tracking-[0.18em] opacity-60"
+                  style={{ color: active === "women" ? "#3A4A38" : "#0D0D12" }}>
+                  {tab.phrase}
+                </p>
+              </div>
+              <p className="text-[8px] md:text-[10px] uppercase tracking-[0.22em] opacity-40 font-bold">
+                {tab.sub}
+              </p>
+            </div>
+
+            {/* Product cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+              {tab.products.map(cat => (
+                <TiltCard key={cat.name} disabled={cat.comingSoon}
+                  className="product-card group relative overflow-hidden bg-black aspect-[3/4] rounded-[2rem] md:rounded-[3rem] transition-transform duration-700 hover:-translate-y-2 md:hover:-translate-y-4 shadow-2xl shadow-black/25">
+                  <a href={cat.comingSoon ? undefined : tab.shopUrl}
+                    target="_blank" rel="noopener noreferrer"
+                    className={cx("block h-full relative", cat.comingSoon && "pointer-events-none")}>
+                    <div className="absolute inset-0 opacity-60 group-hover:opacity-90 grayscale group-hover:grayscale-0 transition-all duration-1000">
+                      <SafeImg src={cat.img} className="w-full h-full object-cover" alt={cat.name} />
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+
+                    {/* Women's tab — verse phrase watermark */}
+                    {active === "women" && cat.phrase && (
+                      <div className="absolute top-5 left-5 text-[7px] uppercase tracking-[0.32em] font-bold"
+                        style={{ color: "rgba(143,175,138,0.55)" }}>
+                        {cat.phrase}
                       </div>
                     )}
-                  </div>
-                </a>
-              </TiltCard>
-            ))}
+
+                    <div className="relative z-10 h-full p-8 md:p-12 flex flex-col justify-end text-white">
+                      <h3 className="font-brand text-2xl md:text-4xl uppercase italic">{cat.name}</h3>
+                      <p className="text-[9px] md:text-[10px] opacity-60 uppercase mt-2 tracking-widest">{cat.copy}</p>
+                      {cat.comingSoon ? (
+                        <p className="text-[8px] tracking-widest uppercase mt-3 font-bold"
+                          style={{ color: `${tab.accent}99` }}>
+                          Coming Soon
+                        </p>
+                      ) : (
+                        <div className="flex items-center gap-3 text-[9px] pt-4 opacity-0 group-hover:opacity-100 transition-opacity"
+                          style={{ color: tab.accent }}>
+                          Shop <ArrowRight size={14} />
+                        </div>
+                      )}
+                    </div>
+                  </a>
+                </TiltCard>
+              ))}
+            </div>
+
+            {/* Women's — formation note */}
+            {active === "women" && (
+              <div className="mt-12 md:mt-16 text-center">
+                <p className="text-[9px] uppercase tracking-[0.32em] font-bold mb-2"
+                  style={{ color: "rgba(143,175,138,0.65)" }}>
+                  The Collective
+                </p>
+                <p className="text-[10px] md:text-xs opacity-40 tracking-[0.14em] max-w-sm mx-auto leading-relaxed"
+                  style={{ color: "#2A3A28" }}>
+                  Same Rule. Different expression. Strength, rooted in light.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </section>
