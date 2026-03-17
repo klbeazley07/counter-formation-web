@@ -3,11 +3,40 @@
 
 @theme {
   --font-brand: "Michroma", sans-serif;
+  --font-sans:  "Inter", sans-serif;
+
+  /* Warmed brand palette */
+  --color-obsidian:   #0E0C0A;
+  --color-champagne:  #C9A84C;
+  --color-ivory:      #FAF8F5;
+  --color-hero-bg:    #06050A;
+  --color-rule-bg:    #17140F;
+  --color-field-bg:   #111009;
+  --color-gear-bg:    #F5F2EC;
+  --color-light-mid:  #F0EDE6;
 }
 
+/* Base */
 body {
-  background-color: #0D0D12;
+  background-color: #0E0C0A;
   color: #FAF8F5;
   margin: 0;
   overflow-x: hidden;
+}
+
+/* Floating trigger fade-up animation */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Smooth anchor scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove number input spinners (email inputs) */
+input[type="email"] {
+  -webkit-appearance: none;
+  appearance: none;
 }
