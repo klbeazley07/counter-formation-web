@@ -397,6 +397,7 @@ function LightTransition() {
         onEnter: () => {
           gsap.to(beamRef.current, { opacity: 1, y: 0, duration: 1.8, ease: "power2.out" });
           gsap.to(textRef.current, { opacity: 1, y: 0, duration: 1.2, ease: "power3.out", delay: 0.5 });
+          gsap.to(beamRef.current, { opacity: 0, duration: 1.5, ease: "power2.inOut", delay: 5 });
         },
       });
     }, sectionRef);
