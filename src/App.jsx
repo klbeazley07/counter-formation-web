@@ -302,7 +302,7 @@ function ArchitectureSection() {
               </div>
               <div className="relative w-full md:w-2/5 aspect-square bg-white/5 rounded-[2rem] md:rounded-[3rem] border border-white/10 overflow-hidden">
                 <SafeImg src={p.img} alt={p.title}
-                  className="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000" />
+                  className="pillar-img w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000" />
               </div>
             </div>
           ))}
@@ -357,7 +357,7 @@ function RuleOfLifeSection() {
                 e.currentTarget.style.transform    = "translateY(0)";
               }}>
               <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C9A84C]/50 to-transparent z-10" />
-              <div className="absolute inset-0 z-0 opacity-35 group-hover:opacity-60 transition-opacity duration-700">
+              <div className="rhythm-img-wrap absolute inset-0 z-0 opacity-35 group-hover:opacity-60 transition-opacity duration-700">
                 <SafeImg src={r.bg} alt=""
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
               </div>
@@ -1073,6 +1073,24 @@ const CounterFormation = () => {
       batchReveal(".footer-reveal", 16);
       batchReveal(".bridge-reveal", 30);
       batchReveal(".journal-card", 20);
+
+      // Mobile: scroll-triggered color reveal (hover doesn't exist on touch)
+      gsap.matchMedia().add("(max-width: 767px)", () => {
+        gsap.utils.toArray(".pillar-img").forEach(img => {
+          gsap.set(img, { filter: "grayscale(1)", opacity: 0.5 });
+          gsap.to(img, {
+            filter: "grayscale(0)", opacity: 1, duration: 1.2, ease: "power2.out",
+            scrollTrigger: { trigger: img, start: "top 80%" },
+          });
+        });
+        gsap.utils.toArray(".rhythm-img-wrap").forEach(wrap => {
+          gsap.set(wrap, { filter: "grayscale(1)" });
+          gsap.to(wrap, {
+            filter: "grayscale(0)", opacity: 0.6, duration: 1.2, ease: "power2.out",
+            scrollTrigger: { trigger: wrap, start: "top 80%" },
+          });
+        });
+      });
     }, mainRef);
     return () => ctx.revert();
   }, []);
