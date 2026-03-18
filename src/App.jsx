@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, Menu, X, ChevronRight } from "lucide-react";
@@ -434,104 +434,174 @@ function LightTransition() {
 function FieldGuideSection() {
   const articles = [
     {
-      type: "Devotion", rhythm: "Scripture", date: "March 2026",
+      kind: "internal",
+      type: "Devotion",
+      rhythm: "Morning Rule",
+      date: "March 2026",
       title: "Scripture Before Scroll",
-      img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800",
-      desc: "Reclaim the architecture of your first hour through scripture before the algorithm.",
-      href: FG_BASE,                          // ← wired to Field Guide
+      img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1200&auto=format&fit=crop",
+      desc: "A mobile-first office designed to reclaim the first attention of the day through stillness, scripture, reflection, and action.",
+      href: `${FG_BASE}`,
+      cta: "Enter the Guide",
     },
     {
-      type: "Practice", rhythm: "Sabbath", date: "February 2026",
+      kind: "locked",
+      type: "Practice",
+      rhythm: "Sabbath",
+      date: "Coming Soon",
       title: "Practicing Rest",
-      img: "https://images.unsplash.com/photo-1472396961693-142e6e269027?q=80&w=800",
-      desc: "A weekly rhythm of trust, delight, and resistance to production without end.",
-      href: "#field-guide",                   // placeholder until next rhythm is built
+      img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop",
+      desc: "A quieter rhythm of trust, delight, and weekly resistance to endless production.",
+      href: "#field-guide",
+      cta: "Coming Soon",
     },
     {
-      type: "Video", rhythm: "Community", date: "January 2026",
+      kind: "locked",
+      type: "Formation",
+      rhythm: "Brotherhood",
+      date: "Coming Soon",
       title: "Formation Together",
-      img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=800",
-      desc: "Why apprenticeship to Jesus requires shared life, mutual love, and practiced presence.",
-      href: "#field-guide",                   // placeholder until next rhythm is built
+      img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1200&auto=format&fit=crop",
+      desc: "Shared practices, honest friendship, and disciplined life with others in the way of Christ.",
+      href: "#field-guide",
+      cta: "Coming Soon",
     },
   ];
 
+  const CardShell = ({ art, index }) => {
+    const inner = (
+      <>
+        <div className="absolute inset-0 pointer-events-none opacity-[0.06]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
+            backgroundSize: '200px 200px',
+          }} />
+        <div className="absolute inset-0 opacity-80"
+          style={{ background: `linear-gradient(to bottom,rgba(6,5,10,0.12),${C.fieldBg} 84%)` }} />
+        <div className="absolute -top-10 left-1/2 h-32 w-32 -translate-x-1/2 rounded-full blur-3xl"
+          style={{ background: 'rgba(201,168,76,0.12)' }} />
+
+        <div className="relative aspect-[4/4.8] overflow-hidden rounded-[1.75rem] border border-white/[0.08] bg-white/[0.03]">
+          <SafeImg
+            src={art.img}
+            alt={art.title}
+            className="h-full w-full object-cover grayscale opacity-35 transition-all duration-1000 group-hover:scale-105 group-hover:opacity-80 group-hover:grayscale-0"
+          />
+          <div className="absolute inset-0"
+            style={{ background: `linear-gradient(to top,${C.fieldBg} 4%,${C.fieldBg}D9 36%,transparent 78%)` }} />
+          <div className="absolute top-5 left-5 right-5 flex items-center justify-between text-[8px] uppercase tracking-[0.32em]">
+            <span className="text-[#C9A84C]">{art.type}</span>
+            <span className="text-white/25">{String(index + 1).padStart(2, '0')}</span>
+          </div>
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-7">
+            <div className="mb-3 flex items-center gap-3 text-[8px] uppercase tracking-[0.28em]">
+              <span className="text-white/28">{art.rhythm}</span>
+              <span className="text-white/15">•</span>
+              <span className="text-white/22">{art.date}</span>
+            </div>
+            <h3 className="font-brand text-2xl md:text-[1.85rem] uppercase tracking-[0.08em] leading-[0.95] text-white">
+              {art.title}
+            </h3>
+            <p className="mt-4 max-w-sm text-[11px] md:text-[11.5px] leading-relaxed text-white/52">
+              {art.desc}
+            </p>
+            <div className="mt-6 flex items-center gap-2 text-[9px] uppercase tracking-[0.26em] font-bold text-[#C9A84C]">
+              {art.cta}
+              <ArrowRight size={12} className="transition-transform duration-300 group-hover:translate-x-1" />
+            </div>
+          </div>
+        </div>
+      </>
+    );
+
+    const shellClass = "group relative block rounded-[2rem] p-2 transition-all duration-500 hover:-translate-y-1";
+
+    if (art.kind === 'internal') {
+      return (
+        <Link to={art.href} className={shellClass} style={{ textDecoration: 'none' }}>
+          {inner}
+        </Link>
+      );
+    }
+
+    return (
+      <a href={art.href} className={shellClass} style={{ textDecoration: 'none' }}>
+        {inner}
+      </a>
+    );
+  };
+
   return (
-    <section id="field-guide" className="py-24 md:py-40 px-4 md:px-6 relative overflow-hidden"
+    <section id="field-guide" className="relative overflow-hidden px-4 py-24 md:px-6 md:py-40"
       style={{ backgroundColor: C.fieldBg }}>
       <div className="absolute inset-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at 50% 80%,rgba(201,168,76,0.04) 0%,transparent 60%)" }} />
-      <div className="absolute inset-0 pointer-events-none opacity-[0.025]"
+        style={{ background: 'radial-gradient(ellipse at 50% 28%, rgba(201,168,76,0.08) 0%, rgba(201,168,76,0.03) 28%, transparent 62%)' }} />
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
-          backgroundSize: "200px 200px",
+          backgroundSize: '220px 220px',
         }} />
-      <div className="absolute inset-0 pointer-events-none opacity-[0.025]">
-        <div className="max-w-7xl mx-auto h-full grid grid-cols-3 gap-10">
-          {[0,1,2].map(i => <div key={i} className="border-x border-white/20 h-full" />)}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.04]">
+        <div className="mx-auto grid h-full max-w-7xl grid-cols-3 gap-10">
+          {[0, 1, 2].map((i) => <div key={i} className="h-full border-x border-white/20" />)}
         </div>
       </div>
+      <div className="absolute left-1/2 top-0 h-32 w-px -translate-x-1/2 bg-gradient-to-b from-[#C9A84C]/40 to-transparent pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-8">
-          <div className="space-y-4 md:space-y-6">
-            <span className="text-[8px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] md:tracking-[0.5em] uppercase font-bold">
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <div className="mb-12 grid gap-8 md:mb-16 md:grid-cols-[1.25fr_auto] md:items-end md:gap-12">
+          <div>
+            <div className="mb-5 text-[8px] font-bold uppercase tracking-[0.5em] text-[#C9A84C] md:text-[10px]">
               Dispatches from the Field
-            </span>
-            <h2 className="font-brand text-3xl md:text-7xl uppercase tracking-[0.1em] md:tracking-[0.12em] text-white leading-none">
+            </div>
+            <h2 className="font-brand text-3xl uppercase tracking-[0.12em] text-white leading-none md:text-7xl">
               Field Guide
             </h2>
-            <p className="text-xs md:text-sm opacity-50 leading-relaxed font-light max-w-xl">
-              Devotions, practices, and media designed to carry the life of Counter Formation beyond the garment. Each release opens a deeper layer of formation.
+            <p className="mt-6 max-w-2xl text-xs leading-relaxed text-white/50 md:text-sm">
+              More than content. A growing archive of disciplined practices, teaching, and rhythm-based experiences designed to carry Counter Formation beyond the garment and into daily life.
             </p>
           </div>
-          <a href={FG_BASE} className="self-start md:self-auto text-[9px] md:text-[10px] text-[#C9A84C] border border-white/10 px-6 md:px-8 py-3 hover:bg-white/5 transition-all whitespace-nowrap rounded-full uppercase tracking-[0.22em] font-bold">
-            Explore Archive
-          </a>
+
+          <div className="self-start md:self-auto">
+            <Link
+              to={FG_BASE}
+              className="inline-flex items-center gap-3 rounded-full border border-white/10 px-6 py-3 text-[9px] font-bold uppercase tracking-[0.24em] text-[#C9A84C] transition-all hover:border-[#C9A84C]/30 hover:bg-white/[0.04] md:px-8 md:text-[10px]"
+            >
+              Explore Archive
+              <ArrowRight size={12} />
+            </Link>
+          </div>
         </div>
 
-        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-12 md:mb-16" />
+        <div className="mb-12 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent md:mb-16" />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16 mb-12 md:mb-16">
-          {articles.map((art, i) => {
-            const cardClass = "journal-card group cursor-pointer space-y-6";
-            const cardStyle = { textDecoration: "none" };
-            const inner = (
-              <>
-                <div className="aspect-video overflow-hidden rounded-2xl md:rounded-[2rem] bg-white/5 border border-white/[0.06] relative">
-                  <SafeImg src={art.img} alt={art.title}
-                    className="w-full h-full object-cover grayscale opacity-45 group-hover:opacity-90 group-hover:scale-105 transition-all duration-1000" />
-                  <div className="absolute inset-0"
-                    style={{ background: `linear-gradient(to top,${C.fieldBg}99,transparent)` }} />
-                  <span className="absolute top-4 right-4 font-mono text-[8px] text-white/25 tracking-[0.2em]">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <div className="space-y-3 px-1">
-                  <div className="flex items-center gap-3 text-[8px] md:text-[9px] uppercase tracking-[0.28em]">
-                    <span className="text-[#C9A84C]">{art.type}</span>
-                    <span className="text-white/20">·</span>
-                    <span className="text-white/35">{art.rhythm}</span>
-                    <span className="text-white/20">·</span>
-                    <span className="text-white/25">{art.date}</span>
-                  </div>
-                  <h3 className="font-brand text-xl md:text-2xl uppercase tracking-[0.08em] text-white leading-snug">
-                    {art.title}
-                  </h3>
-                  <p className="text-[10px] md:text-[11px] leading-relaxed text-white/45 max-w-sm">{art.desc}</p>
-                  <div className="flex items-center gap-2 text-[9px] text-[#C9A84C] opacity-0 group-hover:opacity-100 transition-opacity pt-1 uppercase tracking-[0.22em] font-bold">
-                    Open Guide <ArrowRight size={12} />
-                  </div>
-                </div>
-              </>
-            );
-            return art.href.startsWith("/")
-              ? <Link key={art.title} to={art.href} className={cardClass} style={cardStyle}>{inner}</Link>
-              : <a key={art.title} href={art.href} className={cardClass} style={cardStyle}>{inner}</a>;
-          })}
+        <div className="mb-12 grid grid-cols-1 gap-8 md:mb-16 md:grid-cols-3 md:gap-8">
+          {articles.map((art, i) => (
+            <CardShell key={art.title} art={art} index={i} />
+          ))}
         </div>
 
-        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+        <div className="grid gap-4 rounded-[2rem] border border-white/[0.08] bg-white/[0.02] p-6 md:grid-cols-[1.1fr_auto] md:items-center md:gap-6 md:p-8">
+          <div>
+            <div className="mb-3 text-[8px] font-bold uppercase tracking-[0.42em] text-[#C9A84C] md:text-[9px]">
+              First Rhythm Live Now
+            </div>
+            <h3 className="font-brand text-xl uppercase tracking-[0.1em] text-white md:text-3xl">
+              Scripture Before Scroll
+            </h3>
+            <p className="mt-3 max-w-2xl text-[11px] leading-relaxed text-white/50 md:text-sm">
+              Scan. Begin the office. Return tomorrow. This is the first formation loop now live inside the site.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 md:flex-row">
+            <Link to={`${FG_BASE}/today`} className="inline-flex items-center justify-center rounded-full bg-[#C9A84C] px-6 py-3 text-[9px] font-extrabold uppercase tracking-[0.24em] text-black transition-all hover:-translate-y-[1px] hover:bg-white md:text-[10px]">
+              Begin Today’s Office
+            </Link>
+            <Link to={`${FG_BASE}/path`} className="inline-flex items-center justify-center rounded-full border border-white/10 px-6 py-3 text-[9px] font-bold uppercase tracking-[0.24em] text-white/70 transition-all hover:border-[#C9A84C]/30 hover:text-[#C9A84C] md:text-[10px]">
+              View 7-Day Path
+            </Link>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -1055,11 +1125,6 @@ function MainSite() {
 /* ─── ROOT — ROUTER ───────────────────────────────────────────────── */
 
 export default function App() {
-  useEffect(() => {
-    const path = new URLSearchParams(window.location.search).get("/");
-    if (path) window.history.replaceState(null, "", path);
-  }, []);
-
   return (
     <BrowserRouter>
       <FieldGuideStyles />
@@ -1070,7 +1135,7 @@ export default function App() {
         {/* Field Guide routes */}
         <Route path={`${FG_BASE}`}          element={<FGLanding />} />
         <Route path={`${FG_BASE}/today`}    element={<FGOffice />} />
-        <Route path={`${FG_BASE}/day/:day`} element={<FGOffice />} />
+        <Route path={`${FG_BASE}/day-:day`} element={<FGOffice />} />
         <Route path={`${FG_BASE}/path`}     element={<FGPath />} />
         <Route path={`${FG_BASE}/why`}      element={<FGWhy />} />
         <Route path={`${FG_BASE}/new`}      element={<FGNewHere />} />
