@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, Menu, X, ChevronRight } from "lucide-react";
@@ -493,35 +493,42 @@ function FieldGuideSection() {
         <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-12 md:mb-16" />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16 mb-12 md:mb-16">
-          {articles.map((art, i) => (
-            <a key={art.title} href={art.href} className="journal-card group cursor-pointer space-y-6" style={{ textDecoration:"none" }}>
-              <div className="aspect-video overflow-hidden rounded-2xl md:rounded-[2rem] bg-white/5 border border-white/[0.06] relative">
-                <SafeImg src={art.img} alt={art.title}
-                  className="w-full h-full object-cover grayscale opacity-45 group-hover:opacity-90 group-hover:scale-105 transition-all duration-1000" />
-                <div className="absolute inset-0"
-                  style={{ background: `linear-gradient(to top,${C.fieldBg}99,transparent)` }} />
-                <span className="absolute top-4 right-4 font-mono text-[8px] text-white/25 tracking-[0.2em]">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-              </div>
-              <div className="space-y-3 px-1">
-                <div className="flex items-center gap-3 text-[8px] md:text-[9px] uppercase tracking-[0.28em]">
-                  <span className="text-[#C9A84C]">{art.type}</span>
-                  <span className="text-white/20">·</span>
-                  <span className="text-white/35">{art.rhythm}</span>
-                  <span className="text-white/20">·</span>
-                  <span className="text-white/25">{art.date}</span>
+          {articles.map((art, i) => {
+            const cardClass = "journal-card group cursor-pointer space-y-6";
+            const cardStyle = { textDecoration: "none" };
+            const inner = (
+              <>
+                <div className="aspect-video overflow-hidden rounded-2xl md:rounded-[2rem] bg-white/5 border border-white/[0.06] relative">
+                  <SafeImg src={art.img} alt={art.title}
+                    className="w-full h-full object-cover grayscale opacity-45 group-hover:opacity-90 group-hover:scale-105 transition-all duration-1000" />
+                  <div className="absolute inset-0"
+                    style={{ background: `linear-gradient(to top,${C.fieldBg}99,transparent)` }} />
+                  <span className="absolute top-4 right-4 font-mono text-[8px] text-white/25 tracking-[0.2em]">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                 </div>
-                <h3 className="font-brand text-xl md:text-2xl uppercase tracking-[0.08em] text-white leading-snug">
-                  {art.title}
-                </h3>
-                <p className="text-[10px] md:text-[11px] leading-relaxed text-white/45 max-w-sm">{art.desc}</p>
-                <div className="flex items-center gap-2 text-[9px] text-[#C9A84C] opacity-0 group-hover:opacity-100 transition-opacity pt-1 uppercase tracking-[0.22em] font-bold">
-                  Open Guide <ArrowRight size={12} />
+                <div className="space-y-3 px-1">
+                  <div className="flex items-center gap-3 text-[8px] md:text-[9px] uppercase tracking-[0.28em]">
+                    <span className="text-[#C9A84C]">{art.type}</span>
+                    <span className="text-white/20">·</span>
+                    <span className="text-white/35">{art.rhythm}</span>
+                    <span className="text-white/20">·</span>
+                    <span className="text-white/25">{art.date}</span>
+                  </div>
+                  <h3 className="font-brand text-xl md:text-2xl uppercase tracking-[0.08em] text-white leading-snug">
+                    {art.title}
+                  </h3>
+                  <p className="text-[10px] md:text-[11px] leading-relaxed text-white/45 max-w-sm">{art.desc}</p>
+                  <div className="flex items-center gap-2 text-[9px] text-[#C9A84C] opacity-0 group-hover:opacity-100 transition-opacity pt-1 uppercase tracking-[0.22em] font-bold">
+                    Open Guide <ArrowRight size={12} />
+                  </div>
                 </div>
-              </div>
-            </a>
-          ))}
+              </>
+            );
+            return art.href.startsWith("/")
+              ? <Link key={art.title} to={art.href} className={cardClass} style={cardStyle}>{inner}</Link>
+              : <a key={art.title} href={art.href} className={cardClass} style={cardStyle}>{inner}</a>;
+          })}
         </div>
 
         <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/8 to-transparent" />
