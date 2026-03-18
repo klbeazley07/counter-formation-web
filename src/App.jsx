@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -1048,6 +1048,11 @@ function MainSite() {
 /* ─── ROOT — ROUTER ───────────────────────────────────────────────── */
 
 export default function App() {
+  useEffect(() => {
+    const path = new URLSearchParams(window.location.search).get("/");
+    if (path) window.history.replaceState(null, "", path);
+  }, []);
+
   return (
     <BrowserRouter>
       <FieldGuideStyles />
