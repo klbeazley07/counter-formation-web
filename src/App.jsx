@@ -1,15 +1,25 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, Menu, X, ChevronRight } from "lucide-react";
+
+import {
+  FieldGuideStyles,
+  FGLanding,
+  FGOffice,
+  FGPath,
+  FGWhy,
+  FGNewHere,
+} from "./FieldGuide";
 
 gsap.registerPlugin(ScrollTrigger);
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
 
 const SHOPIFY_URL = "https://shop.counterformed.com/collections/the-gear";
+const FG_BASE     = "/field-guide/scripture-before-scroll";
 
-// Warmed palette — same depth, candlelight not void
 const C = {
   heroBg:   "#06050A",
   darkBg:   "#0E0C0A",
@@ -75,7 +85,6 @@ function TiltCard({ children, className, disabled }) {
   );
 }
 
-// FIX #16 — opacity lifted from 0.08 → 0.12
 function SectionDivider() {
   return (
     <div className="flex items-center justify-center py-6 px-4"
@@ -124,7 +133,6 @@ function CinematicHero() {
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
       tl.to(bgGlowRef.current,  { opacity: 1, duration: 1.4 })
-        // FIX — mobile beam height corrected
         .to(vBeamRef.current,   { opacity: 0.82, height: window.innerWidth < 768 ? "52vh" : "84vh", duration: 1.6 }, "-=0.6")
         .to(hBeamRef.current,   { opacity: 0.52, width: "28vw", duration: 1.1 }, "-=0.6")
         .to(bloomRef.current,   { opacity: 0.7,  scale: 1,      duration: 1.6 }, "-=0.8")
@@ -141,7 +149,6 @@ function CinematicHero() {
 
       gsap.to(bgGlowRef.current,    { x: 12, y: -10, duration: 9,  repeat: -1, yoyo: true, ease: "sine.inOut", delay: 4.5 });
       gsap.to(particlesRef.current, { y: -14,         duration: 11, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 4.5 });
-      // FIX #17 — scroll chevron made more visible
       gsap.to(scrollIndicatorRef.current, { y: 8, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 5.2 });
 
       const hero = heroRef.current;
@@ -208,7 +215,6 @@ function CinematicHero() {
           className="font-brand text-xl md:text-5xl uppercase tracking-[0.28em] md:tracking-[0.38em] leading-tight text-white px-2 opacity-0">
           Formed in Christ.
         </h1>
-        {/* FIX #14 — tightened subline tracking */}
         <p ref={sublineRef}
           className="mt-3 md:mt-4 font-brand italic text-sm md:text-4xl opacity-40 lowercase opacity-0">
           Living Counter to Culture.
@@ -234,7 +240,6 @@ function CinematicHero() {
         </div>
       </div>
 
-      {/* FIX #17 — scroll indicator more visible */}
       <div ref={scrollIndicatorRef}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0 pointer-events-none z-20">
         <span className="text-[7px] uppercase tracking-[0.35em] text-white/40">Scroll</span>
@@ -286,7 +291,6 @@ function ArchitectureSection() {
             <div key={p.title}
               className={cx("pillar-reveal flex flex-col items-center gap-10 md:gap-24 group",
                 p.reverse ? "md:flex-row-reverse" : "md:flex-row")}>
-              {/* FIX #4 — Practice pillar text-left on both viewports */}
               <div className="relative md:w-3/5 text-left">
                 <span className={cx(
                   "absolute -top-10 md:-top-16 text-[6rem] md:text-[18rem] font-brand opacity-[0.03] select-none pointer-events-none group-hover:opacity-[0.06] transition-opacity duration-1000",
@@ -295,7 +299,6 @@ function ArchitectureSection() {
                 <h3 className="font-brand text-3xl md:text-6xl uppercase tracking-widest mb-4 md:mb-8 relative z-10 text-white">
                   {p.title}
                 </h3>
-                {/* FIX #14 — body tracking tightened from tracking-widest */}
                 <p className="text-xs md:text-base opacity-60 leading-relaxed font-light max-w-md tracking-wide">
                   {p.body}
                 </p>
@@ -380,8 +383,7 @@ function RuleOfLifeSection() {
   );
 }
 
-/* ─── NEW: LIGHT TRANSITION ───────────────────────────────────────── */
-// FIX #6 — breathing moment between dark sections, cross beam visual
+/* ─── LIGHT TRANSITION ────────────────────────────────────────────── */
 
 function LightTransition() {
   const sectionRef = useRef(null);
@@ -406,26 +408,19 @@ function LightTransition() {
   return (
     <section ref={sectionRef} className="relative overflow-hidden py-28 md:py-44"
       style={{ background: `linear-gradient(to bottom,${C.ruleBg} 0%,${C.lightMid} 40%,${C.lightMid} 60%,${C.fieldBg} 100%)` }}>
-      {/* Cross beam visual */}
       <div ref={beamRef} className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        {/* Vertical beam */}
         <div className="absolute w-[1px] h-full"
           style={{ background: "linear-gradient(to bottom,transparent 0%,rgba(201,168,76,0.25) 22%,rgba(201,168,76,0.55) 50%,rgba(201,168,76,0.25) 78%,transparent 100%)" }} />
-        {/* Horizontal beam */}
         <div className="absolute h-[1px] w-4/5 md:w-3/5"
           style={{ background: "linear-gradient(to right,transparent 0%,rgba(201,168,76,0.18) 12%,rgba(201,168,76,0.48) 50%,rgba(201,168,76,0.18) 88%,transparent 100%)" }} />
-        {/* Center bloom */}
         <div className="absolute w-56 h-56 rounded-full"
           style={{ background: "radial-gradient(circle,rgba(201,168,76,0.20) 0%,rgba(201,168,76,0.06) 40%,transparent 70%)", filter: "blur(18px)" }} />
       </div>
-      {/* Text */}
       <div ref={textRef} className="relative z-10 text-center px-6">
-        <p className="font-brand text-sm md:text-xl uppercase tracking-[0.38em]"
-          style={{ color: "#2A2018" }}>
+        <p className="font-brand text-sm md:text-xl uppercase tracking-[0.38em]" style={{ color: "#2A2018" }}>
           Formation begins in the light.
         </p>
-        <div className="mt-4 text-[9px] uppercase tracking-[0.38em] opacity-40"
-          style={{ color: "#2A2018" }}>
+        <div className="mt-4 text-[9px] uppercase tracking-[0.38em] opacity-40" style={{ color: "#2A2018" }}>
           Romans 12:2
         </div>
       </div>
@@ -433,9 +428,8 @@ function LightTransition() {
   );
 }
 
-/* ─── FIELD GUIDE ─────────────────────────────────────────────────── */
-// FIX #10 — own background identity (#111009, warm parchment)
-// FIX #11 — card image opacity at rest 0.60 → 0.45
+/* ─── FIELD GUIDE SECTION ─────────────────────────────────────────── */
+// ↓ "Open Guide" cards now link to the Field Guide via React Router
 
 function FieldGuideSection() {
   const articles = [
@@ -444,18 +438,21 @@ function FieldGuideSection() {
       title: "Scripture Before Scroll",
       img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800",
       desc: "Reclaim the architecture of your first hour through scripture before the algorithm.",
+      href: FG_BASE,                          // ← wired to Field Guide
     },
     {
       type: "Practice", rhythm: "Sabbath", date: "February 2026",
       title: "Practicing Rest",
       img: "https://images.unsplash.com/photo-1472396961693-142e6e269027?q=80&w=800",
       desc: "A weekly rhythm of trust, delight, and resistance to production without end.",
+      href: "#field-guide",                   // placeholder until next rhythm is built
     },
     {
       type: "Video", rhythm: "Community", date: "January 2026",
       title: "Formation Together",
       img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=800",
       desc: "Why apprenticeship to Jesus requires shared life, mutual love, and practiced presence.",
+      href: "#field-guide",                   // placeholder until next rhythm is built
     },
   ];
 
@@ -464,13 +461,11 @@ function FieldGuideSection() {
       style={{ backgroundColor: C.fieldBg }}>
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 80%,rgba(201,168,76,0.04) 0%,transparent 60%)" }} />
-      {/* Grain texture (same weight as gear section) */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.025]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
           backgroundSize: "200px 200px",
         }} />
-      {/* Faint vertical grid lines */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.025]">
         <div className="max-w-7xl mx-auto h-full grid grid-cols-3 gap-10">
           {[0,1,2].map(i => <div key={i} className="border-x border-white/20 h-full" />)}
@@ -490,19 +485,17 @@ function FieldGuideSection() {
               Devotions, practices, and media designed to carry the life of Counter Formation beyond the garment. Each release opens a deeper layer of formation.
             </p>
           </div>
-          <a href="#" className="self-start md:self-auto text-[9px] md:text-[10px] text-[#C9A84C] border border-white/10 px-6 md:px-8 py-3 hover:bg-white/5 transition-all whitespace-nowrap rounded-full uppercase tracking-[0.22em] font-bold">
+          <a href={FG_BASE} className="self-start md:self-auto text-[9px] md:text-[10px] text-[#C9A84C] border border-white/10 px-6 md:px-8 py-3 hover:bg-white/5 transition-all whitespace-nowrap rounded-full uppercase tracking-[0.22em] font-bold">
             Explore Archive
           </a>
         </div>
 
-        {/* Opening rule */}
         <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-12 md:mb-16" />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16 mb-12 md:mb-16">
           {articles.map((art, i) => (
-            <div key={art.title} className="journal-card group cursor-pointer space-y-6">
+            <a key={art.title} href={art.href} className="journal-card group cursor-pointer space-y-6" style={{ textDecoration:"none" }}>
               <div className="aspect-video overflow-hidden rounded-2xl md:rounded-[2rem] bg-white/5 border border-white/[0.06] relative">
-                {/* FIX #11 — rest opacity 0.60 → 0.45 */}
                 <SafeImg src={art.img} alt={art.title}
                   className="w-full h-full object-cover grayscale opacity-45 group-hover:opacity-90 group-hover:scale-105 transition-all duration-1000" />
                 <div className="absolute inset-0"
@@ -527,28 +520,25 @@ function FieldGuideSection() {
                   Open Guide <ArrowRight size={12} />
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
 
-        {/* FIX #15 — closing rule after cards */}
         <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/8 to-transparent" />
       </div>
     </section>
   );
 }
 
-/* ─── NEW: 7-DAY CHALLENGE SECTION ───────────────────────────────── */
-// FIX #8 — both section + floating trigger
+/* ─── 7-DAY CHALLENGE ─────────────────────────────────────────────── */
 
 function ChallengeSection() {
-  const [email, setEmail]       = useState("");
+  const [email, setEmail]         = useState("");
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = () => {
     if (!email) return;
     setSubmitted(true);
-    // TODO: wire to Klaviyo / Mailchimp / ConvertKit
   };
 
   return (
@@ -604,8 +594,6 @@ function ChallengeSection() {
 }
 
 /* ─── GEAR BRIDGE ─────────────────────────────────────────────────── */
-// FIX #3 — QR uses local asset with API fallback
-// FIX #12 — flow indicator text size increased on mobile
 
 function GearBridgeSection() {
   return (
@@ -623,7 +611,6 @@ function GearBridgeSection() {
           <h2 className="font-brand text-4xl md:text-6xl lg:text-7xl uppercase leading-none tracking-[0.15em] md:tracking-[0.18em] text-white mb-5">
             The Gear Is Not<br /><span className="text-[#C9A84C]">The Mission.</span>
           </h2>
-          {/* FIX #13 — font-brand uppercase, no serif softening */}
           <p className="font-brand text-base md:text-xl uppercase tracking-[0.22em] opacity-25 mb-8">
             It's a marker of it.
           </p>
@@ -638,7 +625,6 @@ function GearBridgeSection() {
             <p className="text-xs md:text-sm text-white/45 leading-relaxed">
               Every release unlocks a hub of formation content — devotion, practice, reflection, video, and community challenge — accessed through QR touchpoints built into the gear itself.
             </p>
-            {/* FIX #12 — text-[10px] on mobile, more gap */}
             <div className="flex items-center justify-center md:justify-start gap-3 md:gap-2 text-[10px] uppercase tracking-[0.26em] text-white/30 font-bold pt-2">
               <span>Gear</span>
               <span className="text-[#C9A84C]">→</span>
@@ -652,7 +638,7 @@ function GearBridgeSection() {
 
           <div className="shrink-0 flex flex-col items-center gap-3">
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              {/* FIX #3 — use local asset, API as fallback only */}
+              {/* QR routes directly to the Field Guide landing page */}
               <img
                 src="/qr-field-guide.png"
                 alt="Field Guide QR code"
@@ -660,7 +646,7 @@ function GearBridgeSection() {
                 loading="lazy"
                 onError={e => {
                   e.currentTarget.onerror = null;
-                  e.currentTarget.src = "https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fcounterformed.com%2Ffield-guide";
+                  e.currentTarget.src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fcounterformed.com${FG_BASE}`;
                 }}
               />
             </div>
@@ -679,68 +665,26 @@ function GearBridgeSection() {
 }
 
 /* ─── THE GEAR ────────────────────────────────────────────────────── */
-// Tab toggle — Men (Counter Formation) / Women (Collective)
-// Men accent:   #C9A84C  bronze gold
-// Women accent: #8FAF8A  sage green
-// FIX #7 — gradient transition from dark → cream
-// FIX #2 — Shopify URL no longer doubled
 
 const GEAR_TABS = {
   men: {
-    label:    "Counter Formation",
-    sublabel: "Men",
-    accent:   "#C9A84C",
-    accentMuted: "rgba(201,168,76,0.18)",
-    phrase:   "Apparel as a visual anchor.",
-    sub:      "Wear the pattern.",
-    shopUrl:  SHOPIFY_URL,
+    label: "Counter Formation", sublabel: "Men", accent: "#C9A84C",
+    accentMuted: "rgba(201,168,76,0.18)", phrase: "Apparel as a visual anchor.", sub: "Wear the pattern.",
+    shopUrl: SHOPIFY_URL,
     products: [
-      {
-        name: "Technical Tee",
-        img:  "/DriFit_Black.png",
-        copy: "Performance tech for training.",
-      },
-      {
-        name: "Everyday Tee",
-        img:  "/Tshirt_Studio.png",
-        copy: "Premium soft-wash cotton.",
-      },
-      {
-        name: "Hoodies",
-        img:  "/shield-black.png",
-        copy: "Heavyweight anchors.",
-        comingSoon: true,
-      },
+      { name: "Technical Tee", img: "/DriFit_Black.png",  copy: "Performance tech for training." },
+      { name: "Everyday Tee",  img: "/Tshirt_Studio.png", copy: "Premium soft-wash cotton." },
+      { name: "Hoodies",       img: "/shield-black.png",  copy: "Heavyweight anchors.", comingSoon: true },
     ],
   },
   women: {
-    label:    "The Collective",
-    sublabel: "Women",
-    accent:   "#8FAF8A",
-    accentMuted: "rgba(143,175,138,0.18)",
-    phrase:   "Rooted. Rising. Set Apart.",
-    sub:      "Wear the formation.",
-    shopUrl:  SHOPIFY_URL,          // update when women's store is live
+    label: "The Collective", sublabel: "Women", accent: "#8FAF8A",
+    accentMuted: "rgba(143,175,138,0.18)", phrase: "Rooted. Rising. Set Apart.", sub: "Wear the formation.",
+    shopUrl: SHOPIFY_URL,
     products: [
-      {
-        name: "Rooted Hoodie",
-        img:  "/placeholder.png",
-        copy: "Heavyweight. Oversized. Anchored.",
-        phrase: "Psalm 1",
-      },
-      {
-        name: "Set Apart Tee",
-        img:  "/placeholder.png",
-        copy: "Premium soft-wash cotton.",
-        phrase: "Romans 12:2",
-        comingSoon: true,
-      },
-      {
-        name: "Rise Athletic Set",
-        img:  "/placeholder.png",
-        copy: "Cropped hoodie + shorts.",
-        comingSoon: true,
-      },
+      { name: "Rooted Hoodie",    img: "/placeholder.png", copy: "Heavyweight. Oversized. Anchored.", phrase: "Psalm 1" },
+      { name: "Set Apart Tee",    img: "/placeholder.png", copy: "Premium soft-wash cotton.", phrase: "Romans 12:2", comingSoon: true },
+      { name: "Rise Athletic Set",img: "/placeholder.png", copy: "Cropped hoodie + shorts.", comingSoon: true },
     ],
   },
 };
@@ -748,10 +692,8 @@ const GEAR_TABS = {
 function GearSection() {
   const [active, setActive] = useState("men");
   const panelRef = useRef(null);
-
   const tab = GEAR_TABS[active];
 
-  // Fade panel on tab switch
   const switchTab = (key) => {
     if (key === active) return;
     gsap.to(panelRef.current, {
@@ -767,7 +709,6 @@ function GearSection() {
 
   return (
     <>
-      {/* Gradient bridge from dark → cream */}
       <div className="h-24 md:h-32 w-full pointer-events-none"
         style={{ background: `linear-gradient(to bottom,${C.darkBg},${C.gearBg})` }} />
 
@@ -777,45 +718,27 @@ function GearSection() {
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E")`,
           backgroundSize: "200px 200px",
         }}>
-
         <div className="max-w-7xl mx-auto relative z-10 text-[#0D0D12]">
-
-          {/* ── Header row ── */}
           <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 md:gap-12 mb-10 md:mb-14 pt-4">
-            <h2 className="font-brand text-4xl md:text-7xl uppercase tracking-[0.08em]">
-              The Gear
-            </h2>
-            {/* Tab toggle */}
-            <div className="flex items-center gap-1 p-1 rounded-full"
-              style={{ background: "rgba(0,0,0,0.08)" }}>
+            <h2 className="font-brand text-4xl md:text-7xl uppercase tracking-[0.08em]">The Gear</h2>
+            <div className="flex items-center gap-1 p-1 rounded-full" style={{ background: "rgba(0,0,0,0.08)" }}>
               {Object.entries(GEAR_TABS).map(([key, t]) => {
                 const isActive = active === key;
                 return (
                   <button key={key} onClick={() => switchTab(key)}
                     className="relative px-5 py-2 rounded-full text-[9px] md:text-[10px] uppercase tracking-[0.22em] font-bold transition-all duration-300"
-                    style={{
-                      background:  isActive ? "#0D0D12" : "transparent",
-                      color:       isActive ? t.accent  : "rgba(13,13,18,0.45)",
-                      boxShadow:   isActive ? "0 2px 12px rgba(0,0,0,0.18)" : "none",
-                    }}>
+                    style={{ background: isActive ? "#0D0D12" : "transparent", color: isActive ? t.accent : "rgba(13,13,18,0.45)", boxShadow: isActive ? "0 2px 12px rgba(0,0,0,0.18)" : "none" }}>
                     {t.sublabel}
-                    {/* Active indicator dot */}
-                    {isActive && (
-                      <span className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full"
-                        style={{ backgroundColor: t.accent }} />
-                    )}
+                    {isActive && <span className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full" style={{ backgroundColor: t.accent }} />}
                   </button>
                 );
               })}
             </div>
           </div>
 
-          {/* ── Animated panel ── */}
           <div ref={panelRef}>
-            {/* Sub-header */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-10 md:mb-14">
               <div className="flex items-center gap-3">
-                {/* Collective badge for women's tab */}
                 {active === "women" && (
                   <span className="text-[8px] uppercase tracking-[0.38em] font-bold px-3 py-1 rounded-full"
                     style={{ background: "rgba(143,175,138,0.15)", color: "#8FAF8A", border: "1px solid rgba(143,175,138,0.25)" }}>
@@ -827,12 +750,9 @@ function GearSection() {
                   {tab.phrase}
                 </p>
               </div>
-              <p className="text-[8px] md:text-[10px] uppercase tracking-[0.22em] opacity-40 font-bold">
-                {tab.sub}
-              </p>
+              <p className="text-[8px] md:text-[10px] uppercase tracking-[0.22em] opacity-40 font-bold">{tab.sub}</p>
             </div>
 
-            {/* Product cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               {tab.products.map(cat => (
                 <TiltCard key={cat.name} disabled={cat.comingSoon}
@@ -844,26 +764,17 @@ function GearSection() {
                       <SafeImg src={cat.img} className="w-full h-full object-cover" alt={cat.name} />
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
-
-                    {/* Women's tab — verse phrase watermark */}
                     {active === "women" && cat.phrase && (
                       <div className="absolute top-5 left-5 text-[7px] uppercase tracking-[0.32em] font-bold"
-                        style={{ color: "rgba(143,175,138,0.55)" }}>
-                        {cat.phrase}
-                      </div>
+                        style={{ color: "rgba(143,175,138,0.55)" }}>{cat.phrase}</div>
                     )}
-
                     <div className="relative z-10 h-full p-8 md:p-12 flex flex-col justify-end text-white">
                       <h3 className="font-brand text-2xl md:text-4xl uppercase italic">{cat.name}</h3>
                       <p className="text-[9px] md:text-[10px] opacity-60 uppercase mt-2 tracking-widest">{cat.copy}</p>
                       {cat.comingSoon ? (
-                        <p className="text-[8px] tracking-widest uppercase mt-3 font-bold"
-                          style={{ color: `${tab.accent}99` }}>
-                          Coming Soon
-                        </p>
+                        <p className="text-[8px] tracking-widest uppercase mt-3 font-bold" style={{ color: `${tab.accent}99` }}>Coming Soon</p>
                       ) : (
-                        <div className="flex items-center gap-3 text-[9px] pt-4 opacity-0 group-hover:opacity-100 transition-opacity"
-                          style={{ color: tab.accent }}>
+                        <div className="flex items-center gap-3 text-[9px] pt-4 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: tab.accent }}>
                           Shop <ArrowRight size={14} />
                         </div>
                       )}
@@ -873,15 +784,10 @@ function GearSection() {
               ))}
             </div>
 
-            {/* Women's — formation note */}
             {active === "women" && (
               <div className="mt-12 md:mt-16 text-center">
-                <p className="text-[9px] uppercase tracking-[0.32em] font-bold mb-2"
-                  style={{ color: "rgba(143,175,138,0.65)" }}>
-                  The Collective
-                </p>
-                <p className="text-[10px] md:text-xs opacity-40 tracking-[0.14em] max-w-sm mx-auto leading-relaxed"
-                  style={{ color: "#2A3A28" }}>
+                <p className="text-[9px] uppercase tracking-[0.32em] font-bold mb-2" style={{ color: "rgba(143,175,138,0.65)" }}>The Collective</p>
+                <p className="text-[10px] md:text-xs opacity-40 tracking-[0.14em] max-w-sm mx-auto leading-relaxed" style={{ color: "#2A3A28" }}>
                   Same Rule. Different expression. Strength, rooted in light.
                 </p>
               </div>
@@ -894,27 +800,20 @@ function GearSection() {
 }
 
 /* ─── FOOTER ──────────────────────────────────────────────────────── */
-// FIX #13 — "Not drifting." in font-brand uppercase
-// FIX #20 — email capture added
 
 function Footer() {
-  const [email, setEmail]       = useState("");
+  const [email, setEmail]         = useState("");
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = () => {
     if (!email) return;
     setSubmitted(true);
-    // TODO: wire to email provider
   };
 
   return (
     <footer style={{ backgroundColor: C.darkBg }} className="border-t border-white/[0.06]">
-      {/* Closing statement */}
       <div className="footer-reveal max-w-5xl mx-auto pt-24 md:pt-40 pb-16 md:pb-24 px-6 text-center border-b border-white/[0.05]">
-        <p className="text-[9px] md:text-[10px] uppercase tracking-[0.5em] text-[#C9A84C]/60 mb-8 font-bold">
-          The Mission
-        </p>
-        {/* FIX #13 — both lines in font-brand uppercase, size contrast is intentional */}
+        <p className="text-[9px] md:text-[10px] uppercase tracking-[0.5em] text-[#C9A84C]/60 mb-8 font-bold">The Mission</p>
         <h3 className="font-brand text-4xl md:text-6xl lg:text-7xl uppercase tracking-[0.12em] md:tracking-[0.16em] leading-none text-white mb-3">
           Formed in Christ.
         </h3>
@@ -926,14 +825,9 @@ function Footer() {
         </p>
       </div>
 
-      {/* FIX #20 — email capture */}
       <div className="footer-reveal max-w-2xl mx-auto py-16 px-6 text-center border-b border-white/[0.05]">
-        <span className="text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-[#C9A84C]/60 font-bold mb-3 block">
-          Stay in the Formation
-        </span>
-        <h4 className="font-brand text-xl md:text-2xl uppercase tracking-[0.15em] text-white mb-8">
-          Join the Formation
-        </h4>
+        <span className="text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-[#C9A84C]/60 font-bold mb-3 block">Stay in the Formation</span>
+        <h4 className="font-brand text-xl md:text-2xl uppercase tracking-[0.15em] text-white mb-8">Join the Formation</h4>
         {!submitted ? (
           <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <input
@@ -953,16 +847,11 @@ function Footer() {
             </button>
           </div>
         ) : (
-          <p className="text-[10px] uppercase tracking-[0.35em] text-[#C9A84C]">
-            You're in. Weekly field notes incoming.
-          </p>
+          <p className="text-[10px] uppercase tracking-[0.35em] text-[#C9A84C]">You're in. Weekly field notes incoming.</p>
         )}
-        <p className="mt-4 text-[8px] uppercase tracking-[0.3em] text-white/20">
-          Weekly field notes. No noise.
-        </p>
+        <p className="mt-4 text-[8px] uppercase tracking-[0.3em] text-white/20">Weekly field notes. No noise.</p>
       </div>
 
-      {/* Nav grid */}
       <div className="footer-reveal max-w-7xl mx-auto py-14 px-6 grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-20">
         <div className="col-span-2 md:col-span-1 space-y-5">
           <div className="flex items-center gap-3">
@@ -1000,7 +889,6 @@ function Footer() {
 }
 
 /* ─── FLOATING CHALLENGE TRIGGER ─────────────────────────────────── */
-// FIX #8 — appears at 35% scroll depth, dismissible
 
 function FloatingChallengeTrigger() {
   const [visible,   setVisible]   = useState(false);
@@ -1037,15 +925,14 @@ function FloatingChallengeTrigger() {
   );
 }
 
-/* ─── MAIN APP ────────────────────────────────────────────────────── */
+/* ─── MAIN SITE ───────────────────────────────────────────────────── */
 
-const CounterFormation = () => {
+function MainSite() {
   const mainRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   useBodyScrollLock(isMenuOpen);
   useEscape(() => setIsMenuOpen(false), isMenuOpen);
 
-  // FIX #1 — navLinks array used for both desktop and mobile
   const navLinks = [
     { label: "Mission",     href: "#architecture" },
     { label: "Rule",        href: "#rule" },
@@ -1074,21 +961,16 @@ const CounterFormation = () => {
       batchReveal(".bridge-reveal", 30);
       batchReveal(".journal-card", 20);
 
-      // Mobile: scroll-triggered color reveal (hover doesn't exist on touch)
       gsap.matchMedia().add("(max-width: 767px)", () => {
         gsap.utils.toArray(".pillar-img").forEach(img => {
           gsap.set(img, { filter: "grayscale(1)", opacity: 0.5 });
-          gsap.to(img, {
-            filter: "grayscale(0)", opacity: 1, duration: 1.2, ease: "power2.out",
-            scrollTrigger: { trigger: img, start: "top 80%" },
-          });
+          gsap.to(img, { filter: "grayscale(0)", opacity: 1, duration: 1.2, ease: "power2.out",
+            scrollTrigger: { trigger: img, start: "top 80%" } });
         });
         gsap.utils.toArray(".rhythm-img-wrap").forEach(wrap => {
           gsap.set(wrap, { filter: "grayscale(1)" });
-          gsap.to(wrap, {
-            filter: "grayscale(0)", opacity: 0.6, duration: 1.2, ease: "power2.out",
-            scrollTrigger: { trigger: wrap, start: "top 80%" },
-          });
+          gsap.to(wrap, { filter: "grayscale(0)", opacity: 0.6, duration: 1.2, ease: "power2.out",
+            scrollTrigger: { trigger: wrap, start: "top 80%" } });
         });
       });
     }, mainRef);
@@ -1100,7 +982,6 @@ const CounterFormation = () => {
       className="text-[#FAF8F5] selection:bg-[#C9A84C] selection:text-black min-h-screen overflow-x-hidden font-sans"
       style={{ backgroundColor: C.darkBg }}>
 
-      {/* NAVBAR */}
       <nav className="nav-fade fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[100] w-[94%] max-w-5xl px-4 py-3 md:px-5 md:py-4 backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center justify-between"
         style={{ backgroundColor: `${C.darkBg}cc` }}>
         <a href="#top" className="flex items-center gap-2 md:gap-3">
@@ -1128,7 +1009,6 @@ const CounterFormation = () => {
         </div>
       </nav>
 
-      {/* MOBILE MENU — FIX #1: Field Guide included */}
       <div className={cx("fixed inset-0 z-[120] flex flex-col items-center justify-center space-y-8 transition-transform duration-500",
         isMenuOpen ? "translate-y-0" : "-translate-y-full")}
         style={{ backgroundColor: C.darkBg }}>
@@ -1147,23 +1027,45 @@ const CounterFormation = () => {
         </a>
       </div>
 
-      {/* ── PAGE SECTIONS — FIX #5: new order ──────────────────── */}
       <CinematicHero />
       <SectionDivider />
       <ArchitectureSection />
       <SectionDivider />
       <RuleOfLifeSection />
-      <LightTransition />       {/* NEW — breathing moment */}
+      <LightTransition />
       <FieldGuideSection />
       <SectionDivider />
-      <ChallengeSection />      {/* NEW — 7-day email capture */}
+      <ChallengeSection />
       <SectionDivider />
       <GearBridgeSection />
-      <GearSection />           {/* includes dark→cream gradient */}
+      <GearSection />
       <Footer />
-      <FloatingChallengeTrigger /> {/* NEW — floating pill */}
+      <FloatingChallengeTrigger />
     </div>
   );
-};
+}
 
-export default CounterFormation;
+/* ─── ROOT — ROUTER ───────────────────────────────────────────────── */
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <FieldGuideStyles />
+      <Routes>
+        {/* Main site */}
+        <Route path="/" element={<MainSite />} />
+
+        {/* Field Guide routes */}
+        <Route path={`${FG_BASE}`}          element={<FGLanding />} />
+        <Route path={`${FG_BASE}/today`}    element={<FGOffice />} />
+        <Route path={`${FG_BASE}/day-:day`} element={<FGOffice />} />
+        <Route path={`${FG_BASE}/path`}     element={<FGPath />} />
+        <Route path={`${FG_BASE}/why`}      element={<FGWhy />} />
+        <Route path={`${FG_BASE}/new`}      element={<FGNewHere />} />
+
+        {/* Fallback */}
+        <Route path="*" element={<MainSite />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
