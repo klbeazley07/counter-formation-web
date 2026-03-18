@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, Menu, X, ChevronRight } from "lucide-react";
@@ -493,14 +493,8 @@ function FieldGuideSection() {
         <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-12 md:mb-16" />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16 mb-12 md:mb-16">
-          {articles.map((art, i) => {
-            const cardClass = "journal-card group cursor-pointer space-y-6";
-            const CardEl = art.href.startsWith("/") ? Link : "a";
-            const cardProps = art.href.startsWith("/")
-              ? { to: art.href }
-              : { href: art.href };
-            return (
-            <CardEl key={art.title} {...cardProps} className={cardClass} style={{ textDecoration:"none" }}>
+          {articles.map((art, i) => (
+            <a key={art.title} href={art.href} className="journal-card group cursor-pointer space-y-6" style={{ textDecoration:"none" }}>
               <div className="aspect-video overflow-hidden rounded-2xl md:rounded-[2rem] bg-white/5 border border-white/[0.06] relative">
                 <SafeImg src={art.img} alt={art.title}
                   className="w-full h-full object-cover grayscale opacity-45 group-hover:opacity-90 group-hover:scale-105 transition-all duration-1000" />
@@ -526,9 +520,8 @@ function FieldGuideSection() {
                   Open Guide <ArrowRight size={12} />
                 </div>
               </div>
-            </CardEl>
-            );
-          })}
+            </a>
+          ))}
         </div>
 
         <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/8 to-transparent" />
