@@ -1070,7 +1070,7 @@ export default function App() {
         {/* Field Guide routes */}
         <Route path={`${FG_BASE}`}          element={<FGLanding />} />
         <Route path={`${FG_BASE}/today`}    element={<FGOffice />} />
-        <Route path={`${FG_BASE}/day-:day`} element={<FGOffice />} />
+        <Route path={`${FG_BASE}/day/:day`} element={<FGOffice />} />
         <Route path={`${FG_BASE}/path`}     element={<FGPath />} />
         <Route path={`${FG_BASE}/why`}      element={<FGWhy />} />
         <Route path={`${FG_BASE}/new`}      element={<FGNewHere />} />

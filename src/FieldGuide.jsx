@@ -437,7 +437,7 @@ export function FGOffice() {
 
         <div className="fg-reveal" style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:16 }}>
           {next
-            ? <button className="fg-btn-prim" onClick={() => navigate(`${BASE}/day-${next.day}`)}>Day {next.day}: {next.title} →</button>
+            ? <button className="fg-btn-prim" onClick={() => navigate(`${BASE}/day/${next.day}`)}>Day {next.day}: {next.title} →</button>
             : <button className="fg-btn-prim" style={{ background:"transparent", border:`1px solid ${C.gold}`, color:C.gold }} onClick={() => navigate(`${BASE}/path`)}>Complete — View Full Path →</button>
           }
           <button className="fg-btn-sec" onClick={() => navigate(`${BASE}/path`)}>View 7-Day Path</button>
@@ -484,7 +484,7 @@ export function FGPath() {
 
         <div className="fg-reveal" style={{ display:"flex", flexDirection:"column", gap:6, marginBottom:40 }}>
           {OFFICES.map(o => (
-            <button key={o.day} className="fg-day-card" onClick={() => navigate(`${BASE}/day-${o.day}`)}>
+            <button key={o.day} className="fg-day-card" onClick={() => navigate(`${BASE}/day/${o.day}`)}>
               <div style={{ width:36, height:36, borderRadius:"50%", backgroundColor:"rgba(201,168,76,0.08)", border:`1px solid rgba(201,168,76,0.20)`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
                 <span style={{ fontFamily:"'Barlow Condensed',sans-serif", fontSize:13, fontWeight:800, color:C.gold }}>{o.day}</span>
               </div>
