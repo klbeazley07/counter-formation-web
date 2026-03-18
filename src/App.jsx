@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, Menu, X, ChevronRight } from "lucide-react";
@@ -1135,7 +1135,7 @@ export default function App() {
         {/* Field Guide routes */}
         <Route path={`${FG_BASE}`}          element={<FGLanding />} />
         <Route path={`${FG_BASE}/today`}    element={<FGOffice />} />
-        <Route path={`${FG_BASE}/day-:day`} element={<FGOffice />} />
+        <Route path={`${FG_BASE}/day/:day`} element={<FGOffice />} />
         <Route path={`${FG_BASE}/path`}     element={<FGPath />} />
         <Route path={`${FG_BASE}/why`}      element={<FGWhy />} />
         <Route path={`${FG_BASE}/new`}      element={<FGNewHere />} />

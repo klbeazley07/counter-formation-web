@@ -900,7 +900,7 @@ export function FGOffice() {
                   <Check size={16} /> {isComplete ? "Marked Complete" : "Mark Today Complete"}
                 </button>
                 {next ? (
-                  <button className="fg-btn-sec" onClick={() => navigate(`${BASE}/day-${next.day}`)}>
+                  <button className="fg-btn-sec" onClick={() => navigate(`${BASE}/day/${next.day}`)}>
                     Day {next.day}: {next.title}
                   </button>
                 ) : (
@@ -960,7 +960,7 @@ export function FGPath() {
             {OFFICES.map((office) => {
               const done = completed.includes(office.day);
               return (
-                <button key={office.day} className="fg-path-card" onClick={() => navigate(`${BASE}/day-${office.day}`)}>
+                <button key={office.day} className="fg-path-card" onClick={() => navigate(`${BASE}/day/${office.day}`)}>
                   <span className={`fg-day-badge ${done ? "is-complete" : ""}`}>{done ? <Check size={15} /> : office.day}</span>
                   <div>
                     <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 18, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: C.ivory, marginBottom: 4 }}>
