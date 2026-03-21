@@ -13,6 +13,8 @@ import {
   FGNewHere,
 } from "./FieldGuide";
 
+import { ChallengeStyles, CFLanding, CFDevotion } from "./SevenDayChallenge";
+
 gsap.registerPlugin(ScrollTrigger);
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
@@ -620,6 +622,10 @@ function ChallengeSection() {
           <div className="py-4">
             <p className="text-[11px] uppercase tracking-[0.38em] text-[#C9A84C] font-bold mb-2">You're in.</p>
             <p className="text-[10px] opacity-40 tracking-[0.2em] uppercase">Check your inbox. Day 1 begins now.</p>
+            <Link to="/7-day-challenge"
+              className="mt-4 inline-flex items-center gap-2 px-8 py-4 bg-[#C9A84C] text-black rounded-full text-[10px] uppercase tracking-widest font-bold hover:bg-[#FAF8F5] transition-all">
+              Begin Now <ArrowRight size={13} />
+            </Link>
           </div>
         )}
         <p className="mt-8 text-[8px] uppercase tracking-[0.35em] text-white/20">Ephesians 6:10–18</p>
@@ -904,6 +910,7 @@ function Footer() {
           {[["Mission","#architecture"],["Rule of Life","#rule"],["Field Guide","#field-guide"],["The Gear","#shop"]].map(([l,h]) => (
             <a key={l} href={h} className="block opacity-35 hover:opacity-70 hover:text-white transition-all">{l}</a>
           ))}
+          <Link to="/7-day-challenge" className="block opacity-35 hover:opacity-70 hover:text-[#C9A84C] transition-all">7-Day Challenge</Link>
         </div>
         <div className="space-y-4 text-[9px] tracking-widest">
           <span className="text-[#C9A84C] opacity-60 uppercase block mb-5">Connect</span>
@@ -1088,6 +1095,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <FieldGuideStyles />
+      <ChallengeStyles />
       <Routes>
         {/* Main site */}
         <Route path="/" element={<MainSite />} />
@@ -1099,6 +1107,10 @@ export default function App() {
         <Route path={`${FG_BASE}/path`}     element={<FGPath />} />
         <Route path={`${FG_BASE}/why`}      element={<FGWhy />} />
         <Route path={`${FG_BASE}/new`}      element={<FGNewHere />} />
+
+        {/* 7-Day Challenge routes */}
+        <Route path="/7-day-challenge" element={<CFLanding />} />
+        <Route path="/7-day-challenge/day/:day" element={<CFDevotion />} />
 
         {/* Fallback */}
         <Route path="*" element={<MainSite />} />
