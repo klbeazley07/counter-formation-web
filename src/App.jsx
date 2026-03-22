@@ -14,7 +14,7 @@ import {
 } from "./FieldGuide";
 
 import { ChallengeStyles, CFLanding, CFDevotion } from "./SevenDayChallenge";
-import { RuleStyles, RhythmPage } from "./RuleOfLife";
+import { RuleStyles, RhythmPage, BookPage } from "./RuleOfLife";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1117,6 +1117,7 @@ export default function App() {
 
         {/* Rule of Life routes */}
         <Route path="/rule-of-life/:rhythm" element={<RhythmPage />} />
+        <Route path="/rule-of-life/:rhythm/book/:bookIndex" element={<BookPage />} />
 
         {/* Fallback */}
         <Route path="*" element={<MainSite />} />
