@@ -371,7 +371,150 @@ function LectioDivinaGuide() {
   );
 }
 
-/* ─── INTERACTIVE: PRAYER POSTURES ───────────────────────────────── */
+/* ─── INTERACTIVE: EXAMEN WALKTHROUGH ────────────────────────────── */
+
+function ExamenWalkthrough() {
+  const STEPS = [
+    {
+      num: "01", title: "Gratitude", latin: "Gratitudo",
+      prompt: "Pause and look back over the last 24 hours. What are you genuinely grateful for? Name one specific thing — not a category, but a moment, a person, a gift.",
+      cue: "Begin in gratitude. Not because life is easy, but because God is present.",
+    },
+    {
+      num: "02", title: "Presence", latin: "Conscientia",
+      prompt: "Where did you feel most alive today? Where did you sense God near — in a conversation, a moment of beauty, a quiet awareness? Where did you feel most connected to what matters?",
+      cue: "Notice where God was present — even where you weren't looking.",
+    },
+    {
+      num: "03", title: "Sorrow", latin: "Contritio",
+      prompt: "Where did you fall short today? Not to generate shame, but to see clearly. Where did you drift — in attention, in love, in obedience? Name it honestly before God.",
+      cue: "Honesty is not self-punishment. It is the beginning of return.",
+    },
+    {
+      num: "04", title: "Forgiveness", latin: "Remissio",
+      prompt: "Bring what you named in sorrow to God. Receive his forgiveness — not as a feeling, but as a fact. Is there anyone you need to forgive, or anyone you need to seek forgiveness from?",
+      cue: "You are not what you did today. You are who God says you are.",
+    },
+    {
+      num: "05", title: "Resolve", latin: "Propositum",
+      prompt: "What do you want to carry into tomorrow? One thing to do differently, one person to love better, one practice to protect. Make it specific. Tell God.",
+      cue: "Tomorrow is not yet formed. You still get to choose what shapes it.",
+    },
+  ];
+
+  const [step, setStep] = useState(0);
+  const [notes, setNotes] = useState(Array(STEPS.length).fill(""));
+  const [done, setDone] = useState(false);
+  const [started, setStarted] = useState(false);
+
+  const cur = STEPS[step];
+  const isLast = step === STEPS.length - 1;
+
+  const handleNext = () => {
+    if (isLast) setDone(true);
+    else setStep(s => s + 1);
+  };
+  const handleBack = () => { if (step > 0) setStep(s => s - 1); };
+  const handleRestart = () => { setStep(0); setNotes(Array(STEPS.length).fill("")); setDone(false); setStarted(false); };
+
+  const base = { fontFamily: "'Barlow Condensed',sans-serif" };
+
+  if (!started) return (
+    <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", padding: "3rem 2rem", textAlign: "center" }}>
+      <p style={{ ...base, fontSize: "9px", letterSpacing: ".42em", textTransform: "uppercase", color: "rgba(201,168,76,0.7)", marginBottom: "1.5rem" }}>The Daily Examen · Ignatian Practice</p>
+      <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "20px", color: "rgba(250,248,245,0.75)", lineHeight: 1.7, marginBottom: "1rem", maxWidth: "480px", margin: "0 auto 1.5rem" }}>
+        "At the end of each day, take ten minutes to review it in God's presence."
+      </p>
+      <p style={{ ...base, fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: "rgba(250,248,245,0.3)", marginBottom: "2.5rem" }}>5 steps · ~10 minutes · Gratitude → Presence → Sorrow → Forgiveness → Resolve</p>
+      <div style={{ display: "flex", justifyContent: "center", gap: "20px", marginBottom: "2.5rem" }}>
+        {STEPS.map((s, i) => (
+          <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
+            <div style={{ width: "32px", height: "32px", borderRadius: "50%", border: "1px solid rgba(201,168,76,0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "9px", color: "rgba(201,168,76,0.6)", ...base }}>{s.num}</div>
+            <span style={{ fontSize: "7px", letterSpacing: ".2em", textTransform: "uppercase", color: "rgba(250,248,245,0.25)", ...base }}>{s.title}</span>
+          </div>
+        ))}
+      </div>
+      <button onClick={() => setStarted(true)} style={{ padding: "14px 40px", borderRadius: "999px", border: "2px solid rgba(201,168,76,0.5)", background: "rgba(201,168,76,0.1)", color: "#C9A84C", ...base, fontSize: "10px", letterSpacing: ".3em", textTransform: "uppercase", cursor: "pointer", transition: "all .25s", fontWeight: 700 }}
+        onMouseEnter={e => { e.target.style.background = "rgba(201,168,76,0.2)"; e.target.style.borderColor = "#C9A84C"; }}
+        onMouseLeave={e => { e.target.style.background = "rgba(201,168,76,0.1)"; e.target.style.borderColor = "rgba(201,168,76,0.5)"; }}>
+        Begin the Examen
+      </button>
+    </div>
+  );
+
+  if (done) return (
+    <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", padding: "3rem 2rem", textAlign: "center" }}>
+      <p style={{ ...base, fontSize: "9px", letterSpacing: ".42em", textTransform: "uppercase", color: "rgba(201,168,76,0.7)", marginBottom: "1.5rem" }}>Examen Complete</p>
+      <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "22px", color: "rgba(250,248,245,0.82)", lineHeight: 1.6, marginBottom: "1rem" }}>
+        You have reviewed this day in God's presence.
+      </p>
+      <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "16px", color: "rgba(250,248,245,0.45)", lineHeight: 1.7, marginBottom: "2.5rem", maxWidth: "420px", margin: "0 auto 2.5rem" }}>
+        This is how formation happens — not by intensity, but by the daily, faithful act of return. Come back tomorrow.
+      </p>
+      <p style={{ ...base, fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)", marginBottom: "2rem" }}>— Psalm 139:23–24</p>
+      <button onClick={handleRestart} style={{ padding: "12px 32px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.12)", background: "transparent", color: "rgba(250,248,245,0.4)", ...base, fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", cursor: "pointer" }}>
+        Begin Again
+      </button>
+    </div>
+  );
+
+  return (
+    <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", overflow: "hidden" }}>
+      {/* Progress bar */}
+      <div style={{ height: "2px", background: "rgba(255,255,255,0.06)" }}>
+        <div style={{ height: "100%", width: `${((step + 1) / STEPS.length) * 100}%`, background: "linear-gradient(to right, #C9A84C, rgba(201,168,76,0.5))", transition: "width .4s ease" }} />
+      </div>
+
+      {/* Step tabs */}
+      <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        {STEPS.map((s, i) => (
+          <button key={i} onClick={() => setStep(i)} style={{ flex: 1, padding: "12px 4px", border: "none", background: step === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: step === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", ...base, fontSize: "8px", letterSpacing: ".18em", textTransform: "uppercase", color: i <= step ? (step === i ? "#C9A84C" : "rgba(201,168,76,0.5)") : "rgba(250,248,245,0.2)", transition: "all .2s" }}>
+            {s.title}
+          </button>
+        ))}
+      </div>
+
+      <div style={{ padding: "2rem" }}>
+        {/* Step header */}
+        <div style={{ display: "flex", alignItems: "baseline", gap: "14px", marginBottom: "1.5rem" }}>
+          <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "42px", color: "rgba(201,168,76,0.25)", lineHeight: 1 }}>{cur.num}</span>
+          <div>
+            <p style={{ ...base, fontSize: "22px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: "#FAF8F5", lineHeight: 1 }}>{cur.title}</p>
+            <p style={{ ...base, fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.55)", marginTop: "3px" }}>{cur.latin}</p>
+          </div>
+        </div>
+
+        {/* Cue */}
+        <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "16px", color: "rgba(250,248,245,0.45)", lineHeight: 1.7, marginBottom: "1.25rem", borderLeft: "2px solid rgba(201,168,76,0.3)", paddingLeft: "1rem" }}>{cur.cue}</p>
+
+        {/* Prompt */}
+        <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "18px", color: "rgba(250,248,245,0.78)", lineHeight: 1.82, marginBottom: "1.5rem" }}>{cur.prompt}</p>
+
+        {/* Text area */}
+        <textarea
+          value={notes[step]}
+          onChange={e => { const n = [...notes]; n[step] = e.target.value; setNotes(n); }}
+          placeholder="Write your response here, or simply sit in silence..."
+          rows={4}
+          style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", padding: "1rem", color: "rgba(250,248,245,0.7)", fontFamily: "'Cormorant Garamond',serif", fontSize: "16px", lineHeight: 1.7, resize: "none", outline: "none", transition: "border-color .2s", boxSizing: "border-box" }}
+          onFocus={e => { e.target.style.borderColor = "rgba(201,168,76,0.4)"; }}
+          onBlur={e => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; }}
+        />
+
+        {/* Navigation */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1.5rem" }}>
+          <button onClick={handleBack} disabled={step === 0} style={{ padding: "10px 22px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "rgba(250,248,245,0.35)", ...base, fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", cursor: step === 0 ? "not-allowed" : "pointer", opacity: step === 0 ? .3 : 1 }}>← Back</button>
+          <span style={{ ...base, fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)" }}>{step + 1} of {STEPS.length}</span>
+          <button onClick={handleNext} style={{ padding: "10px 22px", borderRadius: "999px", border: "none", background: "#C9A84C", color: "#0A0A0A", ...base, fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", cursor: "pointer", fontWeight: 700, transition: "background .2s" }}
+            onMouseEnter={e => { e.target.style.background = "#FAF8F5"; }}
+            onMouseLeave={e => { e.target.style.background = "#C9A84C"; }}>
+            {isLast ? "Complete" : "Continue →"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function PrayerPostures() {
   const postures = [
