@@ -709,15 +709,15 @@ export function RuleStyles() {
 
       /* ── Book cards — horizontal ── */
       .rl-further      { display: flex; flex-direction: column; gap: 12px; }
-      .rl-book         { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; overflow: hidden; transition: border-color .3s, transform .3s; text-decoration: none; display: grid; grid-template-columns: 140px 1fr; cursor: pointer; }
+      .rl-book         { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; overflow: hidden; transition: border-color .3s, transform .3s; text-decoration: none; display: grid; grid-template-columns: 120px 1fr; cursor: pointer; align-items: stretch; }
       .rl-book:hover   { border-color: rgba(201,168,76,0.45); transform: translateX(4px); }
-      .rl-book-img     { width: 100%; height: 100%; min-height: 110px; object-fit: cover; display: block; filter: grayscale(.35); opacity: .8; transition: opacity .4s, filter .4s; }
+      .rl-book-img     { width: 100%; height: 100%; min-height: 130px; object-fit: cover; display: block; filter: grayscale(.35); opacity: .8; transition: opacity .4s, filter .4s; align-self: stretch; }
       .rl-book:hover .rl-book-img { opacity: 1; filter: grayscale(0); }
-      .rl-book-body    { padding: 1.1rem 1.4rem; display: flex; flex-direction: column; justify-content: space-between; }
-      .rl-book-title   { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; margin-bottom: .3rem; line-height: 1.25; }
-      .rl-book-author  { font-size: 9px; letter-spacing: .25em; text-transform: uppercase; color: rgba(201,168,76,0.65); margin-bottom: .6rem; }
-      .rl-book-desc    { font-family: 'Cormorant Garamond',serif; font-size: 14px; line-height: 1.65; color: rgba(250,248,245,0.45); margin-bottom: .9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-      .rl-book-cta     { display: inline-flex; align-items: center; gap: 6px; font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(201,168,76,0.7); transition: color .2s; }
+      .rl-book-body    { padding: 1rem 1.25rem; display: flex; flex-direction: column; justify-content: space-between; min-height: 130px; }
+      .rl-book-title   { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; margin-bottom: .25rem; line-height: 1.2; }
+      .rl-book-author  { font-size: 9px; letter-spacing: .25em; text-transform: uppercase; color: rgba(201,168,76,0.65); margin-bottom: .5rem; }
+      .rl-book-desc    { font-family: 'Cormorant Garamond',serif; font-size: 13px; line-height: 1.6; color: rgba(250,248,245,0.45); margin-bottom: .75rem; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+      .rl-book-cta     { display: inline-flex; align-items: center; gap: 6px; font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(201,168,76,0.7); transition: color .2s; flex-shrink: 0; }
       .rl-book:hover .rl-book-cta { color: #C9A84C; }
 
       .rl-challenge-link { display: flex; align-items: center; justify-content: space-between; background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 14px; padding: 1.25rem 1.5rem; text-decoration: none; transition: background .25s, border-color .25s; margin-top: 1rem; }
@@ -795,7 +795,8 @@ export function RuleStyles() {
         .rl-rule:nth-of-type(2) { grid-area: rule2; }
         .rl-interactive { grid-area: interactive; }
         .rl-practice    { grid-area: practice; }
-        .rl-further     { grid-area: further; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .rl-further     { grid-area: further; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
+        .rl-further .rl-book:last-child:nth-child(odd) { grid-column: 1 / -1; }
         .rl-rhythm-nav  { grid-area: nav; grid-template-columns: 1fr 1fr; }
         .rl-nav-btn     { min-height: 160px; }
 
