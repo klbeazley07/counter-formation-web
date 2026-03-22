@@ -278,7 +278,7 @@ function ArchitectureSection() {
   return (
     <section id="architecture" className="relative py-24 md:py-40"
       style={{ backgroundColor: C.darkBg }}>
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 xl:px-16">
         <div className="mb-16 md:mb-24 text-center md:text-left space-y-4">
           <h2 className="font-brand text-2xl md:text-5xl uppercase tracking-[0.14em] md:tracking-[0.18em] leading-none text-white">
             Architecture <br />
@@ -334,7 +334,7 @@ function RuleOfLifeSection() {
       style={{ backgroundColor: C.ruleBg }}>
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 60%,rgba(201,168,76,0.04) 0%,transparent 65%)" }} />
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10 lg:px-4 xl:px-8">
         <div className="mb-16 md:mb-32 flex flex-col md:flex-row items-start md:items-end justify-between gap-8 md:gap-12">
           <div className="space-y-4 md:space-y-6">
             <span className="text-[8px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] md:tracking-[0.5em] uppercase font-bold">The Pattern</span>
@@ -480,7 +480,7 @@ function FieldGuideSection() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10 lg:px-4 xl:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-8">
           <div className="space-y-4 md:space-y-6">
             <span className="text-[8px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] md:tracking-[0.5em] uppercase font-bold">

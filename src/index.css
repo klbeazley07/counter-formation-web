@@ -5,7 +5,6 @@
   --font-brand: "Michroma", sans-serif;
   --font-sans:  "Inter", sans-serif;
 
-  /* Warmed brand palette */
   --color-obsidian:   #0E0C0A;
   --color-champagne:  #C9A84C;
   --color-ivory:      #FAF8F5;
@@ -16,6 +15,19 @@
   --color-light-mid:  #F0EDE6;
 }
 
+/* ─── TWO-WIDTH SYSTEM ─────────────────────────────────────────────
+   stage   = cinematic / brand / grid moments   → uses full canvas
+   content = editorial shells                   → generous but controlled
+   reading = actual long-form text columns      → stays narrow by design
+   tracker = progress indicators                → comfortable on desktop
+   ──────────────────────────────────────────────────────────────── */
+:root {
+  --cf-width-stage:   1320px;
+  --cf-width-content: 1100px;
+  --cf-width-reading:  740px;
+  --cf-width-tracker:  640px;
+}
+
 /* Base */
 body {
   background-color: #0E0C0A;
@@ -24,19 +36,102 @@ body {
   overflow-x: hidden;
 }
 
-/* Floating trigger fade-up animation */
+/* Floating trigger fade-up */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Smooth anchor scrolling */
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
-/* Remove number input spinners (email inputs) */
 input[type="email"] {
   -webkit-appearance: none;
   appearance: none;
+}
+
+/* ─── DESKTOP OVERRIDES ────────────────────────────────────────────
+   Applied at ≥1024px so mobile layouts are completely untouched.
+   Each selector targets exactly one narrow container per file and
+   opens it up to the appropriate system variable.
+   ──────────────────────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+
+  /* ── App.jsx ── */
+
+  /* Main section rails — open from max-w-7xl (1280) to stage width */
+  .max-w-7xl { max-width: var(--cf-width-stage) !important; }
+
+  /* ── SevenDayChallenge.jsx ── */
+
+  /* Hero content block — was 540px, now fills the stage */
+  .cf7-hero-content { max-width: 880px; }
+
+  /* Tracker — was 400px */
+  .cf7-tracker { max-width: var(--cf-width-tracker); }
+
+  /* Card grid — was 1100px */
+  .cf7-grid { max-width: var(--cf-width-stage); gap: 18px; }
+  .cf7-grid-wrap { max-width: var(--cf-width-stage); }
+
+  /* Devotion hero inner shell — was 680px, now creates hierarchy above reading column */
+  .cf7-dev-img-inner { max-width: var(--cf-width-content); }
+
+  /* Reading body stays at 740px — intentionally narrow */
+  .cf7-dev-content { max-width: var(--cf-width-reading); }
+
+  /* ── RuleOfLife.jsx ── */
+
+  /* Rhythm page hero inner — same hierarchy principle as devotion */
+  .rl-hero-in { max-width: var(--cf-width-content); }
+
+  /* Reading content — narrow by design */
+  .rl-content { max-width: var(--cf-width-reading); }
+
+  /* ── FieldGuide.jsx ── */
+
+  /* Field guide main wrap — was 1120px */
+  .fg-wrap { max-width: var(--cf-width-stage); }
+
+  /* Hero panel grid — allow wider two-column layout */
+  .fg-hero-panel { max-width: var(--cf-width-stage); }
+
+  /* Narrow prose sections stay narrow */
+  .fg-narrow { max-width: 680px; }
+
+  /* ─── VERTICAL BREATHING ───────────────────────────────────────
+     On desktop, section padding scales up so sections feel like
+     distinct destinations rather than a continuous mobile scroll.
+     ─────────────────────────────────────────────────────────────── */
+
+  /* Challenge section padding */
+  .cf7-challenge { padding-top: 120px; padding-bottom: 100px; }
+
+  /* Rule of life content padding */
+  .rl-content { padding-top: 72px; padding-bottom: 140px; }
+
+  /* Field guide wrap padding */
+  .fg-wrap { padding-bottom: 140px; }
+
+  /* ─── HERO HEADLINE SCALING ────────────────────────────────────
+     At desktop the headline can be larger — currently clamped
+     too conservatively at the top end.
+     ─────────────────────────────────────────────────────────────── */
+  .cf7-h1 { font-size: clamp(80px, 11vw, 148px); }
+  .rl-hero-h1 { font-size: clamp(60px, 9vw, 108px); }
+}
+
+/* ─── LARGE DESKTOP (≥1440px) ─────────────────────────────────────
+   At true 16:9 widths the stage can expand further and card
+   gaps open up even more for a more architectural feel.
+   ──────────────────────────────────────────────────────────────── */
+@media (min-width: 1440px) {
+  :root {
+    --cf-width-stage: 1440px;
+  }
+
+  .cf7-grid { gap: 22px; }
+
+  /* Hero content top padding so the headline sits lower on a tall
+     viewport — creates more cinematic vertical space above it */
+  .cf7-hero-content { padding-top: 2rem; }
 }

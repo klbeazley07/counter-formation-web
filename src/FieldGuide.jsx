@@ -341,7 +341,7 @@ const FG_CSS = `
   }
 
   @media (min-width: 900px) {
-    .fg-wrap { padding: 0 32px 112px; }
+    .fg-wrap { padding: 0 48px 112px; }
     .fg-hero-panel { padding: 56px 48px; }
     .fg-hero-grid {
       display: grid;
@@ -359,6 +359,12 @@ const FG_CSS = `
   @media (max-width: 699px) {
     .fg-wrap { padding: 0 20px 80px; }
     .fg-hero-panel { border-radius: 24px; padding: 30px 20px; }
+  }
+
+  @media (min-width: 1280px) {
+    .fg-wrap { padding: 0 64px 140px; }
+    .fg-hero-panel { padding: 72px 64px; }
+    .fg-meta-grid  { grid-template-columns: 1fr 1fr; gap: 20px; }
   }
 `;
 
