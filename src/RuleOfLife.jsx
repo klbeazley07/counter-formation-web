@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
-/* ─── CONSTANTS ───────────────────────────────────────────────────── */
-
 export const RULE_BASE = "/rule-of-life";
 
 const C = {
@@ -26,7 +24,8 @@ const AUTHORS = {
   "Philip Yancey":          { photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Philip_Yancey.jpg/440px-Philip_Yancey.jpg", bio: "One of the most widely read Christian authors of our time, known for his honest and probing explorations of faith, doubt, and grace." },
   "Paul Miller":            { photo: "/Paul_Miller.jpg",       bio: "Founder of seeJesus ministry and author of A Praying Life, one of the most practical and transformative books on prayer available." },
   "Bill Hybels":            { photo: "/Bill_Hybels.jpg",       bio: "Founding pastor of Willow Creek Community Church and author of numerous books on leadership, prayer, and the local church." },
-  "Tyler Staton":          { photo: null, bio: "Lead pastor of Bridgetown Church in Portland, Oregon, and National Director of 24-7 Prayer USA. Author and teacher on prayer, the Holy Spirit, and the contemplative life." },
+  "Tyler Staton":           { photo: "https://images.squarespace-cdn.com/content/v1/62f4240b6378f20af35390c4/44388244-0fcd-424c-adcc-4943367d71ae/Tyler-Staton.jpg", bio: "Lead pastor of Bridgetown Church in Portland, Oregon, and National Director of 24-7 Prayer USA. Author and teacher on prayer, the Holy Spirit, and the contemplative life." },
+  "Thomas Keating":         { photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Thomas_Keating.jpg/440px-Thomas_Keating.jpg", bio: "Trappist monk and founder of the Centering Prayer movement, which has introduced thousands to the contemplative dimension of Christian life." },
   "Abraham Joshua Heschel": { photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Abraham_Joshua_Heschel.jpg/440px-Abraham_Joshua_Heschel.jpg", bio: "One of the leading Jewish philosophers and theologians of the 20th century. His work on Sabbath, prayer, and prophetic consciousness remains essential." },
   "A.J. Swoboda":           { photo: "/AJ_Swoboda.jpg",        bio: "Pastor, author, and professor whose work on Sabbath, creation care, and spiritual formation has made him a fresh voice in the church." },
   "Rich Villodas":          { photo: "/Rich_Villodas.jpg",     bio: "Lead pastor of New Life Fellowship in Queens, NY — one of the most ethnically diverse churches in America. Author and speaker on spiritual formation and racial reconciliation." },
@@ -39,17 +38,11 @@ const AUTHORS = {
 
 export const RHYTHMS = [
   {
-    slug:    "presence",
-    title:   "Presence",
-    sub:     "Attention before God",
-    rhythm:  "RHYTHM 01",
-    img:     "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1400&auto=format&fit=crop",
-    imgThumb:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=600&auto=format&fit=crop",
-    quote:   "Be still, and know that I am God.",
-    quoteRef:"Psalm 46:10",
-    interactiveLabel: "Breath Prayer",
-    challengeDay: 1,
-    challengeTitle: "You Are Being Formed",
+    slug: "presence", title: "Presence", sub: "Attention before God", rhythm: "RHYTHM 01",
+    img:      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1400&auto=format&fit=crop",
+    imgThumb: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=600&auto=format&fit=crop",
+    quote: "Be still, and know that I am God.", quoteRef: "Psalm 46:10",
+    interactiveLabel: "Breath Prayer", challengeDay: 1, challengeTitle: "You Are Being Formed",
     why: [
       "We live in the age of perpetual elsewhere. Even when our bodies are present, our attention is somewhere else — in the feed, in the inbox, in the anxious rehearsal of tomorrow.",
       "Presence is the practice of returning. Returning to the body, to the moment, to the reality that God is here — not somewhere down the road, not in some future state of spiritual achievement, but now, in this room, in this breath.",
@@ -87,19 +80,18 @@ export const RHYTHMS = [
       { title: "Contemplative Prayer", author: "Thomas Merton", desc: "Merton's deep guide to the interior life — what it means to be still, to listen, and to allow the noise of the self to quiet enough to hear what God is saying. Dense and rewarding for anyone serious about the practice of presence.", amazon: "https://www.amazon.com/Contemplative-Prayer-Classic-Thomas-Merton-ebook/dp/B002VD6NJ6", cover: "https://m.media-amazon.com/images/I/41XPp0B27YL.jpg" },
       { title: "The Way of the Heart", author: "Henri Nouwen", desc: "A slender but profound meditation on solitude, silence, and prayer drawn from the Desert Fathers. Nouwen argues that the heart must be formed in the desert before it can serve in the world. One of the most important short books on the interior life.", amazon: "https://www.amazon.com/Way-Heart-Connecting-Through-Silence/dp/0345463358", cover: "https://m.media-amazon.com/images/I/8138YXp4WfL._SY522_.jpg" },
     ],
+    media: [
+      { title: "How to Practice the Presence of God", source: "Practicing the Way", type: "Video", thumb: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=400", url: "https://www.practicingtheway.org" },
+      { title: "The Ruthless Elimination of Hurry", source: "John Mark Comer Teachings · Podcast", type: "Podcast", thumb: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=400", url: "https://www.practicingtheway.org/resources" },
+      { title: "Presence — Rule of Life Series", source: "Practicing the Way · YouTube", type: "Video", thumb: "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=400", url: "https://www.practicingtheway.org" },
+    ],
   },
   {
-    slug:    "scripture",
-    title:   "Scripture",
-    sub:     "Truth before noise",
-    rhythm:  "RHYTHM 02",
-    img:     "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1400&auto=format&fit=crop",
-    imgThumb:"https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600&auto=format&fit=crop",
-    quote:   "Your word is a lamp to my feet and a light to my path.",
-    quoteRef:"Psalm 119:105",
-    interactiveLabel: "Lectio Divina Guide",
-    challengeDay: 2,
-    challengeTitle: "Scripture Before the Algorithm",
+    slug: "scripture", title: "Scripture", sub: "Truth before noise", rhythm: "RHYTHM 02",
+    img:      "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1400&auto=format&fit=crop",
+    imgThumb: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600&auto=format&fit=crop",
+    quote: "Your word is a lamp to my feet and a light to my path.", quoteRef: "Psalm 119:105",
+    interactiveLabel: "Lectio Divina Guide", challengeDay: 2, challengeTitle: "Scripture Before the Algorithm",
     why: [
       "Every culture has a story it tells about who we are, what we're for, and what matters. The algorithm tells one story. The news tells another. The market tells a third. These stories form us — not through argument, but through repetition, image, and the subtle pressure of what gets attention.",
       "Scripture tells a different story. And the practice of reading it regularly is not primarily about information acquisition — it is about narrative formation. We are being re-storied. Our imaginations are being reoriented around a different account of reality.",
@@ -137,19 +129,18 @@ export const RHYTHMS = [
       { title: "God Has a Name", author: "John Mark Comer", desc: "A deep dive into Exodus 34 and the self-revelation of God's character. Comer shows what it looks like to encounter scripture as a revelation of who God actually is — and how that encounter reshapes everything about how we live.", amazon: "https://www.amazon.com/God-Has-Name-Believe-Become/dp/1400249589", cover: "https://m.media-amazon.com/images/I/31aWLJhjXHL._SY445_SX342_FMwebp_.jpg" },
       { title: "The Blue Parakeet", author: "Scot McKnight", desc: "McKnight helps readers understand how to read the Bible wisely — not just literally or allegorically, but in a way that honors both its authority and its humanity. A practical guide to reading the whole story well.", amazon: "https://www.amazon.com/Blue-Parakeet-2nd-Rethinking-Bible/dp/0310538920", cover: "https://m.media-amazon.com/images/I/71y6jOmuMhL._SY522_.jpg" },
     ],
+    media: [
+      { title: "Scripture Before Scroll — Field Guide", source: "Counter Formation", type: "Article", thumb: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=400", url: "/field-guide/scripture-before-scroll" },
+      { title: "How to Read the Bible", source: "BibleProject · YouTube", type: "Video", thumb: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=400", url: "https://bibleproject.com" },
+      { title: "Lectio Divina — Ancient Practice for Today", source: "Practicing the Way · Podcast", type: "Podcast", thumb: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=400", url: "https://www.practicingtheway.org/resources" },
+    ],
   },
   {
-    slug:    "prayer",
-    title:   "Prayer",
-    sub:     "Dependence before action",
-    rhythm:  "RHYTHM 03",
-    img:     "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=1400&auto=format&fit=crop",
-    imgThumb:"https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=600&auto=format&fit=crop",
-    quote:   "Very early in the morning, while it was still dark, Jesus got up, left the house and went off to a solitary place, where he prayed.",
-    quoteRef:"Mark 1:35",
-    interactiveLabel: "Prayer Postures",
-    challengeDay: 4,
-    challengeTitle: "What You Hold Onto",
+    slug: "prayer", title: "Prayer", sub: "Dependence before action", rhythm: "RHYTHM 03",
+    img:      "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=1400&auto=format&fit=crop&crop=top",
+    imgThumb: "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=600&auto=format&fit=crop&crop=top",
+    quote: "Very early in the morning, while it was still dark, Jesus got up, left the house and went off to a solitary place, where he prayed.", quoteRef: "Mark 1:35",
+    interactiveLabel: "Prayer Postures", challengeDay: 4, challengeTitle: "What You Hold Onto",
     why: [
       "Prayer is the most countercultural thing a person can do in a productivity-obsessed culture. It is an act of deliberate uselessness — stopping what you are doing in order to speak to and listen to a God you cannot see, whose response you cannot control, whose timing is not yours.",
       "And yet Jesus prayed. Constantly. Habitually. Before decisions (Luke 6:12). After ministry (Mark 1:35). In grief (Matthew 26:36). In dependence (John 17). The disciples — watching a man who clearly had access to divine power — did not ask him to teach them to heal or to preach. They asked him to teach them to pray.",
@@ -188,19 +179,18 @@ export const RHYTHMS = [
       { title: "Open Mind, Open Heart", author: "Thomas Keating", desc: "Keating's introduction to centering prayer — the contemplative practice of resting in God's presence beyond words and images. For those who want to go deeper than petition into the silent receptivity at the heart of Christian prayer.", amazon: "https://www.amazon.com/Open-Mind-Heart-20th-Anniversary/dp/1472972090", cover: "https://m.media-amazon.com/images/I/917HBcbg7-L._SY522_.jpg" },
       { title: "Praying Like Monks, Living Like Fools", author: "Tyler Staton", desc: "Staton dismantles the barriers that keep modern people from prayer and rebuilds a vision of it as the most honest, subversive, and transformative act available to us. Practical, theologically grounded, and deeply readable.", amazon: "https://www.amazon.com/Praying-Like-Monks-Living-Fools/dp/031036535X", cover: "https://m.media-amazon.com/images/I/81s-q8hkVWL._SY522_.jpg" },
     ],
+    media: [
+      { title: "Why We Pray — John Mark Comer", source: "Practicing the Way · YouTube", type: "Video", thumb: "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=400&crop=top", url: "https://www.practicingtheway.org/resources" },
+      { title: "John Mark Comer Teachings — Prayer Series", source: "Practicing the Way · Podcast", type: "Podcast", thumb: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=400", url: "https://www.practicingtheway.org/resources" },
+      { title: "The Lord's Prayer — BibleProject", source: "BibleProject · YouTube", type: "Video", thumb: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=400", url: "https://bibleproject.com" },
+    ],
   },
   {
-    slug:    "sabbath",
-    title:   "Sabbath",
-    sub:     "Rest before production",
-    rhythm:  "RHYTHM 04",
-    img:     "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=1400&auto=format&fit=crop",
-    imgThumb:"https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=600&auto=format&fit=crop",
-    quote:   "Remember the Sabbath day by keeping it holy. Six days you shall labor and do all your work, but the seventh day is a sabbath to the Lord your God.",
-    quoteRef:"Exodus 20:8–10",
-    interactiveLabel: "Sabbath Ideas",
-    challengeDay: 7,
-    challengeTitle: "Build a Life That Forms You",
+    slug: "sabbath", title: "Sabbath", sub: "Rest before production", rhythm: "RHYTHM 04",
+    img:      "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=1400&auto=format&fit=crop",
+    imgThumb: "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=600&auto=format&fit=crop",
+    quote: "Remember the Sabbath day by keeping it holy. Six days you shall labor and do all your work, but the seventh day is a sabbath to the Lord your God.", quoteRef: "Exodus 20:8–10",
+    interactiveLabel: "Sabbath Ideas", challengeDay: 7, challengeTitle: "Build a Life That Forms You",
     why: [
       "Sabbath is perhaps the most countercultural practice in this guide. In a culture that equates productivity with virtue and busyness with importance, stopping for an entire day is a radical act.",
       "But that is precisely the point. Sabbath is not primarily a wellness practice or a productivity strategy — it is a theological declaration. By stopping, you are saying with your body what you may believe with your mind but struggle to live: God is in charge. The world does not depend on me. I am a creature, not a creator. I can rest because he does not.",
@@ -233,24 +223,23 @@ export const RHYTHMS = [
       "What would you have to believe about God — really believe, not just intellectually affirm — in order to rest fully?",
     ],
     further: [
-      { title: "The Sabbath", author: "Abraham Joshua Heschel", desc: "The most beautiful book ever written about Sabbath. Heschel, a Jewish theologian, describes Sabbath not as a day of restriction but as a cathedral built in time — the most sacred architecture in Jewish life. His phrase \"a palace in time\" alone is worth the read.", amazon: "https://www.amazon.com/Sabbath-Abraham-Joshua-Heschel/dp/0374529752", cover: "https://images-na.ssl-images-amazon.com/images/P/0374529752.jpg" },
+      { title: "The Sabbath", author: "Abraham Joshua Heschel", desc: "The most beautiful book ever written about Sabbath. Heschel, a Jewish theologian, describes Sabbath not as a day of restriction but as a cathedral built in time — the most sacred architecture in Jewish life. His phrase \"a palace in time\" alone is worth the read.", amazon: "https://www.amazon.com/Sabbath-Classics-Abraham-Joshua-Heschel/dp/0374529752", cover: "https://m.media-amazon.com/images/I/811QpvHSIhL._SY522_.jpg" },
       { title: "The Sabbath Practice", author: "John Mark Comer", desc: "Comer's practical companion guide from Practicing the Way — the four-session course that walks individuals and communities through Stop, Rest, Delight, and Worship. The most accessible entry point into a real Sabbath practice for modern people.", amazon: "https://www.amazon.com/Sabbath-Practice-Four-Session-Companion-Delight/dp/0593603257", cover: "https://m.media-amazon.com/images/I/61IdPrpDlgL._SY522_.jpg" },
       { title: "Garden City", author: "John Mark Comer", desc: "Comer's theology of work and rest — why we work, what work is for, and how Sabbath fits into the larger story of what it means to be human. Essential reading for anyone who struggles to separate their identity from their productivity.", amazon: "https://www.amazon.com/Garden-City-Work-Being-Human/dp/1400257220", cover: "https://m.media-amazon.com/images/I/61OfN8H-H8L._SY522_.jpg" },
       { title: "Subversive Sabbath", author: "A.J. Swoboda", desc: "Swoboda makes the case that Sabbath is not a personal preference but a political act — a weekly declaration that humans are not machines, that the economy does not have the last word, that rest is resistance. Prophetic and practical.", amazon: "https://www.amazon.com/Subversive-Sabbath-Surprising-Power-Nonstop/dp/1587434059", cover: "https://m.media-amazon.com/images/I/41WcHzkzToL._SY445_SX342_FMwebp_.jpg" },
     ],
+    media: [
+      { title: "Sabbath — Stop, Rest, Delight, Worship", source: "Practicing the Way · YouTube", type: "Video", thumb: "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=400", url: "https://www.practicingtheway.org/resources" },
+      { title: "The Sabbath Practice Course", source: "Practicing the Way · Course", type: "Course", thumb: "https://images.unsplash.com/photo-1472396961693-142e6e269027?q=80&w=400", url: "https://www.practicingtheway.org" },
+      { title: "Why Sabbath is Resistance", source: "John Mark Comer Teachings · Podcast", type: "Podcast", thumb: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=400", url: "https://www.practicingtheway.org/resources" },
+    ],
   },
   {
-    slug:    "community",
-    title:   "Community",
-    sub:     "Formation together",
-    rhythm:  "RHYTHM 05",
-    img:     "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1400&auto=format&fit=crop",
-    imgThumb:"https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=600&auto=format&fit=crop",
-    quote:   "They devoted themselves to the apostles' teaching and to fellowship, to the breaking of bread and to prayer.",
-    quoteRef:"Acts 2:42",
-    interactiveLabel: "Depths of Community",
-    challengeDay: 6,
-    challengeTitle: "You Cannot Do This Alone",
+    slug: "community", title: "Community", sub: "Formation together", rhythm: "RHYTHM 05",
+    img:      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1400&auto=format&fit=crop",
+    imgThumb: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=600&auto=format&fit=crop",
+    quote: "They devoted themselves to the apostles' teaching and to fellowship, to the breaking of bread and to prayer.", quoteRef: "Acts 2:42",
+    interactiveLabel: "Depths of Community", challengeDay: 6, challengeTitle: "You Cannot Do This Alone",
     why: [
       "We live in an era of unprecedented connection and epidemic loneliness. We have more ways to communicate with more people than any generation in history — and research consistently shows that people are more isolated, more unknown, and more alone than ever before.",
       "The church was never meant to be a broadcast medium. It was meant to be a body — an organism in which people are genuinely known, genuinely accountable, and genuinely in one another's lives. Not as a social preference, but as a theological necessity.",
@@ -283,10 +272,15 @@ export const RHYTHMS = [
       "What kind of community are you helping to create for others?",
     ],
     further: [
-      { title: "Life Together", author: "Dietrich Bonhoeffer", desc: "The most important book ever written about Christian community. Bonhoeffer, writing from a clandestine seminary in Nazi Germany, dismantles the fantasy of ideal community and shows what genuine, grace-based life together actually looks like. Short, dense, essential.", amazon: "https://www.amazon.com/Life-Together-Exploration-Christian-Community/dp/0060608528", isbn: "0060608528" },
-      { title: "The Deeply Formed Life", author: "Rich Villodas", desc: "Villodas weaves together contemplative spirituality, racial reconciliation, and sexual wholeness into a vision of community that goes deeper than most churches dare. A compelling portrait of what formation in community can actually look like.", amazon: "https://www.amazon.com/Deeply-Formed-Life-Breaking-Conformity/dp/0525653201", isbn: "0525653201" },
-      { title: "Emotionally Healthy Spirituality", author: "Peter Scazzero", desc: "Scazzero's argument that most Christian community is emotionally shallow — and that genuine transformation requires the kind of honesty, grief, and self-awareness that most churches actively avoid. One of the most practically impactful books on community formation.", amazon: "https://www.amazon.com/Emotionally-Healthy-Spirituality-Impossible-Spiritual/dp/0310348498", isbn: "0310348498" },
-      { title: "The Body", author: "Chuck Colson", desc: "Colson's sweeping vision of the church as a distinct, countercultural community — called not to reflect the culture but to embody an alternative. A prophetic call to take the communal nature of Christian life seriously in a fragmenting world.", amazon: "https://www.amazon.com/Body-Being-Light-Darkness/dp/0849944422", isbn: "0849944422" },
+      { title: "Life Together", author: "Dietrich Bonhoeffer", desc: "The most important book ever written about Christian community. Bonhoeffer, writing from a clandestine seminary in Nazi Germany, dismantles the fantasy of ideal community and shows what genuine, grace-based life together actually looks like. Short, dense, essential.", amazon: "https://www.amazon.com/Life-Together-Exploration-Christian-Community/dp/B0FHWWH7Y2", cover: "https://m.media-amazon.com/images/I/41VLz4wzqrL._SY445_SX342_FMwebp_.jpg" },
+      { title: "The Deeply Formed Life", author: "Rich Villodas", desc: "Villodas weaves together contemplative spirituality, racial reconciliation, and sexual wholeness into a vision of community that goes deeper than most churches dare. A compelling portrait of what formation in community can actually look like.", amazon: "https://www.amazon.com/Deeply-Formed-Life-Transformative-Values/dp/0525654402", cover: "https://m.media-amazon.com/images/I/41hmZWxVQZL._SY445_SX342_FMwebp_.jpg" },
+      { title: "Emotionally Healthy Spirituality", author: "Peter Scazzero", desc: "Scazzero's argument that most Christian community is emotionally shallow — and that genuine transformation requires the kind of honesty, grief, and self-awareness that most churches actively avoid. One of the most practically impactful books on community formation.", amazon: "https://www.amazon.com/Emotionally-Healthy-Spirituality-Impossible-Spiritually/dp/0310348498", cover: "https://m.media-amazon.com/images/I/71c9eht02hL._SY522_.jpg" },
+      { title: "The Body", author: "Chuck Colson", desc: "Colson's sweeping vision of the church as a distinct, countercultural community — called not to reflect the culture but to embody an alternative. A prophetic call to take the communal nature of Christian life seriously in a fragmenting world.", amazon: "https://www.amazon.com/Being-Body-Charles-Colson/dp/0849917522", cover: "https://m.media-amazon.com/images/I/81F1eqcBQuL._SY522_.jpg" },
+    ],
+    media: [
+      { title: "Community — Why You Can't Grow Alone", source: "Practicing the Way · YouTube", type: "Video", thumb: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=400", url: "https://www.practicingtheway.org/resources" },
+      { title: "Formation Together — Counter Formation", source: "Counter Formation · Article", type: "Article", thumb: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=400", url: "/" },
+      { title: "Emotionally Healthy Discipleship Podcast", source: "Peter Scazzero · Podcast", type: "Podcast", thumb: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=400", url: "https://www.emotionallyhealthy.org" },
     ],
   },
 ];
@@ -304,17 +298,14 @@ function BreathPrayer() {
   const [phase, setPhase] = useState("idle");
   const [cycles, setCycles] = useState(0);
   const timerRef = useRef(null);
-
   const PHASES = [
     { key: "inhale", label: "Inhale",  prayer: "Lord Jesus",  dur: 4000, next: "hold"   },
     { key: "hold",   label: "Hold",    prayer: "·  ·  ·",    dur: 1500, next: "exhale" },
     { key: "exhale", label: "Exhale",  prayer: "have mercy",  dur: 4000, next: "rest"   },
     { key: "rest",   label: "Rest",    prayer: "·  ·  ·",    dur: 1500, next: "inhale" },
   ];
-
   const start = () => { setPhase("inhale"); setCycles(0); };
   const stop  = () => { clearTimeout(timerRef.current); setPhase("idle"); setCycles(0); };
-
   useEffect(() => {
     if (phase === "idle") return;
     const cur = PHASES.find(p => p.key === phase);
@@ -325,58 +316,24 @@ function BreathPrayer() {
     }, cur.dur);
     return () => clearTimeout(timerRef.current);
   }, [phase]);
-
   const cur = PHASES.find(p => p.key === phase);
   const isExpanding = phase === "inhale" || phase === "hold";
-  const prayerLine  = cur ? cur.prayer : "";
-  const phaseLabel  = cur ? cur.label  : "";
-
   return (
     <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", padding: "3rem 2rem", textAlign: "center" }}>
-      <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".45em", textTransform: "uppercase", color: "rgba(201,168,76,0.7)", marginBottom: "2.5rem" }}>
-        Breath Prayer · 4 counts in · 4 counts out
-      </p>
+      <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".45em", textTransform: "uppercase", color: "rgba(201,168,76,0.7)", marginBottom: "2.5rem" }}>Breath Prayer · 4 counts in · 4 counts out</p>
       <div style={{ position: "relative", width: "220px", height: "220px", margin: "0 auto 2.5rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "1px solid rgba(201,168,76,0.15)" }} />
         <div style={{ position: "absolute", inset: "20px", borderRadius: "50%", border: "1px solid rgba(201,168,76,0.08)" }} />
-        <div style={{
-          width: "120px", height: "120px", borderRadius: "50%",
-          background: phase === "idle" ? "radial-gradient(circle, rgba(201,168,76,0.08), rgba(201,168,76,0.02))" : "radial-gradient(circle, rgba(201,168,76,0.35) 0%, rgba(201,168,76,0.12) 45%, rgba(201,168,76,0.03) 70%)",
-          border: `1px solid rgba(201,168,76,${phase === "idle" ? "0.2" : "0.6"})`,
-          boxShadow: phase !== "idle" ? "0 0 40px rgba(201,168,76,0.18), inset 0 0 30px rgba(201,168,76,0.08)" : "none",
-          transform: isExpanding ? "scale(1.42)" : "scale(0.72)",
-          transition: phase === "inhale" ? "transform 4s ease-in-out, box-shadow 0.5s, background 0.5s" : phase === "exhale" ? "transform 4s ease-in-out, box-shadow 0.5s, background 0.5s" : "transform 0.4s ease, box-shadow 0.5s, background 0.5s",
-          display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "4px",
-        }}>
-          {phase !== "idle" && (
-            <>
-              <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", color: "rgba(201,168,76,0.9)", lineHeight: 1 }}>{phaseLabel}</span>
-              <span style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "13px", color: "rgba(250,248,245,0.8)", lineHeight: 1.2, maxWidth: "80px", textAlign: "center" }}>{prayerLine}</span>
-            </>
-          )}
+        <div style={{ width: "120px", height: "120px", borderRadius: "50%", background: phase === "idle" ? "radial-gradient(circle, rgba(201,168,76,0.08), rgba(201,168,76,0.02))" : "radial-gradient(circle, rgba(201,168,76,0.35) 0%, rgba(201,168,76,0.12) 45%, rgba(201,168,76,0.03) 70%)", border: `1px solid rgba(201,168,76,${phase === "idle" ? "0.2" : "0.6"})`, boxShadow: phase !== "idle" ? "0 0 40px rgba(201,168,76,0.18), inset 0 0 30px rgba(201,168,76,0.08)" : "none", transform: isExpanding ? "scale(1.42)" : "scale(0.72)", transition: phase === "inhale" ? "transform 4s ease-in-out, box-shadow 0.5s, background 0.5s" : phase === "exhale" ? "transform 4s ease-in-out, box-shadow 0.5s, background 0.5s" : "transform 0.4s ease, box-shadow 0.5s, background 0.5s", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "4px" }}>
+          {phase !== "idle" && (<><span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", color: "rgba(201,168,76,0.9)", lineHeight: 1 }}>{cur?.label}</span><span style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "13px", color: "rgba(250,248,245,0.8)", lineHeight: 1.2, maxWidth: "80px", textAlign: "center" }}>{cur?.prayer}</span></>)}
         </div>
       </div>
-      {cycles > 0 && (
-        <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.35)", marginBottom: "1.5rem" }}>
-          {cycles} {cycles === 1 ? "breath" : "breaths"} complete
-        </p>
-      )}
-      {phase === "idle" && (
-        <div style={{ marginBottom: "2rem" }}>
-          <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "18px", color: "rgba(250,248,245,0.5)", letterSpacing: ".04em" }}>"Lord Jesus… have mercy"</p>
-          <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: "rgba(250,248,245,0.22)", marginTop: "8px" }}>The Jesus Prayer · inhale / exhale</p>
-        </div>
-      )}
+      {cycles > 0 && <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.35)", marginBottom: "1.5rem" }}>{cycles} {cycles === 1 ? "breath" : "breaths"} complete</p>}
+      {phase === "idle" && (<div style={{ marginBottom: "2rem" }}><p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "18px", color: "rgba(250,248,245,0.5)", letterSpacing: ".04em" }}>"Lord Jesus… have mercy"</p><p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: "rgba(250,248,245,0.22)", marginTop: "8px" }}>The Jesus Prayer · inhale / exhale</p></div>)}
       {phase === "idle" ? (
-        <button onClick={start} style={{ padding: "14px 40px", borderRadius: "999px", border: "2px solid rgba(201,168,76,0.5)", background: "rgba(201,168,76,0.1)", color: "#C9A84C", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".3em", textTransform: "uppercase", cursor: "pointer", transition: "all .25s", fontWeight: 700 }}
-          onMouseEnter={e => { e.target.style.background = "rgba(201,168,76,0.2)"; e.target.style.borderColor = "#C9A84C"; }}
-          onMouseLeave={e => { e.target.style.background = "rgba(201,168,76,0.1)"; e.target.style.borderColor = "rgba(201,168,76,0.5)"; }}>
-          Begin
-        </button>
+        <button onClick={start} style={{ padding: "14px 40px", borderRadius: "999px", border: "2px solid rgba(201,168,76,0.5)", background: "rgba(201,168,76,0.1)", color: "#C9A84C", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".3em", textTransform: "uppercase", cursor: "pointer", transition: "all .25s", fontWeight: 700 }} onMouseEnter={e => { e.target.style.background = "rgba(201,168,76,0.2)"; e.target.style.borderColor = "#C9A84C"; }} onMouseLeave={e => { e.target.style.background = "rgba(201,168,76,0.1)"; e.target.style.borderColor = "rgba(201,168,76,0.5)"; }}>Begin</button>
       ) : (
-        <button onClick={stop} style={{ padding: "14px 40px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "rgba(250,248,245,0.3)", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".28em", textTransform: "uppercase", cursor: "pointer" }}>
-          Stop
-        </button>
+        <button onClick={stop} style={{ padding: "14px 40px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "rgba(250,248,245,0.3)", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".28em", textTransform: "uppercase", cursor: "pointer" }}>Stop</button>
       )}
     </div>
   );
@@ -386,29 +343,22 @@ function BreathPrayer() {
 
 function LectioDivinaGuide() {
   const steps = [
-    { num: "I",   latin: "Lectio",       eng: "Read",    desc: "Read the passage slowly, aloud if possible. Read it again. A third time. You are not looking for information — you are listening for a word or phrase that seems to press against you." },
-    { num: "II",  latin: "Meditatio",    eng: "Reflect", desc: "Take the word or phrase that caught you. Repeat it quietly. Turn it over. Let it interact with your memory, your imagination, your current situation. Don't analyze — ruminate, like an animal chewing cud." },
-    { num: "III", latin: "Oratio",       eng: "Respond", desc: "Let what has arisen in meditation move you to prayer. Speak to God — in gratitude, petition, confession, praise. This is not a structured prayer. It is a spontaneous response to what God has stirred in you." },
-    { num: "IV",  latin: "Contemplatio", eng: "Rest",    desc: "Release all thoughts, words, and images. Simply rest in God's presence. You are not trying to achieve anything. You are resting in the love of the One who has spoken. Even five minutes of this silence is more valuable than it seems." },
+    { num: "I", latin: "Lectio", eng: "Read", desc: "Read the passage slowly, aloud if possible. Read it again. A third time. You are not looking for information — you are listening for a word or phrase that seems to press against you." },
+    { num: "II", latin: "Meditatio", eng: "Reflect", desc: "Take the word or phrase that caught you. Repeat it quietly. Turn it over. Let it interact with your memory, your imagination, your current situation. Don't analyze — ruminate, like an animal chewing cud." },
+    { num: "III", latin: "Oratio", eng: "Respond", desc: "Let what has arisen in meditation move you to prayer. Speak to God — in gratitude, petition, confession, praise. This is not a structured prayer. It is a spontaneous response to what God has stirred in you." },
+    { num: "IV", latin: "Contemplatio", eng: "Rest", desc: "Release all thoughts, words, and images. Simply rest in God's presence. You are not trying to achieve anything. You are resting in the love of the One who has spoken. Even five minutes of this silence is more valuable than it seems." },
   ];
   const [active, setActive] = useState(0);
   const cur = steps[active];
   return (
     <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", overflow: "hidden" }}>
       <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-        {steps.map((s, i) => (
-          <button key={i} onClick={() => setActive(i)} style={{ flex: 1, padding: "16px 8px", border: "none", background: active === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: active === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: active === i ? "#C9A84C" : "rgba(250,248,245,0.3)", transition: "all .2s" }}>
-            {s.latin}
-          </button>
-        ))}
+        {steps.map((s, i) => (<button key={i} onClick={() => setActive(i)} style={{ flex: 1, padding: "16px 8px", border: "none", background: active === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: active === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: active === i ? "#C9A84C" : "rgba(250,248,245,0.3)", transition: "all .2s" }}>{s.latin}</button>))}
       </div>
       <div style={{ padding: "2.5rem 2rem" }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: "16px", marginBottom: "1.25rem" }}>
           <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "36px", color: "rgba(201,168,76,0.4)" }}>{cur.num}</span>
-          <div>
-            <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "22px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: "#FAF8F5" }}>{cur.eng}</p>
-            <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.6)" }}>{cur.latin}</p>
-          </div>
+          <div><p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "22px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: "#FAF8F5" }}>{cur.eng}</p><p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.6)" }}>{cur.latin}</p></div>
         </div>
         <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "18px", lineHeight: 1.82, color: "rgba(250,248,245,0.7)" }}>{cur.desc}</p>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2rem" }}>
@@ -436,11 +386,7 @@ function PrayerPostures() {
   return (
     <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", overflow: "hidden" }}>
       <div style={{ display: "flex", overflowX: "auto", borderBottom: "1px solid rgba(255,255,255,0.06)", scrollbarWidth: "none" }}>
-        {postures.map((p, i) => (
-          <button key={i} onClick={() => setActive(i)} style={{ flexShrink: 0, padding: "14px 18px", border: "none", background: active === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: active === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", whiteSpace: "nowrap", color: active === i ? "#C9A84C" : "rgba(250,248,245,0.3)", transition: "all .2s" }}>
-            {p.name}
-          </button>
-        ))}
+        {postures.map((p, i) => (<button key={i} onClick={() => setActive(i)} style={{ flexShrink: 0, padding: "14px 18px", border: "none", background: active === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: active === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", whiteSpace: "nowrap", color: active === i ? "#C9A84C" : "rgba(250,248,245,0.3)", transition: "all .2s" }}>{p.name}</button>))}
       </div>
       <div style={{ padding: "2.5rem 2rem" }}>
         <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "24px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: "#FAF8F5", marginBottom: "1.25rem" }}>{cur.name}</p>
@@ -466,22 +412,14 @@ function SabbathIdeas() {
   return (
     <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", overflow: "hidden" }}>
       <div style={{ display: "flex", flexWrap: "wrap", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-        {categories.map((c, i) => (
-          <button key={i} onClick={() => setActive(i)} style={{ padding: "12px 16px", border: "none", background: active === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: active === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".22em", textTransform: "uppercase", color: active === i ? "#C9A84C" : "rgba(250,248,245,0.3)", transition: "all .2s" }}>
-            {c.label}
-          </button>
-        ))}
+        {categories.map((c, i) => (<button key={i} onClick={() => setActive(i)} style={{ padding: "12px 16px", border: "none", background: active === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: active === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".22em", textTransform: "uppercase", color: active === i ? "#C9A84C" : "rgba(250,248,245,0.3)", transition: "all .2s" }}>{c.label}</button>))}
       </div>
       <div style={{ padding: "2rem" }}>
         <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".38em", textTransform: "uppercase", color: "rgba(201,168,76,0.55)", marginBottom: "1.25rem" }}>{cur.label} · Sabbath Ideas</p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(180px, 100%), 1fr))", gap: "8px" }}>
-          {cur.ideas.map((idea, i) => (
-            <div key={i} style={{ padding: "12px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "10px", fontFamily: "'Cormorant Garamond',serif", fontSize: "16px", color: "rgba(250,248,245,0.72)", lineHeight: 1.4 }}>{idea}</div>
-          ))}
+          {cur.ideas.map((idea, i) => (<div key={i} style={{ padding: "12px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "10px", fontFamily: "'Cormorant Garamond',serif", fontSize: "16px", color: "rgba(250,248,245,0.72)", lineHeight: 1.4 }}>{idea}</div>))}
         </div>
-        <p style={{ marginTop: "1.5rem", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)" }}>
-          Ask: is this restful or worshipful? If not, it can wait. — John Mark Comer
-        </p>
+        <p style={{ marginTop: "1.5rem", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)" }}>Ask: is this restful or worshipful? If not, it can wait. — John Mark Comer</p>
       </div>
     </div>
   );
@@ -526,6 +464,61 @@ const INTERACTIVES = {
   community: CommunityDepths,
 };
 
+/* ─── GO DEEPER — TABBED BOOKS / MEDIA ───────────────────────────── */
+
+function GoDeeperSection({ data, rhythm }) {
+  const [tab, setTab] = useState("books");
+  const TYPE_COLORS = { Video: "#C9A84C", Podcast: "#8FAF8A", Article: "#A08CC8", Course: "#C87C5A" };
+
+  return (
+    <div className="rl-further rl-section">
+      {/* Tab header */}
+      <div className="rl-sec-label" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "none", paddingBottom: 0, marginBottom: "1.25rem" }}>
+        <span style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", paddingBottom: ".75rem", display: "block", width: "100%", letterSpacing: ".5em", fontSize: "9px" }}>Go Deeper</span>
+      </div>
+      <div style={{ display: "flex", gap: "4px", padding: "4px", background: "rgba(255,255,255,0.04)", borderRadius: "999px", marginBottom: "1.5rem", gridColumn: "1 / -1", width: "fit-content" }}>
+        {["books", "media"].map(t => (
+          <button key={t} onClick={() => setTab(t)} style={{ padding: "8px 24px", borderRadius: "999px", border: "none", background: tab === t ? "rgba(201,168,76,0.15)" : "transparent", color: tab === t ? "#C9A84C" : "rgba(250,248,245,0.35)", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", cursor: "pointer", fontWeight: tab === t ? 700 : 400, transition: "all .2s" }}>
+            {t === "books" ? "Books" : "Media"}
+          </button>
+        ))}
+      </div>
+
+      {/* Books tab */}
+      {tab === "books" && data.further.map((b, i) => (
+        <Link key={i} to={`${RULE_BASE}/${rhythm}/book/${i}`} className="rl-book">
+          <img src={b.cover} alt={b.title} className="rl-book-img" onError={e => { e.target.style.background = "#17140F"; e.target.style.opacity = "0.4"; }} />
+          <div className="rl-book-body">
+            <div>
+              <p className="rl-book-title">{b.title}</p>
+              <p className="rl-book-author">{b.author}</p>
+              <p className="rl-book-desc">{b.desc}</p>
+            </div>
+            <span className="rl-book-cta">Why we recommend it <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 5h8M5.5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg></span>
+          </div>
+        </Link>
+      ))}
+
+      {/* Media tab */}
+      {tab === "media" && data.media.map((m, i) => (
+        <a key={i} href={m.url} target="_blank" rel="noopener noreferrer" className="rl-book" style={{ textDecoration: "none" }}>
+          <div style={{ position: "relative", overflow: "hidden", flexShrink: 0 }}>
+            <img src={m.thumb} alt={m.title} className="rl-book-img" onError={e => { e.target.style.background = "#17140F"; e.target.style.opacity = "0.4"; }} />
+            <div style={{ position: "absolute", top: "8px", left: "8px", padding: "3px 8px", borderRadius: "999px", background: "rgba(6,5,10,0.75)", backdropFilter: "blur(8px)", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "7px", letterSpacing: ".22em", textTransform: "uppercase", color: TYPE_COLORS[m.type] || "#C9A84C", border: `1px solid ${TYPE_COLORS[m.type] || "#C9A84C"}44` }}>{m.type}</div>
+          </div>
+          <div className="rl-book-body">
+            <div>
+              <p className="rl-book-title">{m.title}</p>
+              <p className="rl-book-author">{m.source}</p>
+            </div>
+            <span className="rl-book-cta">Watch / Listen <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 5h8M5.5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg></span>
+          </div>
+        </a>
+      ))}
+    </div>
+  );
+}
+
 /* ─── BOOK PAGE ───────────────────────────────────────────────────── */
 
 export function BookPage() {
@@ -563,9 +556,6 @@ export function BookPage() {
     bioPhoto:  { width: "52px", height: "52px", borderRadius: "50%", objectFit: "cover", border: "1px solid rgba(201,168,76,0.25)", flexShrink: 0 },
     bioName:   { fontSize: "10px", letterSpacing: ".22em", textTransform: "uppercase", color: "rgba(201,168,76,0.75)", fontWeight: 700, marginBottom: ".4rem" },
     bioPara:   { fontFamily: "'Cormorant Garamond',serif", fontSize: "15px", lineHeight: 1.72, color: "rgba(250,248,245,0.5)" },
-    chip:      { background: "rgba(201,168,76,0.05)", border: "1px solid rgba(201,168,76,0.15)", borderRadius: "14px", padding: "1.1rem 1.4rem", marginBottom: "2rem" },
-    chipLabel: { fontSize: "8px", letterSpacing: ".35em", textTransform: "uppercase", color: "rgba(201,168,76,0.5)", marginBottom: ".35rem" },
-    chipVal:   { fontFamily: "'Barlow Condensed',sans-serif", fontSize: "15px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: "#FAF8F5" },
     cta:       { display: "inline-flex", alignItems: "center", gap: "10px", padding: "15px 28px", borderRadius: "12px", border: "2px solid #C9A84C", background: "#C9A84C", textDecoration: "none", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".28em", textTransform: "uppercase", color: "#0A0A0A", fontWeight: 700, transition: "all .25s" },
     backBtn:   { display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginTop: "1.25rem", padding: "16px", borderRadius: "14px", border: "none", background: "#E8E4DC", textDecoration: "none", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".22em", textTransform: "uppercase", color: "#0A0A0A", fontWeight: 700, transition: "all .25s" },
   };
@@ -573,23 +563,17 @@ export function BookPage() {
   return (
     <div style={S.wrap}>
       <Link to="/" style={{ position: "fixed", top: "1rem", left: "50%", transform: "translateX(-50%)", zIndex: 200, display: "flex", alignItems: "center", gap: "10px", padding: "10px 20px 10px 14px", borderRadius: "999px", background: "rgba(14,12,10,0.88)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.08)", textDecoration: "none" }}>
-        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" style={{ width: "28px", height: "28px", objectFit: "contain", filter: "invert(1) brightness(1.5)" }} />
+        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" style={{ width: "28px", height: "28px", objectFit: "contain", filter: "brightness(0) invert(1)" }} />
         <span style={{ fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", color: "rgba(250,248,245,0.55)", fontWeight: 600 }}>Counter Formation</span>
       </Link>
-
       <div style={S.shell}>
         <Link to={`${RULE_BASE}/${rhythm}`} style={S.back}>
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M12 6.5H1M6 2.5l-4 4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
           Back to {data.title}
         </Link>
-
-        {/* Hero: cover + title/author */}
         <div style={S.hero}>
           <div style={S.coverWrap}>
-            {coverUrl && (
-              <img src={coverUrl} alt={book.title} style={S.cover}
-                onError={e => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }} />
-            )}
+            {coverUrl && (<img src={coverUrl} alt={book.title} style={S.cover} onError={e => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }} />)}
             <div style={{ ...S.coverFallback, display: coverUrl ? "none" : "flex" }}>
               <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "13px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: "#FAF8F5", lineHeight: 1.2, marginBottom: ".75rem" }}>{book.title}</p>
               <p style={{ fontSize: "9px", letterSpacing: ".25em", textTransform: "uppercase", color: "rgba(201,168,76,0.6)" }}>{book.author}</p>
@@ -599,51 +583,28 @@ export function BookPage() {
             <p style={S.kicker}>Recommended Reading</p>
             <h1 style={S.title}>{book.title}</h1>
             <div style={S.authorRow}>
-              {author?.photo && (
-                <img src={author.photo} alt={book.author} style={S.authorPhoto}
-                  onError={e => { e.target.style.display = "none"; }} />
-              )}
+              {author?.photo && (<img src={author.photo} alt={book.author} style={S.authorPhoto} onError={e => { e.target.style.display = "none"; }} />)}
               <span style={S.authorName}>{book.author}</span>
             </div>
           </div>
         </div>
-
-        {/* Why We Recommend It */}
         <p style={S.whyLabel}>Why We Recommend It</p>
         <p style={S.desc}>{book.desc}</p>
-
-        {/* Author bio */}
         {author?.bio && (
           <div style={S.bioWrap}>
-            {author.photo && (
-              <img src={author.photo} alt={book.author} style={S.bioPhoto}
-                onError={e => { e.target.style.display = "none"; }} />
-            )}
-            <div>
-              <p style={S.bioName}>{book.author}</p>
-              <p style={S.bioPara}>{author.bio}</p>
-            </div>
+            {author.photo && (<img src={author.photo} alt={book.author} style={S.bioPhoto} onError={e => { e.target.style.display = "none"; }} />)}
+            <div><p style={S.bioName}>{book.author}</p><p style={S.bioPara}>{author.bio}</p></div>
           </div>
         )}
-
-        {/* Connected Rhythm */}
-        <div style={S.chip}>
-          <p style={S.chipLabel}>Connected Rhythm</p>
-          <p style={S.chipVal}>{data.title} · {data.sub}</p>
-        </div>
-
-        {/* Amazon CTA — outlined */}
         <a href={book.amazon} target="_blank" rel="noopener noreferrer" style={S.cta}
-          onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(201,168,76,0.7)"; e.currentTarget.style.color = "#C9A84C"; e.currentTarget.style.background = "rgba(201,168,76,0.07)"; }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(201,168,76,0.35)"; e.currentTarget.style.color = "rgba(201,168,76,0.8)"; e.currentTarget.style.background = "transparent"; }}>
+          onMouseEnter={e => { e.currentTarget.style.background = "#FAF8F5"; e.currentTarget.style.borderColor = "#FAF8F5"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "#C9A84C"; e.currentTarget.style.borderColor = "#C9A84C"; }}>
           Purchase on Amazon
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6.5 2.5l3.5 3.5-3.5 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
         </a>
-
-        {/* Back nav */}
         <Link to={`${RULE_BASE}/${rhythm}`} style={S.backBtn}
-          onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(201,168,76,0.38)"; e.currentTarget.style.color = "#C9A84C"; }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "rgba(255,255,255,0.38)"; }}>
+          onMouseEnter={e => { e.currentTarget.style.background = "#FAF8F5"; e.currentTarget.style.color = "#0A0A0A"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "#E8E4DC"; e.currentTarget.style.color = "#0A0A0A"; }}>
           ← Return to {data.title}
         </Link>
       </div>
@@ -670,7 +631,7 @@ export function RuleStyles() {
       .rl-prog-fill { height: 100%; width: 0; background: linear-gradient(to right, #C9A84C, rgba(201,168,76,0.35)); transition: width .12s linear; }
 
       .rl-hero-band { position: relative; overflow: hidden; min-height: clamp(300px,52vw,500px); display: flex; flex-direction: column; justify-content: flex-end; }
-      .rl-hero-bg   { position: absolute; inset: 0; background-size: cover; background-position: center; filter: grayscale(.15); }
+      .rl-hero-bg   { position: absolute; inset: 0; background-size: cover; background-position: center top; filter: grayscale(.15); }
       .rl-hero-ov   { position: absolute; inset: 0; background: linear-gradient(to top, rgba(14,12,10,0.98) 0%, rgba(14,12,10,0.5) 55%, rgba(14,12,10,0.18) 100%); }
       .rl-hero-in   { position: relative; z-index: 2; padding: 2rem 24px 2.5rem; max-width: 860px; margin: 0 auto; width: 100%; }
       .rl-hero-logo { width: 32px; height: 32px; filter: invert(1) brightness(.9); opacity: .45; margin-bottom: .9rem; display: block; }
@@ -707,7 +668,7 @@ export function RuleStyles() {
       .rl-reflections { display: flex; flex-direction: column; gap: 1rem; }
       .rl-reflect-q   { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.14); border-radius: 14px; padding: 1.25rem 1.5rem; font-family: 'Cormorant Garamond',serif; font-style: italic; font-size: clamp(15px,3.5vw,18px); color: rgba(250,248,245,0.65); line-height: 1.7; }
 
-      /* ── Book cards — horizontal ── */
+      /* ── Book / Media cards ── */
       .rl-further      { display: flex; flex-direction: column; gap: 12px; }
       .rl-book         { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; overflow: hidden; transition: border-color .3s, transform .3s; text-decoration: none; display: grid; grid-template-columns: 120px 1fr; cursor: pointer; align-items: stretch; }
       .rl-book:hover   { border-color: rgba(201,168,76,0.45); transform: translateX(4px); }
@@ -720,21 +681,9 @@ export function RuleStyles() {
       .rl-book-cta     { display: inline-flex; align-items: center; gap: 6px; font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(201,168,76,0.7); transition: color .2s; flex-shrink: 0; }
       .rl-book:hover .rl-book-cta { color: #C9A84C; }
 
-      .rl-challenge-link { display: flex; align-items: center; justify-content: space-between; background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 14px; padding: 1.25rem 1.5rem; text-decoration: none; transition: background .25s, border-color .25s; margin-top: 1rem; }
-      .rl-challenge-link:hover { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.4); }
-      .rl-challenge-link-left p:first-child { font-size: 8px; letter-spacing: .35em; text-transform: uppercase; color: rgba(201,168,76,0.6); margin-bottom: .3rem; }
-      .rl-challenge-link-left p:last-child  { font-size: clamp(13px,3vw,15px); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #FAF8F5; }
-      .rl-challenge-arrow { font-size: 18px; color: rgba(201,168,76,0.5); }
-
       /* ── Rhythm nav — pill buttons ── */
       .rl-rhythm-nav { display: flex; gap: 12px; margin-top: 3rem; }
-      .rl-nav-btn {
-        flex: 1; padding: 16px 24px; border-radius: 999px;
-        border: 1px solid rgba(255,255,255,0.10);
-        background: rgba(255,255,255,0.04);
-        text-decoration: none; display: flex; flex-direction: column;
-        gap: 4px; transition: border-color .25s, background .25s;
-      }
+      .rl-nav-btn { flex: 1; padding: 16px 24px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.04); text-decoration: none; display: flex; flex-direction: column; gap: 4px; transition: border-color .25s, background .25s; }
       .rl-nav-btn:hover { border-color: rgba(201,168,76,0.45); background: rgba(201,168,76,0.06); }
       .rl-nav-btn-dir   { font-size: 8px; letter-spacing: .38em; text-transform: uppercase; color: rgba(201,168,76,0.65); }
       .rl-nav-btn-title { font-size: clamp(14px,2vw,18px); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #FAF8F5; line-height: 1; }
@@ -755,14 +704,10 @@ export function RuleStyles() {
         .rl-hero-band { min-height: clamp(380px, 58vw, 580px); }
         .rl-hero-in   { max-width: 1100px; padding: 2.5rem 48px 3rem; }
         .rl-hero-h1   { font-size: clamp(60px, 9vw, 108px); }
-
         .rl-content {
-          max-width: 1100px;
-          padding: 60px 48px 140px;
-          display: grid;
-          grid-template-columns: 1fr 340px;
-          column-gap: 64px;
-          align-items: start;
+          max-width: 1100px; padding: 60px 48px 140px;
+          display: grid; grid-template-columns: 1fr 340px;
+          column-gap: 64px; align-items: start;
           grid-template-areas:
             "pullquote   pullquote"
             "why-label   why-label"
@@ -776,11 +721,11 @@ export function RuleStyles() {
             "brand       brand"
             "nav         nav";
         }
-
         .rl-pullquote  { grid-area: pullquote; }
         .rl-why-label  { grid-area: why-label; }
         .rl-why-body   { grid-area: why-body; }
-        .rl-sidebar    { grid-area: sidebar; position: sticky; top: 72px; margin-bottom: 0; align-self: start; }
+        .rl-sidebar    { grid-area: sidebar; position: sticky; top: 72px; margin-bottom: 0; align-self: start; border-left: 1px solid rgba(255,255,255,0.07); padding-left: 40px; display: flex; flex-direction: column; gap: 2rem; }
+        .rl-sidebar .rl-section { margin-bottom: 0; }
         .rl-theology   { grid-area: theology; }
         .rl-rule:nth-of-type(1) { grid-area: rule1; }
         .rl-rule:nth-of-type(2) { grid-area: rule2; }
@@ -788,29 +733,16 @@ export function RuleStyles() {
         .rl-practice    { grid-area: practice; }
         .rl-further     { grid-area: further; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
         .rl-further .rl-sec-label { grid-column: 1 / -1; }
+        .rl-further > div[style*="fit-content"] { grid-column: 1 / -1; }
         .rl-further .rl-book:last-child:nth-child(even) { grid-column: 1 / -1; }
         .rl-rhythm-nav  { grid-area: nav; }
-
-        .rl-sidebar {
-          border-left: 1px solid rgba(255,255,255,0.07);
-          padding-left: 40px;
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-        }
-        .rl-sidebar .rl-section { margin-bottom: 0; }
         .rl-pullquote p { font-size: clamp(22px, 2.8vw, 32px); }
         .rl-sec-label   { letter-spacing: .5em; }
       }
 
       @media (min-width: 1440px) {
         .rl-hero-in { max-width: 1320px; padding: 3rem 64px 3.5rem; }
-        .rl-content {
-          max-width: 1320px;
-          grid-template-columns: 1fr 380px;
-          column-gap: 80px;
-          padding: 72px 64px 160px;
-        }
+        .rl-content { max-width: 1320px; grid-template-columns: 1fr 380px; column-gap: 80px; padding: 72px 64px 160px; }
         .rl-sidebar { padding-left: 52px; }
       }
     `}</style>
@@ -854,16 +786,12 @@ export function RhythmPage() {
   const rfillRef    = useRef(null);
   const data        = RHYTHMS.find(r => r.slug === rhythm);
 
-  useEffect(() => {
-    if (!data) navigate("/", { replace: true });
-  }, [data, navigate]);
-
+  useEffect(() => { if (!data) navigate("/", { replace: true }); }, [data, navigate]);
   useEffect(() => { window.scrollTo(0, 0); }, [rhythm]);
-
   useEffect(() => {
     if (!data) return;
     const onScroll = () => {
-      const d   = document.documentElement;
+      const d = document.documentElement;
       const pct = d.scrollTop / (d.scrollHeight - d.clientHeight) || 0;
       if (rfillRef.current) rfillRef.current.style.width = (pct * 100) + "%";
     };
@@ -895,46 +823,29 @@ export function RhythmPage() {
       </div>
 
       <div className="rl-content">
+        <div className="rl-pullquote"><p>"{data.quote}"</p><cite>— {data.quoteRef}</cite></div>
 
-        <div className="rl-pullquote">
-          <p>"{data.quote}"</p>
-          <cite>— {data.quoteRef}</cite>
-        </div>
-
-        <div className="rl-why-label">
-          <p className="rl-sec-label">Why This Rhythm</p>
-        </div>
+        <div className="rl-why-label"><p className="rl-sec-label">Why This Rhythm</p></div>
 
         <div className="rl-why-body rl-section">
-          {data.why.map((p, i) => (
-            <p key={i} className="rl-body" dangerouslySetInnerHTML={{ __html: p }} />
-          ))}
+          {data.why.map((p, i) => (<p key={i} className="rl-body" dangerouslySetInnerHTML={{ __html: p }} />))}
         </div>
 
         <div className="rl-sidebar">
           <div className="rl-section">
             <p className="rl-sec-label">Key Scriptures</p>
-            {data.scriptures.map((s, i) => (
-              <div key={i} className="rl-scripture">
-                <p>"{s.t}"</p>
-                <cite>{s.r}</cite>
-              </div>
-            ))}
+            {data.scriptures.map((s, i) => (<div key={i} className="rl-scripture"><p>"{s.t}"</p><cite>{s.r}</cite></div>))}
           </div>
           <div className="rl-section">
             <p className="rl-sec-label">Reflection</p>
             <div className="rl-reflections">
-              {data.reflection.map((q, i) => (
-                <div key={i} className="rl-reflect-q">{q}</div>
-              ))}
+              {data.reflection.map((q, i) => (<div key={i} className="rl-reflect-q">{q}</div>))}
             </div>
           </div>
         </div>
 
         <div className="rl-theology rl-section">
-          {data.theology.map((p, i) => (
-            <p key={i} className="rl-body" dangerouslySetInnerHTML={{ __html: p }} />
-          ))}
+          {data.theology.map((p, i) => (<p key={i} className="rl-body" dangerouslySetInnerHTML={{ __html: p }} />))}
         </div>
 
         <div className="rl-rule" />
@@ -948,46 +859,18 @@ export function RhythmPage() {
 
         <div className="rl-practice rl-section">
           <p className="rl-sec-label">The Practice</p>
-          <p className="rl-body" style={{ marginBottom: "1.5rem" }}>
-            <span dangerouslySetInnerHTML={{ __html: data.practice.intro }} />
-          </p>
+          <p className="rl-body" style={{ marginBottom: "1.5rem" }}><span dangerouslySetInnerHTML={{ __html: data.practice.intro }} /></p>
           <div className="rl-steps">
             {data.practice.steps.map((s, i) => (
               <div className="rl-step" key={i}>
-                <div className="rl-step-head">
-                  <span className="rl-step-num">{s.num}</span>
-                  <span className="rl-step-title">{s.title}</span>
-                </div>
+                <div className="rl-step-head"><span className="rl-step-num">{s.num}</span><span className="rl-step-title">{s.title}</span></div>
                 <p className="rl-step-body">{s.body}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="rl-further rl-section">
-          <p className="rl-sec-label">Go Deeper</p>
-          {data.further.map((b, i) => (
-            <Link key={i} to={`${RULE_BASE}/${rhythm}/book/${i}`} className="rl-book">
-              <img
-                src={b.cover}
-                alt={b.title}
-                className="rl-book-img"
-                onError={e => { e.target.style.background = "#17140F"; e.target.style.opacity = "0.4"; }}
-              />
-              <div className="rl-book-body">
-                <div>
-                  <p className="rl-book-title">{b.title}</p>
-                  <p className="rl-book-author">{b.author}</p>
-                  <p className="rl-book-desc">{b.desc}</p>
-                </div>
-                <span className="rl-book-cta">
-                  Why we recommend it
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 5h8M5.5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <GoDeeperSection data={data} rhythm={rhythm} />
 
         <div style={{ textAlign: "center", padding: "2rem 0 1rem", borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: "1rem" }}>
           <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" style={{ width: "26px", height: "26px", opacity: .2, filter: "invert(1)", margin: "0 auto .75rem", display: "block" }} />
@@ -1008,7 +891,6 @@ export function RhythmPage() {
             </Link>
           ) : <div />}
         </div>
-
       </div>
 
       <footer className="rl-footer">
