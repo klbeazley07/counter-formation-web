@@ -864,39 +864,46 @@ export function RhythmPage() {
           <cite>— {data.quoteRef}</cite>
         </div>
 
-        {/* Why */}
-        <div className="rl-section">
+        {/* Why label */}
+        <div className="rl-why-label">
           <p className="rl-sec-label">Why This Rhythm</p>
-          <div className="rl-body">
-            {data.why.map((p, i) => <p key={i} dangerouslySetInnerHTML={{ __html: p }} />)}
-          </div>
         </div>
 
-        <div className="rl-rule" />
+        {/* Why body */}
+        <div className="rl-why-body rl-section">
+          {data.why.map((p, i) => <p key={i} className="rl-body" dangerouslySetInnerHTML={{ __html: p }} />)}
+        </div>
+
+        {/* Sticky sidebar: scriptures + reflections */}
+        <div className="rl-sidebar">
+          <div className="rl-section">
+            <p className="rl-sec-label">Key Scriptures</p>
+            {data.scriptures.map((s, i) => (
+              <div key={i} className="rl-scripture">
+                <p>"{s.t}"</p>
+                <cite>{s.r}</cite>
+              </div>
+            ))}
+          </div>
+          <div className="rl-section">
+            <p className="rl-sec-label">Reflection</p>
+            <div className="rl-reflections">
+              {data.reflection.map((q, i) => (
+                <div key={i} className="rl-reflect-q">{q}</div>
+              ))}
+            </div>
+          </div>
+        </div>
 
         {/* Theology */}
-        <div className="rl-section">
-          <p className="rl-sec-label">The Theological Foundation</p>
-          <div className="rl-body">
-            {data.theology.map((p, i) => <p key={i} dangerouslySetInnerHTML={{ __html: p }} />)}
-          </div>
-        </div>
-
-        {/* Scripture */}
-        <div className="rl-section">
-          <p className="rl-sec-label">Scripture</p>
-          {data.scriptures.map((s, i) => (
-            <div className="rl-scripture" key={i}>
-              <p>"{s.t}"</p>
-              <cite>— {s.r}</cite>
-            </div>
-          ))}
+        <div className="rl-theology rl-section">
+          {data.theology.map((p, i) => <p key={i} className="rl-body" dangerouslySetInnerHTML={{ __html: p }} />)}
         </div>
 
         <div className="rl-rule" />
 
         {/* Signature interactive */}
-        <div className="rl-section">
+        <div className="rl-interactive rl-section">
           <p className="rl-sec-label">{data.interactiveLabel}</p>
           <Interactive />
         </div>
@@ -904,7 +911,7 @@ export function RhythmPage() {
         <div className="rl-rule" />
 
         {/* Practice */}
-        <div className="rl-section">
+        <div className="rl-practice rl-section">
           <p className="rl-sec-label">The Practice</p>
           <p className="rl-body" style={{ marginBottom: "1.5rem" }}><span dangerouslySetInnerHTML={{ __html: data.practice.intro }} /></p>
           <div className="rl-steps">
@@ -920,30 +927,16 @@ export function RhythmPage() {
           </div>
         </div>
 
-        <div className="rl-rule" />
-
-        {/* Reflection */}
-        <div className="rl-section">
-          <p className="rl-sec-label">Questions for Reflection</p>
-          <div className="rl-reflections">
-            {data.reflection.map((q, i) => (
-              <div className="rl-reflect-q" key={i}>{q}</div>
-            ))}
-          </div>
-        </div>
-
         {/* Go Deeper — links to book pages */}
-        <div className="rl-section">
+        <div className="rl-further rl-section">
           <p className="rl-sec-label">Go Deeper</p>
-          <div className="rl-further">
-            {data.further.map((b, i) => (
-              <Link key={i} to={`${RULE_BASE}/${rhythm}/book/${i}`} className="rl-book">
-                <p className="rl-book-title">{b.title}</p>
-                <p className="rl-book-author">{b.author}</p>
-                <p className="rl-book-hint">View · Why we recommend it →</p>
-              </Link>
-            ))}
-          </div>
+          {data.further.map((b, i) => (
+            <Link key={i} to={`${RULE_BASE}/${rhythm}/book/${i}`} className="rl-book">
+              <p className="rl-book-title">{b.title}</p>
+              <p className="rl-book-author">{b.author}</p>
+              <p className="rl-book-hint">View · Why we recommend it →</p>
+            </Link>
+          ))}
         </div>
 
         {/* 7-Day cross-link */}
