@@ -796,7 +796,8 @@ export function RuleStyles() {
         .rl-interactive { grid-area: interactive; }
         .rl-practice    { grid-area: practice; }
         .rl-further     { grid-area: further; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
-        .rl-further .rl-book:last-child:nth-child(odd) { grid-column: 1 / -1; }
+        .rl-further .rl-sec-label { grid-column: 1 / -1; }
+        .rl-further .rl-book:last-child:nth-child(even) { grid-column: 1 / -1; }
         .rl-rhythm-nav  { grid-area: nav; grid-template-columns: 1fr 1fr; }
         .rl-nav-btn     { min-height: 160px; }
 
