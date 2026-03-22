@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
@@ -215,6 +215,46 @@ const DAYS = [
   },
 ];
 
+
+const DAY_META = {
+  1: {
+    line: "The world does not need your permission. It just needs your attention.",
+    why: "If you never name what is shaping you, you will keep calling it normal. Awareness is the first break from drift.",
+    change: "Today changes the posture. You stop assuming your life is neutral and start paying attention to what is actually training your mind and desires.",
+  },
+  2: {
+    line: "What you give your first attention to — you give your heart to.",
+    why: "Morning is not just a time slot. It is a direction-setting window. The first voice in has unusual power over the tone of the day.",
+    change: "This shifts the first thirty minutes from reaction to intention. Scripture becomes the first framing voice instead of the algorithm.",
+  },
+  3: {
+    line: "Hurry is not neutral. Hurry is a formation system.",
+    why: "A rushed life trains a rushed soul. You lose the ability to notice God, receive people, and hear what is happening inside you.",
+    change: "Today interrupts automatic speed. You begin practicing presence instead of living mentally ahead of your life.",
+  },
+  4: {
+    line: "Formation moves through the open hand.",
+    why: "What you grip begins to govern you. Surrender is not passive; it is the refusal to let anxiety and control become your operating system.",
+    change: "This reframes trust as a real action. You name what you are clutching and practice release instead of management.",
+  },
+  5: {
+    line: "Whatever you don't face doesn't go away. It goes deeper.",
+    why: "An unexamined inner life still drives your outer life. Hidden fear, resentment, exhaustion, and grief all shape your reactions whether you name them or not.",
+    change: "Today moves honesty to the center. You stop managing appearances and begin bringing what is real into the light before God.",
+  },
+  6: {
+    line: "Most of us have mastered the art of being known without being known.",
+    why: "Isolation preserves image but limits formation. Shared life is not an optional add-on to discipleship; it is one of the places discipleship actually happens.",
+    change: "This pushes you beyond private spirituality. You practice honest presence with another person instead of staying surfaced and self-protected.",
+  },
+  7: {
+    line: "You become what you repeatedly do — not what you occasionally feel.",
+    why: "Insight without structure fades quickly. Real change needs practices, rhythms, and boundaries that can hold conviction when emotion wears off.",
+    change: "Today turns reflection into architecture. You begin building a repeatable pattern of life instead of waiting for another meaningful moment."
+  },
+};
+
+
 /* ─── STORAGE HELPERS ─────────────────────────────────────────────── */
 
 function getProgress() {
@@ -225,8 +265,31 @@ function markComplete(n) {
   const p = getProgress();
   p[n] = 1;
   localStorage.setItem("cf7", JSON.stringify(p));
+  window.dispatchEvent(new CustomEvent("cf7-progress"));
 }
 function isDone(n) { return !!getProgress()[n]; }
+function getCompletionCount(progress = getProgress()) {
+  return DAYS.reduce((acc, day) => acc + (progress[day.n] ? 1 : 0), 0);
+}
+function isUnlocked(n, progress = getProgress()) {
+  if (n === 1) return true;
+  return !!progress[n - 1];
+}
+function getCurrentDay(progress = getProgress()) {
+  return DAYS.find((day) => !progress[day.n])?.n || DAYS[DAYS.length - 1].n;
+}
+function stripTags(value = "") {
+  return value.replace(/<[^>]+>/g, "");
+}
+function renderRichText(text, key) {
+  return <p key={key} dangerouslySetInnerHTML={{ __html: text }} />;
+}
+function getCardState(n, progress = getProgress()) {
+  const done = !!progress[n];
+  const unlocked = isUnlocked(n, progress);
+  const current = !done && unlocked && getCurrentDay(progress) === n;
+  return { done, unlocked, current };
+}
 
 /* ─── SHARED STYLES (injected once) ──────────────────────────────── */
 
@@ -310,7 +373,8 @@ export function ChallengeStyles() {
       .cf7-challenge { background: #17140F; padding: 80px 1.25rem 70px; }
       .cf7-eyebrow   { font-size: 10px; letter-spacing: .48em; text-transform: uppercase; color: #C9A84C; text-align: center; margin-bottom: 1rem; }
       .cf7-section-h2 { font-size: clamp(40px,10vw,70px); font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #FAF8F5; text-align: center; line-height: .9; margin-bottom: .75rem; }
-      .cf7-section-italic { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(15px,3.5vw,22px); color: rgba(250,248,245,0.22); text-align: center; margin-bottom: 2.5rem; }
+      .cf7-section-italic { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(15px,3.5vw,22px); color: rgba(250,248,245,0.22); text-align: center; margin-bottom: 1rem; }
+      .cf7-section-copy { max-width: 620px; margin: 0 auto 2.5rem; text-align: center; font-size: 10px; line-height: 1.95; letter-spacing: .18em; text-transform: uppercase; color: rgba(250,248,245,0.38); }
       .cf7-divider { height: 1px; background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent); max-width: 560px; margin: 0 auto 2.5rem; }
 
       .cf7-band { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 2.75rem; }
@@ -328,9 +392,18 @@ export function ChallengeStyles() {
       .cf7-tdot.cur  .cf7-dot-circle { border-color: #C9A84C; color: #C9A84C; box-shadow: 0 0 10px rgba(201,168,76,0.35); }
       .cf7-dot-label { font-size: 7px; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,0.2); }
       .cf7-tdot.done .cf7-dot-label, .cf7-tdot.cur .cf7-dot-label { color: rgba(201,168,76,0.6); }
+      .cf7-tdot.locked { cursor: default; opacity: .55; }
+      .cf7-tdot.locked .cf7-dot-circle { border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.16); }
+      .cf7-tdot.locked .cf7-dot-label { color: rgba(255,255,255,0.15); }
 
       /* Day cards grid */
-      .cf7-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(148px,42vw), 1fr)); gap: 12px; max-width: 1100px; margin: 0 auto 3.5rem; }
+      .cf7-grid-wrap { position: relative; max-width: 1100px; margin: 0 auto 3.5rem; }
+      .cf7-grid-wrap::before {
+        content: ''; position: absolute; left: 0; right: 0; top: 18px; height: 1px;
+        background: linear-gradient(to right, transparent, rgba(201,168,76,0.16), transparent);
+        opacity: .55; pointer-events: none;
+      }
+      .cf7-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(148px,42vw), 1fr)); gap: 12px; max-width: 1100px; margin: 0 auto; }
       .cf7-card {
         position: relative; overflow: hidden; border-radius: 16px; cursor: pointer;
         border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04);
@@ -350,6 +423,26 @@ export function ChallengeStyles() {
       .cf7-card:hover .cf7-card-cta { opacity: 1; }
       .cf7-done-badge { position: absolute; top: 9px; left: 9px; z-index: 5; width: 22px; height: 22px; border-radius: 50%; background: #C9A84C; display: none; align-items: center; justify-content: center; }
       .cf7-card.done .cf7-done-badge { display: flex; }
+      .cf7-card.locked { cursor: default; opacity: .58; }
+      .cf7-card.locked .cf7-card-bg { opacity: .18 !important; filter: grayscale(1.1) blur(.5px); }
+      .cf7-card.locked:hover { transform: none; border-color: rgba(255,255,255,0.08); box-shadow: none; }
+      .cf7-card-state {
+        position: absolute; top: 10px; right: 10px; z-index: 6;
+        font-size: 7px; letter-spacing: .24em; text-transform: uppercase;
+        color: rgba(250,248,245,0.86); padding: 7px 10px; border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.12); background: rgba(6,5,10,0.5); backdrop-filter: blur(10px);
+      }
+      .cf7-card.locked .cf7-card-state { color: rgba(250,248,245,0.42); }
+      .cf7-card.current .cf7-card-state {
+        color: #0A0A0A; background: #C9A84C; border-color: #C9A84C;
+        box-shadow: 0 0 18px rgba(201,168,76,0.18);
+      }
+      .cf7-card-lock {
+        position: absolute; inset: 0; z-index: 4; display: flex; align-items: center; justify-content: center;
+        background: linear-gradient(to top, rgba(6,5,10,0.82), rgba(6,5,10,0.52));
+        text-align: center; padding: 18px; color: rgba(250,248,245,0.54);
+        font-size: 8px; line-height: 1.8; letter-spacing: .26em; text-transform: uppercase;
+      }
 
       /* Email form */
       .cf7-form-wrap  { max-width: 460px; margin: 0 auto; text-align: center; }
@@ -376,6 +469,7 @@ export function ChallengeStyles() {
       }
       .cf7-begin-btn:hover { background: #FAF8F5; border-color: #FAF8F5; }
       .cf7-form-note { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,0.2); }
+      .cf7-intensity-line { max-width: 620px; margin: 0 auto 2.4rem; text-align: center; font-size: 9px; letter-spacing: .34em; text-transform: uppercase; color: rgba(201,168,76,0.68); line-height: 1.9; }
       .cf7-suc-msg   { display: none; font-size: 10px; letter-spacing: .35em; text-transform: uppercase; color: #C9A84C; padding: 20px; }
       .cf7-suc-sub   { display: block; color: rgba(255,255,255,0.3); font-size: 8px; margin-top: 6px; }
 
@@ -395,6 +489,19 @@ export function ChallengeStyles() {
 
       .cf7-dev-content { max-width: 680px; margin: 0 auto; padding: 48px 24px 100px; }
       .cf7-dev-rule    { height: 1px; background: linear-gradient(to right, #C9A84C, transparent); opacity: .28; margin: 2.5rem 0; }
+      .cf7-pull-quote {
+        margin: 0 0 2.5rem; padding: 1.75rem 1.35rem 1.5rem; text-align: center;
+        border-top: 1px solid rgba(201,168,76,0.28); border-bottom: 1px solid rgba(201,168,76,0.12);
+        background: linear-gradient(to bottom, rgba(201,168,76,0.05), rgba(255,255,255,0.02));
+      }
+      .cf7-pull-quote p {
+        font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(24px,5vw,34px);
+        line-height: 1.25; color: rgba(250,248,245,0.9); margin: 0 auto; max-width: 560px;
+      }
+      .cf7-pull-quote span {
+        display: block; margin-top: .85rem; font-size: 8px; letter-spacing: .32em; text-transform: uppercase;
+        color: rgba(201,168,76,0.76);
+      }
 
       .cf7-dev-sec     { margin-bottom: 2.75rem; }
       .cf7-dev-sec-lbl { font-size: 9px; letter-spacing: .42em; text-transform: uppercase; color: #C9A84C; margin-bottom: 1.2rem; padding-bottom: .7rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -408,6 +515,16 @@ export function ChallengeStyles() {
 
       .cf7-practice-block { background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.18); border-radius: 16px; padding: 1.75rem; }
       .cf7-practice-tag   { display: inline-block; font-size: 8px; letter-spacing: .32em; text-transform: uppercase; color: #C9A84C; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.22); border-radius: 999px; padding: 5px 14px; margin-bottom: 1.2rem; }
+      .cf7-practice-pre {
+        font-size: 9px; letter-spacing: .26em; text-transform: uppercase; color: rgba(250,248,245,0.45);
+        margin: 0 0 1rem;
+      }
+      .cf7-impact-block {
+        background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px;
+        padding: 1.5rem 1.4rem; margin-bottom: 2rem;
+      }
+      .cf7-impact-block.why { border-color: rgba(201,168,76,0.16); background: rgba(201,168,76,0.035); }
+      .cf7-impact-block.change { border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.025); }
 
       .cf7-reflection { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 2rem; margin-top: 2rem; }
       .cf7-prayer     { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 1.75rem; margin-top: 1.5rem; }
@@ -422,6 +539,27 @@ export function ChallengeStyles() {
       .cf7-nav-btn     { flex: 1; padding: 15px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,0.38); text-align: center; transition: border-color .25s, color .25s; text-decoration: none; display: block; }
       .cf7-nav-btn:hover { border-color: rgba(201,168,76,0.38); color: #C9A84C; }
       .cf7-nav-btn span  { display: block; font-size: 7px; opacity: .45; margin-bottom: 3px; }
+      .cf7-complete-toast {
+        position: fixed; right: 18px; bottom: 18px; z-index: 260; pointer-events: none;
+        padding: 14px 16px 13px; border-radius: 16px; min-width: 220px;
+        background: rgba(14,12,10,0.9); border: 1px solid rgba(201,168,76,0.25); backdrop-filter: blur(18px);
+        box-shadow: 0 18px 40px rgba(0,0,0,0.35), 0 0 24px rgba(201,168,76,0.08);
+        transform: translateY(18px); opacity: 0; transition: opacity .35s, transform .35s;
+      }
+      .cf7-complete-toast.show { opacity: 1; transform: translateY(0); }
+      .cf7-complete-toast strong {
+        display: block; font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: #C9A84C; margin-bottom: 6px;
+      }
+      .cf7-complete-toast span {
+        display: block; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: rgba(250,248,245,0.6); line-height: 1.6;
+      }
+      .cf7-next-step {
+        margin-top: 2.5rem; border: 1px solid rgba(201,168,76,0.18); border-radius: 20px; padding: 1.7rem;
+        background: linear-gradient(to bottom right, rgba(201,168,76,0.06), rgba(255,255,255,0.02));
+      }
+      .cf7-next-step .cf7-dev-sec-lbl { border-bottom: none; padding-bottom: 0; margin-bottom: .85rem; }
+      .cf7-next-step-cta { display: inline-flex; margin-top: 1rem; align-items: center; gap: 8px; text-decoration: none; color: #0A0A0A; background: #C9A84C; border: 1px solid #C9A84C; border-radius: 999px; padding: 12px 18px; font-size: 9px; letter-spacing: .24em; text-transform: uppercase; font-weight: 700; }
+      .cf7-next-step-cta:hover { background: #FAF8F5; border-color: #FAF8F5; }
 
       /* Footer */
       .cf7-footer     { background: #06050A; border-top: 1px solid rgba(255,255,255,0.05); padding: 28px 1.5rem; text-align: center; }
@@ -463,24 +601,28 @@ function CornerNav() {
 
 /* ─── TRACKER (shared) ───────────────────────────────────────────── */
 
-function Tracker({ activeDayN }) {
-  const progress = getProgress();
+function Tracker({ activeDayN, progress }) {
+  const p = progress || getProgress();
+  const currentDay = getCurrentDay(p);
+
   return (
     <div className="cf7-tracker">
-      {DAYS.map((d, i) => {
-        const done = !!progress[d.n];
-        const cur  = d.n === activeDayN && !done;
+      {DAYS.map((d) => {
+        const done = !!p[d.n];
+        const unlocked = isUnlocked(d.n, p);
+        const cur = (activeDayN ? d.n === activeDayN : d.n === currentDay) && !done;
         return (
           <Link
             key={d.n}
-            to={`${CHALLENGE_BASE}/day/${d.n}`}
-            className={`cf7-tdot${done ? " done" : cur ? " cur" : ""}`}
+            to={unlocked ? `${CHALLENGE_BASE}/day/${d.n}` : CHALLENGE_BASE}
+            className={`cf7-tdot${done ? " done" : cur ? " cur" : ""}${!unlocked ? " locked" : ""}`}
             style={{ textDecoration: "none" }}
+            aria-disabled={!unlocked}
           >
             <div className="cf7-dot-circle">
-              {done ? "✓" : d.n}
+              {done ? "✓" : !unlocked ? "•" : d.n}
             </div>
-            <span className="cf7-dot-label">D{d.n}</span>
+            <span className="cf7-dot-label">{done ? "Done" : !unlocked ? "Locked" : `D${d.n}`}</span>
           </Link>
         );
       })}
@@ -491,46 +633,62 @@ function Tracker({ activeDayN }) {
 /* ─── LANDING PAGE ────────────────────────────────────────────────── */
 
 export function CFLanding() {
-  const vbRef    = useRef(null);
-  const blRef    = useRef(null);
-  const markRef  = useRef(null);
-  const contRef  = useRef(null);
-  const shRef    = useRef(null);
-  const progRef  = useRef(null);
-  const [email, setEmail]       = useState("");
+  const vbRef = useRef(null);
+  const blRef = useRef(null);
+  const markRef = useRef(null);
+  const contRef = useRef(null);
+  const shRef = useRef(null);
+  const progRef = useRef(null);
+  const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [progress, setProgress] = useState(getProgress());
+
+  const currentDay = useMemo(() => getCurrentDay(progress), [progress]);
+  const completionCount = useMemo(() => getCompletionCount(progress), [progress]);
 
   useEffect(() => {
     const vb = vbRef.current, bl = blRef.current,
-          mk = markRef.current, co = contRef.current, sh = shRef.current;
-    setTimeout(() => { vb.style.opacity = "1"; vb.style.height = "78svh"; }, 300);
-    setTimeout(() => { bl.style.opacity = "1"; }, 500);
-    setTimeout(() => { mk.style.opacity = "1"; mk.style.transform = "none"; }, 950);
-    setTimeout(() => { co.style.opacity = "1"; co.style.transform = "none"; }, 1350);
-    setTimeout(() => { sh.style.opacity = "1"; }, 2700);
+      mk = markRef.current, co = contRef.current, sh = shRef.current;
+    setTimeout(() => { if (vb) { vb.style.opacity = "1"; vb.style.height = "78svh"; } }, 300);
+    setTimeout(() => { if (bl) bl.style.opacity = "1"; }, 500);
+    setTimeout(() => { if (mk) { mk.style.opacity = "1"; mk.style.transform = "none"; } }, 950);
+    setTimeout(() => { if (co) { co.style.opacity = "1"; co.style.transform = "none"; } }, 1350);
+    setTimeout(() => { if (sh) sh.style.opacity = "1"; }, 2700);
     setTimeout(() => {
-      vb.style.transition = "opacity 2.5s ease";
-      vb.style.opacity    = "0";
+      if (vb) {
+        vb.style.transition = "opacity 2.5s ease";
+        vb.style.opacity = "0";
+      }
     }, 4300);
 
-    // Particles
     const pc = document.getElementById("cf7-particles");
-    for (let i = 0; i < 20; i++) {
-      const p = document.createElement("div");
-      p.className = "cf7-particle";
-      const s = Math.random() * 1.6 + 0.4;
-      p.style.cssText = `width:${s}px;height:${s}px;left:${Math.random()*100}%;bottom:${Math.random()*45}%;animation-duration:${10+Math.random()*12}s;animation-delay:${Math.random()*14}s;`;
-      pc.appendChild(p);
+    if (pc && !pc.childElementCount) {
+      for (let i = 0; i < 20; i++) {
+        const p = document.createElement("div");
+        p.className = "cf7-particle";
+        const s = Math.random() * 1.6 + 0.4;
+        p.style.cssText = `width:${s}px;height:${s}px;left:${Math.random()*100}%;bottom:${Math.random()*45}%;animation-duration:${10+Math.random()*12}s;animation-delay:${Math.random()*14}s;`;
+        pc.appendChild(p);
+      }
     }
 
-    // Scroll progress
     const onScroll = () => {
       const d = document.documentElement;
-      if (progRef.current)
+      if (progRef.current) {
         progRef.current.style.width = (d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + "%";
+      }
     };
+    const syncProgress = () => setProgress(getProgress());
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("cf7-progress", syncProgress);
+    window.addEventListener("storage", syncProgress);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("cf7-progress", syncProgress);
+      window.removeEventListener("storage", syncProgress);
+    };
   }, []);
 
   const handleSubmit = () => {
@@ -543,14 +701,14 @@ export function CFLanding() {
       <CornerNav />
       <div className="cf7-prog-bar"><div className="cf7-prog-fill" ref={progRef} /></div>
 
-      {/* Hero */}
       <section className="cf7-hero">
         <div className="cf7-hero-bg" />
         <div className="cf7-vbeam" ref={vbRef} />
         <div className="cf7-bloom" ref={blRef} />
         <div id="cf7-particles" />
         <img
-          className="cf7-hero-mark" ref={markRef}
+          className="cf7-hero-mark"
+          ref={markRef}
           src="/helmet.png"
           onError={e => { e.target.style.display = "none"; }}
           alt="Counter Formation"
@@ -558,14 +716,14 @@ export function CFLanding() {
         <div className="cf7-hero-content" ref={contRef}>
           <span className="cf7-entry-label">Counter Formation · The Entry Point</span>
           <h1 className="cf7-h1">7-Day<br />Formation<br />Challenge</h1>
-          <p className="cf7-italic">7 days. a new pattern.</p>
-          <p className="cf7-sub">A structured initiation into intentional living. One practice per day. No noise.</p>
+          <p className="cf7-italic">You are already being formed.</p>
+          <p className="cf7-sub">Interrupt the drift. Reorder your attention. Build a different pattern of life — one deliberate practice at a time.</p>
           <a
             className="cf7-cta"
             href="#challenge"
             onClick={e => { e.preventDefault(); document.getElementById("cf7-challenge").scrollIntoView({ behavior: "smooth" }); }}
           >
-            Begin the Challenge
+            {completionCount ? "Continue the Challenge" : "Begin the Challenge"}
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
               <path d="M1 6.5h11M7 2.5l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
@@ -580,11 +738,14 @@ export function CFLanding() {
         </div>
       </section>
 
-      {/* Challenge */}
       <section id="cf7-challenge" className="cf7-challenge">
         <p className="cf7-eyebrow">Counter Formation</p>
         <h2 className="cf7-section-h2">The Seven Days</h2>
-        <p className="cf7-section-italic">Formation is not accidental. It requires structure.</p>
+        <p className="cf7-section-italic">Formation is not optional. It is already happening.</p>
+        <p className="cf7-section-copy">
+          This is not a content library. It is a path. Seven days to interrupt drift, recover attention,
+          and begin practicing a more deliberate life under Christ.
+        </p>
         <div className="cf7-divider" />
 
         <div className="cf7-band">
@@ -594,44 +755,67 @@ export function CFLanding() {
           <div className="cf7-band-rule" />
         </div>
 
-        <Tracker activeDayN={null} />
+        <Tracker activeDayN={null} progress={progress} />
 
-        {/* Cards */}
-        <div className="cf7-grid">
-          {DAYS.map(d => (
-            <Link
-              key={d.n}
-              to={`${CHALLENGE_BASE}/day/${d.n}`}
-              className={`cf7-card${isDone(d.n) ? " done" : ""}`}
-            >
-              <div className="cf7-done-badge">
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                  <path d="M2 5L4.5 7.5L8.5 2.5" stroke="#0A0A0A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-              <div className="cf7-card-bg" style={{ backgroundImage: `url('${d.imgThumb}')` }} />
-              <div className="cf7-card-ov" />
-              <div className="cf7-card-body">
-                <p className="cf7-card-num">Day {d.n}</p>
-                <p className="cf7-card-title">{d.title}</p>
-                <p className="cf7-card-theme">{d.theme}</p>
-                <span className="cf7-card-cta">
-                  Read Devotion
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                    <path d="M1 5h8M5.5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-                  </svg>
-                </span>
-              </div>
-            </Link>
-          ))}
+        <p className="cf7-intensity-line">
+          {completionCount === 0
+            ? "Start with Day 1. Stay in order. Let the week build on itself."
+            : completionCount === DAYS.length
+              ? "All seven complete. Go back through them slowly and keep the rhythm."
+              : `You are ${completionCount} day${completionCount === 1 ? "" : "s"} in. Continue with Day ${currentDay}.`}
+        </p>
+
+        <div className="cf7-grid-wrap">
+          <div className="cf7-grid">
+            {DAYS.map((d) => {
+              const { done, unlocked, current } = getCardState(d.n, progress);
+              const stateLabel = done ? "Completed" : current ? "Start Here" : unlocked ? "Continue" : "Locked";
+              return (
+                <Link
+                  key={d.n}
+                  to={unlocked ? `${CHALLENGE_BASE}/day/${d.n}` : CHALLENGE_BASE}
+                  className={`cf7-card${done ? " done" : ""}${current ? " current" : ""}${!unlocked ? " locked" : ""}`}
+                  aria-disabled={!unlocked}
+                >
+                  <div className="cf7-done-badge">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5L4.5 7.5L8.5 2.5" stroke="#0A0A0A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                  <span className="cf7-card-state">{stateLabel}</span>
+                  <div className="cf7-card-bg" style={{ backgroundImage: `url('${d.imgThumb}')` }} />
+                  <div className="cf7-card-ov" />
+                  {!unlocked && (
+                    <div className="cf7-card-lock">
+                      Complete Day {d.n - 1}
+                      <br />
+                      to continue
+                    </div>
+                  )}
+                  <div className="cf7-card-body">
+                    <p className="cf7-card-num">Day {d.n}</p>
+                    <p className="cf7-card-title">{d.title}</p>
+                    <p className="cf7-card-theme">{d.theme}</p>
+                    <span className="cf7-card-cta">
+                      {done ? "Read Again" : current ? "Begin Day" : "Read Devotion"}
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                        <path d="M1 5h8M5.5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+                      </svg>
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Email form */}
         <div className="cf7-form-wrap">
           {!submitted ? (
             <>
               <p className="cf7-form-eyebrow">The Entry Point</p>
-              <h3 className="cf7-form-h">Begin the<br />Challenge</h3>
+              <h3 className="cf7-form-h">
+                {completionCount ? <>Stay in the<br />Pattern</> : <>Begin the<br />Challenge</>}
+              </h3>
               <div className="cf7-form-row">
                 <input
                   className="cf7-email-inp"
@@ -642,17 +826,17 @@ export function CFLanding() {
                   onKeyDown={e => e.key === "Enter" && handleSubmit()}
                 />
                 <button className="cf7-begin-btn" onClick={handleSubmit}>
-                  Begin
+                  {completionCount ? "Continue" : "Begin"}
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                     <path d="M1 6h10M6.5 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                   </svg>
                 </button>
               </div>
-              <p className="cf7-form-note">7 days · no noise · one email per day</p>
+              <p className="cf7-form-note">One practice per day. No noise. No drift.</p>
             </>
           ) : (
             <div className="cf7-suc-msg" style={{ display: "block" }}>
-              You're in. Day 1 begins now.
+              You're in. Day {currentDay} begins now.
               <span className="cf7-suc-sub">Check your inbox. The formation has started.</span>
             </div>
           )}
@@ -670,66 +854,83 @@ export function CFLanding() {
 /* ─── DEVOTION PAGE ───────────────────────────────────────────────── */
 
 export function CFDevotion() {
-  const { day }     = useParams();
-  const navigate    = useNavigate();
-  const rfillRef    = useRef(null);
-  const contentRef  = useRef(null);
+  const { day } = useParams();
+  const navigate = useNavigate();
+  const rfillRef = useRef(null);
+  const contentRef = useRef(null);
+  const [progress, setProgress] = useState(getProgress());
+  const [showComplete, setShowComplete] = useState(false);
 
   const n = parseInt(day, 10);
   const d = DAYS.find(x => x.n === n);
+  const meta = d ? DAY_META[d.n] : null;
 
-  // Redirect to landing if day is invalid
   useEffect(() => {
     if (!d) navigate(CHALLENGE_BASE, { replace: true });
   }, [d, navigate]);
 
-  // Mark complete when 80% read
+  useEffect(() => {
+    setProgress(getProgress());
+    window.scrollTo(0, 0);
+  }, [n]);
+
   useEffect(() => {
     if (!d) return;
+
+    let hasMarked = !!getProgress()[d.n];
     const el = contentRef.current?.closest(".cf7-dev-scroll") || window;
-    const target = el === window ? document.documentElement : el;
 
     const onScroll = () => {
-      const scrollTop    = el === window ? document.documentElement.scrollTop : el.scrollTop;
+      const scrollTop = el === window ? document.documentElement.scrollTop : el.scrollTop;
       const scrollHeight = el === window ? document.documentElement.scrollHeight : el.scrollHeight;
       const clientHeight = el === window ? window.innerHeight : el.clientHeight;
       const pct = scrollTop / (scrollHeight - clientHeight) || 0;
       if (rfillRef.current) rfillRef.current.style.width = (pct * 100) + "%";
-      if (pct > 0.8) markComplete(d.n);
+
+      if (pct > 0.8 && !hasMarked) {
+        markComplete(d.n);
+        hasMarked = true;
+        setProgress(getProgress());
+        setShowComplete(true);
+        window.setTimeout(() => setShowComplete(false), 2600);
+      }
     };
+
+    const syncProgress = () => setProgress(getProgress());
 
     if (el === window) {
       window.addEventListener("scroll", onScroll, { passive: true });
-      return () => window.removeEventListener("scroll", onScroll);
     } else {
       el.addEventListener("scroll", onScroll, { passive: true });
-      return () => el.removeEventListener("scroll", onScroll);
     }
-  }, [d]);
+    window.addEventListener("cf7-progress", syncProgress);
+    window.addEventListener("storage", syncProgress);
 
-  // Scroll to top on day change
-  useEffect(() => { window.scrollTo(0, 0); }, [n]);
+    return () => {
+      if (el === window) {
+        window.removeEventListener("scroll", onScroll);
+      } else {
+        el.removeEventListener("scroll", onScroll);
+      }
+      window.removeEventListener("cf7-progress", syncProgress);
+      window.removeEventListener("storage", syncProgress);
+    };
+  }, [d]);
 
   if (!d) return null;
 
   const prev = DAYS.find(x => x.n === n - 1);
   const next = DAYS.find(x => x.n === n + 1);
-
-  const practiceLines = d.practice.split("\n").map((l, i) =>
-    l ? <p key={i}>{l}</p> : <br key={i} />
-  );
-  const prayerLines = d.prayer.split("\n").map((l, i) =>
-    l ? <p key={i}>{l}</p> : <br key={i} />
-  );
+  const practiceLines = d.practice.split("\n").map((l, i) => l ? <p key={i}>{l}</p> : <br key={i} />);
+  const prayerLines = d.prayer.split("\n").map((l, i) => l ? <p key={i}>{l}</p> : <br key={i} />);
+  const pullQuote = meta?.line || stripTags(d.teaching[0]);
 
   return (
     <div className="cf7-dev-wrap">
       <CornerNav />
 
-      {/* Reading progress bar */}
       <div className="cf7-rbar"><div className="cf7-rfill" ref={rfillRef} /></div>
 
-      {/* Hero image band */}
       <div className="cf7-dev-img-band">
         <div className="cf7-dev-img-bg" style={{ backgroundImage: `url('${d.img}')` }} />
         <div className="cf7-dev-img-ov" />
@@ -745,78 +946,102 @@ export function CFDevotion() {
         </div>
       </div>
 
+      <div className={`cf7-complete-toast${showComplete ? " show" : ""}`}>
+        <strong>Day Complete</strong>
+        <span>{next ? `Day ${d.n} is complete. Continue to Day ${next.n}.` : "All seven days complete. Keep the rhythm."}</span>
+      </div>
+
       <div className="cf7-dev-content" ref={contentRef}>
-
-        {/* Tracker */}
-        <Tracker activeDayN={d.n} />
-
+        <Tracker activeDayN={d.n} progress={progress} />
         <div className="cf7-dev-rule" />
 
-        {/* Opening */}
-        <div className="cf7-dev-sec">
-          <p className="cf7-dev-sec-lbl">Opening</p>
-          <div className="cf7-dev-body">
-            <p><em>{d.opening}</em></p>
-            {d.body.map((p, i) => (
-              <p key={i} dangerouslySetInnerHTML={{ __html: p }} />
-            ))}
-          </div>
+        <div className="cf7-pull-quote">
+          <p>{pullQuote}</p>
+          <span>Formation Line</span>
         </div>
 
-        {/* Scripture */}
-        <div className="cf7-dev-sec">
-          <p className="cf7-dev-sec-lbl">Scripture</p>
+        <Section label="Opening">
+          <div className="cf7-dev-body">
+            <p><em>{d.opening}</em></p>
+            {d.body.map((p, i) => renderRichText(p, i))}
+          </div>
+        </Section>
+
+        <Section label="Scripture">
           {d.scriptures.map((s, i) => (
             <div className="cf7-scripture-block" key={i}>
               <p>"{s.t}"</p>
               <cite>— {s.r}</cite>
             </div>
           ))}
-        </div>
+        </Section>
 
-        {/* Teaching */}
-        <div className="cf7-dev-sec">
-          <p className="cf7-dev-sec-lbl">Teaching</p>
+        <Section label="Teaching">
           <div className="cf7-dev-body">
-            {d.teaching.map((p, i) => (
-              <p key={i} dangerouslySetInnerHTML={{ __html: p }} />
-            ))}
+            {d.teaching.map((p, i) => renderRichText(p, i))}
           </div>
-        </div>
+        </Section>
 
-        {/* Practice */}
-        <div className="cf7-dev-sec">
+        <Section label="Why This Matters">
+          <div className="cf7-impact-block why">
+            <div className="cf7-dev-body" style={{ fontSize: "clamp(15px,3.6vw,18px)" }}>
+              <p>{meta?.why}</p>
+            </div>
+          </div>
+        </Section>
+
+        <Section>
           <div className="cf7-practice-block">
             <span className="cf7-practice-tag">Practice · 15 Minutes</span>
+            <p className="cf7-practice-pre">Do not rush this. This is where formation begins.</p>
             <div className="cf7-dev-body" style={{ fontSize: "clamp(15px,3.5vw,17px)" }}>
               {practiceLines}
             </div>
           </div>
-        </div>
+        </Section>
 
-        {/* Reflection */}
-        <div className="cf7-dev-sec cf7-reflection">
-          <p className="cf7-dev-sec-lbl">Reflection</p>
+        <Section label="Reflection">
           <div className="cf7-dev-body"><p><em>{d.reflection}</em></p></div>
-        </div>
+        </Section>
 
-        {/* Prayer */}
-        <div className="cf7-dev-sec">
-          <p className="cf7-dev-sec-lbl">Prayer</p>
+        <Section label="What This Changes">
+          <div className="cf7-impact-block change">
+            <div className="cf7-dev-body" style={{ fontSize: "clamp(15px,3.6vw,18px)" }}>
+              <p>{meta?.change}</p>
+            </div>
+          </div>
+        </Section>
+
+        <Section label="Prayer">
           <div className="cf7-prayer">
             <div className="cf7-dev-body" style={{ fontSize: "clamp(15px,3.5vw,17px)", color: "rgba(250,248,245,0.52)" }}>
               {prayerLines}
             </div>
           </div>
-        </div>
+        </Section>
 
-        {/* Brand footer */}
+        {d.n === 7 && (
+          <div className="cf7-next-step">
+            <p className="cf7-dev-sec-lbl">This Is Not The End</p>
+            <div className="cf7-dev-body" style={{ fontSize: "clamp(15px,3.6vw,18px)" }}>
+              <p>This week was not meant to be a spike of inspiration. It was meant to begin a different pattern.</p>
+              <p>Keep the rule. Protect your attention. Stay in community. Return to these seven days when the pace picks up and the drift starts again.</p>
+              <p>Counter Formation is not a moment. It is a way of living.</p>
+            </div>
+            <Link to={CHALLENGE_BASE} className="cf7-next-step-cta">
+              Return to the Challenge
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M1 6h10M6.5 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </Link>
+          </div>
+        )}
+
         <div className="cf7-brand-foot">
           <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
           <p>Counter Formation · Formed in Christ · Ephesians 6:10–18</p>
         </div>
 
-        {/* Day nav */}
         <div className="cf7-day-nav">
           {prev ? (
             <Link to={`${CHALLENGE_BASE}/day/${prev.n}`} className="cf7-nav-btn">
@@ -837,13 +1062,21 @@ export function CFDevotion() {
             </Link>
           )}
         </div>
-
       </div>
 
       <footer className="cf7-footer">
         <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
         <p>Counter Formation · Formed in Christ · Ephesians 6:10–18 · © 2026</p>
       </footer>
+    </div>
+  );
+}
+
+function Section({ label, children }) {
+  return (
+    <div className="cf7-dev-sec">
+      {label ? <p className="cf7-dev-sec-lbl">{label}</p> : null}
+      {children}
     </div>
   );
 }
