@@ -1,4 +1,4 @@
-mport React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
@@ -313,61 +313,37 @@ function BreathPrayer() {
       <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".45em", textTransform: "uppercase", color: "rgba(201,168,76,0.7)", marginBottom: "2.5rem" }}>
         Breath Prayer · 4 counts in · 4 counts out
       </p>
-
-      {/* Large circle visual */}
       <div style={{ position: "relative", width: "220px", height: "220px", margin: "0 auto 2.5rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        {/* Static outer ring */}
         <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "1px solid rgba(201,168,76,0.15)" }} />
-        {/* Mid ring */}
         <div style={{ position: "absolute", inset: "20px", borderRadius: "50%", border: "1px solid rgba(201,168,76,0.08)" }} />
-        {/* Breathing circle — scales up on inhale/hold, down on exhale/rest */}
         <div style={{
           width: "120px", height: "120px", borderRadius: "50%",
-          background: phase === "idle"
-            ? "radial-gradient(circle, rgba(201,168,76,0.08), rgba(201,168,76,0.02))"
-            : "radial-gradient(circle, rgba(201,168,76,0.35) 0%, rgba(201,168,76,0.12) 45%, rgba(201,168,76,0.03) 70%)",
+          background: phase === "idle" ? "radial-gradient(circle, rgba(201,168,76,0.08), rgba(201,168,76,0.02))" : "radial-gradient(circle, rgba(201,168,76,0.35) 0%, rgba(201,168,76,0.12) 45%, rgba(201,168,76,0.03) 70%)",
           border: `1px solid rgba(201,168,76,${phase === "idle" ? "0.2" : "0.6"})`,
           boxShadow: phase !== "idle" ? "0 0 40px rgba(201,168,76,0.18), inset 0 0 30px rgba(201,168,76,0.08)" : "none",
           transform: isExpanding ? "scale(1.42)" : "scale(0.72)",
-          transition: phase === "inhale" ? "transform 4s ease-in-out, box-shadow 0.5s, background 0.5s"
-                    : phase === "exhale" ? "transform 4s ease-in-out, box-shadow 0.5s, background 0.5s"
-                    : "transform 0.4s ease, box-shadow 0.5s, background 0.5s",
-          display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column",
-          gap: "4px",
+          transition: phase === "inhale" ? "transform 4s ease-in-out, box-shadow 0.5s, background 0.5s" : phase === "exhale" ? "transform 4s ease-in-out, box-shadow 0.5s, background 0.5s" : "transform 0.4s ease, box-shadow 0.5s, background 0.5s",
+          display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "4px",
         }}>
-          {/* Phase label inside circle */}
           {phase !== "idle" && (
             <>
-              <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", color: "rgba(201,168,76,0.9)", lineHeight: 1 }}>
-                {phaseLabel}
-              </span>
-              <span style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "13px", color: "rgba(250,248,245,0.8)", lineHeight: 1.2, maxWidth: "80px", textAlign: "center" }}>
-                {prayerLine}
-              </span>
+              <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", color: "rgba(201,168,76,0.9)", lineHeight: 1 }}>{phaseLabel}</span>
+              <span style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "13px", color: "rgba(250,248,245,0.8)", lineHeight: 1.2, maxWidth: "80px", textAlign: "center" }}>{prayerLine}</span>
             </>
           )}
         </div>
       </div>
-
-      {/* Breath count */}
       {cycles > 0 && (
         <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.35)", marginBottom: "1.5rem" }}>
           {cycles} {cycles === 1 ? "breath" : "breaths"} complete
         </p>
       )}
-
-      {/* Prayer words displayed below circle when idle */}
       {phase === "idle" && (
         <div style={{ marginBottom: "2rem" }}>
-          <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "18px", color: "rgba(250,248,245,0.5)", letterSpacing: ".04em" }}>
-            "Lord Jesus… have mercy"
-          </p>
-          <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: "rgba(250,248,245,0.22)", marginTop: "8px" }}>
-            The Jesus Prayer · inhale / exhale
-          </p>
+          <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "18px", color: "rgba(250,248,245,0.5)", letterSpacing: ".04em" }}>"Lord Jesus… have mercy"</p>
+          <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: "rgba(250,248,245,0.22)", marginTop: "8px" }}>The Jesus Prayer · inhale / exhale</p>
         </div>
       )}
-
       {phase === "idle" ? (
         <button onClick={start} style={{ padding: "14px 40px", borderRadius: "999px", border: "2px solid rgba(201,168,76,0.5)", background: "rgba(201,168,76,0.1)", color: "#C9A84C", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".3em", textTransform: "uppercase", cursor: "pointer", transition: "all .25s", fontWeight: 700 }}
           onMouseEnter={e => { e.target.style.background = "rgba(201,168,76,0.2)"; e.target.style.borderColor = "#C9A84C"; }}
@@ -387,10 +363,10 @@ function BreathPrayer() {
 
 function LectioDivinaGuide() {
   const steps = [
-    { num: "I", latin: "Lectio", eng: "Read", desc: "Read the passage slowly, aloud if possible. Read it again. A third time. You are not looking for information — you are listening for a word or phrase that seems to press against you." },
-    { num: "II", latin: "Meditatio", eng: "Reflect", desc: "Take the word or phrase that caught you. Repeat it quietly. Turn it over. Let it interact with your memory, your imagination, your current situation. Don't analyze — ruminate, like an animal chewing cud." },
-    { num: "III", latin: "Oratio", eng: "Respond", desc: "Let what has arisen in meditation move you to prayer. Speak to God — in gratitude, petition, confession, praise. This is not a structured prayer. It is a spontaneous response to what God has stirred in you." },
-    { num: "IV", latin: "Contemplatio", eng: "Rest", desc: "Release all thoughts, words, and images. Simply rest in God's presence. You are not trying to achieve anything. You are resting in the love of the One who has spoken. Even five minutes of this silence is more valuable than it seems." },
+    { num: "I",   latin: "Lectio",      eng: "Read",    desc: "Read the passage slowly, aloud if possible. Read it again. A third time. You are not looking for information — you are listening for a word or phrase that seems to press against you." },
+    { num: "II",  latin: "Meditatio",   eng: "Reflect", desc: "Take the word or phrase that caught you. Repeat it quietly. Turn it over. Let it interact with your memory, your imagination, your current situation. Don't analyze — ruminate, like an animal chewing cud." },
+    { num: "III", latin: "Oratio",      eng: "Respond", desc: "Let what has arisen in meditation move you to prayer. Speak to God — in gratitude, petition, confession, praise. This is not a structured prayer. It is a spontaneous response to what God has stirred in you." },
+    { num: "IV",  latin: "Contemplatio",eng: "Rest",    desc: "Release all thoughts, words, and images. Simply rest in God's presence. You are not trying to achieve anything. You are resting in the love of the One who has spoken. Even five minutes of this silence is more valuable than it seems." },
   ];
   const [active, setActive] = useState(0);
   const cur = steps[active];
@@ -455,105 +431,32 @@ function PrayerPostures() {
 
 function SabbathIdeas() {
   const categories = [
-    {
-      label: "Rest",
-      ideas: [
-        "Sleep in without guilt",
-        "Take a long nap in the afternoon",
-        "Lie in the grass and watch the sky",
-        "Turn off all notifications",
-        "Let the day be slow",
-        "Do nothing on purpose",
-      ],
-    },
-    {
-      label: "Delight",
-      ideas: [
-        "Cook a meal you love",
-        "Take a long walk with no destination",
-        "Read a novel, not a growth book",
-        "Play with your kids",
-        "Tend a garden",
-        "Sit by water",
-        "Make something with your hands",
-        "Listen to music you love all the way through",
-        "Watch the sunset",
-      ],
-    },
-    {
-      label: "Worship",
-      ideas: [
-        "Gather with your church",
-        "Sing — alone or together",
-        "Read a Psalm aloud",
-        "Take communion at home",
-        "Light candles and begin with prayer",
-        "Journal gratitude from the week",
-        "Pray the Lord's Prayer slowly",
-      ],
-    },
-    {
-      label: "People",
-      ideas: [
-        "Share a long, unhurried meal",
-        "Have people over with no agenda",
-        "Call someone you love",
-        "Visit someone who is lonely",
-        "Put the phones away at the table",
-        "Play a game together",
-      ],
-    },
-    {
-      label: "Nature",
-      ideas: [
-        "Hike somewhere beautiful",
-        "Swim in open water",
-        "Sit outside in the morning quiet",
-        "Watch birds",
-        "Walk barefoot",
-        "Find a place with no artificial noise",
-      ],
-    },
-    {
-      label: "Rituals",
-      ideas: [
-        "Light two candles to begin",
-        "Pour wine or sparkling juice",
-        "Begin with a table blessing",
-        "End with evening prayer",
-        "Keep the same start time each week",
-        "Prepare the day before — clear the decks",
-      ],
-    },
+    { label: "Rest",    ideas: ["Sleep in without guilt","Take a long nap in the afternoon","Lie in the grass and watch the sky","Turn off all notifications","Let the day be slow","Do nothing on purpose"] },
+    { label: "Delight", ideas: ["Cook a meal you love","Take a long walk with no destination","Read a novel, not a growth book","Play with your kids","Tend a garden","Sit by water","Make something with your hands","Listen to music you love all the way through","Watch the sunset"] },
+    { label: "Worship", ideas: ["Gather with your church","Sing — alone or together","Read a Psalm aloud","Take communion at home","Light candles and begin with prayer","Journal gratitude from the week","Pray the Lord's Prayer slowly"] },
+    { label: "People",  ideas: ["Share a long, unhurried meal","Have people over with no agenda","Call someone you love","Visit someone who is lonely","Put the phones away at the table","Play a game together"] },
+    { label: "Nature",  ideas: ["Hike somewhere beautiful","Swim in open water","Sit outside in the morning quiet","Watch birds","Walk barefoot","Find a place with no artificial noise"] },
+    { label: "Rituals", ideas: ["Light two candles to begin","Pour wine or sparkling juice","Begin with a table blessing","End with evening prayer","Keep the same start time each week","Prepare the day before — clear the decks"] },
   ];
-
   const [active, setActive] = useState(0);
   const cur = categories[active];
-
   return (
     <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", overflow: "hidden" }}>
-      {/* Category tabs */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
         {categories.map((c, i) => (
           <button key={i} onClick={() => setActive(i)} style={{ padding: "12px 16px", border: "none", background: active === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: active === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".22em", textTransform: "uppercase", color: active === i ? "#C9A84C" : "rgba(250,248,245,0.3)", transition: "all .2s" }}>
             {c.label}
           </button>
         ))}
       </div>
-
-      {/* Ideas grid */}
       <div style={{ padding: "2rem" }}>
-        <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".38em", textTransform: "uppercase", color: "rgba(201,168,76,0.55)", marginBottom: "1.25rem" }}>
-          {cur.label} · Sabbath Ideas
-        </p>
+        <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".38em", textTransform: "uppercase", color: "rgba(201,168,76,0.55)", marginBottom: "1.25rem" }}>{cur.label} · Sabbath Ideas</p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(180px, 100%), 1fr))", gap: "8px" }}>
           {cur.ideas.map((idea, i) => (
-            <div key={i} style={{ padding: "12px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "10px", fontFamily: "'Cormorant Garamond',serif", fontSize: "16px", color: "rgba(250,248,245,0.72)", lineHeight: 1.4 }}>
-              {idea}
-            </div>
+            <div key={i} style={{ padding: "12px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "10px", fontFamily: "'Cormorant Garamond',serif", fontSize: "16px", color: "rgba(250,248,245,0.72)", lineHeight: 1.4 }}>{idea}</div>
           ))}
         </div>
-        <p style={{ marginTop: "1.5rem", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)", fontStyle: "normal" }}>
+        <p style={{ marginTop: "1.5rem", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)" }}>
           Ask: is this restful or worshipful? If not, it can wait. — John Mark Comer
         </p>
       </div>
@@ -617,20 +520,15 @@ export function BookPage() {
 
   return (
     <div style={{ background: "#0E0C0A", minHeight: "100svh", fontFamily: "'Barlow Condensed',sans-serif", color: "#FAF8F5" }}>
-      {/* Corner nav */}
       <Link to="/" style={{ position: "fixed", top: "1rem", left: "50%", transform: "translateX(-50%)", zIndex: 200, display: "flex", alignItems: "center", gap: "10px", padding: "10px 20px 10px 14px", borderRadius: "999px", background: "rgba(14,12,10,0.88)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.08)", textDecoration: "none", transition: "border-color .25s" }}>
         <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="Counter Formation" style={{ width: "28px", height: "28px", objectFit: "contain", filter: "invert(1) brightness(1.1)" }} />
         <span style={{ fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", color: "rgba(250,248,245,0.55)", fontWeight: 600 }}>Counter Formation</span>
       </Link>
-
       <div style={{ maxWidth: "640px", margin: "0 auto", padding: "100px 24px 80px" }}>
-        {/* Back link */}
         <Link to={`${RULE_BASE}/${rhythm}`} style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.7)", textDecoration: "none", marginBottom: "3rem" }}>
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M12 6.5H1M6 2.5l-4 4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
           Back to {data.title}
         </Link>
-
-        {/* Book hero image */}
         <div style={{ position: "relative", borderRadius: "20px", overflow: "hidden", marginBottom: "2.5rem", aspectRatio: "16/9" }}>
           <img src={book.img} alt={book.title} style={{ width: "100%", height: "100%", objectFit: "cover", filter: "grayscale(.3)", opacity: .85 }} onError={e => { e.target.src = "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=900"; }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(14,12,10,0.92) 0%, rgba(14,12,10,0.2) 60%)" }} />
@@ -640,20 +538,14 @@ export function BookPage() {
             <p style={{ fontSize: "10px", letterSpacing: ".25em", textTransform: "uppercase", color: "rgba(201,168,76,0.65)" }}>{book.author}</p>
           </div>
         </div>
-
-        {/* Why we recommend it */}
         <div style={{ marginBottom: "2.5rem" }}>
           <p style={{ fontSize: "9px", letterSpacing: ".42em", textTransform: "uppercase", color: "#C9A84C", marginBottom: "1.25rem", paddingBottom: ".75rem", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>Why We Recommend It</p>
           <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(17px,4vw,20px)", lineHeight: 1.86, color: "rgba(250,248,245,0.76)" }}>{book.desc}</p>
         </div>
-
-        {/* Rhythm connection */}
         <div style={{ background: "rgba(201,168,76,0.05)", border: "1px solid rgba(201,168,76,0.15)", borderRadius: "16px", padding: "1.5rem", marginBottom: "2.5rem" }}>
           <p style={{ fontSize: "8px", letterSpacing: ".35em", textTransform: "uppercase", color: "rgba(201,168,76,0.55)", marginBottom: ".5rem" }}>Connected Rhythm</p>
           <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "16px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: "#FAF8F5" }}>{data.title} · {data.sub}</p>
         </div>
-
-        {/* Amazon CTA */}
         <a href={book.amazon} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1.25rem 1.5rem", borderRadius: "14px", background: "#C9A84C", textDecoration: "none", transition: "background .25s" }}
           onMouseEnter={e => { e.currentTarget.style.background = "#FAF8F5"; }}
           onMouseLeave={e => { e.currentTarget.style.background = "#C9A84C"; }}>
@@ -663,8 +555,6 @@ export function BookPage() {
           </div>
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M10 4l6 6-6 6" stroke="#0A0A0A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </a>
-
-        {/* Back nav */}
         <Link to={`${RULE_BASE}/${rhythm}`} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginTop: "2.5rem", padding: "14px", borderRadius: "14px", border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", textDecoration: "none", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".22em", textTransform: "uppercase", color: "rgba(255,255,255,0.38)", transition: "all .25s" }}
           onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(201,168,76,0.38)"; e.currentTarget.style.color = "#C9A84C"; }}
           onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "rgba(255,255,255,0.38)"; }}>
@@ -693,20 +583,27 @@ export function RuleStyles() {
       .rl-prog-bar  { position: sticky; top: 0; z-index: 190; height: 2px; background: rgba(255,255,255,0.05); }
       .rl-prog-fill { height: 100%; width: 0; background: linear-gradient(to right, #C9A84C, rgba(201,168,76,0.35)); transition: width .12s linear; }
 
-      .rl-hero-band       { position: relative; overflow: hidden; min-height: clamp(300px,52vw,500px); display: flex; flex-direction: column; justify-content: flex-end; }
-      .rl-hero-bg         { position: absolute; inset: 0; background-size: cover; background-position: center; filter: grayscale(.15); }
-      .rl-hero-ov         { position: absolute; inset: 0; background: linear-gradient(to top, rgba(14,12,10,0.98) 0%, rgba(14,12,10,0.5) 55%, rgba(14,12,10,0.18) 100%); }
-      .rl-hero-in         { position: relative; z-index: 2; padding: 2rem 24px 2.5rem; max-width: 800px; margin: 0 auto; width: 100%; }
-      .rl-hero-logo       { width: 32px; height: 32px; filter: invert(1) brightness(.9); opacity: .45; margin-bottom: .9rem; display: block; }
-      .rl-hero-eye        { font-size: 9px; letter-spacing: .42em; text-transform: uppercase; color: rgba(201,168,76,0.75); margin-bottom: .5rem; }
-      .rl-hero-h1         { font-size: clamp(44px,10vw,88px); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; line-height: .86; margin-bottom: 1rem; }
-      .rl-hero-sub        { font-family: 'Cormorant Garamond',serif; font-style: italic; font-size: clamp(16px,3.5vw,22px); color: rgba(250,248,245,0.35); }
+      /* ── Hero ── */
+      .rl-hero-band { position: relative; overflow: hidden; min-height: clamp(300px,52vw,500px); display: flex; flex-direction: column; justify-content: flex-end; }
+      .rl-hero-bg   { position: absolute; inset: 0; background-size: cover; background-position: center; filter: grayscale(.15); }
+      .rl-hero-ov   { position: absolute; inset: 0; background: linear-gradient(to top, rgba(14,12,10,0.98) 0%, rgba(14,12,10,0.5) 55%, rgba(14,12,10,0.18) 100%); }
+      .rl-hero-in   { position: relative; z-index: 2; padding: 2rem 24px 2.5rem; max-width: 860px; margin: 0 auto; width: 100%; }
+      .rl-hero-logo { width: 32px; height: 32px; filter: invert(1) brightness(.9); opacity: .45; margin-bottom: .9rem; display: block; }
+      .rl-hero-eye  { font-size: 9px; letter-spacing: .42em; text-transform: uppercase; color: rgba(201,168,76,0.75); margin-bottom: .5rem; }
+      .rl-hero-h1   { font-size: clamp(44px,10vw,88px); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; line-height: .86; margin-bottom: 1rem; }
+      .rl-hero-sub  { font-family: 'Cormorant Garamond',serif; font-style: italic; font-size: clamp(16px,3.5vw,22px); color: rgba(250,248,245,0.35); }
 
+      /* ── Pull quote ── */
       .rl-pullquote      { border-left: 2px solid #C9A84C; margin: 3rem 0; padding: 1.25rem 2rem; background: rgba(201,168,76,0.04); border-radius: 0 12px 12px 0; }
       .rl-pullquote p    { font-family: 'Cormorant Garamond',serif; font-style: italic; font-size: clamp(20px,4.5vw,28px); color: rgba(250,248,245,0.82); line-height: 1.55; margin-bottom: .75rem; }
       .rl-pullquote cite { font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: #C9A84C; font-style: normal; }
 
-      .rl-content   { max-width: 740px; margin: 0 auto; padding: 52px 24px 120px; }
+      /* ── Content shell — mobile: single column ── */
+      .rl-content { max-width: 740px; margin: 0 auto; padding: 52px 24px 120px; }
+
+      /* Sidebar flows inline on mobile */
+      .rl-sidebar { margin-bottom: 3rem; }
+
       .rl-rule      { height: 1px; background: linear-gradient(to right, #C9A84C, transparent); opacity: .25; margin: 2.5rem 0; }
       .rl-section   { margin-bottom: 3rem; }
       .rl-sec-label { font-size: 9px; letter-spacing: .42em; text-transform: uppercase; color: #C9A84C; margin-bottom: 1.25rem; padding-bottom: .75rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -742,8 +639,8 @@ export function RuleStyles() {
       .rl-challenge-link-left p:last-child  { font-size: clamp(13px,3vw,15px); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #FAF8F5; }
       .rl-challenge-arrow { font-size: 18px; color: rgba(201,168,76,0.5); }
 
-      .rl-rhythm-nav  { display: flex; gap: 10px; margin-top: 3rem; }
-      .rl-nav-btn     { flex: 1; padding: 15px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); cursor: pointer; font-family: 'Barlow Condensed',sans-serif; font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,0.38); text-align: center; transition: border-color .25s, color .25s; text-decoration: none; display: block; }
+      .rl-rhythm-nav { display: flex; gap: 10px; margin-top: 3rem; }
+      .rl-nav-btn    { flex: 1; padding: 15px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); cursor: pointer; font-family: 'Barlow Condensed',sans-serif; font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,0.38); text-align: center; transition: border-color .25s, color .25s; text-decoration: none; display: block; }
       .rl-nav-btn:hover { border-color: rgba(201,168,76,0.38); color: #C9A84C; }
       .rl-nav-btn span  { display: block; font-size: 7px; opacity: .45; margin-bottom: 3px; }
 
@@ -751,29 +648,82 @@ export function RuleStyles() {
       .rl-footer img { width: 24px; height: 24px; opacity: .2; filter: invert(1); display: block; margin: 0 auto .75rem; }
       .rl-footer p   { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
 
-      /* Floating 7-day trigger on rhythm pages */
-      .rl-float-trigger {
-        position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 190;
-        display: flex; align-items: center; gap: 8px;
-      }
-      .rl-float-btn {
-        display: flex; align-items: center; gap: 8px;
-        padding: 12px 22px; border-radius: 999px;
-        background: #C9A84C; color: #0A0A0A;
-        font-family: 'Barlow Condensed',sans-serif; font-size: 10px;
-        letter-spacing: .22em; text-transform: uppercase; font-weight: 700;
-        text-decoration: none; white-space: nowrap;
-        box-shadow: 0 4px 32px rgba(201,168,76,0.35);
-        transition: background .25s, transform .25s;
-      }
+      .rl-float-trigger { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 190; display: flex; align-items: center; gap: 8px; }
+      .rl-float-btn { display: flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; background: #C9A84C; color: #0A0A0A; font-family: 'Barlow Condensed',sans-serif; font-size: 10px; letter-spacing: .22em; text-transform: uppercase; font-weight: 700; text-decoration: none; white-space: nowrap; box-shadow: 0 4px 32px rgba(201,168,76,0.35); transition: background .25s, transform .25s; }
       .rl-float-btn:hover { background: #FAF8F5; transform: scale(1.03); }
-      .rl-float-dismiss {
-        width: 28px; height: 28px; border-radius: 50%; border: none;
-        background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5);
-        display: flex; align-items: center; justify-content: center;
-        cursor: pointer; transition: background .2s;
-      }
+      .rl-float-dismiss { width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .2s; }
       .rl-float-dismiss:hover { background: rgba(255,255,255,0.18); }
+
+      /* ─────────────────────────────────────────────────────────────
+         DESKTOP LAYOUT — ≥1024px
+         Two-column grid: prose left, sidebar right (sticky).
+         Full-width breakouts for interactive, practice, further, nav.
+         ───────────────────────────────────────────────────────────── */
+      @media (min-width: 1024px) {
+
+        .rl-hero-band { min-height: clamp(380px, 58vw, 580px); }
+        .rl-hero-in   { max-width: 1100px; padding: 2.5rem 48px 3rem; }
+        .rl-hero-h1   { font-size: clamp(60px, 9vw, 108px); }
+
+        .rl-content {
+          max-width: 1100px;
+          padding: 60px 48px 140px;
+          display: grid;
+          grid-template-columns: 1fr 340px;
+          column-gap: 64px;
+          align-items: start;
+          grid-template-areas:
+            "pullquote   pullquote"
+            "why-label   why-label"
+            "why-body    sidebar"
+            "theology    sidebar"
+            "rule1       rule1"
+            "interactive interactive"
+            "rule2       rule2"
+            "practice    practice"
+            "further     further"
+            "crosslink   crosslink"
+            "brand       brand"
+            "nav         nav";
+        }
+
+        .rl-pullquote  { grid-area: pullquote; }
+        .rl-why-label  { grid-area: why-label; }
+        .rl-why-body   { grid-area: why-body; }
+        .rl-sidebar    { grid-area: sidebar; position: sticky; top: 72px; margin-bottom: 0; align-self: start; }
+        .rl-theology   { grid-area: theology; }
+        .rl-rule:nth-of-type(1) { grid-area: rule1; }
+        .rl-rule:nth-of-type(2) { grid-area: rule2; }
+        .rl-interactive { grid-area: interactive; }
+        .rl-practice    { grid-area: practice; }
+        .rl-further     { grid-area: further; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .rl-rhythm-nav  { grid-area: nav; }
+
+        /* Sidebar styling */
+        .rl-sidebar {
+          border-left: 1px solid rgba(255,255,255,0.07);
+          padding-left: 40px;
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+        }
+        .rl-sidebar .rl-section { margin-bottom: 0; }
+
+        .rl-pullquote p { font-size: clamp(22px, 2.8vw, 32px); }
+        .rl-sec-label   { letter-spacing: .5em; }
+      }
+
+      /* ─── LARGE DESKTOP ≥1440px ─── */
+      @media (min-width: 1440px) {
+        .rl-hero-in { max-width: 1320px; padding: 3rem 64px 3.5rem; }
+        .rl-content {
+          max-width: 1320px;
+          grid-template-columns: 1fr 380px;
+          column-gap: 80px;
+          padding: 72px 64px 160px;
+        }
+        .rl-sidebar { padding-left: 52px; }
+      }
     `}</style>
   );
 }
@@ -834,9 +784,9 @@ export function RhythmPage() {
 
   if (!data) return null;
 
-  const idx   = RHYTHMS.findIndex(r => r.slug === rhythm);
-  const prev  = RHYTHMS[idx - 1];
-  const next  = RHYTHMS[idx + 1];
+  const idx         = RHYTHMS.findIndex(r => r.slug === rhythm);
+  const prev        = RHYTHMS[idx - 1];
+  const next        = RHYTHMS[idx + 1];
   const Interactive = INTERACTIVES[data.slug];
 
   return (
@@ -858,23 +808,25 @@ export function RhythmPage() {
 
       <div className="rl-content">
 
-        {/* Pull quote */}
+        {/* Pull quote — full width */}
         <div className="rl-pullquote">
           <p>"{data.quote}"</p>
           <cite>— {data.quoteRef}</cite>
         </div>
 
-        {/* Why label */}
+        {/* Why label — full width */}
         <div className="rl-why-label">
           <p className="rl-sec-label">Why This Rhythm</p>
         </div>
 
-        {/* Why body */}
+        {/* Why body — left column */}
         <div className="rl-why-body rl-section">
-          {data.why.map((p, i) => <p key={i} className="rl-body" dangerouslySetInnerHTML={{ __html: p }} />)}
+          {data.why.map((p, i) => (
+            <p key={i} className="rl-body" dangerouslySetInnerHTML={{ __html: p }} />
+          ))}
         </div>
 
-        {/* Sticky sidebar: scriptures + reflections */}
+        {/* Sticky sidebar — right column, spans why + theology rows */}
         <div className="rl-sidebar">
           <div className="rl-section">
             <p className="rl-sec-label">Key Scriptures</p>
@@ -895,14 +847,16 @@ export function RhythmPage() {
           </div>
         </div>
 
-        {/* Theology */}
+        {/* Theology — left column, continues beside sidebar */}
         <div className="rl-theology rl-section">
-          {data.theology.map((p, i) => <p key={i} className="rl-body" dangerouslySetInnerHTML={{ __html: p }} />)}
+          {data.theology.map((p, i) => (
+            <p key={i} className="rl-body" dangerouslySetInnerHTML={{ __html: p }} />
+          ))}
         </div>
 
         <div className="rl-rule" />
 
-        {/* Signature interactive */}
+        {/* Interactive — full width */}
         <div className="rl-interactive rl-section">
           <p className="rl-sec-label">{data.interactiveLabel}</p>
           <Interactive />
@@ -910,10 +864,12 @@ export function RhythmPage() {
 
         <div className="rl-rule" />
 
-        {/* Practice */}
+        {/* Practice — full width */}
         <div className="rl-practice rl-section">
           <p className="rl-sec-label">The Practice</p>
-          <p className="rl-body" style={{ marginBottom: "1.5rem" }}><span dangerouslySetInnerHTML={{ __html: data.practice.intro }} /></p>
+          <p className="rl-body" style={{ marginBottom: "1.5rem" }}>
+            <span dangerouslySetInnerHTML={{ __html: data.practice.intro }} />
+          </p>
           <div className="rl-steps">
             {data.practice.steps.map((s, i) => (
               <div className="rl-step" key={i}>
@@ -927,7 +883,7 @@ export function RhythmPage() {
           </div>
         </div>
 
-        {/* Go Deeper — links to book pages */}
+        {/* Further reading — full width, 4-up on desktop */}
         <div className="rl-further rl-section">
           <p className="rl-sec-label">Go Deeper</p>
           {data.further.map((b, i) => (
@@ -957,7 +913,7 @@ export function RhythmPage() {
           <p style={{ fontSize: "8px", letterSpacing: ".32em", textTransform: "uppercase", color: "rgba(255,255,255,0.18)" }}>Counter Formation · Formed in Christ · Ephesians 6:10–18</p>
         </div>
 
-        {/* Rhythm nav — links to prev/next rhythm */}
+        {/* Rhythm nav */}
         <div className="rl-rhythm-nav">
           {prev ? (
             <Link to={`${RULE_BASE}/${prev.slug}`} className="rl-nav-btn">
@@ -982,7 +938,6 @@ export function RhythmPage() {
         <p>Counter Formation · Rule of Life · Ephesians 6:10–18 · © 2026</p>
       </footer>
 
-      {/* Floating 7-day challenge trigger */}
       <FloatingChallengeTrigger />
     </div>
   );
