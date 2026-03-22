@@ -663,7 +663,7 @@ export function RuleStyles() {
 
       .rl-corner-nav { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 200; display: flex; align-items: center; gap: 10px; padding: 10px 20px 10px 14px; border-radius: 999px; background: rgba(14,12,10,0.88); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); text-decoration: none; transition: border-color .25s; }
       .rl-corner-nav:hover { border-color: rgba(201,168,76,0.35); }
-      .rl-corner-nav img  { width: 28px; height: 28px; object-fit: contain; filter: invert(1) brightness(2); }
+      .rl-corner-nav img  { width: 28px; height: 28px; object-fit: contain; filter: brightness(0) invert(1); }
       .rl-corner-nav span { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: rgba(250,248,245,0.55); font-weight: 600; white-space: nowrap; }
 
       .rl-prog-bar  { position: sticky; top: 0; z-index: 190; height: 2px; background: rgba(255,255,255,0.05); }
