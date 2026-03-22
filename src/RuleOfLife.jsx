@@ -726,28 +726,19 @@ export function RuleStyles() {
       .rl-challenge-link-left p:last-child  { font-size: clamp(13px,3vw,15px); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #FAF8F5; }
       .rl-challenge-arrow { font-size: 18px; color: rgba(201,168,76,0.5); }
 
-      /* ── Rhythm nav — image background cards ── */
-      .rl-rhythm-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 3rem; }
+      /* ── Rhythm nav — pill buttons ── */
+      .rl-rhythm-nav { display: flex; gap: 12px; margin-top: 3rem; }
       .rl-nav-btn {
-        position: relative; overflow: hidden; border-radius: 18px;
-        min-height: 120px; display: flex; flex-direction: column; justify-content: flex-end;
-        padding: 1.25rem 1.5rem; text-decoration: none;
+        flex: 1; padding: 16px 24px; border-radius: 999px;
         border: 1px solid rgba(255,255,255,0.10);
-        transition: border-color .3s, transform .3s;
+        background: rgba(255,255,255,0.04);
+        text-decoration: none; display: flex; flex-direction: column;
+        gap: 4px; transition: border-color .25s, background .25s;
       }
-      .rl-nav-btn:hover { border-color: rgba(201,168,76,0.45); transform: translateY(-3px); }
-      .rl-nav-btn-bg {
-        position: absolute; inset: 0; background-size: cover; background-position: center;
-        filter: grayscale(.4); opacity: .35; transition: opacity .4s, filter .4s;
-      }
-      .rl-nav-btn:hover .rl-nav-btn-bg { opacity: .6; filter: grayscale(0); }
-      .rl-nav-btn-ov {
-        position: absolute; inset: 0;
-        background: linear-gradient(to top, rgba(6,5,10,0.92) 0%, rgba(6,5,10,0.45) 60%, rgba(6,5,10,0.15) 100%);
-      }
-      .rl-nav-btn-inner { position: relative; z-index: 2; }
-      .rl-nav-btn-dir   { font-size: 8px; letter-spacing: .38em; text-transform: uppercase; color: rgba(201,168,76,0.75); margin-bottom: .35rem; }
-      .rl-nav-btn-title { font-size: clamp(18px,2.8vw,24px); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #FAF8F5; line-height: 1; }
+      .rl-nav-btn:hover { border-color: rgba(201,168,76,0.45); background: rgba(201,168,76,0.06); }
+      .rl-nav-btn-dir   { font-size: 8px; letter-spacing: .38em; text-transform: uppercase; color: rgba(201,168,76,0.65); }
+      .rl-nav-btn-title { font-size: clamp(14px,2vw,18px); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #FAF8F5; line-height: 1; }
+      .rl-nav-btn.next  { text-align: right; align-items: flex-end; }
 
       .rl-footer     { background: #06050A; border-top: 1px solid rgba(255,255,255,0.05); padding: 28px 1.5rem; text-align: center; }
       .rl-footer img { width: 24px; height: 24px; opacity: .2; filter: invert(1); display: block; margin: 0 auto .75rem; }
@@ -798,8 +789,7 @@ export function RuleStyles() {
         .rl-further     { grid-area: further; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
         .rl-further .rl-sec-label { grid-column: 1 / -1; }
         .rl-further .rl-book:last-child:nth-child(even) { grid-column: 1 / -1; }
-        .rl-rhythm-nav  { grid-area: nav; grid-template-columns: 1fr 1fr; }
-        .rl-nav-btn     { min-height: 160px; }
+        .rl-rhythm-nav  { grid-area: nav; }
 
         .rl-sidebar {
           border-left: 1px solid rgba(255,255,255,0.07);
@@ -1007,22 +997,14 @@ export function RhythmPage() {
         <div className="rl-rhythm-nav">
           {prev ? (
             <Link to={`${RULE_BASE}/${prev.slug}`} className="rl-nav-btn">
-              <div className="rl-nav-btn-bg" style={{ backgroundImage: `url('${prev.imgThumb}')` }} />
-              <div className="rl-nav-btn-ov" />
-              <div className="rl-nav-btn-inner">
-                <p className="rl-nav-btn-dir">← {prev.rhythm}</p>
-                <p className="rl-nav-btn-title">{prev.title}</p>
-              </div>
+              <span className="rl-nav-btn-dir">← {prev.rhythm}</span>
+              <span className="rl-nav-btn-title">{prev.title}</span>
             </Link>
           ) : <div />}
           {next ? (
-            <Link to={`${RULE_BASE}/${next.slug}`} className="rl-nav-btn" style={{ textAlign: "right" }}>
-              <div className="rl-nav-btn-bg" style={{ backgroundImage: `url('${next.imgThumb}')` }} />
-              <div className="rl-nav-btn-ov" />
-              <div className="rl-nav-btn-inner">
-                <p className="rl-nav-btn-dir">{next.rhythm} →</p>
-                <p className="rl-nav-btn-title">{next.title}</p>
-              </div>
+            <Link to={`${RULE_BASE}/${next.slug}`} className="rl-nav-btn next">
+              <span className="rl-nav-btn-dir">{next.rhythm} →</span>
+              <span className="rl-nav-btn-title">{next.title}</span>
             </Link>
           ) : <div />}
         </div>
