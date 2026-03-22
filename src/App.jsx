@@ -14,6 +14,7 @@ import {
 } from "./FieldGuide";
 
 import { ChallengeStyles, CFLanding, CFDevotion } from "./SevenDayChallenge";
+import { RuleStyles, RhythmPage } from "./RuleOfLife";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -321,11 +322,11 @@ function ArchitectureSection() {
 
 function RuleOfLifeSection() {
   const rhythms = [
-    { title: "Presence",  desc: "Attention before God",    bg: "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=600" },
-    { title: "Scripture", desc: "Truth before noise",       bg: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600" },
-    { title: "Prayer",    desc: "Dependence before action", bg: "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=600" },
-    { title: "Sabbath",   desc: "Rest before production",   bg: "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=600" },
-    { title: "Community", desc: "Formation together",       bg: "/Community_8k.png" },
+    { title: "Presence",  desc: "Attention before God",    slug: "presence",  bg: "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=600" },
+    { title: "Scripture", desc: "Truth before noise",       slug: "scripture", bg: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600" },
+    { title: "Prayer",    desc: "Dependence before action", slug: "prayer",    bg: "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=600" },
+    { title: "Sabbath",   desc: "Rest before production",   slug: "sabbath",   bg: "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=600" },
+    { title: "Community", desc: "Formation together",       slug: "community", bg: "/Community_8k.png" },
   ];
 
   return (
@@ -348,9 +349,10 @@ function RuleOfLifeSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-5">
           {rhythms.map((r, i) => (
-            <div key={r.title}
-              className="manifesto-item group relative overflow-hidden rounded-2xl md:rounded-none transition-all duration-500 cursor-default"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)", minHeight: "320px" }}
+            <Link key={r.title}
+              to={`/rule-of-life/${r.slug}`}
+              className="manifesto-item group relative overflow-hidden rounded-2xl md:rounded-none transition-all duration-500 cursor-pointer"
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)", minHeight: "320px", textDecoration: "none", display: "block" }}
               onMouseEnter={e => {
                 e.currentTarget.style.borderColor = "rgba(201,168,76,0.30)";
                 e.currentTarget.style.background   = "rgba(255,255,255,0.08)";
@@ -377,7 +379,7 @@ function RuleOfLifeSection() {
                 </div>
                 <p className="text-[10px] md:text-xs opacity-60 tracking-wide leading-relaxed font-light mt-6">{r.desc}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
@@ -1096,6 +1098,7 @@ export default function App() {
     <BrowserRouter>
       <FieldGuideStyles />
       <ChallengeStyles />
+      <RuleStyles />
       <Routes>
         {/* Main site */}
         <Route path="/" element={<MainSite />} />
@@ -1111,6 +1114,9 @@ export default function App() {
         {/* 7-Day Challenge routes */}
         <Route path="/7-day-challenge" element={<CFLanding />} />
         <Route path="/7-day-challenge/day/:day" element={<CFDevotion />} />
+
+        {/* Rule of Life routes */}
+        <Route path="/rule-of-life/:rhythm" element={<RhythmPage />} />
 
         {/* Fallback */}
         <Route path="*" element={<MainSite />} />
