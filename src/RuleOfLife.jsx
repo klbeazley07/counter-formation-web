@@ -566,8 +566,8 @@ export function BookPage() {
     chip:      { background: "rgba(201,168,76,0.05)", border: "1px solid rgba(201,168,76,0.15)", borderRadius: "14px", padding: "1.1rem 1.4rem", marginBottom: "2rem" },
     chipLabel: { fontSize: "8px", letterSpacing: ".35em", textTransform: "uppercase", color: "rgba(201,168,76,0.5)", marginBottom: ".35rem" },
     chipVal:   { fontFamily: "'Barlow Condensed',sans-serif", fontSize: "15px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: "#FAF8F5" },
-    cta:       { display: "inline-flex", alignItems: "center", gap: "10px", padding: "13px 22px", borderRadius: "12px", border: "1px solid rgba(201,168,76,0.35)", background: "transparent", textDecoration: "none", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", color: "rgba(201,168,76,0.8)", transition: "all .25s" },
-    backBtn:   { display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginTop: "2.5rem", padding: "14px", borderRadius: "14px", border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", textDecoration: "none", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".22em", textTransform: "uppercase", color: "rgba(255,255,255,0.38)", transition: "all .25s" },
+    cta:       { display: "inline-flex", alignItems: "center", gap: "10px", padding: "15px 28px", borderRadius: "12px", border: "2px solid #C9A84C", background: "#C9A84C", textDecoration: "none", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".28em", textTransform: "uppercase", color: "#0A0A0A", fontWeight: 700, transition: "all .25s" },
+    backBtn:   { display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginTop: "1.25rem", padding: "16px", borderRadius: "14px", border: "none", background: "#E8E4DC", textDecoration: "none", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".22em", textTransform: "uppercase", color: "#0A0A0A", fontWeight: 700, transition: "all .25s" },
   };
 
   return (
