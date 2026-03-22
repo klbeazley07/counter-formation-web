@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+mport React, { useEffect, useRef, useState, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
@@ -816,4 +816,181 @@ export function RhythmPage() {
   const data        = RHYTHMS.find(r => r.slug === rhythm);
 
   useEffect(() => {
-    if (!data) nav
+    if (!data) navigate("/", { replace: true });
+  }, [data, navigate]);
+
+  useEffect(() => { window.scrollTo(0, 0); }, [rhythm]);
+
+  useEffect(() => {
+    if (!data) return;
+    const onScroll = () => {
+      const d   = document.documentElement;
+      const pct = d.scrollTop / (d.scrollHeight - d.clientHeight) || 0;
+      if (rfillRef.current) rfillRef.current.style.width = (pct * 100) + "%";
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [data]);
+
+  if (!data) return null;
+
+  const idx   = RHYTHMS.findIndex(r => r.slug === rhythm);
+  const prev  = RHYTHMS[idx - 1];
+  const next  = RHYTHMS[idx + 1];
+  const Interactive = INTERACTIVES[data.slug];
+
+  return (
+    <div className="rl-wrap">
+      <CornerNav />
+      <div className="rl-prog-bar"><div className="rl-prog-fill" ref={rfillRef} /></div>
+
+      {/* Hero */}
+      <div className="rl-hero-band">
+        <div className="rl-hero-bg" style={{ backgroundImage: `url('${data.img}')` }} />
+        <div className="rl-hero-ov" />
+        <div className="rl-hero-in">
+          <img className="rl-hero-logo" src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
+          <p className="rl-hero-eye">{data.rhythm} · Rule of Life</p>
+          <h1 className="rl-hero-h1">{data.title}</h1>
+          <p className="rl-hero-sub">{data.sub}</p>
+        </div>
+      </div>
+
+      <div className="rl-content">
+
+        {/* Pull quote */}
+        <div className="rl-pullquote">
+          <p>"{data.quote}"</p>
+          <cite>— {data.quoteRef}</cite>
+        </div>
+
+        {/* Why */}
+        <div className="rl-section">
+          <p className="rl-sec-label">Why This Rhythm</p>
+          <div className="rl-body">
+            {data.why.map((p, i) => <p key={i} dangerouslySetInnerHTML={{ __html: p }} />)}
+          </div>
+        </div>
+
+        <div className="rl-rule" />
+
+        {/* Theology */}
+        <div className="rl-section">
+          <p className="rl-sec-label">The Theological Foundation</p>
+          <div className="rl-body">
+            {data.theology.map((p, i) => <p key={i} dangerouslySetInnerHTML={{ __html: p }} />)}
+          </div>
+        </div>
+
+        {/* Scripture */}
+        <div className="rl-section">
+          <p className="rl-sec-label">Scripture</p>
+          {data.scriptures.map((s, i) => (
+            <div className="rl-scripture" key={i}>
+              <p>"{s.t}"</p>
+              <cite>— {s.r}</cite>
+            </div>
+          ))}
+        </div>
+
+        <div className="rl-rule" />
+
+        {/* Signature interactive */}
+        <div className="rl-section">
+          <p className="rl-sec-label">{data.interactiveLabel}</p>
+          <Interactive />
+        </div>
+
+        <div className="rl-rule" />
+
+        {/* Practice */}
+        <div className="rl-section">
+          <p className="rl-sec-label">The Practice</p>
+          <p className="rl-body" style={{ marginBottom: "1.5rem" }}><span dangerouslySetInnerHTML={{ __html: data.practice.intro }} /></p>
+          <div className="rl-steps">
+            {data.practice.steps.map((s, i) => (
+              <div className="rl-step" key={i}>
+                <div className="rl-step-head">
+                  <span className="rl-step-num">{s.num}</span>
+                  <span className="rl-step-title">{s.title}</span>
+                </div>
+                <p className="rl-step-body">{s.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rl-rule" />
+
+        {/* Reflection */}
+        <div className="rl-section">
+          <p className="rl-sec-label">Questions for Reflection</p>
+          <div className="rl-reflections">
+            {data.reflection.map((q, i) => (
+              <div className="rl-reflect-q" key={i}>{q}</div>
+            ))}
+          </div>
+        </div>
+
+        {/* Go Deeper — links to book pages */}
+        <div className="rl-section">
+          <p className="rl-sec-label">Go Deeper</p>
+          <div className="rl-further">
+            {data.further.map((b, i) => (
+              <Link key={i} to={`${RULE_BASE}/${rhythm}/book/${i}`} className="rl-book">
+                <p className="rl-book-title">{b.title}</p>
+                <p className="rl-book-author">{b.author}</p>
+                <p className="rl-book-hint">View · Why we recommend it →</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* 7-Day cross-link */}
+        <div className="rl-section">
+          <p className="rl-sec-label">Continue the Formation</p>
+          <Link to={`/7-day-challenge/day/${data.challengeDay}`} className="rl-challenge-link">
+            <div className="rl-challenge-link-left">
+              <p>7-Day Challenge · Day {data.challengeDay}</p>
+              <p>{data.challengeTitle}</p>
+            </div>
+            <span className="rl-challenge-arrow">→</span>
+          </Link>
+        </div>
+
+        {/* Brand footer mark */}
+        <div style={{ textAlign: "center", padding: "2rem 0 1rem", borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: "1rem" }}>
+          <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" style={{ width: "26px", height: "26px", opacity: .2, filter: "invert(1)", margin: "0 auto .75rem", display: "block" }} />
+          <p style={{ fontSize: "8px", letterSpacing: ".32em", textTransform: "uppercase", color: "rgba(255,255,255,0.18)" }}>Counter Formation · Formed in Christ · Ephesians 6:10–18</p>
+        </div>
+
+        {/* Rhythm nav — links to prev/next rhythm */}
+        <div className="rl-rhythm-nav">
+          {prev ? (
+            <Link to={`${RULE_BASE}/${prev.slug}`} className="rl-nav-btn">
+              <span>← {prev.rhythm}</span>{prev.title}
+            </Link>
+          ) : (
+            <div style={{ flex: 1 }} />
+          )}
+          {next ? (
+            <Link to={`${RULE_BASE}/${next.slug}`} className="rl-nav-btn">
+              <span>{next.rhythm} →</span>{next.title}
+            </Link>
+          ) : (
+            <div style={{ flex: 1 }} />
+          )}
+        </div>
+
+      </div>
+
+      <footer className="rl-footer">
+        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
+        <p>Counter Formation · Rule of Life · Ephesians 6:10–18 · © 2026</p>
+      </footer>
+
+      {/* Floating 7-day challenge trigger */}
+      <FloatingChallengeTrigger />
+    </div>
+  );
+}
