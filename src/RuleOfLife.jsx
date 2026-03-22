@@ -626,23 +626,41 @@ export function RuleStyles() {
       .rl-reflections { display: flex; flex-direction: column; gap: 1rem; }
       .rl-reflect-q   { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.14); border-radius: 14px; padding: 1.25rem 1.5rem; font-family: 'Cormorant Garamond',serif; font-style: italic; font-size: clamp(15px,3.5vw,18px); color: rgba(250,248,245,0.65); line-height: 1.7; }
 
-      .rl-further    { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px,100%), 1fr)); gap: 10px; }
-      .rl-book       { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 1.1rem 1.25rem; transition: border-color .3s; text-decoration: none; display: block; cursor: pointer; }
-      .rl-book:hover { border-color: rgba(201,168,76,0.35); }
-      .rl-book-title  { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; margin-bottom: .3rem; line-height: 1.3; }
-      .rl-book-author { font-size: 9px; letter-spacing: .25em; text-transform: uppercase; color: rgba(201,168,76,0.55); margin-bottom: .5rem; }
-      .rl-book-hint   { font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: rgba(250,248,245,0.2); }
+      /* ── Book cards — horizontal ── */
+      .rl-further      { display: flex; flex-direction: column; gap: 12px; }
+      .rl-book         { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; overflow: hidden; transition: border-color .3s, transform .3s; text-decoration: none; display: grid; grid-template-columns: 140px 1fr; cursor: pointer; }
+      .rl-book:hover   { border-color: rgba(201,168,76,0.45); transform: translateX(4px); }
+      .rl-book-img     { width: 100%; height: 100%; min-height: 110px; object-fit: cover; display: block; filter: grayscale(.35); opacity: .8; transition: opacity .4s, filter .4s; }
+      .rl-book:hover .rl-book-img { opacity: 1; filter: grayscale(0); }
+      .rl-book-body    { padding: 1.1rem 1.4rem; display: flex; flex-direction: column; justify-content: space-between; }
+      .rl-book-title   { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; margin-bottom: .3rem; line-height: 1.25; }
+      .rl-book-author  { font-size: 9px; letter-spacing: .25em; text-transform: uppercase; color: rgba(201,168,76,0.65); margin-bottom: .6rem; }
+      .rl-book-desc    { font-family: 'Cormorant Garamond',serif; font-size: 14px; line-height: 1.65; color: rgba(250,248,245,0.45); margin-bottom: .9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      .rl-book-cta     { display: inline-flex; align-items: center; gap: 6px; font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(201,168,76,0.7); transition: color .2s; }
+      .rl-book:hover .rl-book-cta { color: #C9A84C; }
 
-      .rl-challenge-link { display: flex; align-items: center; justify-content: space-between; background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 14px; padding: 1.25rem 1.5rem; text-decoration: none; transition: background .25s, border-color .25s; margin-top: 1rem; }
-      .rl-challenge-link:hover { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.4); }
-      .rl-challenge-link-left p:first-child { font-size: 8px; letter-spacing: .35em; text-transform: uppercase; color: rgba(201,168,76,0.6); margin-bottom: .3rem; }
-      .rl-challenge-link-left p:last-child  { font-size: clamp(13px,3vw,15px); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #FAF8F5; }
-      .rl-challenge-arrow { font-size: 18px; color: rgba(201,168,76,0.5); }
-
-      .rl-rhythm-nav { display: flex; gap: 10px; margin-top: 3rem; }
-      .rl-nav-btn    { flex: 1; padding: 15px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); cursor: pointer; font-family: 'Barlow Condensed',sans-serif; font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,0.38); text-align: center; transition: border-color .25s, color .25s; text-decoration: none; display: block; }
-      .rl-nav-btn:hover { border-color: rgba(201,168,76,0.38); color: #C9A84C; }
-      .rl-nav-btn span  { display: block; font-size: 7px; opacity: .45; margin-bottom: 3px; }
+      /* ── Rhythm nav — image background cards ── */
+      .rl-rhythm-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 3rem; }
+      .rl-nav-btn {
+        position: relative; overflow: hidden; border-radius: 18px;
+        min-height: 120px; display: flex; flex-direction: column; justify-content: flex-end;
+        padding: 1.25rem 1.5rem; text-decoration: none;
+        border: 1px solid rgba(255,255,255,0.10);
+        transition: border-color .3s, transform .3s;
+      }
+      .rl-nav-btn:hover { border-color: rgba(201,168,76,0.45); transform: translateY(-3px); }
+      .rl-nav-btn-bg {
+        position: absolute; inset: 0; background-size: cover; background-position: center;
+        filter: grayscale(.4); opacity: .35; transition: opacity .4s, filter .4s;
+      }
+      .rl-nav-btn:hover .rl-nav-btn-bg { opacity: .6; filter: grayscale(0); }
+      .rl-nav-btn-ov {
+        position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(6,5,10,0.92) 0%, rgba(6,5,10,0.45) 60%, rgba(6,5,10,0.15) 100%);
+      }
+      .rl-nav-btn-inner { position: relative; z-index: 2; }
+      .rl-nav-btn-dir   { font-size: 8px; letter-spacing: .38em; text-transform: uppercase; color: rgba(201,168,76,0.75); margin-bottom: .35rem; }
+      .rl-nav-btn-title { font-size: clamp(18px,2.8vw,24px); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #FAF8F5; line-height: 1; }
 
       .rl-footer     { background: #06050A; border-top: 1px solid rgba(255,255,255,0.05); padding: 28px 1.5rem; text-align: center; }
       .rl-footer img { width: 24px; height: 24px; opacity: .2; filter: invert(1); display: block; margin: 0 auto .75rem; }
@@ -696,8 +714,9 @@ export function RuleStyles() {
         .rl-rule:nth-of-type(2) { grid-area: rule2; }
         .rl-interactive { grid-area: interactive; }
         .rl-practice    { grid-area: practice; }
-        .rl-further     { grid-area: further; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-        .rl-rhythm-nav  { grid-area: nav; }
+        .rl-further    { grid-area: further; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .rl-rhythm-nav { grid-area: nav; grid-template-columns: 1fr 1fr; }
+        .rl-nav-btn    { min-height: 160px; }
 
         /* Sidebar styling */
         .rl-sidebar {
@@ -888,23 +907,25 @@ export function RhythmPage() {
           <p className="rl-sec-label">Go Deeper</p>
           {data.further.map((b, i) => (
             <Link key={i} to={`${RULE_BASE}/${rhythm}/book/${i}`} className="rl-book">
-              <p className="rl-book-title">{b.title}</p>
-              <p className="rl-book-author">{b.author}</p>
-              <p className="rl-book-hint">View · Why we recommend it →</p>
+              <img
+                src={b.img}
+                alt={b.title}
+                className="rl-book-img"
+                onError={e => { e.target.src = "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=400"; }}
+              />
+              <div className="rl-book-body">
+                <div>
+                  <p className="rl-book-title">{b.title}</p>
+                  <p className="rl-book-author">{b.author}</p>
+                  <p className="rl-book-desc">{b.desc}</p>
+                </div>
+                <span className="rl-book-cta">
+                  Why we recommend it
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 5h8M5.5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>
+                </span>
+              </div>
             </Link>
           ))}
-        </div>
-
-        {/* 7-Day cross-link */}
-        <div className="rl-section">
-          <p className="rl-sec-label">Continue the Formation</p>
-          <Link to={`/7-day-challenge/day/${data.challengeDay}`} className="rl-challenge-link">
-            <div className="rl-challenge-link-left">
-              <p>7-Day Challenge · Day {data.challengeDay}</p>
-              <p>{data.challengeTitle}</p>
-            </div>
-            <span className="rl-challenge-arrow">→</span>
-          </Link>
         </div>
 
         {/* Brand footer mark */}
@@ -913,22 +934,28 @@ export function RhythmPage() {
           <p style={{ fontSize: "8px", letterSpacing: ".32em", textTransform: "uppercase", color: "rgba(255,255,255,0.18)" }}>Counter Formation · Formed in Christ · Ephesians 6:10–18</p>
         </div>
 
-        {/* Rhythm nav */}
+        {/* Rhythm nav — image-backed cards */}
         <div className="rl-rhythm-nav">
           {prev ? (
             <Link to={`${RULE_BASE}/${prev.slug}`} className="rl-nav-btn">
-              <span>← {prev.rhythm}</span>{prev.title}
+              <div className="rl-nav-btn-bg" style={{ backgroundImage: `url('${prev.imgThumb}')` }} />
+              <div className="rl-nav-btn-ov" />
+              <div className="rl-nav-btn-inner">
+                <p className="rl-nav-btn-dir">← {prev.rhythm}</p>
+                <p className="rl-nav-btn-title">{prev.title}</p>
+              </div>
             </Link>
-          ) : (
-            <div style={{ flex: 1 }} />
-          )}
+          ) : <div />}
           {next ? (
-            <Link to={`${RULE_BASE}/${next.slug}`} className="rl-nav-btn">
-              <span>{next.rhythm} →</span>{next.title}
+            <Link to={`${RULE_BASE}/${next.slug}`} className="rl-nav-btn" style={{ textAlign: "right" }}>
+              <div className="rl-nav-btn-bg" style={{ backgroundImage: `url('${next.imgThumb}')` }} />
+              <div className="rl-nav-btn-ov" />
+              <div className="rl-nav-btn-inner">
+                <p className="rl-nav-btn-dir">{next.rhythm} →</p>
+                <p className="rl-nav-btn-title">{next.title}</p>
+              </div>
             </Link>
-          ) : (
-            <div style={{ flex: 1 }} />
-          )}
+          ) : <div />}
         </div>
 
       </div>
