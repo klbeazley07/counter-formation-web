@@ -13,6 +13,28 @@ const C = {
   ivory:  "#FAF8F5",
 };
 
+/* ─── AUTHOR PHOTOS ──────────────────────────────────────────────── */
+
+const AUTHORS = {
+  "Brother Lawrence":       { photo: "/Brother_Lawrence.jpg",  bio: "A 17th-century Carmelite friar who spent his life in a monastery kitchen and became one of the most beloved voices in Christian spiritual formation." },
+  "John Mark Comer":        { photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/John_Mark_Comer_%282019%29.jpg/440px-John_Mark_Comer_%282019%29.jpg", bio: "Teacher, writer, and founder of Practicing the Way. New York Times bestselling author of The Ruthless Elimination of Hurry and Practicing the Way." },
+  "Thomas Merton":          { photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Thomas_Merton_OCSO.jpg/440px-Thomas_Merton_OCSO.jpg", bio: "A Trappist monk, writer, and mystic whose prolific output on contemplative prayer and social justice shaped a generation of Christians." },
+  "Henri Nouwen":           { photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Henri_Nouwen.jpg/440px-Henri_Nouwen.jpg", bio: "A Dutch Catholic priest and author of over 40 books on the spiritual life. Spent his final years as pastor at L'Arche Daybreak community in Canada." },
+  "Eugene Peterson":        { photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Eugene_Peterson_%282014%29.jpg/440px-Eugene_Peterson_%282014%29.jpg", bio: "Pastor, scholar, and author of The Message Bible translation. His books on spiritual theology shaped the modern conversation on pastoral ministry." },
+  "Michael Casey":          { photo: "/Michael_Casey.jpg",     bio: "A Cistercian monk of Tarrawarra Abbey, Australia, and prolific writer on monastic spirituality and lectio divina." },
+  "Scot McKnight":          { photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Scot_McKnight.jpg/440px-Scot_McKnight.jpg", bio: "New Testament scholar and professor at Northern Seminary. Author of over 50 books on Jesus, Paul, and Christian community." },
+  "Philip Yancey":          { photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Philip_Yancey.jpg/440px-Philip_Yancey.jpg", bio: "One of the most widely read Christian authors of our time, known for his honest and probing explorations of faith, doubt, and grace." },
+  "Paul Miller":            { photo: "/Paul_Miller.jpg",       bio: "Founder of seeJesus ministry and author of A Praying Life, one of the most practical and transformative books on prayer available." },
+  "Bill Hybels":            { photo: "/Bill_Hybels.jpg",       bio: "Founding pastor of Willow Creek Community Church and author of numerous books on leadership, prayer, and the local church." },
+  "Thomas Keating":         { photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Thomas_Keating.jpg/440px-Thomas_Keating.jpg", bio: "Trappist monk and founder of the Centering Prayer movement, which has introduced thousands to the contemplative dimension of Christian life." },
+  "Abraham Joshua Heschel": { photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Abraham_Joshua_Heschel.jpg/440px-Abraham_Joshua_Heschel.jpg", bio: "One of the leading Jewish philosophers and theologians of the 20th century. His work on Sabbath, prayer, and prophetic consciousness remains essential." },
+  "A.J. Swoboda":           { photo: "/AJ_Swoboda.jpg",        bio: "Pastor, author, and professor whose work on Sabbath, creation care, and spiritual formation has made him a fresh voice in the church." },
+  "Rich Villodas":          { photo: "/Rich_Villodas.jpg",     bio: "Lead pastor of New Life Fellowship in Queens, NY — one of the most ethnically diverse churches in America. Author and speaker on spiritual formation and racial reconciliation." },
+  "Peter Scazzero":         { photo: "/Peter_Scazzero.jpg",    bio: "Founder of New Life Fellowship and Emotionally Healthy Discipleship, a movement helping churches integrate emotional health and contemplative spirituality." },
+  "Dietrich Bonhoeffer":    { photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Dietrich_Bonhoeffer.jpg/440px-Dietrich_Bonhoeffer.jpg", bio: "German pastor, theologian, and anti-Nazi dissident who was executed in 1945. His writings on community, discipleship, and costly grace remain profoundly formative." },
+  "Chuck Colson":           { photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Chuck_Colson.jpg/440px-Chuck_Colson.jpg", bio: "Former Nixon aide turned Christian author and activist, founder of Prison Fellowship. His later writing on the church as a countercultural community became prophetic." },
+};
+
 /* ─── RHYTHM DATA ─────────────────────────────────────────────────── */
 
 export const RHYTHMS = [
@@ -60,10 +82,10 @@ export const RHYTHMS = [
       "Where have you experienced God's presence unexpectedly? What were the conditions that made you available to notice it?",
     ],
     further: [
-      { title: "The Practice of the Presence of God", author: "Brother Lawrence", desc: "The foundational classic on moment-by-moment awareness of God. Brother Lawrence discovered that washing dishes in a monastery kitchen could be as sacred as kneeling at the altar — and that the presence of God was available in every moment, not just the devoted ones.", amazon: "https://www.amazon.com/Practice-Presence-God-Brother-Lawrence/dp/1603866728", img: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=400" },
-      { title: "The Ruthless Elimination of Hurry", author: "John Mark Comer", desc: "Comer's argument that hurry is the enemy of the spiritual life — and that the path to presence runs through the deliberate, sustained elimination of pace that has colonized modern life. Practical, theologically rich, and urgently needed.", amazon: "https://www.amazon.com/Ruthless-Elimination-Hurry-Emotionally-Spiritually/dp/0525653090", img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=400" },
-      { title: "Contemplative Prayer", author: "Thomas Merton", desc: "Merton's deep guide to the interior life — what it means to be still, to listen, and to allow the noise of the self to quiet enough to hear what God is saying. Dense and rewarding for anyone serious about the practice of presence.", amazon: "https://www.amazon.com/Contemplative-Prayer-Thomas-Merton/dp/0385065477", img: "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=400" },
-      { title: "The Way of the Heart", author: "Henri Nouwen", desc: "A slender but profound meditation on solitude, silence, and prayer drawn from the Desert Fathers. Nouwen argues that the heart must be formed in the desert before it can serve in the world. One of the most important short books on the interior life.", amazon: "https://www.amazon.com/Way-Heart-Desert-Spirituality-Ministry/dp/0345372905", img: "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=400" },
+      { title: "The Practice of the Presence of God", author: "Brother Lawrence", desc: "The foundational classic on moment-by-moment awareness of God. Brother Lawrence discovered that washing dishes in a monastery kitchen could be as sacred as kneeling at the altar — and that the presence of God was available in every moment, not just the devoted ones.", amazon: "https://www.amazon.com/Practice-Presence-God-Brother-Lawrence/dp/1603866728", isbn: "1603866728" },
+      { title: "The Ruthless Elimination of Hurry", author: "John Mark Comer", desc: "Comer's argument that hurry is the enemy of the spiritual life — and that the path to presence runs through the deliberate, sustained elimination of pace that has colonized modern life. Practical, theologically rich, and urgently needed.", amazon: "https://www.amazon.com/Ruthless-Elimination-Hurry-Emotionally-Spiritually/dp/0525653090", isbn: "0525653090" },
+      { title: "Contemplative Prayer", author: "Thomas Merton", desc: "Merton's deep guide to the interior life — what it means to be still, to listen, and to allow the noise of the self to quiet enough to hear what God is saying. Dense and rewarding for anyone serious about the practice of presence.", amazon: "https://www.amazon.com/Contemplative-Prayer-Thomas-Merton/dp/0385065477", isbn: "0385065477" },
+      { title: "The Way of the Heart", author: "Henri Nouwen", desc: "A slender but profound meditation on solitude, silence, and prayer drawn from the Desert Fathers. Nouwen argues that the heart must be formed in the desert before it can serve in the world. One of the most important short books on the interior life.", amazon: "https://www.amazon.com/Way-Heart-Desert-Spirituality-Ministry/dp/0345372905", isbn: "0345372905" },
     ],
   },
   {
@@ -110,10 +132,10 @@ export const RHYTHMS = [
       "Is there a passage of scripture that has genuinely changed you — not just informed you but formed you?",
     ],
     further: [
-      { title: "Eat This Book", author: "Eugene Peterson", desc: "Peterson's case for reading scripture as a spiritual practice, not a scholarly exercise. He introduces lectio divina to a modern audience and argues that the goal of Bible reading is not information but transformation — letting the text read us as much as we read it.", amazon: "https://www.amazon.com/Eat-This-Book-Conversation-Spiritual/dp/0802829309", img: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=400" },
-      { title: "Sacred Reading", author: "Michael Casey", desc: "A modern guide to the ancient practice of lectio divina from a Cistercian monk. Casey unpacks the four movements of sacred reading with theological depth and practical clarity. Essential for anyone serious about letting scripture form rather than merely inform.", amazon: "https://www.amazon.com/Sacred-Reading-Ancient-Lectio-Divina/dp/0764800078", img: "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=400" },
-      { title: "God Has a Name", author: "John Mark Comer", desc: "A deep dive into Exodus 34 and the self-revelation of God's character. Comer shows what it looks like to encounter scripture as a revelation of who God actually is — and how that encounter reshapes everything about how we live.", amazon: "https://www.amazon.com/God-Has-Name-John-Comer/dp/0310529603", img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=400" },
-      { title: "The Blue Parakeet", author: "Scot McKnight", desc: "McKnight helps readers understand how to read the Bible wisely — not just literally or allegorically, but in a way that honors both its authority and its humanity. A practical guide to reading the whole story well.", amazon: "https://www.amazon.com/Blue-Parakeet-Rethinking-Reading-Bible/dp/0310876206", img: "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=400" },
+      { title: "Eat This Book", author: "Eugene Peterson", desc: "Peterson's case for reading scripture as a spiritual practice, not a scholarly exercise. He introduces lectio divina to a modern audience and argues that the goal of Bible reading is not information but transformation — letting the text read us as much as we read it.", amazon: "https://www.amazon.com/Eat-This-Book-Conversation-Spiritual/dp/0802829309", isbn: "0802829309" },
+      { title: "Sacred Reading", author: "Michael Casey", desc: "A modern guide to the ancient practice of lectio divina from a Cistercian monk. Casey unpacks the four movements of sacred reading with theological depth and practical clarity. Essential for anyone serious about letting scripture form rather than merely inform.", amazon: "https://www.amazon.com/Sacred-Reading-Ancient-Lectio-Divina/dp/0764800078", isbn: "0764800078" },
+      { title: "God Has a Name", author: "John Mark Comer", desc: "A deep dive into Exodus 34 and the self-revelation of God's character. Comer shows what it looks like to encounter scripture as a revelation of who God actually is — and how that encounter reshapes everything about how we live.", amazon: "https://www.amazon.com/God-Has-Name-John-Comer/dp/0310529603", isbn: "0310529603" },
+      { title: "The Blue Parakeet", author: "Scot McKnight", desc: "McKnight helps readers understand how to read the Bible wisely — not just literally or allegorically, but in a way that honors both its authority and its humanity. A practical guide to reading the whole story well.", amazon: "https://www.amazon.com/Blue-Parakeet-Rethinking-Reading-Bible/dp/0310876206", isbn: "0310876206" },
     ],
   },
   {
@@ -160,10 +182,10 @@ export const RHYTHMS = [
       "If prayer genuinely changes the one who prays, what would a person who prays regularly look like?",
     ],
     further: [
-      { title: "Prayer", author: "Philip Yancey", desc: "Yancey's most personal and probing book — an honest investigation into why prayer feels difficult, what the Bible actually promises, and how to develop a sustainable, honest practice. Particularly helpful for people who feel their prayers bounce off the ceiling.", amazon: "https://www.amazon.com/Prayer-Does-Make-Difference-Philip/dp/0310345642", img: "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=400" },
-      { title: "A Praying Life", author: "Paul Miller", desc: "Miller dismantles the idea that prayer requires a special spiritual state and shows instead how honest, child-like asking is at the heart of what Jesus modeled. One of the most practically transformative books on prayer available.", amazon: "https://www.amazon.com/Praying-Life-Connecting-World-Distracted/dp/1615216065", img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=400" },
-      { title: "Too Busy Not to Pray", author: "Bill Hybels", desc: "A short, accessible classic that addresses the most common barrier to prayer — the feeling that there is no time. Hybels argues persuasively that the busier life becomes, the more essential prayer is, not less.", amazon: "https://www.amazon.com/Too-Busy-Not-Pray-Slowing/dp/0830833153", img: "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=400" },
-      { title: "The Practice of Contemplative Prayer", author: "Thomas Keating", desc: "Keating's introduction to centering prayer — the contemplative practice of resting in God's presence beyond words and images. For those who want to go deeper than petition into the silent receptivity at the heart of Christian prayer.", amazon: "https://www.amazon.com/Open-Mind-Heart-Practice-Contemplative/dp/082450696X", img: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=400" },
+      { title: "Prayer", author: "Philip Yancey", desc: "Yancey's most personal and probing book — an honest investigation into why prayer feels difficult, what the Bible actually promises, and how to develop a sustainable, honest practice. Particularly helpful for people who feel their prayers bounce off the ceiling.", amazon: "https://www.amazon.com/Prayer-Does-Make-Difference-Philip/dp/0310345642", isbn: "0310345642" },
+      { title: "A Praying Life", author: "Paul Miller", desc: "Miller dismantles the idea that prayer requires a special spiritual state and shows instead how honest, child-like asking is at the heart of what Jesus modeled. One of the most practically transformative books on prayer available.", amazon: "https://www.amazon.com/Praying-Life-Connecting-World-Distracted/dp/1615216065", isbn: "1615216065" },
+      { title: "Too Busy Not to Pray", author: "Bill Hybels", desc: "A short, accessible classic that addresses the most common barrier to prayer — the feeling that there is no time. Hybels argues persuasively that the busier life becomes, the more essential prayer is, not less.", amazon: "https://www.amazon.com/Too-Busy-Not-Pray-Slowing/dp/0830833153", isbn: "0830833153" },
+      { title: "Open Mind, Open Heart", author: "Thomas Keating", desc: "Keating's introduction to centering prayer — the contemplative practice of resting in God's presence beyond words and images. For those who want to go deeper than petition into the silent receptivity at the heart of Christian prayer.", amazon: "https://www.amazon.com/Open-Mind-Heart-Practice-Contemplative/dp/082450696X", isbn: "082450696X" },
     ],
   },
   {
@@ -210,10 +232,10 @@ export const RHYTHMS = [
       "What would you have to believe about God — really believe, not just intellectually affirm — in order to rest fully?",
     ],
     further: [
-      { title: "The Sabbath", author: "Abraham Joshua Heschel", desc: "The most beautiful book ever written about Sabbath. Heschel, a Jewish theologian, describes Sabbath not as a day of restriction but as a cathedral built in time — the most sacred architecture in Jewish life. His phrase \"a palace in time\" alone is worth the read.", amazon: "https://www.amazon.com/Sabbath-Abraham-Joshua-Heschel/dp/0374529752", img: "https://images.unsplash.com/photo-1472396961693-142e6e269027?q=80&w=400" },
-      { title: "The Sabbath Practice", author: "John Mark Comer", desc: "Comer's practical companion guide from Practicing the Way — the four-session course that walks individuals and communities through Stop, Rest, Delight, and Worship. The most accessible entry point into a real Sabbath practice for modern people.", amazon: "https://www.amazon.com/Sabbath-Practice-Four-Session-Companion-Delight/dp/0593603257", img: "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=400" },
-      { title: "Garden City", author: "John Mark Comer", desc: "Comer's theology of work and rest — why we work, what work is for, and how Sabbath fits into the larger story of what it means to be human. Essential reading for anyone who struggles to separate their identity from their productivity.", amazon: "https://www.amazon.com/Garden-City-Work-Rest-Human/dp/0310337356", img: "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=400" },
-      { title: "Subversive Sabbath", author: "A.J. Swoboda", desc: "Swoboda makes the case that Sabbath is not a personal preference but a political act — a weekly declaration that humans are not machines, that the economy does not have the last word, that rest is resistance. Prophetic and practical.", amazon: "https://www.amazon.com/Subversive-Sabbath-Surprising-Power-Rest/dp/1587433893", img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=400" },
+      { title: "The Sabbath", author: "Abraham Joshua Heschel", desc: "The most beautiful book ever written about Sabbath. Heschel, a Jewish theologian, describes Sabbath not as a day of restriction but as a cathedral built in time — the most sacred architecture in Jewish life. His phrase \"a palace in time\" alone is worth the read.", amazon: "https://www.amazon.com/Sabbath-Abraham-Joshua-Heschel/dp/0374529752", isbn: "0374529752" },
+      { title: "The Sabbath Practice", author: "John Mark Comer", desc: "Comer's practical companion guide from Practicing the Way — the four-session course that walks individuals and communities through Stop, Rest, Delight, and Worship. The most accessible entry point into a real Sabbath practice for modern people.", amazon: "https://www.amazon.com/Sabbath-Practice-Four-Session-Companion-Delight/dp/0593603257", isbn: "0593603257" },
+      { title: "Garden City", author: "John Mark Comer", desc: "Comer's theology of work and rest — why we work, what work is for, and how Sabbath fits into the larger story of what it means to be human. Essential reading for anyone who struggles to separate their identity from their productivity.", amazon: "https://www.amazon.com/Garden-City-Work-Rest-Human/dp/0310337356", isbn: "0310337356" },
+      { title: "Subversive Sabbath", author: "A.J. Swoboda", desc: "Swoboda makes the case that Sabbath is not a personal preference but a political act — a weekly declaration that humans are not machines, that the economy does not have the last word, that rest is resistance. Prophetic and practical.", amazon: "https://www.amazon.com/Subversive-Sabbath-Surprising-Power-Rest/dp/1587433893", isbn: "1587433893" },
     ],
   },
   {
@@ -260,10 +282,10 @@ export const RHYTHMS = [
       "What kind of community are you helping to create for others?",
     ],
     further: [
-      { title: "Life Together", author: "Dietrich Bonhoeffer", desc: "The most important book ever written about Christian community. Bonhoeffer, writing from a clandestine seminary in Nazi Germany, dismantles the fantasy of ideal community and shows what genuine, grace-based life together actually looks like. Short, dense, essential.", amazon: "https://www.amazon.com/Life-Together-Exploration-Christian-Community/dp/0060608528", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=400" },
-      { title: "The Deeply Formed Life", author: "Rich Villodas", desc: "Villodas weaves together contemplative spirituality, racial reconciliation, and sexual wholeness into a vision of community that goes deeper than most churches dare. A compelling portrait of what formation in community can actually look like.", amazon: "https://www.amazon.com/Deeply-Formed-Life-Breaking-Conformity/dp/0525653201", img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=400" },
-      { title: "Emotionally Healthy Spirituality", author: "Peter Scazzero", desc: "Scazzero's argument that most Christian community is emotionally shallow — and that genuine transformation requires the kind of honesty, grief, and self-awareness that most churches actively avoid. One of the most practically impactful books on community formation.", amazon: "https://www.amazon.com/Emotionally-Healthy-Spirituality-Impossible-Spiritual/dp/0310348498", img: "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=400" },
-      { title: "The Body", author: "Chuck Colson", desc: "Colson's sweeping vision of the church as a distinct, countercultural community — called not to reflect the culture but to embody an alternative. A prophetic call to take the communal nature of Christian life seriously in a fragmenting world.", amazon: "https://www.amazon.com/Body-Being-Light-Darkness/dp/0849944422", img: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=400" },
+      { title: "Life Together", author: "Dietrich Bonhoeffer", desc: "The most important book ever written about Christian community. Bonhoeffer, writing from a clandestine seminary in Nazi Germany, dismantles the fantasy of ideal community and shows what genuine, grace-based life together actually looks like. Short, dense, essential.", amazon: "https://www.amazon.com/Life-Together-Exploration-Christian-Community/dp/0060608528", isbn: "0060608528" },
+      { title: "The Deeply Formed Life", author: "Rich Villodas", desc: "Villodas weaves together contemplative spirituality, racial reconciliation, and sexual wholeness into a vision of community that goes deeper than most churches dare. A compelling portrait of what formation in community can actually look like.", amazon: "https://www.amazon.com/Deeply-Formed-Life-Breaking-Conformity/dp/0525653201", isbn: "0525653201" },
+      { title: "Emotionally Healthy Spirituality", author: "Peter Scazzero", desc: "Scazzero's argument that most Christian community is emotionally shallow — and that genuine transformation requires the kind of honesty, grief, and self-awareness that most churches actively avoid. One of the most practically impactful books on community formation.", amazon: "https://www.amazon.com/Emotionally-Healthy-Spirituality-Impossible-Spiritual/dp/0310348498", isbn: "0310348498" },
+      { title: "The Body", author: "Chuck Colson", desc: "Colson's sweeping vision of the church as a distinct, countercultural community — called not to reflect the culture but to embody an alternative. A prophetic call to take the communal nature of Christian life seriously in a fragmenting world.", amazon: "https://www.amazon.com/Body-Being-Light-Darkness/dp/0849944422", isbn: "0849944422" },
     ],
   },
 ];
@@ -363,10 +385,10 @@ function BreathPrayer() {
 
 function LectioDivinaGuide() {
   const steps = [
-    { num: "I",   latin: "Lectio",      eng: "Read",    desc: "Read the passage slowly, aloud if possible. Read it again. A third time. You are not looking for information — you are listening for a word or phrase that seems to press against you." },
-    { num: "II",  latin: "Meditatio",   eng: "Reflect", desc: "Take the word or phrase that caught you. Repeat it quietly. Turn it over. Let it interact with your memory, your imagination, your current situation. Don't analyze — ruminate, like an animal chewing cud." },
-    { num: "III", latin: "Oratio",      eng: "Respond", desc: "Let what has arisen in meditation move you to prayer. Speak to God — in gratitude, petition, confession, praise. This is not a structured prayer. It is a spontaneous response to what God has stirred in you." },
-    { num: "IV",  latin: "Contemplatio",eng: "Rest",    desc: "Release all thoughts, words, and images. Simply rest in God's presence. You are not trying to achieve anything. You are resting in the love of the One who has spoken. Even five minutes of this silence is more valuable than it seems." },
+    { num: "I",   latin: "Lectio",       eng: "Read",    desc: "Read the passage slowly, aloud if possible. Read it again. A third time. You are not looking for information — you are listening for a word or phrase that seems to press against you." },
+    { num: "II",  latin: "Meditatio",    eng: "Reflect", desc: "Take the word or phrase that caught you. Repeat it quietly. Turn it over. Let it interact with your memory, your imagination, your current situation. Don't analyze — ruminate, like an animal chewing cud." },
+    { num: "III", latin: "Oratio",       eng: "Respond", desc: "Let what has arisen in meditation move you to prayer. Speak to God — in gratitude, petition, confession, praise. This is not a structured prayer. It is a spontaneous response to what God has stirred in you." },
+    { num: "IV",  latin: "Contemplatio", eng: "Rest",    desc: "Release all thoughts, words, and images. Simply rest in God's presence. You are not trying to achieve anything. You are resting in the love of the One who has spoken. Even five minutes of this silence is more valuable than it seems." },
   ];
   const [active, setActive] = useState(0);
   const cur = steps[active];
@@ -508,8 +530,10 @@ const INTERACTIVES = {
 export function BookPage() {
   const { rhythm, bookIndex } = useParams();
   const navigate = useNavigate();
-  const data = RHYTHMS.find(r => r.slug === rhythm);
-  const book = data?.further[parseInt(bookIndex, 10)];
+  const data   = RHYTHMS.find(r => r.slug === rhythm);
+  const book   = data?.further[parseInt(bookIndex, 10)];
+  const author = book ? AUTHORS[book.author] : null;
+  const coverUrl = book?.isbn ? `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg` : null;
 
   useEffect(() => {
     if (!data || !book) navigate(`${RULE_BASE}/${rhythm}`, { replace: true });
@@ -518,44 +542,105 @@ export function BookPage() {
 
   if (!data || !book) return null;
 
+  const S = {
+    wrap:      { background: "#0E0C0A", minHeight: "100svh", fontFamily: "'Barlow Condensed',sans-serif", color: "#FAF8F5" },
+    shell:     { maxWidth: "720px", margin: "0 auto", padding: "100px 24px 100px" },
+    back:      { display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.7)", textDecoration: "none", marginBottom: "2.5rem" },
+    hero:      { display: "grid", gridTemplateColumns: "180px 1fr", gap: "0", alignItems: "stretch", marginBottom: "2.75rem", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "22px", overflow: "hidden" },
+    coverWrap: { position: "relative", background: "#17140F", minHeight: "260px", display: "flex", alignItems: "stretch" },
+    cover:     { width: "100%", height: "100%", objectFit: "cover", display: "block", minHeight: "260px" },
+    coverFallback: { width: "100%", minHeight: "260px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "1.5rem", background: "linear-gradient(135deg,#1C1914,#0E0C0A)", textAlign: "center" },
+    heroText:  { padding: "2rem 2rem 2rem 1.75rem", display: "flex", flexDirection: "column", justifyContent: "flex-end" },
+    kicker:    { fontSize: "8px", letterSpacing: ".42em", textTransform: "uppercase", color: "rgba(201,168,76,0.65)", marginBottom: ".75rem" },
+    title:     { fontFamily: "'Barlow Condensed',sans-serif", fontSize: "clamp(20px,3.5vw,30px)", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: "#FAF8F5", lineHeight: .92, marginBottom: "1.25rem" },
+    authorRow: { display: "flex", alignItems: "center", gap: "10px" },
+    authorPhoto: { width: "36px", height: "36px", borderRadius: "50%", objectFit: "cover", border: "1px solid rgba(201,168,76,0.3)", flexShrink: 0 },
+    authorName:  { fontSize: "10px", letterSpacing: ".22em", textTransform: "uppercase", color: "rgba(201,168,76,0.8)", fontWeight: 700 },
+    whyLabel:  { fontSize: "9px", letterSpacing: ".42em", textTransform: "uppercase", color: "#C9A84C", marginBottom: "1.1rem", paddingBottom: ".7rem", borderBottom: "1px solid rgba(255,255,255,0.06)" },
+    desc:      { fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(17px,3.5vw,20px)", lineHeight: 1.86, color: "rgba(250,248,245,0.76)", marginBottom: "2.5rem" },
+    bioWrap:   { background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "16px", padding: "1.4rem 1.5rem", marginBottom: "2rem", display: "flex", alignItems: "flex-start", gap: "14px" },
+    bioPhoto:  { width: "52px", height: "52px", borderRadius: "50%", objectFit: "cover", border: "1px solid rgba(201,168,76,0.25)", flexShrink: 0 },
+    bioName:   { fontSize: "10px", letterSpacing: ".22em", textTransform: "uppercase", color: "rgba(201,168,76,0.75)", fontWeight: 700, marginBottom: ".4rem" },
+    bioPara:   { fontFamily: "'Cormorant Garamond',serif", fontSize: "15px", lineHeight: 1.72, color: "rgba(250,248,245,0.5)" },
+    chip:      { background: "rgba(201,168,76,0.05)", border: "1px solid rgba(201,168,76,0.15)", borderRadius: "14px", padding: "1.1rem 1.4rem", marginBottom: "2rem" },
+    chipLabel: { fontSize: "8px", letterSpacing: ".35em", textTransform: "uppercase", color: "rgba(201,168,76,0.5)", marginBottom: ".35rem" },
+    chipVal:   { fontFamily: "'Barlow Condensed',sans-serif", fontSize: "15px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: "#FAF8F5" },
+    cta:       { display: "inline-flex", alignItems: "center", gap: "10px", padding: "13px 22px", borderRadius: "12px", border: "1px solid rgba(201,168,76,0.35)", background: "transparent", textDecoration: "none", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", color: "rgba(201,168,76,0.8)", transition: "all .25s" },
+    backBtn:   { display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginTop: "2.5rem", padding: "14px", borderRadius: "14px", border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", textDecoration: "none", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".22em", textTransform: "uppercase", color: "rgba(255,255,255,0.38)", transition: "all .25s" },
+  };
+
   return (
-    <div style={{ background: "#0E0C0A", minHeight: "100svh", fontFamily: "'Barlow Condensed',sans-serif", color: "#FAF8F5" }}>
-      <Link to="/" style={{ position: "fixed", top: "1rem", left: "50%", transform: "translateX(-50%)", zIndex: 200, display: "flex", alignItems: "center", gap: "10px", padding: "10px 20px 10px 14px", borderRadius: "999px", background: "rgba(14,12,10,0.88)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.08)", textDecoration: "none", transition: "border-color .25s" }}>
-        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="Counter Formation" style={{ width: "28px", height: "28px", objectFit: "contain", filter: "invert(1) brightness(1.1)" }} />
+    <div style={S.wrap}>
+      <Link to="/" style={{ position: "fixed", top: "1rem", left: "50%", transform: "translateX(-50%)", zIndex: 200, display: "flex", alignItems: "center", gap: "10px", padding: "10px 20px 10px 14px", borderRadius: "999px", background: "rgba(14,12,10,0.88)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.08)", textDecoration: "none" }}>
+        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" style={{ width: "28px", height: "28px", objectFit: "contain", filter: "invert(1) brightness(1.1)" }} />
         <span style={{ fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", color: "rgba(250,248,245,0.55)", fontWeight: 600 }}>Counter Formation</span>
       </Link>
-      <div style={{ maxWidth: "640px", margin: "0 auto", padding: "100px 24px 80px" }}>
-        <Link to={`${RULE_BASE}/${rhythm}`} style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.7)", textDecoration: "none", marginBottom: "3rem" }}>
+
+      <div style={S.shell}>
+        <Link to={`${RULE_BASE}/${rhythm}`} style={S.back}>
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M12 6.5H1M6 2.5l-4 4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
           Back to {data.title}
         </Link>
-        <div style={{ position: "relative", borderRadius: "20px", overflow: "hidden", marginBottom: "2.5rem", aspectRatio: "16/9" }}>
-          <img src={book.img} alt={book.title} style={{ width: "100%", height: "100%", objectFit: "cover", filter: "grayscale(.3)", opacity: .85 }} onError={e => { e.target.src = "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=900"; }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(14,12,10,0.92) 0%, rgba(14,12,10,0.2) 60%)" }} />
-          <div style={{ position: "absolute", bottom: "1.5rem", left: "1.5rem" }}>
-            <p style={{ fontSize: "9px", letterSpacing: ".38em", textTransform: "uppercase", color: "rgba(201,168,76,0.7)", marginBottom: ".4rem" }}>Recommended Reading</p>
-            <h1 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "clamp(26px,6vw,40px)", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: "#FAF8F5", lineHeight: .9, marginBottom: ".5rem" }}>{book.title}</h1>
-            <p style={{ fontSize: "10px", letterSpacing: ".25em", textTransform: "uppercase", color: "rgba(201,168,76,0.65)" }}>{book.author}</p>
+
+        {/* Hero: cover + title/author */}
+        <div style={S.hero}>
+          <div style={S.coverWrap}>
+            {coverUrl && (
+              <img src={coverUrl} alt={book.title} style={S.cover}
+                onError={e => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }} />
+            )}
+            <div style={{ ...S.coverFallback, display: coverUrl ? "none" : "flex" }}>
+              <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "13px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: "#FAF8F5", lineHeight: 1.2, marginBottom: ".75rem" }}>{book.title}</p>
+              <p style={{ fontSize: "9px", letterSpacing: ".25em", textTransform: "uppercase", color: "rgba(201,168,76,0.6)" }}>{book.author}</p>
+            </div>
+          </div>
+          <div style={S.heroText}>
+            <p style={S.kicker}>Recommended Reading</p>
+            <h1 style={S.title}>{book.title}</h1>
+            <div style={S.authorRow}>
+              {author?.photo && (
+                <img src={author.photo} alt={book.author} style={S.authorPhoto}
+                  onError={e => { e.target.style.display = "none"; }} />
+              )}
+              <span style={S.authorName}>{book.author}</span>
+            </div>
           </div>
         </div>
-        <div style={{ marginBottom: "2.5rem" }}>
-          <p style={{ fontSize: "9px", letterSpacing: ".42em", textTransform: "uppercase", color: "#C9A84C", marginBottom: "1.25rem", paddingBottom: ".75rem", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>Why We Recommend It</p>
-          <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(17px,4vw,20px)", lineHeight: 1.86, color: "rgba(250,248,245,0.76)" }}>{book.desc}</p>
-        </div>
-        <div style={{ background: "rgba(201,168,76,0.05)", border: "1px solid rgba(201,168,76,0.15)", borderRadius: "16px", padding: "1.5rem", marginBottom: "2.5rem" }}>
-          <p style={{ fontSize: "8px", letterSpacing: ".35em", textTransform: "uppercase", color: "rgba(201,168,76,0.55)", marginBottom: ".5rem" }}>Connected Rhythm</p>
-          <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "16px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: "#FAF8F5" }}>{data.title} · {data.sub}</p>
-        </div>
-        <a href={book.amazon} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1.25rem 1.5rem", borderRadius: "14px", background: "#C9A84C", textDecoration: "none", transition: "background .25s" }}
-          onMouseEnter={e => { e.currentTarget.style.background = "#FAF8F5"; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "#C9A84C"; }}>
-          <div>
-            <p style={{ fontSize: "8px", letterSpacing: ".35em", textTransform: "uppercase", color: "rgba(10,10,10,0.55)", marginBottom: ".3rem" }}>Available on</p>
-            <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "16px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: "#0A0A0A" }}>Purchase on Amazon →</p>
+
+        {/* Why We Recommend It */}
+        <p style={S.whyLabel}>Why We Recommend It</p>
+        <p style={S.desc}>{book.desc}</p>
+
+        {/* Author bio */}
+        {author?.bio && (
+          <div style={S.bioWrap}>
+            {author.photo && (
+              <img src={author.photo} alt={book.author} style={S.bioPhoto}
+                onError={e => { e.target.style.display = "none"; }} />
+            )}
+            <div>
+              <p style={S.bioName}>{book.author}</p>
+              <p style={S.bioPara}>{author.bio}</p>
+            </div>
           </div>
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M10 4l6 6-6 6" stroke="#0A0A0A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        )}
+
+        {/* Connected Rhythm */}
+        <div style={S.chip}>
+          <p style={S.chipLabel}>Connected Rhythm</p>
+          <p style={S.chipVal}>{data.title} · {data.sub}</p>
+        </div>
+
+        {/* Amazon CTA — outlined */}
+        <a href={book.amazon} target="_blank" rel="noopener noreferrer" style={S.cta}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(201,168,76,0.7)"; e.currentTarget.style.color = "#C9A84C"; e.currentTarget.style.background = "rgba(201,168,76,0.07)"; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(201,168,76,0.35)"; e.currentTarget.style.color = "rgba(201,168,76,0.8)"; e.currentTarget.style.background = "transparent"; }}>
+          Purchase on Amazon
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6.5 2.5l3.5 3.5-3.5 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
         </a>
-        <Link to={`${RULE_BASE}/${rhythm}`} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginTop: "2.5rem", padding: "14px", borderRadius: "14px", border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", textDecoration: "none", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".22em", textTransform: "uppercase", color: "rgba(255,255,255,0.38)", transition: "all .25s" }}
+
+        {/* Back nav */}
+        <Link to={`${RULE_BASE}/${rhythm}`} style={S.backBtn}
           onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(201,168,76,0.38)"; e.currentTarget.style.color = "#C9A84C"; }}
           onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "rgba(255,255,255,0.38)"; }}>
           ← Return to {data.title}
@@ -583,7 +668,6 @@ export function RuleStyles() {
       .rl-prog-bar  { position: sticky; top: 0; z-index: 190; height: 2px; background: rgba(255,255,255,0.05); }
       .rl-prog-fill { height: 100%; width: 0; background: linear-gradient(to right, #C9A84C, rgba(201,168,76,0.35)); transition: width .12s linear; }
 
-      /* ── Hero ── */
       .rl-hero-band { position: relative; overflow: hidden; min-height: clamp(300px,52vw,500px); display: flex; flex-direction: column; justify-content: flex-end; }
       .rl-hero-bg   { position: absolute; inset: 0; background-size: cover; background-position: center; filter: grayscale(.15); }
       .rl-hero-ov   { position: absolute; inset: 0; background: linear-gradient(to top, rgba(14,12,10,0.98) 0%, rgba(14,12,10,0.5) 55%, rgba(14,12,10,0.18) 100%); }
@@ -593,15 +677,11 @@ export function RuleStyles() {
       .rl-hero-h1   { font-size: clamp(44px,10vw,88px); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; line-height: .86; margin-bottom: 1rem; }
       .rl-hero-sub  { font-family: 'Cormorant Garamond',serif; font-style: italic; font-size: clamp(16px,3.5vw,22px); color: rgba(250,248,245,0.35); }
 
-      /* ── Pull quote ── */
       .rl-pullquote      { border-left: 2px solid #C9A84C; margin: 3rem 0; padding: 1.25rem 2rem; background: rgba(201,168,76,0.04); border-radius: 0 12px 12px 0; }
       .rl-pullquote p    { font-family: 'Cormorant Garamond',serif; font-style: italic; font-size: clamp(20px,4.5vw,28px); color: rgba(250,248,245,0.82); line-height: 1.55; margin-bottom: .75rem; }
       .rl-pullquote cite { font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: #C9A84C; font-style: normal; }
 
-      /* ── Content shell — mobile: single column ── */
       .rl-content { max-width: 740px; margin: 0 auto; padding: 52px 24px 120px; }
-
-      /* Sidebar flows inline on mobile */
       .rl-sidebar { margin-bottom: 3rem; }
 
       .rl-rule      { height: 1px; background: linear-gradient(to right, #C9A84C, transparent); opacity: .25; margin: 2.5rem 0; }
@@ -639,6 +719,12 @@ export function RuleStyles() {
       .rl-book-cta     { display: inline-flex; align-items: center; gap: 6px; font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(201,168,76,0.7); transition: color .2s; }
       .rl-book:hover .rl-book-cta { color: #C9A84C; }
 
+      .rl-challenge-link { display: flex; align-items: center; justify-content: space-between; background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 14px; padding: 1.25rem 1.5rem; text-decoration: none; transition: background .25s, border-color .25s; margin-top: 1rem; }
+      .rl-challenge-link:hover { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.4); }
+      .rl-challenge-link-left p:first-child { font-size: 8px; letter-spacing: .35em; text-transform: uppercase; color: rgba(201,168,76,0.6); margin-bottom: .3rem; }
+      .rl-challenge-link-left p:last-child  { font-size: clamp(13px,3vw,15px); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #FAF8F5; }
+      .rl-challenge-arrow { font-size: 18px; color: rgba(201,168,76,0.5); }
+
       /* ── Rhythm nav — image background cards ── */
       .rl-rhythm-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 3rem; }
       .rl-nav-btn {
@@ -672,13 +758,8 @@ export function RuleStyles() {
       .rl-float-dismiss { width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .2s; }
       .rl-float-dismiss:hover { background: rgba(255,255,255,0.18); }
 
-      /* ─────────────────────────────────────────────────────────────
-         DESKTOP LAYOUT — ≥1024px
-         Two-column grid: prose left, sidebar right (sticky).
-         Full-width breakouts for interactive, practice, further, nav.
-         ───────────────────────────────────────────────────────────── */
+      /* ── Desktop layout ≥1024px ── */
       @media (min-width: 1024px) {
-
         .rl-hero-band { min-height: clamp(380px, 58vw, 580px); }
         .rl-hero-in   { max-width: 1100px; padding: 2.5rem 48px 3rem; }
         .rl-hero-h1   { font-size: clamp(60px, 9vw, 108px); }
@@ -700,7 +781,6 @@ export function RuleStyles() {
             "rule2       rule2"
             "practice    practice"
             "further     further"
-            "crosslink   crosslink"
             "brand       brand"
             "nav         nav";
         }
@@ -714,11 +794,10 @@ export function RuleStyles() {
         .rl-rule:nth-of-type(2) { grid-area: rule2; }
         .rl-interactive { grid-area: interactive; }
         .rl-practice    { grid-area: practice; }
-        .rl-further    { grid-area: further; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-        .rl-rhythm-nav { grid-area: nav; grid-template-columns: 1fr 1fr; }
-        .rl-nav-btn    { min-height: 160px; }
+        .rl-further     { grid-area: further; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .rl-rhythm-nav  { grid-area: nav; grid-template-columns: 1fr 1fr; }
+        .rl-nav-btn     { min-height: 160px; }
 
-        /* Sidebar styling */
         .rl-sidebar {
           border-left: 1px solid rgba(255,255,255,0.07);
           padding-left: 40px;
@@ -727,12 +806,10 @@ export function RuleStyles() {
           gap: 2rem;
         }
         .rl-sidebar .rl-section { margin-bottom: 0; }
-
         .rl-pullquote p { font-size: clamp(22px, 2.8vw, 32px); }
         .rl-sec-label   { letter-spacing: .5em; }
       }
 
-      /* ─── LARGE DESKTOP ≥1440px ─── */
       @media (min-width: 1440px) {
         .rl-hero-in { max-width: 1320px; padding: 3rem 64px 3.5rem; }
         .rl-content {
@@ -813,7 +890,6 @@ export function RhythmPage() {
       <CornerNav />
       <div className="rl-prog-bar"><div className="rl-prog-fill" ref={rfillRef} /></div>
 
-      {/* Hero */}
       <div className="rl-hero-band">
         <div className="rl-hero-bg" style={{ backgroundImage: `url('${data.img}')` }} />
         <div className="rl-hero-ov" />
@@ -827,25 +903,21 @@ export function RhythmPage() {
 
       <div className="rl-content">
 
-        {/* Pull quote — full width */}
         <div className="rl-pullquote">
           <p>"{data.quote}"</p>
           <cite>— {data.quoteRef}</cite>
         </div>
 
-        {/* Why label — full width */}
         <div className="rl-why-label">
           <p className="rl-sec-label">Why This Rhythm</p>
         </div>
 
-        {/* Why body — left column */}
         <div className="rl-why-body rl-section">
           {data.why.map((p, i) => (
             <p key={i} className="rl-body" dangerouslySetInnerHTML={{ __html: p }} />
           ))}
         </div>
 
-        {/* Sticky sidebar — right column, spans why + theology rows */}
         <div className="rl-sidebar">
           <div className="rl-section">
             <p className="rl-sec-label">Key Scriptures</p>
@@ -866,7 +938,6 @@ export function RhythmPage() {
           </div>
         </div>
 
-        {/* Theology — left column, continues beside sidebar */}
         <div className="rl-theology rl-section">
           {data.theology.map((p, i) => (
             <p key={i} className="rl-body" dangerouslySetInnerHTML={{ __html: p }} />
@@ -875,7 +946,6 @@ export function RhythmPage() {
 
         <div className="rl-rule" />
 
-        {/* Interactive — full width */}
         <div className="rl-interactive rl-section">
           <p className="rl-sec-label">{data.interactiveLabel}</p>
           <Interactive />
@@ -883,7 +953,6 @@ export function RhythmPage() {
 
         <div className="rl-rule" />
 
-        {/* Practice — full width */}
         <div className="rl-practice rl-section">
           <p className="rl-sec-label">The Practice</p>
           <p className="rl-body" style={{ marginBottom: "1.5rem" }}>
@@ -902,16 +971,15 @@ export function RhythmPage() {
           </div>
         </div>
 
-        {/* Further reading — full width, 4-up on desktop */}
         <div className="rl-further rl-section">
           <p className="rl-sec-label">Go Deeper</p>
           {data.further.map((b, i) => (
             <Link key={i} to={`${RULE_BASE}/${rhythm}/book/${i}`} className="rl-book">
               <img
-                src={b.img}
+                src={`https://covers.openlibrary.org/b/isbn/${b.isbn}-M.jpg`}
                 alt={b.title}
                 className="rl-book-img"
-                onError={e => { e.target.src = "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=400"; }}
+                onError={e => { e.target.style.background = "#17140F"; e.target.style.opacity = "0.4"; }}
               />
               <div className="rl-book-body">
                 <div>
@@ -928,13 +996,11 @@ export function RhythmPage() {
           ))}
         </div>
 
-        {/* Brand footer mark */}
         <div style={{ textAlign: "center", padding: "2rem 0 1rem", borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: "1rem" }}>
           <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" style={{ width: "26px", height: "26px", opacity: .2, filter: "invert(1)", margin: "0 auto .75rem", display: "block" }} />
           <p style={{ fontSize: "8px", letterSpacing: ".32em", textTransform: "uppercase", color: "rgba(255,255,255,0.18)" }}>Counter Formation · Formed in Christ · Ephesians 6:10–18</p>
         </div>
 
-        {/* Rhythm nav — image-backed cards */}
         <div className="rl-rhythm-nav">
           {prev ? (
             <Link to={`${RULE_BASE}/${prev.slug}`} className="rl-nav-btn">
