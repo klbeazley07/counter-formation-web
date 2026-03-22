@@ -830,7 +830,7 @@ export function RuleStyles() {
 function CornerNav() {
   return (
     <Link to="/" className="rl-corner-nav">
-      <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="Counter Formation" />
+      <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="Counter Formation" style={{ filter: "brightness(0) invert(1)" }} />
       <span>Counter Formation</span>
     </Link>
   );
