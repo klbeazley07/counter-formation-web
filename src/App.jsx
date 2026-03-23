@@ -521,10 +521,26 @@ function FieldGuideSection() {
 function ChallengeSection() {
   const [email, setEmail]         = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading]     = useState(false);
+  const [error, setError]         = useState(null);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!email) return;
-    setSubmitted(true);
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/subscribe`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "7day_challenge" }),
+      });
+      if (!res.ok) throw new Error();
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -549,21 +565,27 @@ function ChallengeSection() {
         </p>
 
         {!submitted ? (
-          <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input
-              type="email" value={email}
-              onChange={e => setEmail(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && handleSubmit()}
-              placeholder="your@email.com"
-              className="flex-1 px-5 py-4 rounded-full text-[11px] text-white placeholder-white/25 focus:outline-none tracking-widest uppercase"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)" }}
-              onFocus={e => e.currentTarget.style.borderColor = "rgba(201,168,76,0.40)"}
-              onBlur={e  => e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)"}
-            />
-            <button onClick={handleSubmit}
-              className="px-8 py-4 bg-[#C9A84C] text-black rounded-full text-[10px] uppercase tracking-widest font-bold hover:bg-[#FAF8F5] transition-all whitespace-nowrap flex items-center gap-2 justify-center">
-              Begin <ArrowRight size={13} />
-            </button>
+          <div className="max-w-md mx-auto">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <input
+                type="email" value={email}
+                onChange={e => setEmail(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && handleSubmit()}
+                placeholder="your@email.com"
+                disabled={loading}
+                className="flex-1 px-5 py-4 rounded-full text-[11px] text-white placeholder-white/25 focus:outline-none tracking-widest uppercase disabled:opacity-50"
+                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)" }}
+                onFocus={e => e.currentTarget.style.borderColor = "rgba(201,168,76,0.40)"}
+                onBlur={e  => e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)"}
+              />
+              <button onClick={handleSubmit} disabled={loading}
+                className="px-8 py-4 bg-[#C9A84C] text-black rounded-full text-[10px] uppercase tracking-widest font-bold hover:bg-[#FAF8F5] transition-all whitespace-nowrap flex items-center gap-2 justify-center disabled:opacity-50">
+                {loading ? "..." : <><span>Begin</span> <ArrowRight size={13} /></>}
+              </button>
+            </div>
+            {error && (
+              <p className="mt-3 text-[10px] uppercase tracking-[0.2em] text-red-400">{error}</p>
+            )}
           </div>
         ) : (
           <div className="py-4">
@@ -794,10 +816,26 @@ function GearSection() {
 function Footer() {
   const [email, setEmail]         = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading]     = useState(false);
+  const [error, setError]         = useState(null);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!email) return;
-    setSubmitted(true);
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/subscribe`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "join_formation" }),
+      });
+      if (!res.ok) throw new Error();
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -819,22 +857,28 @@ function Footer() {
         <span className="text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-[#C9A84C]/60 font-bold mb-3 block">Stay in the Formation</span>
         <h4 className="font-brand text-xl md:text-2xl uppercase tracking-[0.15em] text-white mb-8">Join the Formation</h4>
         {!submitted ? (
-          <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input
-              type="email" value={email}
-              onChange={e => setEmail(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && handleSubmit()}
-              placeholder="your@email.com"
-              className="flex-1 px-5 py-4 rounded-full text-[11px] text-white placeholder-white/25 focus:outline-none tracking-widest uppercase"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)" }}
-              onFocus={e => e.currentTarget.style.borderColor = "rgba(201,168,76,0.40)"}
-              onBlur={e  => e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)"}
-            />
-            <button onClick={handleSubmit}
-              className="px-8 py-4 rounded-full text-[10px] uppercase tracking-widest font-bold transition-all whitespace-nowrap border hover:bg-[#C9A84C] hover:text-black hover:border-[#C9A84C]"
-              style={{ background: "rgba(255,255,255,0.06)", borderColor: "rgba(255,255,255,0.12)", color: C.ivory }}>
-              Join
-            </button>
+          <div className="max-w-md mx-auto">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <input
+                type="email" value={email}
+                onChange={e => setEmail(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && handleSubmit()}
+                placeholder="your@email.com"
+                disabled={loading}
+                className="flex-1 px-5 py-4 rounded-full text-[11px] text-white placeholder-white/25 focus:outline-none tracking-widest uppercase disabled:opacity-50"
+                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)" }}
+                onFocus={e => e.currentTarget.style.borderColor = "rgba(201,168,76,0.40)"}
+                onBlur={e  => e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)"}
+              />
+              <button onClick={handleSubmit} disabled={loading}
+                className="px-8 py-4 rounded-full text-[10px] uppercase tracking-widest font-bold transition-all whitespace-nowrap border hover:bg-[#C9A84C] hover:text-black hover:border-[#C9A84C] disabled:opacity-50"
+                style={{ background: "rgba(255,255,255,0.06)", borderColor: "rgba(255,255,255,0.12)", color: C.ivory }}>
+                {loading ? "..." : "Join"}
+              </button>
+            </div>
+            {error && (
+              <p className="mt-3 text-[10px] uppercase tracking-[0.2em] text-red-400">{error}</p>
+            )}
           </div>
         ) : (
           <p className="text-[10px] uppercase tracking-[0.35em] text-[#C9A84C]">You're in. Weekly field notes incoming.</p>
