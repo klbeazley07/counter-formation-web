@@ -485,7 +485,7 @@ export function ArchitectureStyles() {
       .camp-hero-line {
         font-family: 'Cormorant Garamond', serif; font-style: italic;
         font-size: clamp(17px,2.2vw,24px); line-height: 1.65;
-        color: rgba(14,12,10,0.52); max-width: 560px; margin-bottom: 2rem;
+        color: rgba(14,12,10,0.82); max-width: 560px; margin-bottom: 2rem;
       }
       .camp-banner {
         background: #0E0C0A;
@@ -558,8 +558,8 @@ export function ArchitectureStyles() {
       .camp-btn-s {
         display: inline-flex; align-items: center; gap: 9px;
         padding: 14px 30px; border-radius: 999px;
-        background: transparent; color: rgba(14,12,10,0.5);
-        border: 1px solid rgba(14,12,10,0.18);
+        background: #0E0C0A; color: #FAF8F5;
+        border: 1px solid #0E0C0A;
         font-family: 'Barlow Condensed', sans-serif; font-size: 10px;
         letter-spacing: .26em; text-transform: uppercase; font-weight: 700;
         text-decoration: none; transition: border-color .25s, color .25s;
