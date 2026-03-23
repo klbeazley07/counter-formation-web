@@ -709,9 +709,9 @@ export function RuleStyles() {
       .rl-prog-bar  { position: sticky; top: 0; z-index: 190; height: 2px; background: rgba(255,255,255,0.05); }
       .rl-prog-fill { height: 100%; width: 0; background: linear-gradient(to right, #C9A84C, rgba(201,168,76,0.35)); transition: width .12s linear; }
 
-      .rl-hero-band { position: relative; overflow: hidden; min-height: clamp(420px,65vw,680px); display: flex; flex-direction: column; justify-content: flex-end; }
+      .rl-hero-band { position: relative; overflow: hidden; min-height: clamp(520px,72vw,820px); display: flex; flex-direction: column; justify-content: flex-end; }
       .rl-hero-bg   { position: absolute; inset: 0; background-size: cover; background-position: center center; filter: grayscale(.15); }
-      .rl-hero-ov   { position: absolute; inset: 0; background: linear-gradient(to top, rgba(14,12,10,0.98) 0%, rgba(14,12,10,0.5) 55%, rgba(14,12,10,0.18) 100%); }
+      .rl-hero-ov   { position: absolute; inset: 0; background: linear-gradient(to top, rgba(14,12,10,0.96) 0%, rgba(14,12,10,0.35) 45%, rgba(14,12,10,0.08) 100%); }
       .rl-hero-in   { position: relative; z-index: 2; padding: 2rem 24px 2.5rem; max-width: 860px; margin: 0 auto; width: 100%; }
       .rl-hero-logo { width: 32px; height: 32px; filter: invert(1) brightness(.9); opacity: .45; margin-bottom: .9rem; display: block; }
       .rl-hero-eye  { font-size: 9px; letter-spacing: .42em; text-transform: uppercase; color: rgba(201,168,76,0.75); margin-bottom: .5rem; }
@@ -777,7 +777,7 @@ export function RuleStyles() {
       .rl-float-dismiss:hover { background: rgba(255,255,255,0.18); }
 
       @media (min-width: 1024px) {
-        .rl-hero-band { min-height: clamp(500px, 70vw, 780px); }
+        .rl-hero-band { min-height: clamp(600px, 78vw, 900px); }
         .rl-hero-in   { max-width: 1100px; padding: 2.5rem 48px 3rem; }
         .rl-hero-h1   { font-size: clamp(60px, 9vw, 108px); }
         .rl-content {
