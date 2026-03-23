@@ -1,11 +1,18 @@
 const KIT_API = "https://api.convertkit.com/v3";
 
-function corsHeaders(env) {
+function corsHeaders(origin) {
   return {
-    "Access-Control-Allow-Origin": env.ALLOWED_ORIGIN,
+    "Access-Control-Allow-Origin": origin,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
+    "Vary": "Origin",
   };
+}
+
+function getAllowedOrigin(request, env) {
+  const origin = request.headers.get("Origin") ?? "";
+  const allowed = [env.ALLOWED_ORIGIN, `https://www.${new URL(env.ALLOWED_ORIGIN).hostname}`];
+  return allowed.includes(origin) ? origin : null;
 }
 
 function json(body, status = 200, extraHeaders = {}) {
@@ -56,15 +63,15 @@ export default {
 
     // ── CORS preflight ──────────────────────────────────────────────
     if (request.method === "OPTIONS" && url.pathname === "/subscribe") {
-      console.log("ALLOWED_ORIGIN:", env.ALLOWED_ORIGIN);
-      return new Response(null, { status: 204, headers: corsHeaders(env) });
+      const origin = getAllowedOrigin(request, env);
+      if (!origin) return new Response(null, { status: 403 });
+      return new Response(null, { status: 204, headers: corsHeaders(origin) });
     }
 
     // ── POST /subscribe ─────────────────────────────────────────────
     if (request.method === "POST" && url.pathname === "/subscribe") {
-      console.log("POST ALLOWED_ORIGIN:", env.ALLOWED_ORIGIN);
-      console.log("Request origin:", request.headers.get("Origin"));
-      const cors = corsHeaders(env);
+      const origin = getAllowedOrigin(request, env);
+      const cors = origin ? corsHeaders(origin) : {};
 
       let body;
       try {
