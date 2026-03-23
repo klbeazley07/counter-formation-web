@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Michroma&family=Inter:wght@300;400;500;700;900&display=swap');
+import url('https://fonts.googleapis.com/css2?family=Michroma&family=Inter:wght@300;400;500;700;900&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -163,53 +163,41 @@ input[type="email"] {
   .cf7-dev-img-inner { max-width: var(--cf-width-content); padding: 2.5rem 48px 3rem; }
   .cf7-dev-img-h1    { font-size: clamp(44px, 8vw, 88px); }
 
-  /* Devotion content — two-column grid mirroring Rule of Life */
+  /* Devotion content — outer wrapper stays single column */
   .cf7-dev-content {
     max-width: var(--cf-width-content);
     padding: 60px 48px 140px;
+    display: block;
+  }
+
+  /* Two-column zone: only opening/scripture/teaching vs sidebar */
+  .cf7-dev-two-col {
     display: grid;
     grid-template-columns: 1fr 320px;
     column-gap: 64px;
     align-items: start;
-    grid-template-areas:
-      "tracker    tracker"
-      "rule0      rule0"
-      "pullquote  pullquote"
-      "opening    sidebar"
-      "scripture  sidebar"
-      "teaching   sidebar"
-      "why        why"
-      "practice   practice"
-      "reflection reflection"
-      "change     change"
-      "prayer     prayer"
-      "nextday    nextday"
-      "brand      brand"
-      "daynav     daynav";
   }
 
-  /* Assign grid areas to devotion sections */
-  .cf7-tracker-row  { grid-area: tracker; }
-  .cf7-dev-rule:first-of-type { grid-area: rule0; }
-  .cf7-pull-quote   { grid-area: pullquote; }
-  .cf7-dev-opening  { grid-area: opening; }
-  .cf7-dev-scripture { grid-area: scripture; }
-  .cf7-dev-teaching { grid-area: teaching; }
-  .cf7-dev-sidebar  {
-    grid-area: sidebar;
-    position: sticky; top: 72px;
+  /* Left column stacks naturally */
+  .cf7-dev-left { min-width: 0; }
+
+  /* Sidebar — sticky within the two-col zone only */
+  .cf7-dev-sidebar {
+    position: sticky;
+    top: 72px;
     align-self: start;
     border-left: 1px solid rgba(255,255,255,0.07);
     padding-left: 40px;
   }
-  .cf7-dev-why      { grid-area: why;        grid-column: 1 / -1; }
-  .cf7-dev-practice { grid-area: practice;   grid-column: 1 / -1; }
-  .cf7-dev-reflect  { grid-area: reflection; grid-column: 1 / -1; }
-  .cf7-dev-change   { grid-area: change;     grid-column: 1 / -1; }
-  .cf7-dev-prayer   { grid-area: prayer;     grid-column: 1 / -1; }
-  .cf7-next-step    { grid-area: nextday;    grid-column: 1 / -1; }
-  .cf7-brand-foot   { grid-area: brand;      grid-column: 1 / -1; }
-  .cf7-day-nav      { grid-area: daynav;     grid-column: 1 / -1; }
+
+  /* Everything below two-col zone is normal block flow — no overlap */
+  .cf7-dev-why,
+  .cf7-dev-practice,
+  .cf7-dev-change,
+  .cf7-dev-prayer,
+  .cf7-next-step,
+  .cf7-brand-foot,
+  .cf7-day-nav { display: block; }
 
   /* Tracker stays full-width */
   .cf7-tracker {

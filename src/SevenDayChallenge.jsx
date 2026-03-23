@@ -507,46 +507,17 @@ export function ChallengeStyles() {
 
       .cf7-dev-content { max-width: 680px; margin: 0 auto; padding: 48px 24px 100px; }
       .cf7-tracker-row { margin-bottom: 2rem; }
+      .cf7-dev-two-col { display: flex; flex-direction: column; gap: 0; }
+      .cf7-dev-sidebar { margin-top: 2rem; }
       @media (min-width: 1024px) {
-        .cf7-dev-content {
-          max-width: 1100px;
-          padding: 48px 48px 100px;
-          display: grid;
-          grid-template-columns: 1fr 300px;
-          grid-template-areas:
-            "tracker  tracker"
-            "rule     rule"
-            "quote    quote"
-            "opening  sidebar"
-            "scripture sidebar"
-            "teaching sidebar"
-            "why      why"
-            "practice practice"
-            "change   change"
-            "prayer   prayer"
-            "nextstep nextstep"
-            "brandf   brandf"
-            "daynav   daynav";
-          gap: 0 64px;
-          align-items: start;
-        }
-        .cf7-tracker-row   { grid-area: tracker; }
-        .cf7-dev-rule      { grid-area: rule; }
-        .cf7-pull-quote    { grid-area: quote; }
-        .cf7-dev-opening   { grid-area: opening; }
-        .cf7-dev-scripture { grid-area: scripture; }
-        .cf7-dev-teaching  { grid-area: teaching; }
-        .cf7-dev-sidebar   {
-          grid-area: sidebar; position: sticky; top: 80px; align-self: start;
+        .cf7-dev-content { max-width: 1100px; padding: 48px 48px 100px; }
+        .cf7-dev-two-col { flex-direction: row; align-items: start; gap: 64px; }
+        .cf7-dev-left    { flex: 1; min-width: 0; }
+        .cf7-dev-sidebar {
+          width: 300px; flex-shrink: 0; position: sticky; top: 80px;
           border-left: 1px solid rgba(255,255,255,0.06); padding-left: 40px;
+          margin-top: 0;
         }
-        .cf7-dev-why       { grid-area: why; }
-        .cf7-dev-practice  { grid-area: practice; }
-        .cf7-dev-change    { grid-area: change; }
-        .cf7-dev-prayer    { grid-area: prayer; }
-        .cf7-next-step     { grid-area: nextstep; }
-        .cf7-brand-foot    { grid-area: brandf; }
-        .cf7-day-nav       { grid-area: daynav; }
       }
       .cf7-dev-rule    { height: 1px; background: linear-gradient(to right, #C9A84C, transparent); opacity: .28; margin: 2.5rem 0; }
       .cf7-pull-quote {
@@ -1013,77 +984,75 @@ export function CFDevotion() {
 
       <div className="cf7-dev-content" ref={contentRef}>
 
-        {/* Tracker — full width */}
+        {/* Full-width — tracker + rule + pull quote */}
         <div className="cf7-tracker-row">
           <Tracker activeDayN={d.n} progress={progress} />
         </div>
-
-        <div className="cf7-dev-rule cf7-dev-rule" />
-
-        {/* Pull quote — full width */}
+        <div className="cf7-dev-rule" />
         <div className="cf7-pull-quote">
           <p>{pullQuote}</p>
           <span>Formation Line</span>
         </div>
 
-        {/* Left column — opening, scripture, teaching */}
-        <Section label="Opening" className="cf7-dev-opening">
-          <div className="cf7-dev-body">
-            <p><em>{d.opening}</em></p>
-            {d.body.map((p, i) => renderRichText(p, i))}
+        {/* Two-column zone — left content + sticky sidebar */}
+        <div className="cf7-dev-two-col">
+          <div className="cf7-dev-left">
+            <Section label="Opening" className="cf7-dev-opening">
+              <div className="cf7-dev-body">
+                <p><em>{d.opening}</em></p>
+                {d.body.map((p, i) => renderRichText(p, i))}
+              </div>
+            </Section>
+            <Section label="Scripture" className="cf7-dev-scripture">
+              {d.scriptures.map((s, i) => (
+                <div className="cf7-scripture-block" key={i}>
+                  <p>"{s.t}"</p>
+                  <cite>— {s.r}</cite>
+                </div>
+              ))}
+            </Section>
+            <Section label="Teaching" className="cf7-dev-teaching">
+              <div className="cf7-dev-body">
+                {d.teaching.map((p, i) => renderRichText(p, i))}
+              </div>
+            </Section>
           </div>
-        </Section>
 
-        <Section label="Scripture" className="cf7-dev-scripture">
-          {d.scriptures.map((s, i) => (
-            <div className="cf7-scripture-block" key={i}>
-              <p>"{s.t}"</p>
-              <cite>— {s.r}</cite>
+          <aside className="cf7-dev-sidebar">
+            <div className="cf7-dev-sec">
+              <p className="cf7-dev-sec-lbl">Reflection</p>
+              <div style={{
+                background: "rgba(201,168,76,0.04)",
+                border: "1px solid rgba(201,168,76,0.14)",
+                borderRadius: "14px",
+                padding: "1.25rem 1.5rem",
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontSize: "clamp(15px,3.5vw,18px)",
+                color: "rgba(250,248,245,0.65)",
+                lineHeight: 1.7,
+              }}>
+                {d.reflection}
+              </div>
             </div>
-          ))}
-        </Section>
-
-        <Section label="Teaching" className="cf7-dev-teaching">
-          <div className="cf7-dev-body">
-            {d.teaching.map((p, i) => renderRichText(p, i))}
-          </div>
-        </Section>
-
-        {/* Right sidebar — reflection question + day meta */}
-        <aside className="cf7-dev-sidebar">
-          <div className="cf7-dev-sec">
-            <p className="cf7-dev-sec-lbl">Reflection</p>
-            <div style={{
-              background: "rgba(201,168,76,0.04)",
-              border: "1px solid rgba(201,168,76,0.14)",
-              borderRadius: "14px",
-              padding: "1.25rem 1.5rem",
-              fontFamily: "'Cormorant Garamond', serif",
-              fontStyle: "italic",
-              fontSize: "clamp(15px,3.5vw,18px)",
-              color: "rgba(250,248,245,0.65)",
-              lineHeight: 1.7,
-            }}>
-              {d.reflection}
+            <div className="cf7-dev-sec" style={{ marginTop: "2rem" }}>
+              <p className="cf7-dev-sec-lbl">Day {d.n} of 7</p>
+              <p style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontSize: "16px",
+                color: "rgba(250,248,245,0.38)",
+                lineHeight: 1.7,
+                marginBottom: "1rem",
+              }}>
+                {d.theme}
+              </p>
+              <Tracker activeDayN={d.n} progress={progress} />
             </div>
-          </div>
-          <div className="cf7-dev-sec" style={{ marginTop: "2rem" }}>
-            <p className="cf7-dev-sec-lbl">Day {d.n} of 7</p>
-            <p style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontStyle: "italic",
-              fontSize: "16px",
-              color: "rgba(250,248,245,0.38)",
-              lineHeight: 1.7,
-              marginBottom: "1rem",
-            }}>
-              {d.theme}
-            </p>
-            <Tracker activeDayN={d.n} progress={progress} />
-          </div>
-        </aside>
+          </aside>
+        </div>
 
-        {/* Full-width sections below the fold */}
+        {/* Full-width sections — below the two-col zone, no overlap */}
         <Section label="Why This Matters" className="cf7-dev-why">
           <div className="cf7-impact-block why">
             <div className="cf7-dev-body" style={{ fontSize: "clamp(15px,3.6vw,18px)" }}>
