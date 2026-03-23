@@ -467,8 +467,8 @@ export function ArchitectureStyles() {
       }
       .camp-pillar-tag {
         display: inline-flex; align-items: center; gap: 10px;
-        font-size: 9px; letter-spacing: .42em; text-transform: uppercase;
-        color: rgba(14,12,10,0.45); margin-bottom: 1.25rem;
+        font-size: 12px; letter-spacing: .42em; text-transform: uppercase; font-weight: 700;
+        color: #C9A84C; margin-bottom: 1.25rem;
       }
       .camp-pillar-num {
         width: 24px; height: 24px; border-radius: 50%;
@@ -493,8 +493,8 @@ export function ArchitectureStyles() {
       }
       .camp-banner-inner { max-width: 1100px; margin: 0 auto; }
       .camp-banner-eye {
-        font-size: 9px; letter-spacing: .44em; text-transform: uppercase;
-        color: rgba(201,168,76,0.65); margin-bottom: .85rem; display: block;
+        font-size: 12px; letter-spacing: .44em; text-transform: uppercase; font-weight: 700;
+        color: #C9A84C; margin-bottom: .85rem; display: block;
       }
       .camp-banner-h {
         font-family: 'Michroma', sans-serif;
@@ -868,17 +868,6 @@ function CampaignPage({ pillar }) {
           </div>
           <h1 className="camp-hero-h1">{pillar.title}</h1>
           <p className="camp-hero-line">{pillar.heroLine}</p>
-          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-            <Link to={`/rule-of-life/${pillar.connectedRhythm}`} className="camp-btn-p">
-              Explore the Rule of Life
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M1 6h10M6.5 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-              </svg>
-            </Link>
-            <Link to={`/7-day-challenge/day/${pillar.connectedChallenge}`} className="camp-btn-s">
-              Day {pillar.connectedChallenge} of the Challenge →
-            </Link>
-          </div>
         </div>
       </div>
 
@@ -917,15 +906,6 @@ function CampaignPage({ pillar }) {
             ))}
           </div>
           <div className="camp-ctas">
-            <Link to={`/rule-of-life/${pillar.connectedRhythm}`} className="camp-btn-p">
-              Explore the {pillar.title} Rhythm
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M1 6h10M6.5 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-              </svg>
-            </Link>
-            <Link to={`/7-day-challenge/day/${pillar.connectedChallenge}`} className="camp-btn-s">
-              Day {pillar.connectedChallenge} of the Challenge →
-            </Link>
             <a href={SHOPIFY_URL} target="_blank" rel="noopener noreferrer" className="camp-btn-s">
               Shop the Gear →
             </a>
