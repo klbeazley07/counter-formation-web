@@ -1,4 +1,4 @@
-import url('https://fonts.googleapis.com/css2?family=Michroma&family=Inter:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Michroma&family=Inter:wght@300;400;500;700;900&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -172,22 +172,27 @@ input[type="email"] {
 
   /* Two-column zone: only opening/scripture/teaching vs sidebar */
   .cf7-dev-two-col {
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    column-gap: 64px;
+    display: flex;
+    flex-direction: row;
     align-items: start;
+    gap: 64px;
+    margin-bottom: 2.75rem;
   }
 
   /* Left column stacks naturally */
-  .cf7-dev-left { min-width: 0; }
+  .cf7-dev-left { flex: 1; min-width: 0; }
 
-  /* Sidebar — sticky within the two-col zone only */
+  /* Sidebar — sticky within the two-col zone only.
+     align-self: start is REQUIRED for sticky to work inside flexbox */
   .cf7-dev-sidebar {
+    width: 300px;
+    flex-shrink: 0;
     position: sticky;
-    top: 72px;
+    top: 80px;
     align-self: start;
     border-left: 1px solid rgba(255,255,255,0.07);
     padding-left: 40px;
+    margin-top: 0;
   }
 
   /* Everything below two-col zone is normal block flow — no overlap */

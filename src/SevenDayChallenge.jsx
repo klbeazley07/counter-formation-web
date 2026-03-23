@@ -506,20 +506,10 @@ export function ChallengeStyles() {
       .cf7-dev-img-h1    { font-size: clamp(30px,8vw,62px); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; line-height: .88; }
 
       .cf7-dev-content { max-width: 680px; margin: 0 auto; padding: 48px 24px 100px; }
-      .cf7-tracker-row { margin-bottom: 2rem; }
-      .cf7-dev-two-col { display: flex; flex-direction: column; gap: 0; }
-      .cf7-dev-sidebar { margin-top: 2rem; }
-      @media (min-width: 1024px) {
-        .cf7-dev-content { max-width: 1100px; padding: 48px 48px 100px; }
-        .cf7-dev-two-col { flex-direction: row; align-items: start; gap: 64px; }
-        .cf7-dev-left    { flex: 1; min-width: 0; }
-        .cf7-dev-sidebar {
-          width: 300px; flex-shrink: 0; position: sticky; top: 80px;
-          border-left: 1px solid rgba(255,255,255,0.06); padding-left: 40px;
-          margin-top: 0;
-        }
-      }
       .cf7-dev-rule    { height: 1px; background: linear-gradient(to right, #C9A84C, transparent); opacity: .28; margin: 2.5rem 0; }
+      .cf7-tracker-row { margin-bottom: 2rem; }
+      .cf7-dev-two-col { display: flex; flex-direction: column; }
+      .cf7-dev-sidebar { margin-top: 2rem; border-left: none; padding-left: 0; }
       .cf7-pull-quote {
         margin: 0 0 2.5rem; padding: 1.75rem 1.35rem 1.5rem; text-align: center;
         border-top: 1px solid rgba(201,168,76,0.28); border-bottom: 1px solid rgba(201,168,76,0.12);
