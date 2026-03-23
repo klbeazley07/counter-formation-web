@@ -42,7 +42,7 @@ export const RHYTHMS = [
     img:      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1400&auto=format&fit=crop",
     imgThumb: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=600&auto=format&fit=crop",
     quote: "Be still, and know that I am God.", quoteRef: "Psalm 46:10",
-    interactiveLabel: "Breath Prayer", challengeDay: 1, challengeTitle: "You Are Being Formed",
+    interactiveLabel: "The Daily Examen", challengeDay: 1, challengeTitle: "You Are Being Formed",
     why: [
       "We live in the age of perpetual elsewhere. Even when our bodies are present, our attention is somewhere else — in the feed, in the inbox, in the anxious rehearsal of tomorrow.",
       "Presence is the practice of returning. Returning to the body, to the moment, to the reality that God is here — not somewhere down the road, not in some future state of spiritual achievement, but now, in this room, in this breath.",
@@ -292,86 +292,7 @@ function getBookProgress() {
   catch { return {}; }
 }
 
-/* ─── INTERACTIVE: BREATH PRAYER ─────────────────────────────────── */
-
-function BreathPrayer() {
-  const [phase, setPhase] = useState("idle");
-  const [cycles, setCycles] = useState(0);
-  const timerRef = useRef(null);
-  const PHASES = [
-    { key: "inhale", label: "Inhale",  prayer: "Lord Jesus",  dur: 4000, next: "hold"   },
-    { key: "hold",   label: "Hold",    prayer: "·  ·  ·",    dur: 1500, next: "exhale" },
-    { key: "exhale", label: "Exhale",  prayer: "have mercy",  dur: 4000, next: "rest"   },
-    { key: "rest",   label: "Rest",    prayer: "·  ·  ·",    dur: 1500, next: "inhale" },
-  ];
-  const start = () => { setPhase("inhale"); setCycles(0); };
-  const stop  = () => { clearTimeout(timerRef.current); setPhase("idle"); setCycles(0); };
-  useEffect(() => {
-    if (phase === "idle") return;
-    const cur = PHASES.find(p => p.key === phase);
-    if (!cur) return;
-    timerRef.current = setTimeout(() => {
-      if (cur.next === "inhale") setCycles(c => c + 1);
-      setPhase(cur.next);
-    }, cur.dur);
-    return () => clearTimeout(timerRef.current);
-  }, [phase]);
-  const cur = PHASES.find(p => p.key === phase);
-  const isExpanding = phase === "inhale" || phase === "hold";
-  return (
-    <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", padding: "3rem 2rem", textAlign: "center" }}>
-      <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".45em", textTransform: "uppercase", color: "rgba(201,168,76,0.7)", marginBottom: "2.5rem" }}>Breath Prayer · 4 counts in · 4 counts out</p>
-      <div style={{ position: "relative", width: "220px", height: "220px", margin: "0 auto 2.5rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "1px solid rgba(201,168,76,0.15)" }} />
-        <div style={{ position: "absolute", inset: "20px", borderRadius: "50%", border: "1px solid rgba(201,168,76,0.08)" }} />
-        <div style={{ width: "120px", height: "120px", borderRadius: "50%", background: phase === "idle" ? "radial-gradient(circle, rgba(201,168,76,0.08), rgba(201,168,76,0.02))" : "radial-gradient(circle, rgba(201,168,76,0.35) 0%, rgba(201,168,76,0.12) 45%, rgba(201,168,76,0.03) 70%)", border: `1px solid rgba(201,168,76,${phase === "idle" ? "0.2" : "0.6"})`, boxShadow: phase !== "idle" ? "0 0 40px rgba(201,168,76,0.18), inset 0 0 30px rgba(201,168,76,0.08)" : "none", transform: isExpanding ? "scale(1.42)" : "scale(0.72)", transition: phase === "inhale" ? "transform 4s ease-in-out, box-shadow 0.5s, background 0.5s" : phase === "exhale" ? "transform 4s ease-in-out, box-shadow 0.5s, background 0.5s" : "transform 0.4s ease, box-shadow 0.5s, background 0.5s", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "4px" }}>
-          {phase !== "idle" && (<><span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", color: "rgba(201,168,76,0.9)", lineHeight: 1 }}>{cur?.label}</span><span style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "13px", color: "rgba(250,248,245,0.8)", lineHeight: 1.2, maxWidth: "80px", textAlign: "center" }}>{cur?.prayer}</span></>)}
-        </div>
-      </div>
-      {cycles > 0 && <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.35)", marginBottom: "1.5rem" }}>{cycles} {cycles === 1 ? "breath" : "breaths"} complete</p>}
-      {phase === "idle" && (<div style={{ marginBottom: "2rem" }}><p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "18px", color: "rgba(250,248,245,0.5)", letterSpacing: ".04em" }}>"Lord Jesus… have mercy"</p><p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: "rgba(250,248,245,0.22)", marginTop: "8px" }}>The Jesus Prayer · inhale / exhale</p></div>)}
-      {phase === "idle" ? (
-        <button onClick={start} style={{ padding: "14px 40px", borderRadius: "999px", border: "2px solid rgba(201,168,76,0.5)", background: "rgba(201,168,76,0.1)", color: "#C9A84C", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".3em", textTransform: "uppercase", cursor: "pointer", transition: "all .25s", fontWeight: 700 }} onMouseEnter={e => { e.target.style.background = "rgba(201,168,76,0.2)"; e.target.style.borderColor = "#C9A84C"; }} onMouseLeave={e => { e.target.style.background = "rgba(201,168,76,0.1)"; e.target.style.borderColor = "rgba(201,168,76,0.5)"; }}>Begin</button>
-      ) : (
-        <button onClick={stop} style={{ padding: "14px 40px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "rgba(250,248,245,0.3)", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".28em", textTransform: "uppercase", cursor: "pointer" }}>Stop</button>
-      )}
-    </div>
-  );
-}
-
-/* ─── INTERACTIVE: LECTIO DIVINA ──────────────────────────────────── */
-
-function LectioDivinaGuide() {
-  const steps = [
-    { num: "I", latin: "Lectio", eng: "Read", desc: "Read the passage slowly, aloud if possible. Read it again. A third time. You are not looking for information — you are listening for a word or phrase that seems to press against you." },
-    { num: "II", latin: "Meditatio", eng: "Reflect", desc: "Take the word or phrase that caught you. Repeat it quietly. Turn it over. Let it interact with your memory, your imagination, your current situation. Don't analyze — ruminate, like an animal chewing cud." },
-    { num: "III", latin: "Oratio", eng: "Respond", desc: "Let what has arisen in meditation move you to prayer. Speak to God — in gratitude, petition, confession, praise. This is not a structured prayer. It is a spontaneous response to what God has stirred in you." },
-    { num: "IV", latin: "Contemplatio", eng: "Rest", desc: "Release all thoughts, words, and images. Simply rest in God's presence. You are not trying to achieve anything. You are resting in the love of the One who has spoken. Even five minutes of this silence is more valuable than it seems." },
-  ];
-  const [active, setActive] = useState(0);
-  const cur = steps[active];
-  return (
-    <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", overflow: "hidden" }}>
-      <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-        {steps.map((s, i) => (<button key={i} onClick={() => setActive(i)} style={{ flex: 1, padding: "16px 8px", border: "none", background: active === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: active === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: active === i ? "#C9A84C" : "rgba(250,248,245,0.3)", transition: "all .2s" }}>{s.latin}</button>))}
-      </div>
-      <div style={{ padding: "2.5rem 2rem" }}>
-        <div style={{ display: "flex", alignItems: "baseline", gap: "16px", marginBottom: "1.25rem" }}>
-          <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "36px", color: "rgba(201,168,76,0.4)" }}>{cur.num}</span>
-          <div><p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "22px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: "#FAF8F5" }}>{cur.eng}</p><p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.6)" }}>{cur.latin}</p></div>
-        </div>
-        <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "18px", lineHeight: 1.82, color: "rgba(250,248,245,0.7)" }}>{cur.desc}</p>
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2rem" }}>
-          <button onClick={() => setActive(i => Math.max(0, i - 1))} disabled={active === 0} style={{ padding: "10px 24px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "rgba(250,248,245,0.35)", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", cursor: active === 0 ? "not-allowed" : "pointer", opacity: active === 0 ? .3 : 1 }}>← Prev</button>
-          <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)", alignSelf: "center" }}>{active + 1} of {steps.length}</span>
-          <button onClick={() => setActive(i => Math.min(steps.length - 1, i + 1))} disabled={active === steps.length - 1} style={{ padding: "10px 24px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "rgba(250,248,245,0.35)", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", cursor: active === steps.length - 1 ? "not-allowed" : "pointer", opacity: active === steps.length - 1 ? .3 : 1 }}>Next →</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── INTERACTIVE: EXAMEN WALKTHROUGH ────────────────────────────── */
+/* ─── INTERACTIVE: EXAMEN WALKTHROUGH (Presence) ─────────────────── */
 
 function ExamenWalkthrough() {
   const STEPS = [
@@ -410,10 +331,7 @@ function ExamenWalkthrough() {
   const cur = STEPS[step];
   const isLast = step === STEPS.length - 1;
 
-  const handleNext = () => {
-    if (isLast) setDone(true);
-    else setStep(s => s + 1);
-  };
+  const handleNext = () => { if (isLast) setDone(true); else setStep(s => s + 1); };
   const handleBack = () => { if (step > 0) setStep(s => s - 1); };
   const handleRestart = () => { setStep(0); setNotes(Array(STEPS.length).fill("")); setDone(false); setStarted(false); };
 
@@ -422,7 +340,7 @@ function ExamenWalkthrough() {
   if (!started) return (
     <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", padding: "3rem 2rem", textAlign: "center" }}>
       <p style={{ ...base, fontSize: "9px", letterSpacing: ".42em", textTransform: "uppercase", color: "rgba(201,168,76,0.7)", marginBottom: "1.5rem" }}>The Daily Examen · Ignatian Practice</p>
-      <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "20px", color: "rgba(250,248,245,0.75)", lineHeight: 1.7, marginBottom: "1rem", maxWidth: "480px", margin: "0 auto 1.5rem" }}>
+      <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "20px", color: "rgba(250,248,245,0.75)", lineHeight: 1.7, maxWidth: "480px", margin: "0 auto 1.5rem" }}>
         "At the end of each day, take ten minutes to review it in God's presence."
       </p>
       <p style={{ ...base, fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: "rgba(250,248,245,0.3)", marginBottom: "2.5rem" }}>5 steps · ~10 minutes · Gratitude → Presence → Sorrow → Forgiveness → Resolve</p>
@@ -448,7 +366,7 @@ function ExamenWalkthrough() {
       <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "22px", color: "rgba(250,248,245,0.82)", lineHeight: 1.6, marginBottom: "1rem" }}>
         You have reviewed this day in God's presence.
       </p>
-      <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "16px", color: "rgba(250,248,245,0.45)", lineHeight: 1.7, marginBottom: "2.5rem", maxWidth: "420px", margin: "0 auto 2.5rem" }}>
+      <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "16px", color: "rgba(250,248,245,0.45)", lineHeight: 1.7, maxWidth: "420px", margin: "0 auto 2.5rem" }}>
         This is how formation happens — not by intensity, but by the daily, faithful act of return. Come back tomorrow.
       </p>
       <p style={{ ...base, fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)", marginBottom: "2rem" }}>— Psalm 139:23–24</p>
@@ -460,12 +378,9 @@ function ExamenWalkthrough() {
 
   return (
     <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", overflow: "hidden" }}>
-      {/* Progress bar */}
       <div style={{ height: "2px", background: "rgba(255,255,255,0.06)" }}>
         <div style={{ height: "100%", width: `${((step + 1) / STEPS.length) * 100}%`, background: "linear-gradient(to right, #C9A84C, rgba(201,168,76,0.5))", transition: "width .4s ease" }} />
       </div>
-
-      {/* Step tabs */}
       <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
         {STEPS.map((s, i) => (
           <button key={i} onClick={() => setStep(i)} style={{ flex: 1, padding: "12px 4px", border: "none", background: step === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: step === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", ...base, fontSize: "8px", letterSpacing: ".18em", textTransform: "uppercase", color: i <= step ? (step === i ? "#C9A84C" : "rgba(201,168,76,0.5)") : "rgba(250,248,245,0.2)", transition: "all .2s" }}>
@@ -473,9 +388,7 @@ function ExamenWalkthrough() {
           </button>
         ))}
       </div>
-
       <div style={{ padding: "2rem" }}>
-        {/* Step header */}
         <div style={{ display: "flex", alignItems: "baseline", gap: "14px", marginBottom: "1.5rem" }}>
           <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "42px", color: "rgba(201,168,76,0.25)", lineHeight: 1 }}>{cur.num}</span>
           <div>
@@ -483,14 +396,8 @@ function ExamenWalkthrough() {
             <p style={{ ...base, fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.55)", marginTop: "3px" }}>{cur.latin}</p>
           </div>
         </div>
-
-        {/* Cue */}
         <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "16px", color: "rgba(250,248,245,0.45)", lineHeight: 1.7, marginBottom: "1.25rem", borderLeft: "2px solid rgba(201,168,76,0.3)", paddingLeft: "1rem" }}>{cur.cue}</p>
-
-        {/* Prompt */}
         <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "18px", color: "rgba(250,248,245,0.78)", lineHeight: 1.82, marginBottom: "1.5rem" }}>{cur.prompt}</p>
-
-        {/* Text area */}
         <textarea
           value={notes[step]}
           onChange={e => { const n = [...notes]; n[step] = e.target.value; setNotes(n); }}
@@ -500,8 +407,6 @@ function ExamenWalkthrough() {
           onFocus={e => { e.target.style.borderColor = "rgba(201,168,76,0.4)"; }}
           onBlur={e => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; }}
         />
-
-        {/* Navigation */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1.5rem" }}>
           <button onClick={handleBack} disabled={step === 0} style={{ padding: "10px 22px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "rgba(250,248,245,0.35)", ...base, fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", cursor: step === 0 ? "not-allowed" : "pointer", opacity: step === 0 ? .3 : 1 }}>← Back</button>
           <span style={{ ...base, fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)" }}>{step + 1} of {STEPS.length}</span>
@@ -515,6 +420,40 @@ function ExamenWalkthrough() {
     </div>
   );
 }
+
+/* ─── INTERACTIVE: LECTIO DIVINA (Scripture) ─────────────────────── */
+
+function LectioDivinaGuide() {
+  const steps = [
+    { num: "I", latin: "Lectio", eng: "Read", desc: "Read the passage slowly, aloud if possible. Read it again. A third time. You are not looking for information — you are listening for a word or phrase that seems to press against you." },
+    { num: "II", latin: "Meditatio", eng: "Reflect", desc: "Take the word or phrase that caught you. Repeat it quietly. Turn it over. Let it interact with your memory, your imagination, your current situation. Don't analyze — ruminate, like an animal chewing cud." },
+    { num: "III", latin: "Oratio", eng: "Respond", desc: "Let what has arisen in meditation move you to prayer. Speak to God — in gratitude, petition, confession, praise. This is not a structured prayer. It is a spontaneous response to what God has stirred in you." },
+    { num: "IV", latin: "Contemplatio", eng: "Rest", desc: "Release all thoughts, words, and images. Simply rest in God's presence. You are not trying to achieve anything. You are resting in the love of the One who has spoken. Even five minutes of this silence is more valuable than it seems." },
+  ];
+  const [active, setActive] = useState(0);
+  const cur = steps[active];
+  return (
+    <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", overflow: "hidden" }}>
+      <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        {steps.map((s, i) => (<button key={i} onClick={() => setActive(i)} style={{ flex: 1, padding: "16px 8px", border: "none", background: active === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: active === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: active === i ? "#C9A84C" : "rgba(250,248,245,0.3)", transition: "all .2s" }}>{s.latin}</button>))}
+      </div>
+      <div style={{ padding: "2.5rem 2rem" }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: "16px", marginBottom: "1.25rem" }}>
+          <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "36px", color: "rgba(201,168,76,0.4)" }}>{cur.num}</span>
+          <div><p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "22px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: "#FAF8F5" }}>{cur.eng}</p><p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.6)" }}>{cur.latin}</p></div>
+        </div>
+        <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "18px", lineHeight: 1.82, color: "rgba(250,248,245,0.7)" }}>{cur.desc}</p>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2rem" }}>
+          <button onClick={() => setActive(i => Math.max(0, i - 1))} disabled={active === 0} style={{ padding: "10px 24px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "rgba(250,248,245,0.35)", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", cursor: active === 0 ? "not-allowed" : "pointer", opacity: active === 0 ? .3 : 1 }}>← Prev</button>
+          <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)", alignSelf: "center" }}>{active + 1} of {steps.length}</span>
+          <button onClick={() => setActive(i => Math.min(steps.length - 1, i + 1))} disabled={active === steps.length - 1} style={{ padding: "10px 24px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "rgba(250,248,245,0.35)", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", cursor: active === steps.length - 1 ? "not-allowed" : "pointer", opacity: active === steps.length - 1 ? .3 : 1 }}>Next →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── INTERACTIVE: PRAYER POSTURES (Prayer) ──────────────────────── */
 
 function PrayerPostures() {
   const postures = [
@@ -539,7 +478,7 @@ function PrayerPostures() {
   );
 }
 
-/* ─── INTERACTIVE: SABBATH IDEAS ─────────────────────────────────── */
+/* ─── INTERACTIVE: SABBATH IDEAS (Sabbath) ───────────────────────── */
 
 function SabbathIdeas() {
   const categories = [
@@ -568,7 +507,7 @@ function SabbathIdeas() {
   );
 }
 
-/* ─── INTERACTIVE: COMMUNITY DEPTHS ──────────────────────────────── */
+/* ─── INTERACTIVE: COMMUNITY DEPTHS (Community) ──────────────────── */
 
 function CommunityDepths() {
   const levels = [
@@ -599,12 +538,14 @@ function CommunityDepths() {
   );
 }
 
+/* ─── INTERACTIVES MAP ────────────────────────────────────────────── */
+
 const INTERACTIVES = {
-  presence:  BreathPrayer,
-  scripture: LectioDivinaGuide,
-  prayer:    PrayerPostures,
-  sabbath:   SabbathIdeas,
-  community: CommunityDepths,
+  presence:  ExamenWalkthrough,   // Daily Examen
+  scripture: LectioDivinaGuide,   // Lectio Divina
+  prayer:    PrayerPostures,       // Prayer Postures
+  sabbath:   SabbathIdeas,         // Sabbath Ideas
+  community: CommunityDepths,      // Depths of Community
 };
 
 /* ─── GO DEEPER — TABBED BOOKS / MEDIA ───────────────────────────── */
@@ -615,7 +556,6 @@ function GoDeeperSection({ data, rhythm }) {
 
   return (
     <div className="rl-further rl-section">
-      {/* Tab header */}
       <div className="rl-sec-label" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "none", paddingBottom: 0, marginBottom: "1.25rem" }}>
         <span style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", paddingBottom: ".75rem", display: "block", width: "100%", letterSpacing: ".5em", fontSize: "9px" }}>Go Deeper</span>
       </div>
@@ -626,8 +566,6 @@ function GoDeeperSection({ data, rhythm }) {
           </button>
         ))}
       </div>
-
-      {/* Books tab */}
       {tab === "books" && data.further.map((b, i) => (
         <Link key={i} to={`${RULE_BASE}/${rhythm}/book/${i}`} className="rl-book">
           <img src={b.cover} alt={b.title} className="rl-book-img" onError={e => { e.target.style.background = "#17140F"; e.target.style.opacity = "0.4"; }} />
@@ -641,8 +579,6 @@ function GoDeeperSection({ data, rhythm }) {
           </div>
         </Link>
       ))}
-
-      {/* Media tab */}
       {tab === "media" && data.media.map((m, i) => (
         <a key={i} href={m.url} target="_blank" rel="noopener noreferrer" className="rl-book" style={{ textDecoration: "none" }}>
           <div style={{ position: "relative", overflow: "hidden", flexShrink: 0 }}>
@@ -811,7 +747,6 @@ export function RuleStyles() {
       .rl-reflections { display: flex; flex-direction: column; gap: 1rem; }
       .rl-reflect-q   { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.14); border-radius: 14px; padding: 1.25rem 1.5rem; font-family: 'Cormorant Garamond',serif; font-style: italic; font-size: clamp(15px,3.5vw,18px); color: rgba(250,248,245,0.65); line-height: 1.7; }
 
-      /* ── Book / Media cards ── */
       .rl-further      { display: flex; flex-direction: column; gap: 12px; }
       .rl-book         { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; overflow: hidden; transition: border-color .3s, transform .3s; text-decoration: none; display: grid; grid-template-columns: 120px 1fr; cursor: pointer; align-items: stretch; }
       .rl-book:hover   { border-color: rgba(201,168,76,0.45); transform: translateX(4px); }
@@ -824,7 +759,6 @@ export function RuleStyles() {
       .rl-book-cta     { display: inline-flex; align-items: center; gap: 6px; font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(201,168,76,0.7); transition: color .2s; flex-shrink: 0; }
       .rl-book:hover .rl-book-cta { color: #C9A84C; }
 
-      /* ── Rhythm nav — pill buttons ── */
       .rl-rhythm-nav { display: flex; gap: 12px; margin-top: 3rem; }
       .rl-nav-btn { flex: 1; padding: 16px 24px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.04); text-decoration: none; display: flex; flex-direction: column; gap: 4px; transition: border-color .25s, background .25s; }
       .rl-nav-btn:hover { border-color: rgba(201,168,76,0.45); background: rgba(201,168,76,0.06); }
@@ -842,7 +776,6 @@ export function RuleStyles() {
       .rl-float-dismiss { width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .2s; }
       .rl-float-dismiss:hover { background: rgba(255,255,255,0.18); }
 
-      /* ── Desktop layout ≥1024px ── */
       @media (min-width: 1024px) {
         .rl-hero-band { min-height: clamp(380px, 58vw, 580px); }
         .rl-hero-in   { max-width: 1100px; padding: 2.5rem 48px 3rem; }
