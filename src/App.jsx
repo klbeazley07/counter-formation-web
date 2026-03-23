@@ -343,7 +343,7 @@ function RuleOfLifeSection() {
             </h2>
           </div>
           <p className="max-w-md text-xs md:text-base opacity-50 leading-relaxed font-light text-left md:text-right">
-            A curated set of practices and relational commitments that help us be with Jesus, become like Jesus, and do what Jesus did.
+            A set of practices and relational commitments that help us be with Jesus, become like Jesus, and do what Jesus did.
           </p>
         </div>
 
