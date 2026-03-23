@@ -62,6 +62,8 @@ export default {
 
     // ── POST /subscribe ─────────────────────────────────────────────
     if (request.method === "POST" && url.pathname === "/subscribe") {
+      console.log("POST ALLOWED_ORIGIN:", env.ALLOWED_ORIGIN);
+      console.log("Request origin:", request.headers.get("Origin"));
       const cors = corsHeaders(env);
 
       let body;
