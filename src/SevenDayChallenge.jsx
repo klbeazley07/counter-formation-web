@@ -311,6 +311,8 @@ export function ChallengeStyles() {
         text-decoration: none; transition: border-color .25s;
       }
       .cf7-corner-nav:hover { border-color: rgba(201,168,76,0.35); }
+      .cf7-shield-mark { position: fixed; top: 1.25rem; left: 1.5rem; z-index: 200; width: 192px; height: 192px; opacity: 0.32; pointer-events: none; }
+      @media (max-width: 640px) { .cf7-shield-mark { width: 100px; height: 100px; top: 0.5rem; left: 0.5rem; } }
       .cf7-corner-nav img  { width: 28px; height: 28px; object-fit: contain; filter: invert(1) brightness(1.1); }
       .cf7-corner-nav span { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: rgba(250,248,245,0.55); font-weight: 600; white-space: nowrap; }
 
@@ -588,15 +590,23 @@ export function ChallengeStyles() {
 
 function CornerNav() {
   return (
-    <Link to="/" className="cf7-corner-nav">
+    <>
       <img
-        src="/helmet.png"
+        src="/shield-white.png"
+        className="cf7-shield-mark"
         onError={e => { e.target.style.display = "none"; }}
-        alt="Counter Formation"
-        style={{ filter: "brightness(0) invert(1)" }}
+        alt=""
       />
-      <span>Counter Formation</span>
-    </Link>
+      <Link to="/" className="cf7-corner-nav">
+        <img
+          src="/helmet.png"
+          onError={e => { e.target.style.display = "none"; }}
+          alt="Counter Formation"
+          style={{ filter: "brightness(0) invert(1)" }}
+        />
+        <span>Counter Formation</span>
+      </Link>
+    </>
   );
 }
 
@@ -707,13 +717,6 @@ export function CFLanding() {
         <div className="cf7-vbeam" ref={vbRef} />
         <div className="cf7-bloom" ref={blRef} />
         <div id="cf7-particles" />
-        <img
-          className="cf7-hero-mark"
-          ref={markRef}
-          src="/helmet.png"
-          onError={e => { e.target.style.display = "none"; }}
-          alt="Counter Formation"
-        />
         <div className="cf7-hero-content" ref={contRef}>
           <span className="cf7-entry-label">Counter Formation · The Entry Point</span>
           <h1 className="cf7-h1">7-Day<br />Formation<br />Challenge</h1>
