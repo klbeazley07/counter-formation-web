@@ -772,7 +772,7 @@ function GearSection() {
                   <a href={cat.comingSoon ? undefined : tab.shopUrl}
                     target="_blank" rel="noopener noreferrer"
                     className={cx("block h-full relative", cat.comingSoon && "pointer-events-none")}>
-                    <div className="absolute inset-0 opacity-60 group-hover:opacity-90 grayscale group-hover:grayscale-0 transition-all duration-1000">
+                    <div className="absolute inset-0 opacity-100 transition-all duration-1000">
                       <SafeImg src={cat.img} className="w-full h-full object-contain" alt={cat.name} />
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
