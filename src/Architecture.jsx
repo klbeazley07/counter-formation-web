@@ -530,7 +530,7 @@ export function ArchitectureStyles() {
       .camp-sections { display: flex; flex-direction: column; gap: clamp(2.5rem,5vw,4.5rem); margin-bottom: clamp(2.5rem,5vw,4rem); }
       .camp-sect { display: grid; grid-template-columns: 1fr; gap: 1rem; }
       @media (min-width: 768px) { .camp-sect { grid-template-columns: 160px 1fr; gap: 2.5rem; align-items: start; } }
-      .camp-sect-eye { font-size: 9px; letter-spacing: .42em; text-transform: uppercase; color: #C9A84C; font-weight: 700; display: block; margin-bottom: .5rem; }
+      .camp-sect-eye { font-size: 13px; letter-spacing: .42em; text-transform: uppercase; color: #C9A84C; font-weight: 800; display: block; margin-bottom: .75rem; }
       .camp-sect-rule { width: 28px; height: 1px; background: rgba(14,12,10,0.16); }
       .camp-sect-h {
         font-family: 'Michroma', sans-serif; font-size: clamp(16px,2.2vw,24px);
