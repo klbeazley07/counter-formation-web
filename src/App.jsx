@@ -15,6 +15,13 @@ import {
 
 import { ChallengeStyles, CFLanding, CFDevotion } from "./SevenDayChallenge";
 import { RuleStyles, RhythmPage, BookPage } from "./RuleOfLife";
+import {
+  ArchitectureStyles,
+  ArchitectureSlider,
+  IdentityPage,
+  PracticePage,
+  CommunityPage,
+} from "./Architecture";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -255,68 +262,6 @@ function CinematicHero() {
 }
 
 /* ─── ARCHITECTURE OF THE SOUL ────────────────────────────────────── */
-
-function ArchitectureSection() {
-  const pillars = [
-    {
-      num: "I", title: "Identity", img: "/Identity_8k.png",
-      body: "Before action comes being. Counter Formation begins by anchoring your identity in Christ — not performance, not platform, not approval.",
-      reverse: false,
-    },
-    {
-      num: "II", title: "Practice", img: "/Practice_8k.png",
-      body: "A life is built on rhythms. Through scripture, prayer, sabbath, and stillness we train our lives to remain rooted in Christ.",
-      reverse: true,
-    },
-    {
-      num: "III", title: "Community", img: "/Community_8k.png",
-      body: "Formation is a team sport. An ethos for people committed to living differently — together.",
-      reverse: false,
-    },
-  ];
-
-  return (
-    <section id="architecture" className="relative py-24 md:py-40"
-      style={{ backgroundColor: C.darkBg }}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 xl:px-16">
-        <div className="mb-16 md:mb-24 text-center md:text-left space-y-4">
-          <h2 className="font-brand text-2xl md:text-5xl uppercase tracking-[0.14em] md:tracking-[0.18em] leading-none text-white">
-            Architecture <br />
-            <span className="opacity-30 italic font-serif lowercase tracking-normal">of the</span> Soul
-          </h2>
-          <p className="max-w-2xl text-[10px] md:text-sm opacity-55 tracking-[0.1em] md:tracking-[0.15em] uppercase leading-relaxed font-light">
-            Identity anchors the heart. Practice builds discipline. Community protects the journey.
-          </p>
-        </div>
-
-        <div className="space-y-32 md:space-y-40">
-          {pillars.map((p) => (
-            <div key={p.title}
-              className={cx("pillar-reveal flex flex-col items-center gap-10 md:gap-24 group",
-                p.reverse ? "md:flex-row-reverse" : "md:flex-row")}>
-              <div className="relative md:w-3/5 text-left">
-                <span className={cx(
-                  "absolute -top-10 md:-top-16 text-[6rem] md:text-[18rem] font-brand opacity-[0.03] select-none pointer-events-none group-hover:opacity-[0.06] transition-opacity duration-1000",
-                  p.reverse ? "right-0 md:left-20" : "-left-6 md:-left-10"
-                )}>{p.num}</span>
-                <h3 className="font-brand text-3xl md:text-6xl uppercase tracking-widest mb-4 md:mb-8 relative z-10 text-white">
-                  {p.title}
-                </h3>
-                <p className="text-xs md:text-base opacity-60 leading-relaxed font-light max-w-md tracking-wide">
-                  {p.body}
-                </p>
-              </div>
-              <div className="relative w-full md:w-2/5 aspect-square bg-white/5 rounded-[2rem] md:rounded-[3rem] border border-white/10 overflow-hidden">
-                <SafeImg src={p.img} alt={p.title}
-                  className="pillar-img w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /* ─── RULE OF LIFE ────────────────────────────────────────────────── */
 
@@ -1075,7 +1020,7 @@ function MainSite() {
 
       <CinematicHero />
       <SectionDivider />
-      <ArchitectureSection />
+      <ArchitectureSlider />
       <SectionDivider />
       <RuleOfLifeSection />
       <LightTransition />
@@ -1099,6 +1044,7 @@ export default function App() {
       <FieldGuideStyles />
       <ChallengeStyles />
       <RuleStyles />
+      <ArchitectureStyles />
       <Routes>
         {/* Main site */}
         <Route path="/" element={<MainSite />} />
@@ -1118,6 +1064,11 @@ export default function App() {
         {/* Rule of Life routes */}
         <Route path="/rule-of-life/:rhythm" element={<RhythmPage />} />
         <Route path="/rule-of-life/:rhythm/book/:bookIndex" element={<BookPage />} />
+
+        {/* Architecture routes */}
+        <Route path="/identity"  element={<IdentityPage />} />
+        <Route path="/practice"  element={<PracticePage />} />
+        <Route path="/community" element={<CommunityPage />} />
 
         {/* Fallback */}
         <Route path="*" element={<MainSite />} />
