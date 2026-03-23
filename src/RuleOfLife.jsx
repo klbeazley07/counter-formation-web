@@ -807,10 +807,11 @@ export function RuleStyles() {
         .rl-rule:nth-of-type(2) { grid-area: rule2; }
         .rl-interactive { grid-area: interactive; }
         .rl-practice    { grid-area: practice; }
-        .rl-further     { grid-area: further; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
+        .rl-further     { grid-area: further; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; grid-auto-flow: row dense; }
         .rl-further .rl-sec-label { grid-column: 1 / -1; }
         .rl-further > div[style*="fit-content"] { grid-column: 1 / -1; }
-        .rl-further .rl-book:last-child:nth-child(even) { grid-column: 1 / -1; }
+        .rl-further .rl-book:last-child:nth-child(odd) { grid-column: 1 / -1; }
+        .rl-further .rl-book:last-child:nth-child(even) { grid-column: auto; }
         .rl-rhythm-nav  { grid-area: nav; }
         .rl-pullquote p { font-size: clamp(22px, 2.8vw, 32px); }
         .rl-sec-label   { letter-spacing: .5em; }
