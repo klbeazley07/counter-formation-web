@@ -239,7 +239,7 @@ function CinematicHero() {
             className="w-full md:w-auto px-8 md:px-12 py-4 md:py-5 bg-white/5 text-white rounded-full text-[9px] md:text-[10px] border border-white/10 hover:border-[#C9A84C]/40 hover:text-[#C9A84C] transition-all uppercase tracking-widest font-bold">
             Explore the Architecture
           </a>
-          <a href={SHOPIFY_URL}
+          <a href="#shop"
             className="w-full md:w-auto px-8 md:px-12 py-4 md:py-5 bg-[#FAF8F5] text-black rounded-full text-[9px] md:text-[10px] border-2 border-[#C9A84C] hover:bg-[#C9A84C] transition-all flex items-center justify-center gap-3 uppercase tracking-widest font-bold shadow-[0_0_24px_rgba(201,168,76,0.18)]">
             Shop the Gear <ArrowRight size={14} />
           </a>
@@ -972,7 +972,6 @@ function MainSite() {
     { label: "Mission",     href: "#architecture" },
     { label: "Rule",        href: "#rule" },
     { label: "Field Guide", href: "#field-guide" },
-    { label: "Gear",        href: "#shop", gold: true },
   ];
 
   useEffect(() => {
@@ -1034,7 +1033,7 @@ function MainSite() {
               </a>
             ))}
           </div>
-          <a href={SHOPIFY_URL}
+          <a href="#shop"
             className="px-4 py-2 md:px-6 md:py-2 bg-white text-black rounded-full text-[9px] md:text-[10px] hidden md:block hover:bg-[#C9A84C] transition-all uppercase tracking-widest font-bold">
             Shop the Gear
           </a>
