@@ -1,19 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
 
 const SHOPIFY_URL = "https://shop.counterformed.com/collections/the-gear";
-
-const C = {
-  heroBg:  "#06050A",
-  darkBg:  "#0E0C0A",
-  gold:    "#C9A84C",
-  ivory:   "#FAF8F5",
-  cream:   "#F5F0E8",
-  warm:    "#EDE8DF",
-  warmDark:"#1C1812",
-};
 
 /* ─── PILLAR DATA ─────────────────────────────────────────────────── */
 
@@ -24,12 +14,10 @@ const PILLARS = [
     title: "Identity",
     route: "/identity",
     img: "/Identity_8k.png",
-    // Challenge: confronts performance culture
     challenge: "You are not your output.",
     manifesto: "The modern world measures you by what you produce, how you appear, and how many people are watching. Counter Formation begins by refusing that metric entirely — and anchoring identity in Christ before anything else gets to name you.",
     sub: "Before action comes being.",
     cta: "Enter Identity",
-    // Campaign page content
     heroLine: "The world has been forming your identity since you were old enough to scroll.",
     sections: [
       {
@@ -121,19 +109,24 @@ const PILLARS = [
   },
 ];
 
-/* ─── SHARED STYLES ───────────────────────────────────────────────── */
+/* ─── STYLES ──────────────────────────────────────────────────────── */
 
 export function ArchitectureStyles() {
   return (
     <style>{`
-      /* ── Slider section ── */
-      .arch-section {
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+      /* ════════════════════════════════════════════════════
+         SLIDER
+      ════════════════════════════════════════════════════ */
+
+      .arch-outer {
         position: relative;
+        /* tall enough for scroll-past escape hatch */
+        height: 400svh;
         background: #06050A;
-        overflow: hidden;
       }
 
-      /* sticky container that pins while user scrolls through panels */
       .arch-sticky {
         position: sticky;
         top: 0;
@@ -141,224 +134,335 @@ export function ArchitectureStyles() {
         overflow: hidden;
       }
 
-      /* horizontal track */
+      /* viewport frame */
+      .arch-viewport {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      /* sliding track */
       .arch-track {
         display: flex;
+        width: 300%; /* 3 panels */
         height: 100%;
+        transition: transform .72s cubic-bezier(.76,0,.24,1);
         will-change: transform;
       }
 
-      /* individual panel */
+      /* single panel */
       .arch-panel {
         position: relative;
-        flex-shrink: 0;
-        width: 100vw;
+        width: calc(100% / 3);
         height: 100%;
+        flex-shrink: 0;
         overflow: hidden;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
       }
 
-      .arch-panel-bg {
+      .arch-bg {
         position: absolute;
         inset: 0;
         background-size: cover;
         background-position: center;
-        will-change: transform;
-        transition: transform .1s linear;
+        transform: scale(1.08);
+        transition: transform 1.1s cubic-bezier(.16,1,.3,1);
+      }
+      .arch-panel.is-active .arch-bg {
+        transform: scale(1.0);
       }
 
-      /* dark overlay — gradient to bottom */
-      .arch-panel-ov {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          to top,
-          rgba(6,5,10,0.96) 0%,
-          rgba(6,5,10,0.62) 35%,
-          rgba(6,5,10,0.22) 65%,
-          rgba(6,5,10,0.08) 100%
-        );
+      /* layered overlays */
+      .arch-ov-bottom {
+        position: absolute; inset: 0;
+        background: linear-gradient(to top,
+          rgba(6,5,10,0.97) 0%,
+          rgba(6,5,10,0.68) 38%,
+          rgba(6,5,10,0.28) 65%,
+          rgba(6,5,10,0.08) 100%);
+      }
+      .arch-ov-top {
+        position: absolute; inset: 0;
+        background: linear-gradient(to bottom,
+          rgba(6,5,10,0.52) 0%,
+          transparent 30%);
       }
 
-      /* top tint for contrast */
-      .arch-panel-top-tint {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          to bottom,
-          rgba(6,5,10,0.55) 0%,
-          transparent 28%
-        );
-      }
-
-      .arch-panel-content {
+      /* panel content */
+      .arch-content {
         position: relative;
         z-index: 10;
-        padding: clamp(2rem,5vw,4rem) clamp(1.5rem,5vw,5rem) clamp(3rem,6vw,5rem);
-        max-width: 900px;
+        padding: clamp(2rem,4vw,3.5rem) clamp(1.75rem,5vw,5rem) clamp(2.5rem,5vw,4.5rem);
+        max-width: 860px;
       }
 
-      /* pillar number */
-      .arch-panel-num {
-        font-family: 'Michroma', sans-serif;
-        font-size: clamp(10px,1.2vw,13px);
-        letter-spacing: .48em;
-        text-transform: uppercase;
-        color: rgba(201,168,76,0.8);
-        margin-bottom: clamp(.75rem,1.5vw,1.25rem);
+      /* eyebrow */
+      .arch-eyebrow {
         display: flex;
         align-items: center;
         gap: 14px;
+        font-family: 'Michroma', sans-serif;
+        font-size: clamp(9px,1vw,11px);
+        letter-spacing: .48em;
+        text-transform: uppercase;
+        color: rgba(201,168,76,0.75);
+        margin-bottom: clamp(.75rem,1.5vw,1.25rem);
+        opacity: 0;
+        transform: translateY(16px);
+        transition: opacity .6s .1s, transform .6s .1s cubic-bezier(.16,1,.3,1);
       }
-      .arch-panel-num::before {
+      .arch-eyebrow::before {
         content: '';
         display: block;
-        width: 32px;
+        width: 28px;
         height: 1px;
-        background: rgba(201,168,76,0.55);
+        background: rgba(201,168,76,0.5);
+        flex-shrink: 0;
       }
+      .arch-panel.is-active .arch-eyebrow { opacity: 1; transform: none; }
 
-      /* challenge headline */
-      .arch-panel-challenge {
+      /* headline */
+      .arch-headline {
         font-family: 'Michroma', sans-serif;
-        font-size: clamp(36px,6.5vw,86px);
+        font-size: clamp(32px,5.8vw,78px);
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: .03em;
-        line-height: .88;
+        line-height: .9;
         color: #FAF8F5;
-        margin-bottom: clamp(1.25rem,2.5vw,2rem);
+        margin-bottom: clamp(1rem,2vw,1.75rem);
+        opacity: 0;
+        transform: translateY(22px);
+        transition: opacity .65s .2s, transform .65s .2s cubic-bezier(.16,1,.3,1);
       }
+      .arch-panel.is-active .arch-headline { opacity: 1; transform: none; }
 
-      .arch-panel-manifesto {
+      /* manifesto */
+      .arch-manifesto {
         font-family: 'Cormorant Garamond', serif;
-        font-size: clamp(15px,1.8vw,20px);
-        line-height: 1.8;
-        color: rgba(250,248,245,0.55);
-        max-width: 560px;
-        margin-bottom: clamp(1.5rem,3vw,2.5rem);
+        font-size: clamp(14px,1.6vw,19px);
+        line-height: 1.82;
+        color: rgba(250,248,245,0.5);
+        max-width: 520px;
+        margin-bottom: clamp(1.5rem,2.5vw,2.25rem);
+        opacity: 0;
+        transform: translateY(18px);
+        transition: opacity .6s .32s, transform .6s .32s cubic-bezier(.16,1,.3,1);
       }
+      .arch-panel.is-active .arch-manifesto { opacity: 1; transform: none; }
 
-      /* CTA */
-      .arch-panel-cta {
+      /* CTA row */
+      .arch-cta-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        opacity: 0;
+        transform: translateY(14px);
+        transition: opacity .6s .42s, transform .6s .42s cubic-bezier(.16,1,.3,1);
+      }
+      .arch-panel.is-active .arch-cta-row { opacity: 1; transform: none; }
+
+      .arch-cta-enter {
         display: inline-flex;
         align-items: center;
-        gap: 10px;
-        padding: 14px 32px;
+        gap: 9px;
+        padding: 13px 28px;
         border-radius: 999px;
         background: transparent;
         border: 1px solid rgba(201,168,76,0.55);
         color: #C9A84C;
         font-family: 'Michroma', sans-serif;
-        font-size: clamp(9px,1vw,11px);
+        font-size: clamp(8px,.9vw,10px);
         letter-spacing: .28em;
         text-transform: uppercase;
         font-weight: 700;
         text-decoration: none;
-        transition: background .25s, color .25s, border-color .25s, transform .25s;
+        transition: background .25s, color .25s, border-color .25s, transform .2s;
         cursor: pointer;
+        white-space: nowrap;
       }
-      .arch-panel-cta:hover {
+      .arch-cta-enter:hover {
         background: #C9A84C;
         color: #0A0A0A;
         border-color: #C9A84C;
         transform: translateY(-2px);
       }
 
-      /* pagination dots */
-      .arch-dots {
+      /* ── NAVIGATION ARROWS ── */
+      .arch-arrows {
         position: absolute;
-        bottom: clamp(1.5rem,3vw,2.5rem);
-        right: clamp(1.5rem,3vw,2.5rem);
-        z-index: 20;
+        bottom: clamp(1.75rem,3.5vw,3rem);
+        right: clamp(1.75rem,3.5vw,3.5rem);
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .arch-arrow {
+        width: clamp(44px,4vw,54px);
+        height: clamp(44px,4vw,54px);
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.15);
+        background: rgba(6,5,10,0.55);
+        backdrop-filter: blur(12px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: border-color .25s, background .25s, transform .2s;
+        color: rgba(250,248,245,0.7);
+      }
+      .arch-arrow:hover:not(:disabled) {
+        border-color: rgba(201,168,76,0.55);
+        background: rgba(201,168,76,0.12);
+        color: #C9A84C;
+        transform: scale(1.06);
+      }
+      .arch-arrow:disabled {
+        opacity: .28;
+        cursor: default;
+      }
+
+      /* ── CONTINUE BUTTON (appears on last panel) ── */
+      .arch-continue {
+        position: absolute;
+        bottom: clamp(1.75rem,3.5vw,3rem);
+        left: 50%;
+        transform: translateX(-50%) translateY(12px);
+        z-index: 30;
         display: flex;
         flex-direction: column;
-        gap: 10px;
         align-items: center;
-      }
-      .arch-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.22);
-        transition: background .35s, transform .35s;
+        gap: 8px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .5s, transform .5s cubic-bezier(.16,1,.3,1);
         cursor: pointer;
+        background: none;
         border: none;
         padding: 0;
       }
+      .arch-continue.visible {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+        pointer-events: auto;
+      }
+      .arch-continue span {
+        font-family: 'Michroma', sans-serif;
+        font-size: 9px;
+        letter-spacing: .42em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.4);
+      }
+      @keyframes archBounce {
+        0%,100% { transform: translateY(0); }
+        50% { transform: translateY(5px); }
+      }
+      .arch-continue svg { animation: archBounce 1.8s ease-in-out infinite; }
+
+      /* ── DOTS ── */
+      .arch-dots {
+        position: absolute;
+        bottom: clamp(1.75rem,3.5vw,3rem);
+        left: clamp(1.75rem,3.5vw,3.5rem);
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .arch-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        transition: background .3s, transform .3s, width .3s;
+      }
       .arch-dot.active {
         background: #C9A84C;
-        transform: scale(1.5);
+        width: 22px;
+        border-radius: 4px;
       }
 
-      /* progress bar at bottom */
-      .arch-progress {
+      /* ── SCROLL-PAST HINT (first panel only) ── */
+      .arch-scroll-hint {
         position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: rgba(255,255,255,0.06);
-        z-index: 20;
-      }
-      .arch-progress-fill {
-        height: 100%;
-        background: linear-gradient(to right, #C9A84C, rgba(201,168,76,0.4));
-        transition: width .12s linear;
-      }
-
-      /* scroll cue */
-      .arch-scroll-cue {
-        position: absolute;
-        bottom: clamp(1.5rem,3vw,2.5rem);
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 20;
+        top: clamp(1.5rem,2.5vw,2rem);
+        right: clamp(1.75rem,3.5vw,3.5rem);
+        z-index: 30;
         display: flex;
-        flex-direction: column;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
+        opacity: 0;
+        animation: archFadeIn 1s 1.5s forwards;
         pointer-events: none;
       }
-      .arch-scroll-cue span {
+      @keyframes archFadeIn { to { opacity: 1; } }
+      .arch-scroll-hint span {
         font-family: 'Michroma', sans-serif;
         font-size: 8px;
         letter-spacing: .38em;
         text-transform: uppercase;
-        color: rgba(255,255,255,0.28);
+        color: rgba(255,255,255,0.22);
       }
-      @keyframes archScrollPulse {
-        0%,100% { transform: translateX(-50%) translateY(0); opacity: .6; }
-        50% { transform: translateX(-50%) translateY(5px); opacity: 1; }
-      }
-      .arch-scroll-cue { animation: archScrollPulse 2.2s ease-in-out infinite; }
 
-      /* panel reveal animation */
-      .arch-panel-content > * {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1);
+      /* ── PANEL COUNTER ── */
+      .arch-counter {
+        position: absolute;
+        top: clamp(1.5rem,2.5vw,2rem);
+        left: clamp(1.75rem,3.5vw,3.5rem);
+        z-index: 30;
+        font-family: 'Michroma', sans-serif;
+        font-size: 9px;
+        letter-spacing: .38em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.25);
       }
-      .arch-panel.in-view .arch-panel-content > * { opacity: 1; transform: none; }
-      .arch-panel.in-view .arch-panel-content > *:nth-child(1) { transition-delay: .05s; }
-      .arch-panel.in-view .arch-panel-content > *:nth-child(2) { transition-delay: .15s; }
-      .arch-panel.in-view .arch-panel-content > *:nth-child(3) { transition-delay: .25s; }
-      .arch-panel.in-view .arch-panel-content > *:nth-child(4) { transition-delay: .35s; }
+      .arch-counter strong { color: rgba(255,255,255,0.55); }
 
-      /* mobile: stack vertically instead of horizontal scroll */
+      /* ── MOBILE: stack panels vertically ── */
       @media (max-width: 767px) {
-        .arch-section { overflow: visible; }
+        .arch-outer { height: auto; }
         .arch-sticky { position: relative; height: auto; }
-        .arch-track { flex-direction: column; transform: none !important; }
-        .arch-panel { width: 100%; height: 100svh; flex-shrink: 0; }
-        .arch-dots { display: none; }
-        .arch-scroll-cue { display: none; }
-        .arch-panel-challenge { font-size: clamp(32px,9vw,52px); }
+        .arch-track {
+          flex-direction: column;
+          width: 100%;
+          transition: none;
+          transform: none !important;
+        }
+        .arch-panel {
+          width: 100%;
+          height: 100svh;
+          flex-shrink: 0;
+        }
+        /* all panels visible on mobile — no is-active needed */
+        .arch-panel .arch-eyebrow,
+        .arch-panel .arch-headline,
+        .arch-panel .arch-manifesto,
+        .arch-panel .arch-cta-row {
+          opacity: 1;
+          transform: none;
+        }
+        .arch-arrows,
+        .arch-dots,
+        .arch-continue,
+        .arch-scroll-hint,
+        .arch-counter { display: none; }
+        .arch-content { padding: 2rem 1.5rem 3rem; }
       }
 
-      /* ── Campaign pages ── */
+
+      /* ════════════════════════════════════════════════════
+         CAMPAIGN PAGES
+      ════════════════════════════════════════════════════ */
+
       .camp-wrap {
         min-height: 100svh;
         background: #FAF8F5;
@@ -367,16 +471,12 @@ export function ArchitectureStyles() {
         overflow-x: hidden;
       }
 
-      /* corner nav on campaign pages */
       .camp-nav {
         position: fixed;
-        top: 1rem;
-        left: 50%;
+        top: 1rem; left: 50%;
         transform: translateX(-50%);
         z-index: 200;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        display: flex; align-items: center; gap: 10px;
         padding: 10px 20px 10px 14px;
         border-radius: 999px;
         background: rgba(6,5,10,0.88);
@@ -389,7 +489,6 @@ export function ArchitectureStyles() {
       .camp-nav img  { width: 28px; height: 28px; object-fit: contain; filter: brightness(0) invert(1); }
       .camp-nav span { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: rgba(250,248,245,0.6); font-weight: 600; }
 
-      /* hero band */
       .camp-hero {
         position: relative;
         height: 100svh;
@@ -399,14 +498,12 @@ export function ArchitectureStyles() {
         justify-content: flex-end;
       }
       .camp-hero-bg {
-        position: absolute;
-        inset: 0;
+        position: absolute; inset: 0;
         background-size: cover;
         background-position: center;
       }
       .camp-hero-ov {
-        position: absolute;
-        inset: 0;
+        position: absolute; inset: 0;
         background: linear-gradient(
           to top,
           rgba(245,240,232,0.98) 0%,
@@ -415,184 +512,78 @@ export function ArchitectureStyles() {
         );
       }
       .camp-hero-in {
-        position: relative;
-        z-index: 2;
-        padding: clamp(2rem,4vw,3.5rem) clamp(1.5rem,5vw,4rem);
-        max-width: 1200px;
-        margin: 0 auto;
-        width: 100%;
+        position: relative; z-index: 2;
+        padding: clamp(2rem,4vw,3.5rem) clamp(1.5rem,5vw,5rem);
+        max-width: 1200px; margin: 0 auto; width: 100%;
       }
-
       .camp-pillar-tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 9px;
-        letter-spacing: .42em;
-        text-transform: uppercase;
-        color: rgba(14,12,10,0.5);
-        margin-bottom: 1.25rem;
+        display: inline-flex; align-items: center; gap: 10px;
+        font-size: 9px; letter-spacing: .42em; text-transform: uppercase;
+        color: rgba(14,12,10,0.45); margin-bottom: 1.25rem;
       }
-      .camp-pillar-tag-num {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
+      .camp-pillar-num {
+        width: 24px; height: 24px; border-radius: 50%;
         border: 1px solid rgba(201,168,76,0.55);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 8px;
-        color: #C9A84C;
-        font-weight: 700;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 8px; color: #C9A84C; font-weight: 700;
       }
-
       .camp-hero-h1 {
         font-family: 'Michroma', sans-serif;
         font-size: clamp(52px,9vw,120px);
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: .04em;
-        line-height: .86;
-        color: #0E0C0A;
-        margin-bottom: 1.25rem;
+        font-weight: 700; text-transform: uppercase;
+        letter-spacing: .04em; line-height: .86;
+        color: #0E0C0A; margin-bottom: 1.25rem;
       }
-
       .camp-hero-line {
         font-family: 'Cormorant Garamond', serif;
         font-style: italic;
-        font-size: clamp(18px,2.5vw,26px);
-        line-height: 1.65;
-        color: rgba(14,12,10,0.55);
-        max-width: 580px;
-        margin-bottom: 2rem;
+        font-size: clamp(17px,2.2vw,24px);
+        line-height: 1.65; color: rgba(14,12,10,0.52);
+        max-width: 560px; margin-bottom: 2rem;
       }
 
-      /* challenge banner — dark strip */
-      .camp-challenge-banner {
+      /* dark challenge banner */
+      .camp-banner {
         background: #0E0C0A;
-        padding: clamp(2.5rem,5vw,4rem) clamp(1.5rem,5vw,4rem);
+        padding: clamp(2.5rem,5vw,4.5rem) clamp(1.5rem,5vw,5rem);
       }
-      .camp-challenge-inner {
-        max-width: 1100px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        gap: .75rem;
+      .camp-banner-inner { max-width: 1100px; margin: 0 auto; }
+      .camp-banner-eye {
+        font-size: 9px; letter-spacing: .44em; text-transform: uppercase;
+        color: rgba(201,168,76,0.65); margin-bottom: .85rem; display: block;
       }
-      .camp-challenge-eyebrow {
-        font-size: 9px;
-        letter-spacing: .42em;
-        text-transform: uppercase;
-        color: rgba(201,168,76,0.7);
-      }
-      .camp-challenge-text {
+      .camp-banner-h {
         font-family: 'Michroma', sans-serif;
-        font-size: clamp(28px,5vw,56px);
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: .05em;
-        line-height: .92;
-        color: #FAF8F5;
+        font-size: clamp(28px,5vw,58px);
+        font-weight: 700; text-transform: uppercase;
+        letter-spacing: .04em; line-height: .92; color: #FAF8F5;
       }
-      .camp-challenge-text em {
-        font-style: normal;
-        color: #C9A84C;
-      }
+      .camp-banner-h em { font-style: normal; color: #C9A84C; }
 
-      /* main content body */
+      /* body */
       .camp-body {
         background: #FAF8F5;
-        padding: clamp(3rem,6vw,6rem) clamp(1.5rem,5vw,4rem);
+        padding: clamp(3rem,6vw,6rem) clamp(1.5rem,5vw,5rem);
       }
-      .camp-body-inner {
-        max-width: 1100px;
-        margin: 0 auto;
-      }
+      .camp-body-inner { max-width: 1100px; margin: 0 auto; }
 
-      /* pull quote */
       .camp-pull {
-        padding: clamp(2rem,4vw,3.5rem) 0;
+        padding: clamp(2rem,3.5vw,3rem) 0;
         border-top: 1px solid rgba(14,12,10,0.1);
         border-bottom: 1px solid rgba(14,12,10,0.1);
-        margin-bottom: clamp(3rem,6vw,5rem);
+        margin-bottom: clamp(3rem,5vw,4.5rem);
       }
       .camp-pull p {
         font-family: 'Cormorant Garamond', serif;
         font-style: italic;
-        font-size: clamp(24px,4vw,44px);
-        line-height: 1.25;
-        color: #0E0C0A;
+        font-size: clamp(22px,3.8vw,44px);
+        line-height: 1.25; color: #0E0C0A;
         max-width: 780px;
       }
-      .camp-pull cite {
-        display: block;
-        margin-top: 1rem;
-        font-family: 'Barlow Condensed', sans-serif;
-        font-size: 9px;
-        letter-spacing: .38em;
-        text-transform: uppercase;
-        color: #C9A84C;
-        font-style: normal;
-      }
 
-      /* section blocks */
-      .camp-sections {
-        display: flex;
-        flex-direction: column;
-        gap: clamp(3rem,6vw,5rem);
-        margin-bottom: clamp(3rem,6vw,5rem);
-      }
-      .camp-sect {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1.25rem;
-      }
-      @media (min-width: 768px) {
-        .camp-sect {
-          grid-template-columns: 180px 1fr;
-          gap: 2.5rem;
-          align-items: start;
-        }
-      }
-      .camp-sect-left {
-        display: flex;
-        flex-direction: column;
-        gap: .5rem;
-      }
-      .camp-sect-eyebrow {
-        font-size: 9px;
-        letter-spacing: .42em;
-        text-transform: uppercase;
-        color: #C9A84C;
-        font-weight: 700;
-      }
-      .camp-sect-rule {
-        width: 32px;
-        height: 1px;
-        background: rgba(14,12,10,0.18);
-      }
-      .camp-sect-right {}
-      .camp-sect-h {
-        font-family: 'Michroma', sans-serif;
-        font-size: clamp(18px,2.5vw,26px);
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: .06em;
-        line-height: 1.1;
-        color: #0E0C0A;
-        margin-bottom: 1rem;
-      }
-      .camp-sect-body {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: clamp(17px,2.2vw,21px);
-        line-height: 1.82;
-        color: rgba(14,12,10,0.62);
-      }
-
-      /* scripture block */
       .camp-scripture {
         border-left: 3px solid #C9A84C;
-        padding: 1.5rem 1.75rem;
+        padding: 1.4rem 1.75rem;
         background: rgba(201,168,76,0.06);
         border-radius: 0 16px 16px 0;
         margin-bottom: clamp(2.5rem,5vw,4rem);
@@ -600,142 +591,125 @@ export function ArchitectureStyles() {
       .camp-scripture p {
         font-family: 'Cormorant Garamond', serif;
         font-style: italic;
-        font-size: clamp(17px,2.2vw,22px);
-        color: rgba(14,12,10,0.78);
-        line-height: 1.7;
-        margin-bottom: .6rem;
+        font-size: clamp(16px,2vw,21px);
+        color: rgba(14,12,10,0.75);
+        line-height: 1.7; margin-bottom: .6rem;
       }
       .camp-scripture cite {
-        font-family: 'Barlow Condensed', sans-serif;
-        font-size: 9px;
-        letter-spacing: .32em;
-        text-transform: uppercase;
-        color: #C9A84C;
-        font-style: normal;
+        font-size: 9px; letter-spacing: .32em;
+        text-transform: uppercase; color: #C9A84C; font-style: normal;
       }
 
-      /* CTAs row */
+      .camp-sections {
+        display: flex; flex-direction: column;
+        gap: clamp(2.5rem,5vw,4.5rem);
+        margin-bottom: clamp(2.5rem,5vw,4rem);
+      }
+      .camp-sect {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      @media (min-width: 768px) {
+        .camp-sect { grid-template-columns: 160px 1fr; gap: 2.5rem; align-items: start; }
+      }
+      .camp-sect-eye {
+        font-size: 9px; letter-spacing: .42em; text-transform: uppercase;
+        color: #C9A84C; font-weight: 700; display: block; margin-bottom: .5rem;
+      }
+      .camp-sect-rule { width: 28px; height: 1px; background: rgba(14,12,10,0.16); }
+      .camp-sect-h {
+        font-family: 'Michroma', sans-serif;
+        font-size: clamp(16px,2.2vw,24px);
+        font-weight: 700; text-transform: uppercase;
+        letter-spacing: .05em; line-height: 1.1;
+        color: #0E0C0A; margin-bottom: .9rem;
+      }
+      .camp-sect-body {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(16px,2vw,20px);
+        line-height: 1.84; color: rgba(14,12,10,0.58);
+      }
+
       .camp-ctas {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        padding-top: clamp(2rem,4vw,3rem);
+        display: flex; flex-wrap: wrap; gap: 12px;
+        padding-top: clamp(2rem,3.5vw,3rem);
         border-top: 1px solid rgba(14,12,10,0.1);
       }
-      .camp-btn-primary {
-        display: inline-flex;
-        align-items: center;
-        gap: 9px;
-        padding: 15px 32px;
-        border-radius: 999px;
-        background: #0E0C0A;
-        color: #FAF8F5;
+      .camp-btn-p {
+        display: inline-flex; align-items: center; gap: 9px;
+        padding: 14px 30px; border-radius: 999px;
+        background: #0E0C0A; color: #FAF8F5;
         border: 2px solid #0E0C0A;
         font-family: 'Barlow Condensed', sans-serif;
-        font-size: 10px;
-        letter-spacing: .26em;
-        text-transform: uppercase;
-        font-weight: 700;
+        font-size: 10px; letter-spacing: .26em;
+        text-transform: uppercase; font-weight: 700;
         text-decoration: none;
-        transition: background .25s, color .25s;
-        cursor: pointer;
+        transition: background .25s, border-color .25s, color .25s;
       }
-      .camp-btn-primary:hover { background: #C9A84C; border-color: #C9A84C; color: #0A0A0A; }
-      .camp-btn-secondary {
-        display: inline-flex;
-        align-items: center;
-        gap: 9px;
-        padding: 15px 32px;
-        border-radius: 999px;
-        background: transparent;
-        color: rgba(14,12,10,0.55);
-        border: 1px solid rgba(14,12,10,0.2);
+      .camp-btn-p:hover { background: #C9A84C; border-color: #C9A84C; color: #0A0A0A; }
+      .camp-btn-s {
+        display: inline-flex; align-items: center; gap: 9px;
+        padding: 14px 30px; border-radius: 999px;
+        background: transparent; color: rgba(14,12,10,0.5);
+        border: 1px solid rgba(14,12,10,0.18);
         font-family: 'Barlow Condensed', sans-serif;
-        font-size: 10px;
-        letter-spacing: .26em;
-        text-transform: uppercase;
-        font-weight: 700;
+        font-size: 10px; letter-spacing: .26em;
+        text-transform: uppercase; font-weight: 700;
         text-decoration: none;
         transition: border-color .25s, color .25s;
-        cursor: pointer;
       }
-      .camp-btn-secondary:hover { border-color: #C9A84C; color: #C9A84C; }
+      .camp-btn-s:hover { border-color: #C9A84C; color: #C9A84C; }
 
-      /* other pillars nav */
-      .camp-other-pillars {
+      /* other pillars */
+      .camp-others {
         background: #0E0C0A;
-        padding: clamp(2.5rem,5vw,4rem) clamp(1.5rem,5vw,4rem);
+        padding: clamp(2.5rem,5vw,4.5rem) clamp(1.5rem,5vw,5rem);
       }
-      .camp-other-inner {
-        max-width: 1100px;
-        margin: 0 auto;
+      .camp-others-inner { max-width: 1100px; margin: 0 auto; }
+      .camp-others-label {
+        font-size: 9px; letter-spacing: .42em; text-transform: uppercase;
+        color: rgba(201,168,76,0.6); margin-bottom: 1.5rem; font-weight: 700;
       }
-      .camp-other-label {
-        font-size: 9px;
-        letter-spacing: .42em;
-        text-transform: uppercase;
-        color: rgba(201,168,76,0.65);
-        margin-bottom: 1.5rem;
-        font-weight: 700;
-      }
-      .camp-other-grid {
+      .camp-others-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(min(260px,100%),1fr));
         gap: 12px;
       }
       .camp-other-card {
-        position: relative;
-        overflow: hidden;
-        border-radius: 16px;
-        border: 1px solid rgba(255,255,255,0.08);
-        aspect-ratio: 4/3;
-        text-decoration: none;
-        display: block;
+        position: relative; overflow: hidden;
+        border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);
+        aspect-ratio: 4/3; text-decoration: none; display: block;
         transition: border-color .3s, transform .3s;
       }
       .camp-other-card:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-4px); }
       .camp-other-bg {
-        position: absolute;
-        inset: 0;
-        background-size: cover;
-        background-position: center;
-        filter: grayscale(.3);
-        opacity: .5;
+        position: absolute; inset: 0;
+        background-size: cover; background-position: center;
+        filter: grayscale(.3); opacity: .5;
         transition: opacity .5s, filter .5s;
       }
-      .camp-other-card:hover .camp-other-bg { opacity: .8; filter: grayscale(0); }
+      .camp-other-card:hover .camp-other-bg { opacity: .82; filter: grayscale(0); }
       .camp-other-ov {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to top, rgba(6,5,10,0.92), rgba(6,5,10,0.3) 60%, transparent);
+        position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(6,5,10,0.92), rgba(6,5,10,0.28) 60%, transparent);
       }
-      .camp-other-body {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 1.25rem;
-        z-index: 2;
-      }
-      .camp-other-num { font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: #C9A84C; margin-bottom: .35rem; }
+      .camp-other-body { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.25rem; z-index: 2; }
+      .camp-other-num { font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: #C9A84C; margin-bottom: .3rem; }
       .camp-other-title {
         font-family: 'Michroma', sans-serif;
-        font-size: clamp(16px,2.5vw,22px);
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: .06em;
-        color: #FAF8F5;
+        font-size: clamp(15px,2.2vw,22px);
+        font-weight: 700; text-transform: uppercase;
+        letter-spacing: .06em; color: #FAF8F5;
       }
 
-      /* footer strip */
       .camp-footer {
         background: #06050A;
         border-top: 1px solid rgba(255,255,255,0.05);
-        padding: 28px 1.5rem;
-        text-align: center;
+        padding: 28px 1.5rem; text-align: center;
       }
       .camp-footer img { width: 24px; height: 24px; opacity: .2; filter: invert(1); display: block; margin: 0 auto .75rem; }
-      .camp-footer p { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
+      .camp-footer p   { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
     `}</style>
   );
 }
@@ -743,143 +717,162 @@ export function ArchitectureStyles() {
 /* ─── ARCHITECTURE SLIDER ─────────────────────────────────────────── */
 
 export function ArchitectureSlider() {
-  const sectionRef  = useRef(null);
+  const outerRef    = useRef(null);
   const trackRef    = useRef(null);
-  const progressRef = useRef(null);
-  const [activeIdx, setActiveIdx]   = useState(0);
-  const [cueVisible, setCueVisible] = useState(true);
+  const [idx, setIdx] = useState(0);
+  const TOTAL = PILLARS.length;
 
-  const PANEL_COUNT = PILLARS.length;
+  // ── Advance / retreat
+  const goTo = useCallback((next) => {
+    setIdx(Math.max(0, Math.min(TOTAL - 1, next)));
+  }, [TOTAL]);
 
-  // Scroll-jacking: translate track horizontally as user scrolls
+  // ── Keyboard navigation
   useEffect(() => {
-    const section = sectionRef.current;
-    const track   = trackRef.current;
-    const prog    = progressRef.current;
-    if (!section || !track) return;
-
-    // On mobile, skip the scroll-jack
-    const isMobile = () => window.innerWidth < 768;
-
-    const onScroll = () => {
-      if (isMobile()) return;
-
-      const rect = section.getBoundingClientRect();
-      const sectionH = section.offsetHeight - window.innerHeight;
-      const scrolled = -rect.top;
-      const pct = Math.max(0, Math.min(1, scrolled / sectionH));
-
-      // Translate
-      const maxX = -(PANEL_COUNT - 1) * window.innerWidth;
-      const tx = pct * maxX;
-      track.style.transform = `translateX(${tx}px)`;
-
-      // Active panel
-      const idx = Math.round(pct * (PANEL_COUNT - 1));
-      setActiveIdx(idx);
-
-      // Progress bar
-      if (prog) prog.style.width = `${pct * 100}%`;
-
-      // Scroll cue
-      if (scrolled > 40) setCueVisible(false);
-
-      // Parallax on bg images
-      const panels = track.querySelectorAll(".arch-panel");
-      panels.forEach((panel, i) => {
-        const panelPct = pct * (PANEL_COUNT - 1) - i;
-        const clampedPct = Math.max(-1, Math.min(1, panelPct));
-        const bg = panel.querySelector(".arch-panel-bg");
-        if (bg) bg.style.transform = `translateX(${clampedPct * 6}%) scale(1.06)`;
-
-        // in-view class
-        const distFromCenter = Math.abs(pct * (PANEL_COUNT - 1) - i);
-        if (distFromCenter < 0.5) panel.classList.add("in-view");
-        else panel.classList.remove("in-view");
-      });
+    const onKey = (e) => {
+      // Only hijack arrow keys when section is in view
+      const outer = outerRef.current;
+      if (!outer) return;
+      const rect = outer.getBoundingClientRect();
+      const inView = rect.top <= 0 && rect.bottom >= window.innerHeight;
+      if (!inView) return;
+      if (e.key === "ArrowRight") goTo(idx + 1);
+      if (e.key === "ArrowLeft")  goTo(idx - 1);
     };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [idx, goTo]);
 
-    // Mark first panel in-view on mount
+  // ── Scroll-past escape hatch:
+  //    When user scrolls deeply into the "exit zone" (bottom 25% of scroll space),
+  //    we allow the sticky to naturally release — no JS needed, just CSS height.
+  //    The 400svh outer gives plenty of scroll room; sticky releases at 300svh mark.
+
+  // ── Apply translation to track
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    track.style.transform = `translateX(-${idx * (100 / TOTAL)}%)`;
+  }, [idx, TOTAL]);
+
+  // ── Mark active panel
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    track.querySelectorAll(".arch-panel").forEach((p, i) => {
+      p.classList.toggle("is-active", i === idx);
+    });
+  }, [idx]);
+
+  // ── Mark first panel active on mount
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
     const panels = track.querySelectorAll(".arch-panel");
-    if (panels[0]) panels[0].classList.add("in-view");
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    if (panels[0]) panels[0].classList.add("is-active");
   }, []);
 
-  const scrollToPanel = useCallback((idx) => {
-    const section = sectionRef.current;
-    if (!section || window.innerWidth < 768) return;
-    const sectionH = section.offsetHeight - window.innerHeight;
-    const targetPct = idx / (PANEL_COUNT - 1);
-    const targetScroll = section.offsetTop + targetPct * sectionH;
-    window.scrollTo({ top: targetScroll, behavior: "smooth" });
+  // ── Scroll the page past the section when Continue is clicked
+  const handleContinue = useCallback(() => {
+    const outer = outerRef.current;
+    if (!outer) return;
+    // Scroll to just below the section
+    const target = outer.offsetTop + outer.offsetHeight;
+    window.scrollTo({ top: target, behavior: "smooth" });
   }, []);
 
   return (
-    // Outer section height = sticky viewport + scroll space for each panel transition
-    <section
-      ref={sectionRef}
-      id="architecture"
-      className="arch-section"
-      style={{ height: `calc(100svh + ${(PANEL_COUNT - 1) * 100}svh)` }}
-    >
+    <section ref={outerRef} id="architecture" className="arch-outer">
       <div className="arch-sticky">
-        {/* Horizontal track */}
-        <div ref={trackRef} className="arch-track">
-          {PILLARS.map((p, i) => (
-            <div key={p.slug} className="arch-panel">
-              {/* Background image */}
-              <div
-                className="arch-panel-bg"
-                style={{ backgroundImage: `url('${p.img}')` }}
-              />
-              <div className="arch-panel-top-tint" />
-              <div className="arch-panel-ov" />
+        <div className="arch-viewport">
 
-              {/* Content */}
-              <div className="arch-panel-content">
-                <div className="arch-panel-num">
-                  Pillar {p.num} &nbsp;·&nbsp; Architecture of the Soul
-                </div>
-                <h2 className="arch-panel-challenge">{p.challenge}</h2>
-                <p className="arch-panel-manifesto">{p.manifesto}</p>
-                <Link to={p.route} className="arch-panel-cta">
-                  {p.cta}
-                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                    <path d="M2 6.5h9M7 2.5l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
+          {/* Panel counter */}
+          <div className="arch-counter">
+            <strong>{idx + 1}</strong> / {TOTAL}
+          </div>
 
-        {/* Pagination dots */}
-        <div className="arch-dots">
-          {PILLARS.map((p, i) => (
-            <button
-              key={p.slug}
-              className={`arch-dot${i === activeIdx ? " active" : ""}`}
-              onClick={() => scrollToPanel(i)}
-              aria-label={`Go to ${p.title}`}
-            />
-          ))}
-        </div>
-
-        {/* Scroll cue */}
-        {cueVisible && (
-          <div className="arch-scroll-cue">
-            <span>Scroll to explore</span>
-            <svg width="14" height="9" viewBox="0 0 14 9" fill="none">
-              <path d="M1 1L7 7L13 1" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" strokeLinecap="round"/>
+          {/* Scroll-past hint */}
+          <div className="arch-scroll-hint">
+            <span>Or scroll to skip</span>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M7 1v12M3 9l4 4 4-4" stroke="rgba(255,255,255,0.22)" strokeWidth="1.4" strokeLinecap="round"/>
             </svg>
           </div>
-        )}
 
-        {/* Progress bar */}
-        <div className="arch-progress">
-          <div ref={progressRef} className="arch-progress-fill" style={{ width: "0%" }} />
+          {/* Track */}
+          <div ref={trackRef} className="arch-track">
+            {PILLARS.map((p, i) => (
+              <div key={p.slug} className={`arch-panel${i === 0 ? " is-active" : ""}`}>
+                <div className="arch-bg" style={{ backgroundImage: `url('${p.img}')` }} />
+                <div className="arch-ov-bottom" />
+                <div className="arch-ov-top" />
+
+                <div className="arch-content">
+                  <div className="arch-eyebrow">
+                    Pillar {p.num}&nbsp;&nbsp;·&nbsp;&nbsp;Architecture of the Soul
+                  </div>
+                  <h2 className="arch-headline">{p.challenge}</h2>
+                  <p className="arch-manifesto">{p.manifesto}</p>
+                  <div className="arch-cta-row">
+                    <Link to={p.route} className="arch-cta-enter">
+                      {p.cta}
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M1 6h10M6.5 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Dots */}
+          <div className="arch-dots">
+            {PILLARS.map((p, i) => (
+              <button
+                key={p.slug}
+                className={`arch-dot${i === idx ? " active" : ""}`}
+                onClick={() => goTo(i)}
+                aria-label={`Go to ${p.title}`}
+              />
+            ))}
+          </div>
+
+          {/* Arrows */}
+          <div className="arch-arrows">
+            <button
+              className="arch-arrow"
+              onClick={() => goTo(idx - 1)}
+              disabled={idx === 0}
+              aria-label="Previous pillar"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <button
+              className="arch-arrow"
+              onClick={() => idx < TOTAL - 1 ? goTo(idx + 1) : handleContinue()}
+              aria-label={idx < TOTAL - 1 ? "Next pillar" : "Continue"}
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          {/* Continue — visible on last panel */}
+          <button
+            className={`arch-continue${idx === TOTAL - 1 ? " visible" : ""}`}
+            onClick={handleContinue}
+            aria-label="Continue scrolling"
+          >
+            <span>Continue</span>
+            <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
+              <path d="M1 1L8 8L15 1" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+
         </div>
       </div>
     </section>
@@ -889,14 +882,11 @@ export function ArchitectureSlider() {
 /* ─── CAMPAIGN PAGE (shared layout) ──────────────────────────────── */
 
 function CampaignPage({ pillar }) {
-  const navigate = useNavigate();
   const others = PILLARS.filter(p => p.slug !== pillar.slug);
-
   useEffect(() => { window.scrollTo(0, 0); }, [pillar.slug]);
 
   return (
     <div className="camp-wrap">
-      {/* Nav */}
       <Link to="/" className="camp-nav">
         <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="Counter Formation" />
         <span>Counter Formation</span>
@@ -908,25 +898,19 @@ function CampaignPage({ pillar }) {
         <div className="camp-hero-ov" />
         <div className="camp-hero-in">
           <div className="camp-pillar-tag">
-            <div className="camp-pillar-tag-num">{pillar.num}</div>
+            <div className="camp-pillar-num">{pillar.num}</div>
             Architecture of the Soul &nbsp;·&nbsp; {pillar.title}
           </div>
           <h1 className="camp-hero-h1">{pillar.title}</h1>
           <p className="camp-hero-line">{pillar.heroLine}</p>
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-            <Link
-              to={`/rule-of-life/${pillar.connectedRhythm}`}
-              className="camp-btn-primary"
-            >
-              Enter the Rule of Life
+            <Link to={`/rule-of-life/${pillar.connectedRhythm}`} className="camp-btn-p">
+              Explore the Rule of Life
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path d="M1 6h10M6.5 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
               </svg>
             </Link>
-            <Link
-              to={`/7-day-challenge/day/${pillar.connectedChallenge}`}
-              className="camp-btn-secondary"
-            >
+            <Link to={`/7-day-challenge/day/${pillar.connectedChallenge}`} className="camp-btn-s">
               Day {pillar.connectedChallenge} of the Challenge →
             </Link>
           </div>
@@ -934,15 +918,15 @@ function CampaignPage({ pillar }) {
       </div>
 
       {/* Challenge banner */}
-      <div className="camp-challenge-banner">
-        <div className="camp-challenge-inner">
-          <p className="camp-challenge-eyebrow">The Confrontation</p>
-          <h2 className="camp-challenge-text">
-            {pillar.challenge.split(" ").map((word, i, arr) => {
-              // italicize last two words for rhythm
-              if (i >= arr.length - 2) return <em key={i}>{word}{i < arr.length - 1 ? " " : ""}</em>;
-              return <span key={i}>{word} </span>;
-            })}
+      <div className="camp-banner">
+        <div className="camp-banner-inner">
+          <span className="camp-banner-eye">The Confrontation</span>
+          <h2 className="camp-banner-h">
+            {pillar.challenge.split(" ").map((word, i, arr) => (
+              i >= arr.length - 2
+                ? <em key={i}>{word}{i < arr.length - 1 ? " " : ""}</em>
+                : <span key={i}>{word} </span>
+            ))}
           </h2>
         </div>
       </div>
@@ -950,27 +934,23 @@ function CampaignPage({ pillar }) {
       {/* Body */}
       <div className="camp-body">
         <div className="camp-body-inner">
-
-          {/* Pull quote */}
           <div className="camp-pull">
             <p>"{pillar.pullQuote}"</p>
           </div>
 
-          {/* Scripture */}
           <div className="camp-scripture">
             <p>"{pillar.scripture.t}"</p>
             <cite>— {pillar.scripture.r}</cite>
           </div>
 
-          {/* Sections */}
           <div className="camp-sections">
             {pillar.sections.map((s, i) => (
               <div key={i} className="camp-sect">
-                <div className="camp-sect-left">
-                  <span className="camp-sect-eyebrow">{s.eyebrow}</span>
+                <div>
+                  <span className="camp-sect-eye">{s.eyebrow}</span>
                   <div className="camp-sect-rule" />
                 </div>
-                <div className="camp-sect-right">
+                <div>
                   <h3 className="camp-sect-h">{s.headline}</h3>
                   <p className="camp-sect-body">{s.body}</p>
                 </div>
@@ -978,18 +958,17 @@ function CampaignPage({ pillar }) {
             ))}
           </div>
 
-          {/* CTAs */}
           <div className="camp-ctas">
-            <Link to={`/rule-of-life/${pillar.connectedRhythm}`} className="camp-btn-primary">
+            <Link to={`/rule-of-life/${pillar.connectedRhythm}`} className="camp-btn-p">
               Explore the {pillar.title} Rhythm
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path d="M1 6h10M6.5 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
               </svg>
             </Link>
-            <Link to={`/7-day-challenge/day/${pillar.connectedChallenge}`} className="camp-btn-secondary">
-              Day {pillar.connectedChallenge} of the Formation Challenge →
+            <Link to={`/7-day-challenge/day/${pillar.connectedChallenge}`} className="camp-btn-s">
+              Day {pillar.connectedChallenge} of the Challenge →
             </Link>
-            <a href={SHOPIFY_URL} target="_blank" rel="noopener noreferrer" className="camp-btn-secondary">
+            <a href={SHOPIFY_URL} target="_blank" rel="noopener noreferrer" className="camp-btn-s">
               Shop the Gear →
             </a>
           </div>
@@ -997,10 +976,10 @@ function CampaignPage({ pillar }) {
       </div>
 
       {/* Other pillars */}
-      <div className="camp-other-pillars">
-        <div className="camp-other-inner">
-          <p className="camp-other-label">The Other Pillars</p>
-          <div className="camp-other-grid">
+      <div className="camp-others">
+        <div className="camp-others-inner">
+          <p className="camp-others-label">The Other Pillars</p>
+          <div className="camp-others-grid">
             {others.map(o => (
               <Link key={o.slug} to={o.route} className="camp-other-card">
                 <div className="camp-other-bg" style={{ backgroundImage: `url('${o.img}')` }} />
@@ -1015,7 +994,6 @@ function CampaignPage({ pillar }) {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="camp-footer">
         <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
         <p>Counter Formation · Architecture of the Soul · Ephesians 6:10–18 · © 2026</p>
@@ -1024,8 +1002,8 @@ function CampaignPage({ pillar }) {
   );
 }
 
-/* ─── INDIVIDUAL CAMPAIGN PAGE EXPORTS ───────────────────────────── */
+/* ─── EXPORTS ─────────────────────────────────────────────────────── */
 
-export function IdentityPage()   { return <CampaignPage pillar={PILLARS[0]} />; }
-export function PracticePage()   { return <CampaignPage pillar={PILLARS[1]} />; }
-export function CommunityPage()  { return <CampaignPage pillar={PILLARS[2]} />; }
+export function IdentityPage()  { return <CampaignPage pillar={PILLARS[0]} />; }
+export function PracticePage()  { return <CampaignPage pillar={PILLARS[1]} />; }
+export function CommunityPage() { return <CampaignPage pillar={PILLARS[2]} />; }
