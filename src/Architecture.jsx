@@ -10,6 +10,7 @@ const PILLARS = [
     num: "I", slug: "identity", title: "Identity", route: "/identity",
     img: "/Identity_wide.png",
     challenge: "You are not your output.",
+
     manifesto: "The modern world measures you by what you produce, how you appear, and how many people are watching. Counter Formation begins by refusing that metric entirely — and anchoring identity in Christ before anything else gets to name you.",
     cta: "Enter Identity",
     heroLine: "The world has been forming your identity since you were old enough to scroll.",
@@ -24,7 +25,7 @@ const PILLARS = [
   },
   {
     num: "II", slug: "practice", title: "Practice", route: "/practice",
-    img: "/Practice_8k.png",
+    img: "/Practice_wide.png",
     challenge: "Intention without rhythm is just wishful thinking.",
     manifesto: "You do not drift into a formed life. You build one — through scripture before screen, through silence before noise, through sabbath before production. The practices are not the goal. They are the conditions under which formation becomes possible.",
     cta: "Enter Practice",
@@ -40,7 +41,7 @@ const PILLARS = [
   },
   {
     num: "III", slug: "community", title: "Community", route: "/community",
-    img: "/Community_8k.png",
+    img: "/Community_wide.png",
     challenge: "You cannot become like Christ alone.",
     manifesto: "This is not a motivational claim. It is a structural one. Jesus did not form his disciples through content or curriculum — he lived with them. Proximity over time, through honesty and failure and shared rhythm, is the actual environment in which transformation happens.",
     cta: "Enter Community",
@@ -626,6 +627,39 @@ export function ArchitectureSlider() {
     if (!track) return;
     const panels = track.querySelectorAll(".arch-panel");
     if (panels[0]) panels[0].classList.add("is-active");
+  }, []);
+
+  // ── Snap into viewport when section enters view
+  useEffect(() => {
+    const outer = outerRef.current;
+    if (!outer || window.innerWidth < 768) return;
+
+    let snapped = false;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !snapped) {
+            const rect = outer.getBoundingClientRect();
+            // Only snap if the section top is within 80% of viewport height
+            // — avoids snapping when scrolling back up past it
+            if (rect.top > -window.innerHeight * 0.8 && rect.top < window.innerHeight * 0.8) {
+              snapped = true;
+              window.scrollTo({
+                top: outer.offsetTop,
+                behavior: "smooth",
+              });
+              // Reset snap lock after transition settles
+              setTimeout(() => { snapped = false; }, 1200);
+            }
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(outer);
+    return () => observer.disconnect();
   }, []);
 
   // ── Wheel handler — intercepts scroll when section is pinned
