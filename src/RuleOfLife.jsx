@@ -39,8 +39,8 @@ const AUTHORS = {
 export const RHYTHMS = [
   {
     slug: "presence", title: "Presence", sub: "Attention before God", rhythm: "RHYTHM 01",
-    img:      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1400&auto=format&fit=crop",
-    imgThumb: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=600&auto=format&fit=crop",
+    img:      "/Presence.png",
+    imgThumb: "/Presence.png",
     quote: "Be still, and know that I am God.", quoteRef: "Psalm 46:10",
     interactiveLabel: "The Daily Examen", challengeDay: 1, challengeTitle: "You Are Being Formed",
     why: [
@@ -88,8 +88,8 @@ export const RHYTHMS = [
   },
   {
     slug: "scripture", title: "Scripture", sub: "Truth before noise", rhythm: "RHYTHM 02",
-    img:      "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1400&auto=format&fit=crop",
-    imgThumb: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600&auto=format&fit=crop",
+    img:      "/Scripture.png",
+    imgThumb: "/Scripture.png",
     quote: "Your word is a lamp to my feet and a light to my path.", quoteRef: "Psalm 119:105",
     interactiveLabel: "Lectio Divina Guide", challengeDay: 2, challengeTitle: "Scripture Before the Algorithm",
     why: [
@@ -137,8 +137,8 @@ export const RHYTHMS = [
   },
   {
     slug: "prayer", title: "Prayer", sub: "Dependence before action", rhythm: "RHYTHM 03",
-    img:      "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=1400&auto=format&fit=crop&crop=top",
-    imgThumb: "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=600&auto=format&fit=crop&crop=top",
+    img:      "/Prayer.png",
+    imgThumb: "/Prayer.png",
     quote: "Very early in the morning, while it was still dark, Jesus got up, left the house and went off to a solitary place, where he prayed.", quoteRef: "Mark 1:35",
     interactiveLabel: "Prayer Postures", challengeDay: 4, challengeTitle: "What You Hold Onto",
     why: [
@@ -187,8 +187,8 @@ export const RHYTHMS = [
   },
   {
     slug: "sabbath", title: "Sabbath", sub: "Rest before production", rhythm: "RHYTHM 04",
-    img:      "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=1400&auto=format&fit=crop",
-    imgThumb: "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=600&auto=format&fit=crop",
+    img:      "/Sabbath.png",
+    imgThumb: "/Sabbath.png",
     quote: "Remember the Sabbath day by keeping it holy. Six days you shall labor and do all your work, but the seventh day is a sabbath to the Lord your God.", quoteRef: "Exodus 20:8–10",
     interactiveLabel: "Sabbath Ideas", challengeDay: 7, challengeTitle: "Build a Life That Forms You",
     why: [
@@ -236,8 +236,8 @@ export const RHYTHMS = [
   },
   {
     slug: "community", title: "Community", sub: "Formation together", rhythm: "RHYTHM 05",
-    img:      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1400&auto=format&fit=crop",
-    imgThumb: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=600&auto=format&fit=crop",
+    img:      "/Community_8k.png",
+    imgThumb: "/Community_8k.png",
     quote: "They devoted themselves to the apostles' teaching and to fellowship, to the breaking of bread and to prayer.", quoteRef: "Acts 2:42",
     interactiveLabel: "Depths of Community", challengeDay: 6, challengeTitle: "You Cannot Do This Alone",
     why: [
@@ -711,6 +711,7 @@ export function RuleStyles() {
 
       .rl-hero-band { position: relative; overflow: hidden; min-height: clamp(300px,52vw,500px); display: flex; flex-direction: column; justify-content: flex-end; }
       .rl-hero-bg   { position: absolute; inset: 0; background-size: cover; background-position: center top; filter: grayscale(.15); }
+      .rl-hero-bg.community { background-size: 75%; background-position: center center; }
       .rl-hero-ov   { position: absolute; inset: 0; background: linear-gradient(to top, rgba(14,12,10,0.98) 0%, rgba(14,12,10,0.5) 55%, rgba(14,12,10,0.18) 100%); }
       .rl-hero-in   { position: relative; z-index: 2; padding: 2rem 24px 2.5rem; max-width: 860px; margin: 0 auto; width: 100%; }
       .rl-hero-logo { width: 32px; height: 32px; filter: invert(1) brightness(.9); opacity: .45; margin-bottom: .9rem; display: block; }
@@ -889,7 +890,7 @@ export function RhythmPage() {
       <div className="rl-prog-bar"><div className="rl-prog-fill" ref={rfillRef} /></div>
 
       <div className="rl-hero-band">
-        <div className="rl-hero-bg" style={{ backgroundImage: `url('${data.img}')` }} />
+        <div className={`rl-hero-bg${rhythm === "community" ? " community" : ""}`} style={{ backgroundImage: `url('${data.img}')` }} />
         <div className="rl-hero-ov" />
         <div className="rl-hero-in">
           <img className="rl-hero-logo" src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
