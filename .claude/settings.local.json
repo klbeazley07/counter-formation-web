@@ -11,7 +11,10 @@
       "Bash(git commit:*)",
       "Bash(npm.cmd install:*)",
       "Bash(cd /c/Users/luke.beazley/Documents/GitHub/counter-formation-web/worker && npm.cmd run test)",
-      "Bash(git -C \"C:/Users/luke.beazley/Documents/GitHub/counter-formation-web\" log 9310e16..75b86e7 --oneline)"
+      "Bash(git -C \"C:/Users/luke.beazley/Documents/GitHub/counter-formation-web\" log 9310e16..75b86e7 --oneline)",
+      "Bash(npm.cmd --prefix \"C:/Users/luke.beazley/Documents/GitHub/counter-formation-web/worker\" test 2>&1)",
+      "Bash(dir \"C:\\\\Users\\\\luke.beazley\\\\Documents\\\\GitHub\\\\counter-formation-web\\\\worker\")",
+      "Bash(cd \"C:\\\\Users\\\\luke.beazley\\\\Documents\\\\GitHub\\\\counter-formation-web\\\\worker\" && npm.cmd run test 2>&1)"
     ]
   }
 }
