@@ -506,6 +506,48 @@ export function ChallengeStyles() {
       .cf7-dev-img-h1    { font-size: clamp(30px,8vw,62px); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; line-height: .88; }
 
       .cf7-dev-content { max-width: 680px; margin: 0 auto; padding: 48px 24px 100px; }
+      .cf7-tracker-row { margin-bottom: 2rem; }
+      @media (min-width: 1024px) {
+        .cf7-dev-content {
+          max-width: 1100px;
+          padding: 48px 48px 100px;
+          display: grid;
+          grid-template-columns: 1fr 300px;
+          grid-template-areas:
+            "tracker  tracker"
+            "rule     rule"
+            "quote    quote"
+            "opening  sidebar"
+            "scripture sidebar"
+            "teaching sidebar"
+            "why      why"
+            "practice practice"
+            "change   change"
+            "prayer   prayer"
+            "nextstep nextstep"
+            "brandf   brandf"
+            "daynav   daynav";
+          gap: 0 64px;
+          align-items: start;
+        }
+        .cf7-tracker-row   { grid-area: tracker; }
+        .cf7-dev-rule      { grid-area: rule; }
+        .cf7-pull-quote    { grid-area: quote; }
+        .cf7-dev-opening   { grid-area: opening; }
+        .cf7-dev-scripture { grid-area: scripture; }
+        .cf7-dev-teaching  { grid-area: teaching; }
+        .cf7-dev-sidebar   {
+          grid-area: sidebar; position: sticky; top: 80px; align-self: start;
+          border-left: 1px solid rgba(255,255,255,0.06); padding-left: 40px;
+        }
+        .cf7-dev-why       { grid-area: why; }
+        .cf7-dev-practice  { grid-area: practice; }
+        .cf7-dev-change    { grid-area: change; }
+        .cf7-dev-prayer    { grid-area: prayer; }
+        .cf7-next-step     { grid-area: nextstep; }
+        .cf7-brand-foot    { grid-area: brandf; }
+        .cf7-day-nav       { grid-area: daynav; }
+      }
       .cf7-dev-rule    { height: 1px; background: linear-gradient(to right, #C9A84C, transparent); opacity: .28; margin: 2.5rem 0; }
       .cf7-pull-quote {
         margin: 0 0 2.5rem; padding: 1.75rem 1.35rem 1.5rem; text-align: center;
@@ -970,22 +1012,29 @@ export function CFDevotion() {
       </div>
 
       <div className="cf7-dev-content" ref={contentRef}>
-        <Tracker activeDayN={d.n} progress={progress} />
-        <div className="cf7-dev-rule" />
 
+        {/* Tracker — full width */}
+        <div className="cf7-tracker-row">
+          <Tracker activeDayN={d.n} progress={progress} />
+        </div>
+
+        <div className="cf7-dev-rule cf7-dev-rule" />
+
+        {/* Pull quote — full width */}
         <div className="cf7-pull-quote">
           <p>{pullQuote}</p>
           <span>Formation Line</span>
         </div>
 
-        <Section label="Opening">
+        {/* Left column — opening, scripture, teaching */}
+        <Section label="Opening" className="cf7-dev-opening">
           <div className="cf7-dev-body">
             <p><em>{d.opening}</em></p>
             {d.body.map((p, i) => renderRichText(p, i))}
           </div>
         </Section>
 
-        <Section label="Scripture">
+        <Section label="Scripture" className="cf7-dev-scripture">
           {d.scriptures.map((s, i) => (
             <div className="cf7-scripture-block" key={i}>
               <p>"{s.t}"</p>
@@ -994,13 +1043,48 @@ export function CFDevotion() {
           ))}
         </Section>
 
-        <Section label="Teaching">
+        <Section label="Teaching" className="cf7-dev-teaching">
           <div className="cf7-dev-body">
             {d.teaching.map((p, i) => renderRichText(p, i))}
           </div>
         </Section>
 
-        <Section label="Why This Matters">
+        {/* Right sidebar — reflection question + day meta */}
+        <aside className="cf7-dev-sidebar">
+          <div className="cf7-dev-sec">
+            <p className="cf7-dev-sec-lbl">Reflection</p>
+            <div style={{
+              background: "rgba(201,168,76,0.04)",
+              border: "1px solid rgba(201,168,76,0.14)",
+              borderRadius: "14px",
+              padding: "1.25rem 1.5rem",
+              fontFamily: "'Cormorant Garamond', serif",
+              fontStyle: "italic",
+              fontSize: "clamp(15px,3.5vw,18px)",
+              color: "rgba(250,248,245,0.65)",
+              lineHeight: 1.7,
+            }}>
+              {d.reflection}
+            </div>
+          </div>
+          <div className="cf7-dev-sec" style={{ marginTop: "2rem" }}>
+            <p className="cf7-dev-sec-lbl">Day {d.n} of 7</p>
+            <p style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontStyle: "italic",
+              fontSize: "16px",
+              color: "rgba(250,248,245,0.38)",
+              lineHeight: 1.7,
+              marginBottom: "1rem",
+            }}>
+              {d.theme}
+            </p>
+            <Tracker activeDayN={d.n} progress={progress} />
+          </div>
+        </aside>
+
+        {/* Full-width sections below the fold */}
+        <Section label="Why This Matters" className="cf7-dev-why">
           <div className="cf7-impact-block why">
             <div className="cf7-dev-body" style={{ fontSize: "clamp(15px,3.6vw,18px)" }}>
               <p>{meta?.why}</p>
@@ -1008,7 +1092,7 @@ export function CFDevotion() {
           </div>
         </Section>
 
-        <Section>
+        <Section className="cf7-dev-practice">
           <div className="cf7-practice-block">
             <span className="cf7-practice-tag">Practice · 15 Minutes</span>
             <p className="cf7-practice-pre">Do not rush this. This is where formation begins.</p>
@@ -1018,11 +1102,7 @@ export function CFDevotion() {
           </div>
         </Section>
 
-        <Section label="Reflection">
-          <div className="cf7-dev-body"><p><em>{d.reflection}</em></p></div>
-        </Section>
-
-        <Section label="What This Changes">
+        <Section label="What This Changes" className="cf7-dev-change">
           <div className="cf7-impact-block change">
             <div className="cf7-dev-body" style={{ fontSize: "clamp(15px,3.6vw,18px)" }}>
               <p>{meta?.change}</p>
@@ -1030,7 +1110,7 @@ export function CFDevotion() {
           </div>
         </Section>
 
-        <Section label="Prayer">
+        <Section label="Prayer" className="cf7-dev-prayer">
           <div className="cf7-prayer">
             <div className="cf7-dev-body" style={{ fontSize: "clamp(15px,3.5vw,17px)", color: "rgba(250,248,245,0.52)" }}>
               {prayerLines}
@@ -1090,9 +1170,9 @@ export function CFDevotion() {
   );
 }
 
-function Section({ label, children }) {
+function Section({ label, children, className = "" }) {
   return (
-    <div className="cf7-dev-sec">
+    <div className={`cf7-dev-sec${className ? ` ${className}` : ""}`}>
       {label ? <p className="cf7-dev-sec-lbl">{label}</p> : null}
       {children}
     </div>
