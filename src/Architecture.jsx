@@ -13,7 +13,7 @@ const PILLARS = [
     slug: "identity",
     title: "Identity",
     route: "/identity",
-    img: "/Identity_8k.png",
+    img: "/Identity_wide.png",
     challenge: "You are not your output.",
     manifesto: "The modern world measures you by what you produce, how you appear, and how many people are watching. Counter Formation begins by refusing that metric entirely — and anchoring identity in Christ before anything else gets to name you.",
     sub: "Before action comes being.",
