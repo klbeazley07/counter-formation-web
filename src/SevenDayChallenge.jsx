@@ -750,15 +750,6 @@ export function CFLanding() {
           This is not a content library. It is a path. Seven days to interrupt drift, recover attention,
           and begin practicing a more deliberate life under Christ.
         </p>
-        <div className="cf7-divider" />
-
-        <div className="cf7-band">
-          <div className="cf7-band-rule" />
-          <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
-          <span className="cf7-band-text">Counter Formation</span>
-          <div className="cf7-band-rule" />
-        </div>
-
         <Tracker activeDayN={null} progress={progress} />
 
         <p className="cf7-intensity-line">
