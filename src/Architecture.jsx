@@ -205,10 +205,11 @@ export function ArchitectureStyles() {
         align-items: center;
         gap: 14px;
         font-family: 'Michroma', sans-serif;
-        font-size: clamp(9px,1vw,11px);
+        font-size: clamp(11px,1.2vw,13px);
         letter-spacing: .48em;
         text-transform: uppercase;
-        color: rgba(201,168,76,0.75);
+        color: rgba(201,168,76,1);
+        font-weight: 700;
         margin-bottom: clamp(.75rem,1.5vw,1.25rem);
         opacity: 0;
         transform: translateY(16px);
@@ -243,9 +244,9 @@ export function ArchitectureStyles() {
       /* manifesto */
       .arch-manifesto {
         font-family: 'Cormorant Garamond', serif;
-        font-size: clamp(14px,1.6vw,19px);
+        font-size: clamp(16px,1.8vw,22px);
         line-height: 1.82;
-        color: rgba(250,248,245,0.5);
+        color: rgba(250,248,245,0.72);
         max-width: 520px;
         margin-bottom: clamp(1.5rem,2.5vw,2.25rem);
         opacity: 0;
