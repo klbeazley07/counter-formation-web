@@ -703,8 +703,9 @@ export function RuleStyles() {
 
       .rl-corner-nav { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 200; display: flex; align-items: center; gap: 10px; padding: 10px 20px 10px 14px; border-radius: 999px; background: rgba(14,12,10,0.88); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); text-decoration: none; transition: border-color .25s; }
       .rl-corner-nav:hover { border-color: rgba(201,168,76,0.35); }
-      .rl-corner-nav img  { width: 28px; height: 28px; object-fit: contain; filter: brightness(0) invert(1); }
+      .rl-corner-nav img  { width: 84px; height: 84px; object-fit: contain; filter: brightness(0) invert(1); }
       .rl-corner-nav span { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: rgba(250,248,245,0.55); font-weight: 600; white-space: nowrap; }
+      .rl-shield-mark { position: fixed; top: 1.25rem; left: 1.5rem; z-index: 200; width: 48px; height: 48px; opacity: 0.18; pointer-events: none; }
 
       .rl-prog-bar  { position: sticky; top: 0; z-index: 190; height: 2px; background: rgba(255,255,255,0.05); }
       .rl-prog-fill { height: 100%; width: 0; background: linear-gradient(to right, #C9A84C, rgba(201,168,76,0.35)); transition: width .12s linear; }
@@ -830,10 +831,18 @@ export function RuleStyles() {
 
 function CornerNav() {
   return (
-    <Link to="/" className="rl-corner-nav">
-      <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="Counter Formation" style={{ filter: "brightness(0) invert(1)" }} />
-      <span>Counter Formation</span>
-    </Link>
+    <>
+      <img
+        src="/shield-white.png"
+        className="rl-shield-mark"
+        onError={e => { e.target.style.display = "none"; }}
+        alt=""
+      />
+      <Link to="/" className="rl-corner-nav">
+        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="Counter Formation" style={{ filter: "brightness(0) invert(1)" }} />
+        <span>Counter Formation</span>
+      </Link>
+    </>
   );
 }
 
