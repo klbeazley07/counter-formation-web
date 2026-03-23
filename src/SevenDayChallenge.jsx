@@ -372,11 +372,25 @@ export function ChallengeStyles() {
       .cf7-scripture { margin-top: 2rem; font-size: 9px; letter-spacing: .4em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
 
       /* Challenge section */
-      .cf7-challenge { background: #17140F; padding: 80px 1.25rem 70px; }
-      .cf7-eyebrow   { font-size: 10px; letter-spacing: .48em; text-transform: uppercase; color: #C9A84C; text-align: center; margin-bottom: 1rem; }
-      .cf7-section-h2 { font-size: clamp(40px,10vw,70px); font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #FAF8F5; text-align: center; line-height: .9; margin-bottom: .75rem; }
-      .cf7-section-italic { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(15px,3.5vw,22px); color: rgba(250,248,245,0.22); text-align: center; margin-bottom: 1rem; }
+      .cf7-challenge { background: #17140F; padding: 80px 0 70px; }
+      .cf7-challenge-shell { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem 3rem; }
+      .cf7-challenge-header { }
+      .cf7-challenge-sidebar { }
+      .cf7-cards-shell { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
+      @media (min-width: 1024px) {
+        .cf7-challenge-shell { display: grid; grid-template-columns: 1fr 300px; gap: 0 64px; align-items: start; padding: 0 48px 3rem; }
+        .cf7-cards-shell { padding: 0 48px; }
+        .cf7-challenge-sidebar { position: sticky; top: 80px; border-left: 1px solid rgba(255,255,255,0.06); padding-left: 40px; }
+      }
+      .cf7-eyebrow   { font-size: 10px; letter-spacing: .48em; text-transform: uppercase; color: #C9A84C; margin-bottom: 1rem; }
+      .cf7-section-h2 { font-size: clamp(40px,10vw,70px); font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #FAF8F5; line-height: .9; margin-bottom: .75rem; text-align: center; }
+      .cf7-section-italic { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(15px,3.5vw,22px); color: rgba(250,248,245,0.22); margin-bottom: 1rem; text-align: center; }
       .cf7-section-copy { max-width: 620px; margin: 0 auto 2.5rem; text-align: center; font-size: 10px; line-height: 1.95; letter-spacing: .18em; text-transform: uppercase; color: rgba(250,248,245,0.38); }
+      @media (min-width: 1024px) {
+        .cf7-section-h2 { text-align: left; }
+        .cf7-section-italic { text-align: left; }
+        .cf7-section-copy { text-align: left; margin-left: 0; margin-right: 0; max-width: none; }
+      }
       .cf7-divider { height: 1px; background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent); max-width: 560px; margin: 0 auto 2.5rem; }
 
       .cf7-band { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 2.75rem; }
@@ -385,7 +399,8 @@ export function ChallengeStyles() {
       .cf7-band-rule { flex: 1; max-width: 70px; height: 1px; background: rgba(255,255,255,0.08); }
 
       /* Tracker */
-      .cf7-tracker { display: flex; justify-content: center; gap: 0; margin-bottom: 3rem; max-width: 400px; margin-left: auto; margin-right: auto; padding: 0 .5rem; }
+      .cf7-tracker { display: flex; justify-content: center; gap: 0; margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto; padding: 0 .5rem; }
+      @media (min-width: 1024px) { .cf7-tracker { margin-left: 0; margin-right: 0; max-width: none; } }
       .cf7-tdot { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; position: relative; }
       .cf7-tdot::after { content: ''; position: absolute; top: 10px; left: 50%; width: 100%; height: 1px; background: rgba(255,255,255,0.08); z-index: 0; }
       .cf7-tdot:last-child::after { display: none; }
@@ -472,6 +487,7 @@ export function ChallengeStyles() {
       .cf7-begin-btn:hover { background: #FAF8F5; border-color: #FAF8F5; }
       .cf7-form-note { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,0.2); }
       .cf7-intensity-line { max-width: 620px; margin: 0 auto 2.4rem; text-align: center; font-size: 9px; letter-spacing: .34em; text-transform: uppercase; color: rgba(201,168,76,0.68); line-height: 1.9; }
+      @media (min-width: 1024px) { .cf7-intensity-line { text-align: left; margin-left: 0; margin-right: 0; max-width: none; } }
       .cf7-suc-msg   { display: none; font-size: 10px; letter-spacing: .35em; text-transform: uppercase; color: #C9A84C; padding: 20px; }
       .cf7-suc-sub   { display: block; color: rgba(255,255,255,0.3); font-size: 8px; margin-top: 6px; }
 
@@ -743,23 +759,29 @@ export function CFLanding() {
       </section>
 
       <section id="cf7-challenge" className="cf7-challenge">
-        <p className="cf7-eyebrow">Counter Formation</p>
-        <h2 className="cf7-section-h2">The Seven Days</h2>
-        <p className="cf7-section-italic">Formation is not optional. It is already happening.</p>
-        <p className="cf7-section-copy">
-          This is not a content library. It is a path. Seven days to interrupt drift, recover attention,
-          and begin practicing a more deliberate life under Christ.
-        </p>
-        <Tracker activeDayN={null} progress={progress} />
+        <div className="cf7-challenge-shell">
+          <div className="cf7-challenge-header">
+            <p className="cf7-eyebrow">Counter Formation</p>
+            <h2 className="cf7-section-h2">The Seven Days</h2>
+            <p className="cf7-section-italic">Formation is not optional. It is already happening.</p>
+            <p className="cf7-section-copy">
+              This is not a content library. It is a path. Seven days to interrupt drift, recover attention,
+              and begin practicing a more deliberate life under Christ.
+            </p>
+          </div>
+          <div className="cf7-challenge-sidebar">
+            <Tracker activeDayN={null} progress={progress} />
+            <p className="cf7-intensity-line">
+              {completionCount === 0
+                ? "Start with Day 1. Stay in order. Let the week build on itself."
+                : completionCount === DAYS.length
+                  ? "All seven complete. Go back through them slowly and keep the rhythm."
+                  : `You are ${completionCount} day${completionCount === 1 ? "" : "s"} in. Continue with Day ${currentDay}.`}
+            </p>
+          </div>
+        </div>
 
-        <p className="cf7-intensity-line">
-          {completionCount === 0
-            ? "Start with Day 1. Stay in order. Let the week build on itself."
-            : completionCount === DAYS.length
-              ? "All seven complete. Go back through them slowly and keep the rhythm."
-              : `You are ${completionCount} day${completionCount === 1 ? "" : "s"} in. Continue with Day ${currentDay}.`}
-        </p>
-
+        <div className="cf7-cards-shell">
         <div className="cf7-grid-wrap">
           <div className="cf7-grid">
             {DAYS.map((d) => {
@@ -802,6 +824,7 @@ export function CFLanding() {
               );
             })}
           </div>
+        </div>
         </div>
 
         <div className="cf7-form-wrap">
