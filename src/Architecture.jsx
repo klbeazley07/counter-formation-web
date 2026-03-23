@@ -629,27 +629,32 @@ export function ArchitectureSlider() {
     if (panels[0]) panels[0].classList.add("is-active");
   }, []);
 
-  // ── Snap into viewport when section enters view
+  // ── Snap into viewport — only fires during manual wheel/touch scroll
   useEffect(() => {
     const outer = outerRef.current;
     if (!outer || window.innerWidth < 768) return;
 
     let snapped = false;
+    let userScrolling = false;
+    let scrollTimer = null;
+
+    const markScrolling = () => {
+      userScrolling = true;
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => { userScrolling = false; }, 200);
+    };
+
+    window.addEventListener("wheel",     markScrolling, { passive: true });
+    window.addEventListener("touchmove", markScrolling, { passive: true });
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !snapped) {
+          if (entry.isIntersecting && !snapped && userScrolling) {
             const rect = outer.getBoundingClientRect();
-            // Only snap if the section top is within 80% of viewport height
-            // — avoids snapping when scrolling back up past it
             if (rect.top > -window.innerHeight * 0.8 && rect.top < window.innerHeight * 0.8) {
               snapped = true;
-              window.scrollTo({
-                top: outer.offsetTop,
-                behavior: "smooth",
-              });
-              // Reset snap lock after transition settles
+              window.scrollTo({ top: outer.offsetTop, behavior: "smooth" });
               setTimeout(() => { snapped = false; }, 1200);
             }
           }
@@ -659,7 +664,12 @@ export function ArchitectureSlider() {
     );
 
     observer.observe(outer);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("wheel",     markScrolling);
+      window.removeEventListener("touchmove", markScrolling);
+      clearTimeout(scrollTimer);
+    };
   }, []);
 
   // ── Wheel handler — intercepts scroll when section is pinned
