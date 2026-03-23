@@ -56,6 +56,7 @@ export default {
 
     // ── CORS preflight ──────────────────────────────────────────────
     if (request.method === "OPTIONS" && url.pathname === "/subscribe") {
+      console.log("ALLOWED_ORIGIN:", env.ALLOWED_ORIGIN);
       return new Response(null, { status: 204, headers: corsHeaders(env) });
     }
 
