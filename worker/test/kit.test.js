@@ -1,12 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { subscribeToForm, subscribeWithTag } from '../src/kit.js'
 
-const mockEnv = {
-  KIT_API_KEY: 'test-api-key',
-  KIT_FORM_ID: 'form123',
-  KIT_TAG_7DAY: 'tag7day',
-}
-
 describe('subscribeToForm', () => {
   beforeEach(() => { vi.stubGlobal('fetch', vi.fn()) })
   afterEach(() => { vi.unstubAllGlobals() })
