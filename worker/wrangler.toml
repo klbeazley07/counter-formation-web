@@ -3,4 +3,5 @@ main = "src/index.js"
 compatibility_date = "2024-01-01"
 
 [env.production]
+name = "counterformed-api"
 routes = [{ pattern = "api.counterformed.com", custom_domain = true }]
