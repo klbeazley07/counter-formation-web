@@ -705,7 +705,7 @@ export function RuleStyles() {
       .rl-corner-nav:hover { border-color: rgba(201,168,76,0.35); }
       .rl-corner-nav img  { width: 28px; height: 28px; object-fit: contain; filter: brightness(0) invert(1); }
       .rl-corner-nav span { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: rgba(250,248,245,0.55); font-weight: 600; white-space: nowrap; }
-      .rl-shield-mark { position: fixed; top: 1.25rem; left: 1.5rem; z-index: 200; width: 192px; height: 192px; opacity: 0.18; pointer-events: none; }
+      .rl-shield-mark { position: fixed; top: 1.25rem; left: 1.5rem; z-index: 200; width: 192px; height: 192px; opacity: 0.32; pointer-events: none; }
 
       .rl-prog-bar  { position: sticky; top: 0; z-index: 190; height: 2px; background: rgba(255,255,255,0.05); }
       .rl-prog-fill { height: 100%; width: 0; background: linear-gradient(to right, #C9A84C, rgba(201,168,76,0.35)); transition: width .12s linear; }
