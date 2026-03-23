@@ -686,7 +686,7 @@ const GEAR_TABS = {
     products: [
       { name: "Technical Tee", img: "/DriFit_Black.png",  copy: "Performance tech for training." },
       { name: "Everyday Tee",  img: "/Tshirt_Studio.png", copy: "Premium soft-wash cotton." },
-      { name: "Hoodies",       img: "/Hoodie_white.png",  copy: "Heavyweight anchors.", comingSoon: true },
+      { name: "Technical Hoodie", img: "/Hoodie_white.png", copy: "Heavyweight Performance Tech.", comingSoon: true },
     ],
   },
   women: {
