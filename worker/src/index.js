@@ -28,14 +28,22 @@ async function subscribeToKit(env, tagId, email, fields = {}) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ api_key: env.KIT_API_KEY, email, fields }),
   });
-  if (!tagRes.ok) throw new Error(`Kit tag subscribe failed: ${tagRes.status}`);
+  if (!tagRes.ok) {
+    const body = await tagRes.text();
+    console.error(`Kit tag subscribe failed: ${tagRes.status}`, body);
+    throw new Error(`Kit tag subscribe failed: ${tagRes.status}`);
+  }
 
   const formRes = await fetch(`${KIT_API}/forms/${env.KIT_FORM_ID}/subscribe`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ api_key: env.KIT_API_KEY, email }),
   });
-  if (!formRes.ok) throw new Error(`Kit form subscribe failed: ${formRes.status}`);
+  if (!formRes.ok) {
+    const body = await formRes.text();
+    console.error(`Kit form subscribe failed: ${formRes.status}`, body);
+    throw new Error(`Kit form subscribe failed: ${formRes.status}`);
+  }
 }
 
 async function verifyShopifyHmac(request, secret) {
