@@ -629,46 +629,47 @@ export function ArchitectureSlider() {
     if (panels[0]) panels[0].classList.add("is-active");
   }, []);
 
-  // ── Snap into viewport — only fires during manual wheel/touch scroll
+  // ── Snap into viewport — fires on scroll, only during manual wheel/touch
   useEffect(() => {
     const outer = outerRef.current;
     if (!outer || window.innerWidth < 768) return;
 
-    let snapped = false;
-    let userScrolling = false;
-    let scrollTimer = null;
+    let snapping = false;
+    let lastInputTime = 0; // timestamp of last wheel/touch — avoids timeout race
 
-    const markScrolling = () => {
-      userScrolling = true;
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => { userScrolling = false; }, 200);
+    const markInput = () => { lastInputTime = Date.now(); };
+
+    const onScroll = () => {
+      if (snapping) return;
+      // Only act on genuine user input (wheel/touch within last 400ms)
+      if (Date.now() - lastInputTime > 400) return;
+      const rect = outer.getBoundingClientRect();
+      const vh = window.innerHeight;
+
+      // Snap DOWN: section top entering view from below
+      if (rect.top > 10 && rect.top < vh * 0.65) {
+        snapping = true;
+        window.scrollTo({ top: outer.offsetTop, behavior: "smooth" });
+        setTimeout(() => { snapping = false; }, 1200);
+        return;
+      }
+
+      // Snap UP: scrolling up and near the top of section (barely passed it)
+      if (rect.top < -10 && rect.top > -vh * 0.65) {
+        snapping = true;
+        window.scrollTo({ top: outer.offsetTop, behavior: "smooth" });
+        setTimeout(() => { snapping = false; }, 1200);
+      }
     };
 
-    window.addEventListener("wheel",     markScrolling, { passive: true });
-    window.addEventListener("touchmove", markScrolling, { passive: true });
+    window.addEventListener("wheel",     markInput, { passive: true });
+    window.addEventListener("touchmove", markInput, { passive: true });
+    window.addEventListener("scroll",    onScroll,  { passive: true });
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !snapped && userScrolling) {
-            const rect = outer.getBoundingClientRect();
-            if (rect.top > -window.innerHeight * 0.8 && rect.top < window.innerHeight * 0.8) {
-              snapped = true;
-              window.scrollTo({ top: outer.offsetTop, behavior: "smooth" });
-              setTimeout(() => { snapped = false; }, 1200);
-            }
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-
-    observer.observe(outer);
     return () => {
-      observer.disconnect();
-      window.removeEventListener("wheel",     markScrolling);
-      window.removeEventListener("touchmove", markScrolling);
-      clearTimeout(scrollTimer);
+      window.removeEventListener("wheel",     markInput);
+      window.removeEventListener("touchmove", markInput);
+      window.removeEventListener("scroll",    onScroll);
     };
   }, []);
 
