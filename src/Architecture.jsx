@@ -695,8 +695,11 @@ export function ArchitectureSlider() {
       if (dir < 0) {
         if (idx > 0) {
           setIdx(i => i - 1);
+        } else {
+          // Already on first panel — jump to previous section
+          const prev = outer.previousElementSibling;
+          if (prev) window.scrollTo({ top: prev.offsetTop + prev.offsetHeight - window.innerHeight, behavior: "smooth" });
         }
-        // else let scroll pass through naturally (already at top of section)
         return;
       }
 
