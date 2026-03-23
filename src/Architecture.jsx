@@ -709,11 +709,10 @@ export function ArchitectureSlider() {
       if (idx === TOTAL - 1) {
         exitAccRef.current += 1;
         if (exitAccRef.current >= TICKS_TO_RELEASE) {
-          // Release — stop intercepting so page scrolls naturally
           exitAccRef.current = 0;
           accumRef.current = 0;
-          // Programmatically scroll past the section
-          const target = outer.offsetTop + outer.offsetHeight + 2;
+          const next = outer.nextElementSibling;
+          const target = next ? next.offsetTop : outer.offsetTop + outer.offsetHeight;
           window.scrollTo({ top: target, behavior: "smooth" });
         }
         // Don't advance — already on last panel
@@ -758,7 +757,8 @@ export function ArchitectureSlider() {
   const handleContinue = useCallback(() => {
     const outer = outerRef.current;
     if (!outer) return;
-    const target = outer.offsetTop + outer.offsetHeight + 2;
+    const next = outer.nextElementSibling;
+    const target = next ? next.offsetTop : outer.offsetTop + outer.offsetHeight;
     window.scrollTo({ top: target, behavior: "smooth" });
   }, []);
 
