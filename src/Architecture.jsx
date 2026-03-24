@@ -71,9 +71,9 @@ export function ArchitectureStyles() {
       .arch-outer {
         position: relative;
         /* Tall enough that sticky holds while wheel handler runs.
-           Extra 200svh = scroll buffer so native scroll doesn't
+           Extra 50svh = scroll buffer so native scroll doesn't
            immediately release the sticky container. */
-        height: 300svh;
+        height: 150svh;
         background: #06050A;
       }
 
