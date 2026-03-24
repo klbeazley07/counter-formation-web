@@ -479,7 +479,7 @@ function FieldGuideSection() {
             {secondary.map((art, i) => (
               <a key={art.title} href={art.href} className="journal-card group rounded-[1.5rem] border border-white/10 bg-white/[0.03] overflow-hidden min-h-[248px]" style={{ textDecoration: "none" }}>
                 <div className="grid grid-cols-[0.95fr_1.05fr] h-full">
-                  <div className="relative h-full">
+                  <div className="relative h-full overflow-hidden">
                     <SafeImg src={art.img} alt={art.title}
                       className="w-full h-full object-cover grayscale opacity-45 group-hover:opacity-85 group-hover:scale-105 transition-all duration-1000" />
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#111009]" />
