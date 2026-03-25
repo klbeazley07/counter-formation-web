@@ -592,7 +592,7 @@ export function ArchitectureStyles() {
 
 // How many wheel "ticks" to consume before advancing a panel or releasing
 const TICKS_TO_ADVANCE = 5;   // ticks to move to next panel
-const TICKS_TO_RELEASE = 3;   // extra ticks on last panel before exiting
+const TICKS_TO_RELEASE = 1;   // extra ticks on last panel before exiting
 
 export function ArchitectureSlider() {
   const outerRef    = useRef(null);
