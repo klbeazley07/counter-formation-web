@@ -384,20 +384,19 @@ function LightTransition() {
 function FieldGuideSection() {
   const articles = [
     {
+      type: "Tool", rhythm: "Formation", date: "March 2026",
+      title: "Daily Devotion Guide",
+      img: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=1200",
+      desc: "Generate a customized daily devotion for any passage, theme, question, or challenge — AI-powered formation on demand.",
+      href: "/field-guide/devotion-guide",
+      isLink: true,
+    },
+    {
       type: "Devotion", rhythm: "Scripture", date: "March 2026",
       title: "Scripture Before Scroll",
       img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1200",
       desc: "Reclaim the architecture of your first hour through scripture before the algorithm.",
       href: FG_BASE,
-      featured: true,
-    },
-    {
-      type: "Tool", rhythm: "Formation", date: "March 2026",
-      title: "Daily Devotion Guide",
-      img: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=1200",
-      desc: "Generate a tactical field guide for any passage, theme, or big idea — AI-powered formation on demand.",
-      href: "/field-guide/devotion-guide",
-      isLink: true,
     },
     {
       type: "Practice", rhythm: "Sabbath", date: "February 2026",
@@ -472,7 +471,7 @@ function FieldGuideSection() {
                 {featured.desc}
               </p>
               <div className="mt-8 inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.22em] font-bold text-[#C9A84C]">
-                Enter the Rhythm <ArrowRight size={14} />
+                {featured.isLink ? "Open Guide" : "Enter the Rhythm"} <ArrowRight size={14} />
               </div>
             </div>
           </Link>
