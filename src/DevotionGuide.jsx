@@ -173,6 +173,8 @@ export default function DevotionGuide() {
   const [scrolled, setScrolled] = useState(false);
   const resultRef = useRef(null);
 
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
