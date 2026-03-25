@@ -386,7 +386,7 @@ function FieldGuideSection() {
     {
       type: "Tool", rhythm: "Formation", date: "March 2026",
       title: "Daily Devotion Guide",
-      img: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=1200",
+      img: "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=1200",
       desc: "Generate a customized daily devotion for any passage, theme, question, or challenge — AI-powered formation on demand.",
       href: "/field-guide/devotion-guide",
       isLink: true,
@@ -453,8 +453,8 @@ function FieldGuideSection() {
             style={{ textDecoration: "none" }}
           >
             <SafeImg src={featured.img} alt={featured.title}
-              className="absolute inset-0 w-full h-full object-cover grayscale opacity-45 group-hover:opacity-90 group-hover:scale-105 transition-all duration-1000" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#111009] via-[#111009cc] to-transparent" />
+              className="absolute inset-0 w-full h-full object-cover grayscale opacity-70 group-hover:opacity-95 group-hover:scale-105 transition-all duration-1000" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#111009] via-[#11100966] to-transparent" />
             <div className="absolute top-0 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-[#C9A84C]/60 to-transparent" />
             <div className="relative z-10 h-full flex flex-col justify-end p-8 md:p-10">
               <div className="flex items-center gap-3 text-[8px] md:text-[9px] uppercase tracking-[0.28em] mb-4">
