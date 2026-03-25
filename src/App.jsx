@@ -14,6 +14,7 @@ import {
 } from "./FieldGuide";
 
 import { ChallengeStyles, CFLanding, CFDevotion } from "./SevenDayChallenge";
+import DevotionGuide from "./DevotionGuide";
 import { RuleStyles, RhythmPage, BookPage } from "./RuleOfLife";
 import {
   ArchitectureStyles,
@@ -391,17 +392,18 @@ function FieldGuideSection() {
       featured: true,
     },
     {
+      type: "Tool", rhythm: "Formation", date: "March 2026",
+      title: "Daily Devotion Guide",
+      img: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=1200",
+      desc: "Generate a tactical field guide for any passage, theme, or big idea — AI-powered formation on demand.",
+      href: "/field-guide/devotion-guide",
+      isLink: true,
+    },
+    {
       type: "Practice", rhythm: "Sabbath", date: "February 2026",
       title: "Practicing Rest",
       img: "https://images.unsplash.com/photo-1472396961693-142e6e269027?q=80&w=1200",
       desc: "A weekly rhythm of trust, delight, and resistance to production without end.",
-      href: "#field-guide",
-    },
-    {
-      type: "Video", rhythm: "Community", date: "January 2026",
-      title: "Formation Together",
-      img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1200",
-      desc: "Why apprenticeship to Jesus requires shared life, mutual love, and practiced presence.",
       href: "#field-guide",
     },
   ];
@@ -476,35 +478,39 @@ function FieldGuideSection() {
           </Link>
 
           <div className="grid grid-cols-1 gap-6">
-            {secondary.map((art, i) => (
-              <a key={art.title} href={art.href} className="journal-card group rounded-[1.5rem] border border-white/10 bg-white/[0.03] overflow-hidden min-h-[248px]" style={{ textDecoration: "none" }}>
-                <div className="grid grid-cols-[0.95fr_1.05fr] h-full">
-                  <div className="relative h-full overflow-hidden">
-                    <SafeImg src={art.img} alt={art.title}
-                      className="w-full h-full object-cover grayscale opacity-45 group-hover:opacity-85 group-hover:scale-105 transition-all duration-1000" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#111009]" />
-                  </div>
-                  <div className="p-6 md:p-7 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center gap-3 text-[8px] uppercase tracking-[0.28em] mb-3">
-                        <span className="text-[#C9A84C]">{art.type}</span>
-                        <span className="text-white/20">·</span>
-                        <span className="text-white/25">{art.date}</span>
+            {secondary.map((art, i) => {
+              const CardTag = art.isLink ? Link : "a";
+              const cardProps = art.isLink ? { to: art.href } : { href: art.href };
+              return (
+                <CardTag key={art.title} {...cardProps} className="journal-card group rounded-[1.5rem] border border-white/10 bg-white/[0.03] overflow-hidden min-h-[248px]" style={{ textDecoration: "none" }}>
+                  <div className="grid grid-cols-[0.95fr_1.05fr] h-full">
+                    <div className="relative h-full overflow-hidden">
+                      <SafeImg src={art.img} alt={art.title}
+                        className="w-full h-full object-cover grayscale opacity-45 group-hover:opacity-85 group-hover:scale-105 transition-all duration-1000" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#111009]" />
+                    </div>
+                    <div className="p-6 md:p-7 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center gap-3 text-[8px] uppercase tracking-[0.28em] mb-3">
+                          <span className="text-[#C9A84C]">{art.type}</span>
+                          <span className="text-white/20">·</span>
+                          <span className="text-white/25">{art.date}</span>
+                        </div>
+                        <h3 className="font-brand text-xl md:text-2xl uppercase tracking-[0.08em] text-white leading-snug">
+                          {art.title}
+                        </h3>
+                        <p className="mt-3 text-[10px] md:text-[11px] leading-relaxed text-white/45">
+                          {art.desc}
+                        </p>
                       </div>
-                      <h3 className="font-brand text-xl md:text-2xl uppercase tracking-[0.08em] text-white leading-snug">
-                        {art.title}
-                      </h3>
-                      <p className="mt-3 text-[10px] md:text-[11px] leading-relaxed text-white/45">
-                        {art.desc}
-                      </p>
-                    </div>
-                    <div className="pt-5 flex items-center gap-2 text-[9px] text-[#C9A84C] uppercase tracking-[0.22em] font-bold">
-                      Coming Next <ArrowRight size={12} />
+                      <div className="pt-5 flex items-center gap-2 text-[9px] text-[#C9A84C] uppercase tracking-[0.22em] font-bold">
+                        {art.isLink ? "Open Guide" : "Coming Next"} <ArrowRight size={12} />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </a>
-            ))}
+                </CardTag>
+              );
+            })}
           </div>
         </div>
 
@@ -1099,6 +1105,7 @@ export default function App() {
         <Route path={`${FG_BASE}/path`}     element={<FGPath />} />
         <Route path={`${FG_BASE}/why`}      element={<FGWhy />} />
         <Route path={`${FG_BASE}/new`}      element={<FGNewHere />} />
+        <Route path="/field-guide/devotion-guide" element={<DevotionGuide />} />
 
         {/* 7-Day Challenge routes */}
         <Route path="/7-day-challenge" element={<CFLanding />} />

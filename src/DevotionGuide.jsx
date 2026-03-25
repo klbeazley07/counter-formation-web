@@ -1,0 +1,454 @@
+import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+
+/* ─── CONSTANTS ───────────────────────────────────────────────────── */
+
+const C = {
+  bg:       "#06050A",
+  bgSurf:   "#0E0C0A",
+  bgCard:   "#17140F",
+  gold:     "#C9A84C",
+  goldMid:  "rgba(201,168,76,0.30)",
+  goldDim:  "rgba(201,168,76,0.12)",
+  ivory:    "#FAF8F5",
+  muted:    "rgba(250,248,245,0.58)",
+  dim:      "rgba(250,248,245,0.24)",
+  border:   "rgba(255,255,255,0.08)",
+
+  // Card theme — warm espresso
+  cardBg:      "#1A1612",
+  cardBg2:     "#201C17",
+  cardText:    "#FAF8F5",
+  cardMuted:   "rgba(250,248,245,0.58)",
+  cardDim:     "rgba(250,248,245,0.28)",
+  cardBorder:  "rgba(201,168,76,0.14)",
+};
+
+/* ─── MARKDOWN STYLES ────────────────────────────────────────────── */
+
+const DG_CSS = `
+  .dg-markdown { font-family: 'Cormorant Garamond', serif; }
+
+  .dg-input::placeholder { color: rgba(23,20,15,0.38); }
+  .dg-input:focus { box-shadow: 0 0 0 2px rgba(201,168,76,0.25); }
+
+  .dg-markdown h1 {
+    font-family: 'Michroma', sans-serif;
+    font-size: clamp(22px, 4vw, 38px);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #FAF8F5;
+    text-align: center;
+    margin: 0 0 40px;
+    line-height: 1.1;
+  }
+
+  .dg-markdown h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    font-weight: 700;
+    text-align: center;
+    margin: 48px 0 16px;
+  }
+
+  .dg-markdown h3 {
+    font-family: 'Michroma', sans-serif;
+    font-size: clamp(14px, 2vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(250,248,245,0.9);
+    margin: 32px 0 16px;
+  }
+
+  .dg-markdown p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(17px, 2.5vw, 21px);
+    font-weight: 300;
+    font-style: normal;
+    line-height: 1.9;
+    color: rgba(250,248,245,0.62);
+    margin-bottom: 28px;
+  }
+
+  .dg-markdown ul, .dg-markdown ol {
+    margin: 0 0 28px 24px;
+  }
+
+  .dg-markdown li {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(17px, 2.2vw, 21px);
+    font-weight: 300;
+    font-style: normal;
+    line-height: 1.9;
+    color: rgba(250,248,245,0.62);
+    margin-bottom: 10px;
+  }
+
+  .dg-markdown blockquote {
+    border-left: 2px solid #C9A84C;
+    background: rgba(201,168,76,0.08);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 24px;
+    margin: 28px 0;
+    font-style: italic;
+    color: rgba(250,248,245,0.80);
+  }
+
+  .dg-markdown hr {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
+    border: none;
+    margin: 40px 0;
+  }
+
+  .dg-markdown strong {
+    color: rgba(250,248,245,0.85);
+    font-weight: 600;
+  }
+`;
+
+/* ─── FIELD INPUT ─────────────────────────────────────────────────── */
+
+function FieldInput({ label, value, onChange, placeholder, multiline }) {
+  const sharedStyle = {
+    width: "100%",
+    background: "#E8E0D0",
+    border: `1px solid rgba(201,168,76,0.20)`,
+    borderRadius: 12,
+    padding: "14px 20px",
+    color: "#17140F",
+    fontFamily: "'Barlow Condensed',sans-serif",
+    fontSize: 13,
+    letterSpacing: "0.16em",
+    textTransform: "uppercase",
+    outline: "none",
+    boxSizing: "border-box",
+    transition: "border-color 0.2s",
+  };
+
+  return (
+    <div>
+      <p className="fg-section-kicker" style={{ marginBottom: 10 }}>{label}</p>
+      {multiline ? (
+        <textarea
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          rows={6}
+          className="dg-input"
+          style={{ ...sharedStyle, resize: "vertical", minHeight: 130 }}
+          onFocus={e => { e.target.style.borderColor = C.gold; }}
+          onBlur={e => { e.target.style.borderColor = "rgba(201,168,76,0.20)"; }}
+        />
+      ) : (
+        <input
+          type="text"
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          className="dg-input"
+          style={sharedStyle}
+          onFocus={e => { e.target.style.borderColor = C.gold; }}
+          onBlur={e => { e.target.style.borderColor = C.cardBorder; }}
+        />
+      )}
+    </div>
+  );
+}
+
+/* ─── MAIN COMPONENT ─────────────────────────────────────────────── */
+
+export default function DevotionGuide() {
+  const [passage, setPassage]   = useState("");
+  const [theme, setTheme]       = useState("");
+  const [bigIdea, setBigIdea]   = useState("");
+  const [loading, setLoading]   = useState(false);
+  const [devotional, setDevotional] = useState(null);
+  const [copied, setCopied]     = useState(false);
+  const [error, setError]       = useState(null);
+  const [scrolled, setScrolled] = useState(false);
+  const resultRef = useRef(null);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const canGenerate = passage.trim() || theme.trim() || bigIdea.trim();
+
+  const generate = async () => {
+    if (!canGenerate || loading) return;
+    setLoading(true);
+    setDevotional(null);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/generate", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ passage, theme, bigIdea }),
+      });
+
+      if (!res.ok) throw new Error("Generation failed");
+      const { text, error: apiErr } = await res.json();
+      if (apiErr) throw new Error(apiErr);
+
+      setDevotional(text);
+      setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+    } catch (err) {
+      setError(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const copy = () => {
+    if (!devotional) return;
+    navigator.clipboard.writeText(devotional);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div style={{ minHeight: "100vh", backgroundColor: C.bg, color: C.ivory }}>
+      <style>{DG_CSS}</style>
+
+      {/* ── Nav ── */}
+      <nav style={{
+        position:        "sticky",
+        top:             0,
+        zIndex:          100,
+        backgroundColor: scrolled ? "rgba(6,5,10,0.92)" : "transparent",
+        backdropFilter:  scrolled ? "blur(16px)" : "none",
+        borderBottom:    scrolled ? `1px solid ${C.border}` : "1px solid transparent",
+        padding:         "14px 24px",
+        display:         "flex",
+        alignItems:      "center",
+        justifyContent:  "space-between",
+        transition:      "all 0.35s ease",
+      }}>
+        <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+          <img src="/helmet.png" style={{ width: 32, height: 32, objectFit: "contain" }} alt="Counter Formation" />
+          <span style={{ fontFamily: "'Michroma',sans-serif", fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: C.ivory }}>
+            Counter Formation
+          </span>
+        </Link>
+        <Link to="/#field-guide" className="fg-nav-link">
+          ← Field Guide
+        </Link>
+      </nav>
+
+      {/* ── Hero ── */}
+      <header style={{ padding: "72px 24px 64px", textAlign: "center", maxWidth: 860, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 24, marginBottom: 16 }}>
+          <img src="/shield-white.png" style={{ width: "auto", height: "clamp(96px,16vw,180px)", objectFit: "contain", opacity: 0.9, flexShrink: 0 }} alt="Counter Formation" />
+          <div style={{ textAlign: "left" }}>
+            <h1 style={{
+              fontFamily:    "'Michroma',sans-serif",
+              fontSize:      "clamp(24px,5vw,58px)",
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              lineHeight:    1.0,
+              color:         C.ivory,
+              margin:        "0 0 10px",
+            }}>
+              Counter Formation
+            </h1>
+            <p style={{
+              fontFamily:    "'Barlow Condensed',sans-serif",
+              fontSize:      "clamp(13px,2vw,18px)",
+              textTransform: "uppercase",
+              letterSpacing: "0.3em",
+              color:         C.gold,
+              fontWeight:    600,
+              margin:        0,
+            }}>
+              Daily Devotion Guide
+            </p>
+          </div>
+        </div>
+        <p style={{
+          fontFamily: "'Cormorant Garamond',serif",
+          fontStyle:  "italic",
+          fontSize:   "clamp(16px,2.5vw,20px)",
+          color:      C.muted,
+          lineHeight: 1.8,
+          maxWidth:   560,
+          margin:     "0 auto 32px",
+        }}>
+          Resist the drift. Intentional spiritual formation for the counter-cultural life in Christ.
+        </p>
+        <div style={{
+          display:         "inline-block",
+          background:      "rgba(201,168,76,0.06)",
+          borderLeft:      `3px solid ${C.gold}`,
+          borderRadius:    "0 12px 12px 0",
+          padding:         "20px 28px",
+          textAlign:       "left",
+          maxWidth:        560,
+        }}>
+          <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase", color: C.gold, fontWeight: 700, marginBottom: 14 }}>
+            How to use
+          </p>
+          <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 16, color: C.muted, lineHeight: 1.75, margin: 0 }}>
+            Input all three — <em>1) Scripture Reference, 2) Devotion Theme, 3) Subject, Topic, or Question</em> — for the most complete guide. Or choose just one and the tool will produce a custom devotion for the day.
+          </p>
+        </div>
+      </header>
+
+      <main style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px 96px" }}>
+
+        {/* ── Input card ── */}
+        <div style={{
+          background:    `radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 60%), ${C.cardBg}`,
+          border:        `1px solid ${C.cardBorder}`,
+          borderRadius:  24,
+          padding:       "clamp(32px,5vw,64px)",
+          position:      "relative",
+          overflow:      "hidden",
+          marginBottom:  64,
+          boxShadow:     "0 24px 60px rgba(0,0,0,0.3)",
+        }}>
+          {/* gold top line */}
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${C.goldMid},transparent)` }} />
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 40, marginBottom: 40 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+              <FieldInput
+                label="1. Scripture Reference"
+                value={passage}
+                onChange={e => setPassage(e.target.value)}
+                placeholder="e.g., Romans 12:1-2"
+              />
+              <FieldInput
+                label="2. Devotion Theme"
+                value={theme}
+                onChange={e => setTheme(e.target.value)}
+                placeholder="e.g., Intentionality"
+              />
+            </div>
+            <FieldInput
+              label="3. Subject, Topic, or Question"
+              value={bigIdea}
+              onChange={e => setBigIdea(e.target.value)}
+              placeholder="e.g., How do I resist the pull of distraction?"
+              multiline
+            />
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <button
+              onClick={generate}
+              disabled={loading || !canGenerate}
+              className={canGenerate && !loading ? "fg-btn-prim" : ""}
+              style={{
+                padding:       "16px 48px",
+                borderRadius:  999,
+                background:    loading || !canGenerate ? "rgba(201,168,76,0.3)" : C.gold,
+                color:         "#000",
+                border:        "none",
+                fontFamily:    "'Barlow Condensed',sans-serif",
+                fontSize:      13,
+                fontWeight:    800,
+                letterSpacing: "0.26em",
+                textTransform: "uppercase",
+                cursor:        loading || !canGenerate ? "not-allowed" : "pointer",
+                display:       "flex",
+                alignItems:    "center",
+                gap:           10,
+                transition:    "all 0.2s ease",
+              }}
+            >
+              {loading ? "Forming…" : "Begin Formation"}
+            </button>
+          </div>
+
+          {error && (
+            <p style={{ textAlign: "center", color: "rgba(255,100,100,0.8)", fontSize: 13, marginTop: 20, fontFamily: "'Barlow Condensed',sans-serif", letterSpacing: "0.1em" }}>
+              {error}
+            </p>
+          )}
+        </div>
+
+        {/* ── Feature cards (shown before first generation) ── */}
+        {!devotional && !loading && (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 24 }}>
+            {[
+              { label: "The Objective",    text: "Clear, mission-oriented focus for your daily walk." },
+              { label: "Life Steps",  text: "Concrete actions to resist the drift of the world." },
+              { label: "Deep Formation",   text: "Structured methods for profound spiritual growth." },
+            ].map(item => (
+              <div key={item.label} style={{ background: C.cardBg, border: `1px solid ${C.cardBorder}`, borderRadius: 16, padding: 32 }}>
+                <p style={{ fontFamily: "'Michroma',sans-serif", fontSize: 12, textTransform: "uppercase", color: C.cardText, marginBottom: 12 }}>
+                  {item.label}
+                </p>
+                <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "normal", fontWeight: 300, fontSize: 17, color: C.cardMuted, lineHeight: 1.8 }}>
+                  {item.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ── Result ── */}
+        {devotional && (
+          <div ref={resultRef}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16, marginBottom: 32 }}>
+              <p className="fg-section-kicker" style={{ margin: 0 }}>Dispatches from the Field</p>
+              <button
+                onClick={copy}
+                style={{
+                  padding:       "10px 20px",
+                  borderRadius:  999,
+                  background:    "rgba(255,255,255,0.03)",
+                  border:        `1px solid ${C.border}`,
+                  color:         copied ? C.gold : C.muted,
+                  fontFamily:    "'Barlow Condensed',sans-serif",
+                  fontSize:      11,
+                  fontWeight:    700,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  cursor:        "pointer",
+                  transition:    "all 0.2s",
+                }}
+              >
+                {copied ? "Captured ✓" : "Capture Guide"}
+              </button>
+            </div>
+
+            <div style={{ background: C.bgSurf, border: `1px solid ${C.border}`, borderRadius: 24, padding: "clamp(32px,5vw,80px)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${C.goldMid},transparent)` }} />
+              <div className="dg-markdown">
+                <ReactMarkdown>{devotional}</ReactMarkdown>
+              </div>
+              <div style={{ marginTop: 64, paddingTop: 48, borderTop: "1px solid rgba(255,255,255,0.05)", textAlign: "center" }}>
+                <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.3em", color: C.dim, textTransform: "uppercase" }}>
+                  Go with conviction.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* ── Footer ── */}
+      <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 40, paddingBottom: 48, textAlign: "center", backgroundColor: C.bgSurf }}>
+        <img src="/helmet.png" style={{ width: 20, height: 20, objectFit: "contain", opacity: 0.2, filter: "invert(1)", display: "block", margin: "0 auto 16px" }} alt="" />
+        <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 9, letterSpacing: "0.32em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)", marginBottom: 6 }}>
+          Counter Formation · Daily Devotion Guide
+        </p>
+        <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 9, letterSpacing: "0.32em", textTransform: "uppercase", color: "rgba(250,248,245,0.12)" }}>
+          Discipline · Presence · Formation
+        </p>
+        <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 9, letterSpacing: "0.32em", textTransform: "uppercase", color: "rgba(250,248,245,0.12)", marginTop: 6 }}>
+          Ephesians 6:10–18 · © 2026
+        </p>
+      </div>
+    </div>
+  );
+}
