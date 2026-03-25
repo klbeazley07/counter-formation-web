@@ -71,9 +71,9 @@ export function ArchitectureStyles() {
       .arch-outer {
         position: relative;
         /* Tall enough that sticky holds while wheel handler runs.
-           Extra 50svh = scroll buffer so native scroll doesn't
+           Extra 20svh = minimal buffer so native scroll doesn't
            immediately release the sticky container. */
-        height: 150svh;
+        height: 120svh;
         background: #06050A;
       }
 
@@ -592,7 +592,7 @@ export function ArchitectureStyles() {
 
 // How many wheel "ticks" to consume before advancing a panel or releasing
 const TICKS_TO_ADVANCE = 5;   // ticks to move to next panel
-const TICKS_TO_RELEASE = 7;   // extra ticks on last panel before exiting
+const TICKS_TO_RELEASE = 3;   // extra ticks on last panel before exiting
 
 export function ArchitectureSlider() {
   const outerRef    = useRef(null);
