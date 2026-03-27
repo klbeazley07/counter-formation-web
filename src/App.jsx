@@ -218,7 +218,7 @@ function CinematicHero() {
 
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 pt-20 pb-10 text-center">
         <div ref={logoGroupRef} className="mb-6 md:mb-8 opacity-0">
-          <SafeImg src="/full-logo.png"
+          <SafeImg src="/shield-white.png"
             className="w-[260px] md:w-[500px] mx-auto drop-shadow-[0_20px_60px_rgba(0,0,0,0.9)] max-h-[42vh] object-contain"
             alt="Counter Formation" />
         </div>
