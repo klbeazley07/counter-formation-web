@@ -227,15 +227,19 @@ function CinematicHero() {
           Formed in Christ.
         </h1>
         <p ref={sublineRef}
-          className="mt-3 md:mt-4 font-brand italic text-sm md:text-4xl opacity-40 lowercase opacity-0">
+          className="mt-3 md:mt-4 font-brand italic text-sm md:text-4xl opacity-35 lowercase opacity-0">
           Living Counter to Culture.
         </p>
-        <p ref={microcopyRef}
-          className="mt-4 md:mt-5 max-w-xs md:max-w-xl mx-auto text-[8px] md:text-xs opacity-0 tracking-[0.16em] md:tracking-[0.22em] uppercase leading-relaxed font-light text-white/60">
-          Intentional formation in a world designed for drift.
-        </p>
+        <div ref={microcopyRef} className="mt-6 md:mt-8 max-w-[23rem] md:max-w-3xl mx-auto px-1 opacity-0">
+          <p className="text-[12px] md:text-[19px] leading-[1.8] md:leading-[1.7] text-white/78 font-light">
+            Counter Formation is a premium men&apos;s and women&apos;s athletic lifestyle brand for those committed to being formed by Christ, not by the world.
+          </p>
+          <p className="mt-3 md:mt-4 text-[8px] md:text-[10px] uppercase tracking-[0.24em] md:tracking-[0.3em] leading-loose text-white/52 font-semibold">
+            Quality apparel in limited drops designed to reflect disciplined faith, bold surrender, and faithful presence.
+          </p>
+        </div>
         <div ref={ctaRef}
-          className="mt-8 md:mt-10 flex flex-col md:flex-row gap-3 md:gap-5 justify-center items-center w-full max-w-sm md:max-w-none opacity-0">
+          className="mt-10 md:mt-12 flex flex-col md:flex-row gap-3 md:gap-5 justify-center items-center w-full max-w-sm md:max-w-none opacity-0">
           <a href="#architecture"
             className="w-full md:w-auto px-8 md:px-12 py-4 md:py-5 bg-white/5 text-white rounded-full text-[9px] md:text-[10px] border border-white/10 hover:border-[#C9A84C]/40 hover:text-[#C9A84C] transition-all uppercase tracking-widest font-bold">
             Explore the Architecture
@@ -257,6 +261,37 @@ function CinematicHero() {
         <svg width="16" height="10" viewBox="0 0 16 10" fill="none" className="text-white/35">
           <path d="M1 1L8 8L15 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
+      </div>
+    </section>
+  );
+}
+
+function BrandPhilosophySection() {
+  return (
+    <section className="relative py-24 md:py-36 px-6 overflow-hidden" style={{ backgroundColor: C.darkBg }}>
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse at 18% 24%,rgba(201,168,76,0.05) 0%,transparent 42%), radial-gradient(ellipse at 82% 76%,rgba(255,255,255,0.03) 0%,transparent 44%)" }} />
+
+      <div className="relative z-10 max-w-6xl mx-auto border-y border-white/[0.06] py-14 md:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-10 md:gap-16 items-start">
+          <div className="space-y-5 md:space-y-6">
+            <span className="block text-[8px] md:text-[10px] text-[#C9A84C] tracking-[0.42em] md:tracking-[0.5em] uppercase font-bold">
+              The Brand
+            </span>
+            <h2 className="font-brand text-3xl md:text-5xl lg:text-6xl uppercase tracking-[0.08em] leading-[0.98] text-white max-w-md">
+              Counter Formation exists for those who refuse to drift.
+            </h2>
+          </div>
+
+          <div className="max-w-2xl space-y-5">
+            <p className="text-[14px] md:text-[20px] leading-[1.9] text-white/66 font-light max-w-xl">
+              We believe every person is being formed, shaped daily by habits, culture, and whatever holds their attention. The question is not whether you are being formed, but by what.
+            </p>
+            <p className="text-[13px] md:text-[17px] leading-[1.95] text-white/46 font-light max-w-xl">
+              Counter Formation is built on a different pursuit: to be intentionally formed by Christ. Through premium athletic and lifestyle apparel, limited releases, and purposeful design, each piece serves as a reminder to live with discipline, surrender fully, and walk with faithful presence in a world pulling the other direction.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -435,12 +470,18 @@ function FieldGuideSection() {
             <h2 className="font-brand text-3xl md:text-7xl uppercase tracking-[0.1em] md:tracking-[0.12em] text-white leading-none">
               Field Guide
             </h2>
-            <p className="text-xs md:text-sm opacity-50 leading-relaxed font-light max-w-xl">
-              Devotions, practices, and media designed to carry the life of Counter Formation beyond the garment. Each release opens a deeper layer of formation.
+            <p className="font-brand text-base md:text-2xl uppercase tracking-[0.16em] md:tracking-[0.2em] text-white/78 max-w-3xl leading-[1.35]">
+              This is where formation becomes practice.
+            </p>
+            <p className="text-[11px] md:text-sm opacity-55 leading-relaxed font-light max-w-xl">
+              Each release connects to something deeper, scripture, discipline, and daily rhythms designed to shape you into the image of Christ.
+            </p>
+            <p className="text-[8px] md:text-[9px] uppercase tracking-[0.32em] text-[#C9A84C]/60 font-bold">
+              Wear the reminder. Step into the practice.
             </p>
           </div>
           <Link to={FG_BASE} className="self-start md:self-auto text-[9px] md:text-[10px] text-[#C9A84C] border border-white/10 px-6 md:px-8 py-3 hover:bg-white/5 transition-all whitespace-nowrap rounded-full uppercase tracking-[0.22em] font-bold">
-            Explore Archive
+            Enter the Field Guide
           </Link>
         </div>
 
@@ -623,24 +664,27 @@ function GearBridgeSection() {
       <div className="relative z-10 max-w-5xl mx-auto">
         <div className="text-center mb-16 md:mb-20 bridge-reveal">
           <p className="text-[9px] md:text-[10px] uppercase tracking-[0.5em] text-[#C9A84C]/70 font-bold mb-8">
-            On the Gear
+            Designed for those who refuse to drift.
           </p>
-          <h2 className="font-brand text-4xl md:text-6xl lg:text-7xl uppercase leading-none tracking-[0.15em] md:tracking-[0.18em] text-white mb-5">
-            The Gear Is Not<br /><span className="text-[#C9A84C]">The Mission.</span>
+          <h2 className="font-brand text-4xl md:text-6xl lg:text-7xl uppercase leading-none tracking-[0.13em] md:tracking-[0.16em] text-white mb-6 max-w-4xl mx-auto">
+            More than apparel.<br /><span className="text-[#C9A84C]">A daily reminder of what is forming you.</span>
           </h2>
-          <p className="font-brand text-base md:text-xl uppercase tracking-[0.22em] opacity-25 mb-8">
-            It's a marker of it.
+          <p className="text-[11px] md:text-sm text-white/48 leading-relaxed max-w-2xl mx-auto">
+            Counter Formation pieces are built to carry the mission with you, on the garment, through the day, and into the practices that shape a different kind of life.
           </p>
-          <div className="w-12 h-[1px] bg-[#C9A84C]/40 mx-auto" />
+          <div className="w-12 h-[1px] bg-[#C9A84C]/40 mx-auto mt-8" />
         </div>
 
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 md:gap-16 bridge-reveal">
           <div className="space-y-4 max-w-xl text-center md:text-left">
             <span className="text-[9px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] uppercase font-bold">
-              Linked to the Gear
+              Linked to every release
             </span>
             <p className="text-xs md:text-sm text-white/45 leading-relaxed">
-              Every release unlocks a hub of formation content — devotion, practice, reflection, video, and community challenge — accessed through QR touchpoints built into the gear itself.
+              Every release unlocks a hub of formation content — devotion, practice, reflection, video, and challenge — accessed through QR touchpoints built into the gear itself.
+            </p>
+            <p className="text-[9px] md:text-[10px] uppercase tracking-[0.28em] text-white/28 font-bold pt-2">
+              Wear the reminder. Step into the practice.
             </p>
             <div className="flex items-center justify-center md:justify-start gap-3 md:gap-2 text-[10px] uppercase tracking-[0.26em] text-white/30 font-bold pt-2">
               <span>Gear</span>
@@ -737,7 +781,15 @@ function GearSection() {
         }}>
         <div className="max-w-7xl mx-auto relative z-10 text-[#0D0D12]">
           <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 md:gap-12 mb-10 md:mb-14 pt-4">
-            <h2 className="font-brand text-4xl md:text-7xl uppercase tracking-[0.08em]">The Gear</h2>
+            <div className="max-w-3xl">
+              <p className="text-[9px] md:text-[10px] uppercase tracking-[0.38em] text-black/45 font-bold mb-4">
+                Built with purpose. Worn as a reminder.
+              </p>
+              <h2 className="font-brand text-4xl md:text-7xl uppercase tracking-[0.08em]">The Gear</h2>
+              <p className="mt-4 text-[11px] md:text-sm text-black/55 leading-relaxed max-w-xl">
+                Premium pieces designed to reflect disciplined faith, bold surrender, and daily formation.
+              </p>
+            </div>
             <div className="flex items-center gap-1 p-1 rounded-full" style={{ background: "rgba(0,0,0,0.08)" }}>
               {Object.entries(GEAR_TABS).map(([key, t]) => {
                 const isActive = active === key;
@@ -754,20 +806,35 @@ function GearSection() {
           </div>
 
           <div ref={panelRef}>
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-10 md:mb-14">
-              <div className="flex items-center gap-3">
-                {active === "women" && (
-                  <span className="text-[8px] uppercase tracking-[0.38em] font-bold px-3 py-1 rounded-full"
-                    style={{ background: "rgba(143,175,138,0.15)", color: "#8FAF8A", border: "1px solid rgba(143,175,138,0.25)" }}>
-                    Collective
-                  </span>
-                )}
-                <p className="font-brand text-sm md:text-base uppercase tracking-[0.18em] opacity-60"
-                  style={{ color: active === "women" ? "#3A4A38" : "#0D0D12" }}>
-                  {tab.phrase}
+            <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-10 md:mb-14">
+              <div className="max-w-2xl">
+                <div className="flex items-center gap-3 flex-wrap">
+                  {active === "women" && (
+                    <span className="text-[8px] uppercase tracking-[0.38em] font-bold px-3 py-1 rounded-full"
+                      style={{ background: "rgba(143,175,138,0.15)", color: "#8FAF8A", border: "1px solid rgba(143,175,138,0.25)" }}>
+                      Collective
+                    </span>
+                  )}
+                  <p className="font-brand text-sm md:text-base uppercase tracking-[0.18em] opacity-60"
+                    style={{ color: active === "women" ? "#3A4A38" : "#0D0D12" }}>
+                    {tab.phrase}
+                  </p>
+                </div>
+                <p className="mt-4 text-[11px] md:text-[12px] leading-relaxed text-black/55 max-w-xl">
+                  Every piece is designed as a reminder: you are being formed every day. Choose discipline. Choose surrender. Choose Counter Formation.
                 </p>
               </div>
-              <p className="text-[8px] md:text-[10px] uppercase tracking-[0.22em] opacity-40 font-bold">{tab.sub}</p>
+              <div className="flex flex-col items-start md:items-end gap-3">
+                <p className="text-[8px] md:text-[10px] uppercase tracking-[0.22em] opacity-40 font-bold">{tab.sub}</p>
+                <a
+                  href={tab.shopUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 px-5 py-3 rounded-full text-[9px] md:text-[10px] uppercase tracking-[0.22em] font-bold border border-black/10 hover:border-black/30 hover:bg-black hover:text-white transition-all"
+                >
+                  Shop All Releases <ArrowRight size={13} />
+                </a>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
@@ -900,6 +967,9 @@ function Footer() {
           <p className="text-[9px] uppercase tracking-widest opacity-30 leading-relaxed max-w-[180px]">
             Formed in Christ.<br />Living counter to culture.
           </p>
+          <p className="text-[8px] uppercase tracking-[0.32em] text-white/18">
+            Formed, not drifting.
+          </p>
         </div>
         <div className="space-y-4 text-[9px] tracking-widest">
           <span className="text-[#C9A84C] opacity-60 uppercase block mb-5">Navigate</span>
@@ -920,7 +990,7 @@ function Footer() {
       </div>
 
       <div className="footer-reveal border-t border-white/[0.04] py-8 px-6 flex flex-col md:flex-row items-center justify-between gap-3 max-w-7xl mx-auto">
-        <p className="text-[8px] uppercase tracking-[0.3em] opacity-20">© 2026 Counter Formation</p>
+        <p className="text-[8px] uppercase tracking-[0.3em] opacity-20">&copy; 2026 Counter Formation</p>
         <p className="text-[8px] uppercase tracking-[0.3em] opacity-15">Discipline · Presence · Formation</p>
         <p className="text-[8px] uppercase tracking-[0.3em] opacity-15">Ephesians 6:10–18</p>
       </div>
@@ -1067,6 +1137,7 @@ function MainSite() {
       </div>
 
       <CinematicHero />
+      <BrandPhilosophySection />
       <SectionDivider />
       <ArchitectureSlider />
       <SectionDivider />
