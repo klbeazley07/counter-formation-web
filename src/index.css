@@ -315,3 +315,17 @@ input[type="email"] {
   .fg-hero-panel { max-width: var(--cf-width-stage); padding: 72px 64px; }
   .fg-narrow     { max-width: 720px; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   GEAR SECTION ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════ */
+
+@keyframes breathe {
+  0%, 100% { background-color: rgba(255,255,255,0.02); }
+  50% { background-color: rgba(255,255,255,0.05); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}

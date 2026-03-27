@@ -337,47 +337,15 @@ function RuleOfLifeSection() {
   );
 }
 
-/* ─── LIGHT TRANSITION ────────────────────────────────────────────── */
+/* ─── DARK TRANSITION ─────────────────────────────────────────────── */
 
-function LightTransition() {
-  const sectionRef = useRef(null);
-  const beamRef    = useRef(null);
-  const textRef    = useRef(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.set([beamRef.current, textRef.current], { opacity: 0, y: 10 });
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "top 72%",
-        onEnter: () => {
-          gsap.to(beamRef.current, { opacity: 1, y: 0, duration: 1.8, ease: "power2.out" });
-          gsap.to(textRef.current, { opacity: 1, y: 0, duration: 1.2, ease: "power3.out", delay: 0.5 });
-        },
-      });
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
-
+function DarkTransition() {
   return (
-    <section ref={sectionRef} className="relative overflow-hidden py-28 md:py-44"
-      style={{ background: `linear-gradient(to bottom,${C.ruleBg} 0%,${C.lightMid} 40%,${C.lightMid} 60%,${C.fieldBg} 100%)` }}>
-      <div ref={beamRef} className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="absolute w-[1px] h-full"
-          style={{ background: "linear-gradient(to bottom,transparent 0%,rgba(201,168,76,0.25) 22%,rgba(201,168,76,0.55) 50%,rgba(201,168,76,0.25) 78%,transparent 100%)" }} />
-        <div className="absolute h-[1px] w-4/5 md:w-3/5"
-          style={{ background: "linear-gradient(to right,transparent 0%,rgba(201,168,76,0.18) 12%,rgba(201,168,76,0.48) 50%,rgba(201,168,76,0.18) 88%,transparent 100%)" }} />
-        <div className="absolute w-56 h-56 rounded-full"
-          style={{ background: "radial-gradient(circle,rgba(201,168,76,0.20) 0%,rgba(201,168,76,0.06) 40%,transparent 70%)", filter: "blur(18px)" }} />
-      </div>
-      <div ref={textRef} className="relative z-10 text-center px-6">
-        <p className="font-brand text-sm md:text-xl uppercase tracking-[0.38em]" style={{ color: "#2A2018" }}>
-          Formation begins in the light.
-        </p>
-        <div className="mt-4 text-[9px] uppercase tracking-[0.38em] opacity-40" style={{ color: "#2A2018" }}>
-          Romans 12:2
-        </div>
-      </div>
+    <section className="py-16 md:py-24 text-center" style={{ backgroundColor: C.darkBg }}>
+      <div className="w-[1px] h-12 mx-auto bg-gradient-to-b from-transparent via-[#C9A84C]/40 to-transparent mb-6" />
+      <p className="text-[11px] md:text-[12px] tracking-[0.35em] uppercase text-white/20 font-light">
+        Formation begins in the gear
+      </p>
     </section>
   );
 }
@@ -607,9 +575,9 @@ const GEAR_TABS = {
     accentMuted: "rgba(201,168,76,0.18)", phrase: "Apparel as a visual anchor.", sub: "Wear the pattern.",
     shopUrl: SHOPIFY_URL,
     products: [
-      { name: "Technical Tee", img: "/DriFit_Black.png",  copy: "Performance tech for training." },
-      { name: "Everyday Tee",  img: "/Tshirt_Studio.png", copy: "Premium soft-wash cotton." },
-      { name: "Technical Hoodie", img: "/Hoodie_white.png", copy: "Heavyweight Performance Tech.", comingSoon: true },
+      { name: "Technical Tee", img: "/DriFit_Black.png",  copy: "Performance tech for training.", tier: "available", slug: "technical-tee" },
+      { name: "Everyday Tee",  img: "/Tshirt_Studio.png", copy: "Premium soft-wash cotton.", tier: "available", slug: "everyday-tee" },
+      { name: "Technical Hoodie", img: "/Hoodie_white.png", copy: "Heavyweight Performance Tech.", tier: "teaser", slug: "technical-hoodie" },
     ],
   },
   women: {
@@ -617,12 +585,96 @@ const GEAR_TABS = {
     accentMuted: "rgba(143,175,138,0.18)", phrase: "Rooted. Rising. Set Apart.", sub: "Wear the formation.",
     shopUrl: SHOPIFY_URL,
     products: [
-      { name: "Rooted Hoodie",    img: "/placeholder.png", copy: "Heavyweight. Oversized. Anchored.", phrase: "Psalm 1" },
-      { name: "Set Apart Tee",    img: "/placeholder.png", copy: "Premium soft-wash cotton.", phrase: "Romans 12:2", comingSoon: true },
-      { name: "Rise Athletic Set",img: "/placeholder.png", copy: "Cropped hoodie + shorts.", comingSoon: true },
+      { name: "Rooted Hoodie",    img: "/placeholder.png", copy: "Heavyweight. Oversized. Anchored.", phrase: "Psalm 1", tier: "teaser", slug: "rooted-hoodie" },
+      { name: "Set Apart Tee",    img: "/placeholder.png", copy: "Premium soft-wash cotton.", phrase: "Romans 12:2", tier: "teaser", slug: "set-apart-tee" },
+      { name: "Rise Athletic Set",img: "/placeholder.png", copy: "Cropped hoodie + shorts.", tier: "teaser", slug: "rise-athletic-set" },
     ],
   },
 };
+
+function DroppingSoonStrip({ products, accent, accentMuted }) {
+  const [notifyOpen, setNotifyOpen] = useState(null);
+  const [notifyEmail, setNotifyEmail] = useState({});
+  const [notifyDone, setNotifyDone] = useState({});
+  const [notifyLoading, setNotifyLoading] = useState({});
+
+  const handleNotify = async (slug) => {
+    const em = notifyEmail[slug];
+    if (!em) return;
+    setNotifyLoading(prev => ({ ...prev, [slug]: true }));
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/subscribe`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: em, source: `notify_${slug}` }),
+      });
+      if (!res.ok) throw new Error();
+      setNotifyDone(prev => ({ ...prev, [slug]: true }));
+      setNotifyOpen(null);
+    } catch {
+      // silently fail — user can retry
+    } finally {
+      setNotifyLoading(prev => ({ ...prev, [slug]: false }));
+    }
+  };
+
+  return (
+    <div className="flex gap-4 overflow-x-auto pb-4 -mx-2 px-2" style={{ scrollSnapType: "x mandatory", scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}>
+      {products.map(product => (
+        <div key={product.slug}
+          className="flex-shrink-0 w-[200px] md:w-[220px] rounded-2xl border border-white/[0.06] flex flex-col p-5"
+          style={{ aspectRatio: "3/4", scrollSnapAlign: "center", animation: "breathe 4s ease-in-out infinite" }}>
+          {/* Silhouette area */}
+          <div className="flex-1 flex items-center justify-center">
+            <div className="w-16 h-20 rounded-lg"
+              style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.03), rgba(255,255,255,0.01))" }} />
+          </div>
+
+          {/* Product name */}
+          <p className="text-[11px] font-brand uppercase tracking-wider text-white/70 mb-3">
+            {product.name}
+          </p>
+
+          {/* Notify Me / Email input / Done */}
+          {notifyDone[product.slug] ? (
+            <div className="flex items-center gap-2 text-[10px] tracking-widest uppercase" style={{ color: accent }}>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              You're in
+            </div>
+          ) : notifyOpen === product.slug ? (
+            <div className="flex items-center gap-1">
+              <input
+                type="email"
+                value={notifyEmail[product.slug] || ""}
+                onChange={e => setNotifyEmail(prev => ({ ...prev, [product.slug]: e.target.value }))}
+                onKeyDown={e => e.key === "Enter" && handleNotify(product.slug)}
+                placeholder="email"
+                className="flex-1 min-w-0 px-3 py-2 rounded-full text-[10px] text-white placeholder-white/25 focus:outline-none tracking-wider uppercase"
+                style={{ background: "rgba(255,255,255,0.05)", border: `1px solid ${accentMuted}` }}
+                autoFocus
+                disabled={notifyLoading[product.slug]}
+              />
+              <button
+                onClick={() => handleNotify(product.slug)}
+                disabled={notifyLoading[product.slug]}
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-all"
+                style={{ border: `1px solid ${accent}40`, color: accent }}>
+                <ArrowRight size={12} />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setNotifyOpen(product.slug)}
+              className="text-[10px] tracking-widest uppercase rounded-full px-4 py-2 transition-all hover:bg-white/[0.05]"
+              style={{ border: `1px solid ${accent}4D`, color: `${accent}B3` }}>
+              Notify Me
+            </button>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function GearSection() {
   const [active, setActive] = useState("men");
@@ -642,104 +694,106 @@ function GearSection() {
     });
   };
 
+  const available = tab.products.filter(p => p.tier === "available");
+  const teaser = tab.products.filter(p => p.tier === "teaser");
+
   return (
-    <>
-      <div className="h-24 md:h-32 w-full pointer-events-none"
-        style={{ background: `linear-gradient(to bottom,${C.darkBg},${C.gearBg})` }} />
-
-      <section id="shop" className="pb-24 md:pb-48 px-4 md:px-6 relative overflow-hidden"
-        style={{
-          backgroundColor: C.gearBg,
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E")`,
-          backgroundSize: "200px 200px",
-        }}>
-        <div className="max-w-7xl mx-auto relative z-10 text-[#0D0D12]">
-          <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 md:gap-12 mb-10 md:mb-14 pt-4">
-            <div className="max-w-3xl">
-              <p className="text-[9px] md:text-[10px] uppercase tracking-[0.38em] text-black/45 font-bold mb-4">
-                Built with purpose. Worn as a reminder.
-              </p>
-              <h2 className="font-brand text-4xl md:text-7xl uppercase tracking-[0.08em]">The Gear</h2>
-            </div>
-            <div className="flex items-center gap-1 p-1 rounded-full" style={{ background: "rgba(0,0,0,0.08)" }}>
-              {Object.entries(GEAR_TABS).map(([key, t]) => {
-                const isActive = active === key;
-                return (
-                  <button key={key} onClick={() => switchTab(key)}
-                    className="relative px-5 py-2 rounded-full text-[9px] md:text-[10px] uppercase tracking-[0.22em] font-bold transition-all duration-300"
-                    style={{ background: isActive ? "#0D0D12" : "transparent", color: isActive ? t.accent : "rgba(13,13,18,0.45)", boxShadow: isActive ? "0 2px 12px rgba(0,0,0,0.18)" : "none" }}>
-                    {t.sublabel}
-                    {isActive && <span className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full" style={{ backgroundColor: t.accent }} />}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div ref={panelRef}>
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-8 md:mb-10">
-              <div className="flex items-center gap-3 flex-wrap">
-                {active === "women" && (
-                  <span className="text-[8px] uppercase tracking-[0.38em] font-bold px-3 py-1 rounded-full"
-                    style={{ background: "rgba(143,175,138,0.15)", color: "#8FAF8A", border: "1px solid rgba(143,175,138,0.25)" }}>
-                    Collective
-                  </span>
-                )}
-                <p className="font-brand text-sm md:text-base uppercase tracking-[0.18em] opacity-60"
-                  style={{ color: active === "women" ? "#3A4A38" : "#0D0D12" }}>
-                  {tab.phrase}
-                </p>
-              </div>
-              <p className="text-[8px] md:text-[10px] uppercase tracking-[0.22em] opacity-40 font-bold">{tab.sub}</p>
-            </div>
-
-            <p className="text-[9px] md:text-[10px] uppercase tracking-[0.18em] md:tracking-[0.22em] opacity-42 leading-loose max-w-xl mb-10 md:mb-12">
-              Designed as a reminder: you are being formed every day.
+    <section id="shop" className="py-24 md:py-48 px-4 md:px-6 relative overflow-hidden"
+      style={{ backgroundColor: C.darkBg }}>
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.03) 0%, transparent 60%)" }} />
+      <div className="max-w-7xl mx-auto relative z-10 text-white">
+        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 md:gap-12 mb-10 md:mb-14 pt-4">
+          <div className="max-w-3xl">
+            <p className="text-[9px] md:text-[10px] uppercase tracking-[0.38em] text-white/45 font-bold mb-4">
+              Built with purpose. Worn as a reminder.
             </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-              {tab.products.map(cat => (
-                <TiltCard key={cat.name} disabled={cat.comingSoon}
-                  className="product-card group relative overflow-hidden bg-black aspect-[4/5] rounded-[2rem] md:rounded-[3rem] transition-transform duration-700 hover:-translate-y-2 md:hover:-translate-y-4 shadow-2xl shadow-black/25">
-                  <a href={cat.comingSoon ? undefined : tab.shopUrl}
-                    target="_blank" rel="noopener noreferrer"
-                    className={cx("block h-full relative", cat.comingSoon && "pointer-events-none")}>
-                    <div className="absolute inset-0 opacity-100 transition-all duration-1000">
-                      <SafeImg src={cat.img} className="w-full h-full object-contain" alt={cat.name} />
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
-                    {active === "women" && cat.phrase && (
-                      <div className="absolute top-5 left-5 text-[7px] uppercase tracking-[0.32em] font-bold"
-                        style={{ color: "rgba(143,175,138,0.55)" }}>{cat.phrase}</div>
-                    )}
-                    <div className="relative z-10 h-full p-8 md:p-12 flex flex-col justify-end text-white">
-                      <h3 className="font-brand text-2xl md:text-4xl uppercase italic">{cat.name}</h3>
-                      <p className="text-[9px] md:text-[10px] opacity-60 uppercase mt-2 tracking-widest">{cat.copy}</p>
-                      {cat.comingSoon ? (
-                        <p className="text-[8px] tracking-widest uppercase mt-3 font-bold" style={{ color: `${tab.accent}99` }}>Coming Soon</p>
-                      ) : (
-                        <div className="flex items-center gap-3 text-[9px] pt-4 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: tab.accent }}>
-                          Shop <ArrowRight size={14} />
-                        </div>
-                      )}
-                    </div>
-                  </a>
-                </TiltCard>
-              ))}
-            </div>
-
-            {active === "women" && (
-              <div className="mt-12 md:mt-16 text-center">
-                <p className="text-[9px] uppercase tracking-[0.32em] font-bold mb-2" style={{ color: "rgba(143,175,138,0.65)" }}>The Collective</p>
-                <p className="text-[10px] md:text-xs opacity-40 tracking-[0.14em] max-w-sm mx-auto leading-relaxed" style={{ color: "#2A3A28" }}>
-                  Same Rule. Different expression. Strength, rooted in light.
-                </p>
-              </div>
-            )}
+            <h2 className="font-brand text-4xl md:text-7xl uppercase tracking-[0.08em] text-white">The Gear</h2>
+          </div>
+          <div className="flex items-center gap-1 p-1 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+            {Object.entries(GEAR_TABS).map(([key, t]) => {
+              const isActive = active === key;
+              return (
+                <button key={key} onClick={() => switchTab(key)}
+                  className="relative px-5 py-2 rounded-full text-[9px] md:text-[10px] uppercase tracking-[0.22em] font-bold transition-all duration-300"
+                  style={{ background: isActive ? "rgba(255,255,255,0.10)" : "transparent", color: isActive ? t.accent : "rgba(255,255,255,0.35)", boxShadow: isActive ? "0 2px 12px rgba(0,0,0,0.18)" : "none" }}>
+                  {t.sublabel}
+                  {isActive && <span className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full" style={{ backgroundColor: t.accent }} />}
+                </button>
+              );
+            })}
           </div>
         </div>
-      </section>
-    </>
+
+        <div ref={panelRef}>
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-8 md:mb-10">
+            <div className="flex items-center gap-3 flex-wrap">
+              {active === "women" && (
+                <span className="text-[8px] uppercase tracking-[0.38em] font-bold px-3 py-1 rounded-full"
+                  style={{ background: "rgba(143,175,138,0.15)", color: "#8FAF8A", border: "1px solid rgba(143,175,138,0.25)" }}>
+                  Collective
+                </span>
+              )}
+              <p className="font-brand text-sm md:text-base uppercase tracking-[0.18em] opacity-60"
+                style={{ color: active === "women" ? "rgba(143,175,138,0.65)" : "white" }}>
+                {tab.phrase}
+              </p>
+            </div>
+            <p className="text-[8px] md:text-[10px] uppercase tracking-[0.22em] text-white opacity-40 font-bold">{tab.sub}</p>
+          </div>
+
+          <p className="text-[9px] md:text-[10px] uppercase tracking-[0.18em] md:tracking-[0.22em] text-white opacity-42 leading-loose max-w-xl mb-10 md:mb-12">
+            Designed as a reminder: you are being formed every day.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {available.map(cat => (
+              <TiltCard key={cat.name}
+                className="product-card group relative overflow-hidden bg-black aspect-[4/5] rounded-[2rem] md:rounded-[3rem] transition-transform duration-700 hover:-translate-y-2 md:hover:-translate-y-4 shadow-2xl shadow-black/25">
+                <a href={tab.shopUrl}
+                  target="_blank" rel="noopener noreferrer"
+                  className="block h-full relative">
+                  <div className="absolute inset-0 opacity-100 transition-all duration-1000">
+                    <SafeImg src={cat.img} className="w-full h-full object-contain" alt={cat.name} />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+                  {active === "women" && cat.phrase && (
+                    <div className="absolute top-5 left-5 text-[7px] uppercase tracking-[0.32em] font-bold"
+                      style={{ color: "rgba(143,175,138,0.55)" }}>{cat.phrase}</div>
+                  )}
+                  <div className="relative z-10 h-full p-8 md:p-12 flex flex-col justify-end text-white">
+                    <h3 className="font-brand text-2xl md:text-4xl uppercase italic">{cat.name}</h3>
+                    <p className="text-[9px] md:text-[10px] opacity-60 uppercase mt-2 tracking-widest">{cat.copy}</p>
+                    <div className="flex items-center gap-3 text-[9px] pt-4 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: tab.accent }}>
+                      Shop <ArrowRight size={14} />
+                    </div>
+                  </div>
+                </a>
+              </TiltCard>
+            ))}
+          </div>
+
+          {teaser.length > 0 && (
+            <>
+              <p className="text-[11px] tracking-[0.5em] uppercase font-bold mt-14 mb-6"
+                style={{ color: `${tab.accent}80` }}>
+                Dropping Soon
+              </p>
+              <DroppingSoonStrip products={teaser} accent={tab.accent} accentMuted={tab.accentMuted} />
+            </>
+          )}
+
+          {active === "women" && (
+            <div className="mt-12 md:mt-16 text-center">
+              <p className="text-[9px] uppercase tracking-[0.32em] font-bold mb-2" style={{ color: "rgba(143,175,138,0.65)" }}>The Collective</p>
+              <p className="text-[10px] md:text-xs opacity-40 tracking-[0.14em] max-w-sm mx-auto leading-relaxed" style={{ color: "rgba(143,175,138,0.45)" }}>
+                Same Rule. Different expression. Strength, rooted in light.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -1199,7 +1253,7 @@ function MainSite() {
       <ArchitectureSlider />
       <SectionDivider />
       <RuleOfLifeSection />
-      <LightTransition />
+      <DarkTransition />
       <FieldGuideSection />
       <SectionDivider />
       <GearBridgeSection />
