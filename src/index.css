@@ -38,6 +38,20 @@ body {
 
 html { scroll-behavior: smooth; }
 
+/* Hero dual-path cards — mobile horizontal scroll */
+.hero-path-scroll {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.hero-path-scroll::-webkit-scrollbar { display: none; }
+@media (min-width: 768px) {
+  .hero-path-scroll {
+    scroll-snap-type: none;
+    overflow: visible;
+  }
+}
+
 input[type="email"] {
   -webkit-appearance: none;
   appearance: none;

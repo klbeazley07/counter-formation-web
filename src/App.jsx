@@ -123,6 +123,8 @@ function CinematicHero() {
   const sublineRef         = useRef(null);
   const microcopyRef       = useRef(null);
   const ctaRef             = useRef(null);
+  const pathCard1Ref       = useRef(null);
+  const pathCard2Ref       = useRef(null);
   const scriptureRef       = useRef(null);
   const scrollIndicatorRef = useRef(null);
 
@@ -130,8 +132,8 @@ function CinematicHero() {
     const ctx = gsap.context(() => {
       gsap.set([bgGlowRef.current, vBeamRef.current, hBeamRef.current,
         bloomRef.current, logoGroupRef.current, headingRef.current,
-        sublineRef.current, microcopyRef.current, ctaRef.current,
-        scriptureRef.current, scrollIndicatorRef.current], { opacity: 0 });
+        sublineRef.current, microcopyRef.current, pathCard1Ref.current,
+        pathCard2Ref.current, scriptureRef.current, scrollIndicatorRef.current], { opacity: 0 });
       gsap.set(vBeamRef.current,     { height: "0vh", xPercent: -50 });
       gsap.set(hBeamRef.current,     { width: "0vw",  xPercent: -50 });
       gsap.set(bloomRef.current,     { scale: 0.7 });
@@ -139,7 +141,7 @@ function CinematicHero() {
       gsap.set(headingRef.current,   { y: 28, filter: "blur(12px)" });
       gsap.set(sublineRef.current,   { y: 20, filter: "blur(8px)" });
       gsap.set(microcopyRef.current, { y: 16, filter: "blur(6px)" });
-      gsap.set(ctaRef.current,       { y: 18, filter: "blur(8px)" });
+      gsap.set([pathCard1Ref.current, pathCard2Ref.current], { y: 18, filter: "blur(8px)" });
       gsap.set(scriptureRef.current, { y: 10, filter: "blur(4px)" });
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
@@ -152,7 +154,8 @@ function CinematicHero() {
         .to(headingRef.current,   { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.0 }, "-=0.5")
         .to(sublineRef.current,   { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.9 }, "-=0.55")
         .to(microcopyRef.current, { opacity: 0.8, y: 0, filter: "blur(0px)", duration: 0.8 }, "-=0.45")
-        .to(ctaRef.current,       { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.85 }, "-=0.4")
+        .to(pathCard1Ref.current, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.85 }, "-=0.4")
+        .to(pathCard2Ref.current, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.85 }, "-=0.7")
         .to(scriptureRef.current, { opacity: 0.25, y: 0, filter: "blur(0px)", duration: 0.8 }, "-=0.35")
         .to(scrollIndicatorRef.current, { opacity: 1, duration: 0.7 }, "-=0.3")
         .to([vBeamRef.current, hBeamRef.current, bloomRef.current],
@@ -239,14 +242,32 @@ function CinematicHero() {
           </p>
         </div>
         <div ref={ctaRef}
-          className="mt-10 md:mt-12 flex flex-col md:flex-row gap-3 md:gap-5 justify-center items-center w-full max-w-sm md:max-w-none opacity-0">
-          <a href="#architecture"
-            className="w-full md:w-auto px-8 md:px-12 py-4 md:py-5 bg-white/5 text-white rounded-full text-[9px] md:text-[10px] border border-white/10 hover:border-[#C9A84C]/40 hover:text-[#C9A84C] transition-all uppercase tracking-widest font-bold">
-            Explore the Architecture
+          className="mt-10 md:mt-12 flex overflow-x-auto md:overflow-visible gap-4 md:gap-6 justify-start md:justify-center items-stretch w-full max-w-none px-[7.5vw] md:px-0 hero-path-scroll">
+          <a ref={pathCard1Ref} href="#architecture"
+            className="relative flex-[0_0_85vw] md:flex-none md:w-[280px] snap-center bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm rounded-2xl p-6 md:p-8 flex flex-col items-start text-left transition-all duration-300 hover:border-[#C9A84C]/30 hover:bg-white/[0.07] group opacity-0">
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C9A84C]/50 to-transparent" />
+            <h3 className="font-brand text-[11px] md:text-[13px] uppercase tracking-[0.22em] text-white mb-4">
+              Enter the Formation
+            </h3>
+            <p className="text-[10px] md:text-[11px] tracking-[0.14em] uppercase leading-relaxed text-white/50 font-light">
+              Architecture.<br />Practice.<br />Community.
+            </p>
+            <div className="mt-auto pt-6">
+              <ArrowRight size={16} className="text-white/30 group-hover:text-[#C9A84C]/70 transition-colors duration-300" />
+            </div>
           </a>
-          <a href="#shop"
-            className="w-full md:w-auto px-8 md:px-12 py-4 md:py-5 bg-[#FAF8F5] text-black rounded-full text-[9px] md:text-[10px] border-2 border-[#C9A84C] hover:bg-[#C9A84C] transition-all flex items-center justify-center gap-3 uppercase tracking-widest font-bold shadow-[0_0_24px_rgba(201,168,76,0.18)]">
-            Shop the Gear <ArrowRight size={14} />
+          <a ref={pathCard2Ref} href="#shop"
+            className="relative flex-[0_0_85vw] md:flex-none md:w-[280px] snap-center bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm rounded-2xl p-6 md:p-8 flex flex-col items-start text-left transition-all duration-300 hover:border-[#C9A84C]/30 hover:bg-white/[0.07] group opacity-0">
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C9A84C]/50 to-transparent" />
+            <h3 className="font-brand text-[11px] md:text-[13px] uppercase tracking-[0.22em] text-white mb-4">
+              Shop the Gear
+            </h3>
+            <p className="text-[10px] md:text-[11px] tracking-[0.14em] uppercase leading-relaxed text-white/50 font-light">
+              Apparel as anchor.<br />Limited drops.
+            </p>
+            <div className="mt-auto pt-6">
+              <ArrowRight size={16} className="text-white/30 group-hover:text-[#C9A84C]/70 transition-colors duration-300" />
+            </div>
           </a>
         </div>
         <div ref={scriptureRef}
