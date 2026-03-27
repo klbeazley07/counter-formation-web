@@ -31,8 +31,11 @@ const C = {
 const DG_CSS = `
   .dg-markdown { font-family: 'Cormorant Garamond', serif; }
 
-  .dg-input::placeholder { color: rgba(23,20,15,0.38); }
-  .dg-input:focus { box-shadow: 0 0 0 2px rgba(201,168,76,0.25); }
+  .dg-input::placeholder { color: rgba(23,20,15,0.42); }
+  .dg-input:focus {
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.18), 0 18px 32px rgba(0,0,0,0.16);
+    transform: translateY(-1px);
+  }
 
   .dg-markdown h1 {
     font-family: 'Michroma', sans-serif;
@@ -114,36 +117,56 @@ const DG_CSS = `
 
 /* ─── FIELD INPUT ─────────────────────────────────────────────────── */
 
-function FieldInput({ label, value, onChange, placeholder, multiline }) {
+function FieldInput({ label, hint, value, onChange, placeholder, multiline }) {
   const sharedStyle = {
     width: "100%",
-    background: "#E8E0D0",
-    border: `1px solid rgba(201,168,76,0.20)`,
-    borderRadius: 12,
-    padding: "14px 20px",
+    background: "#EEE7DA",
+    border: `1px solid rgba(201,168,76,0.16)`,
+    borderRadius: 16,
+    padding: multiline ? "18px 20px" : "16px 20px",
     color: "#17140F",
     fontFamily: "'Barlow Condensed',sans-serif",
-    fontSize: 13,
-    letterSpacing: "0.16em",
-    textTransform: "uppercase",
+    fontSize: 14,
+    letterSpacing: multiline ? "0.08em" : "0.14em",
+    textTransform: multiline ? "none" : "uppercase",
     outline: "none",
     boxSizing: "border-box",
-    transition: "border-color 0.2s",
+    lineHeight: 1.5,
+    transition: "border-color 0.2s, box-shadow 0.2s ease, transform 0.2s ease, background 0.2s ease",
   };
 
   return (
-    <div>
-      <p className="fg-section-kicker" style={{ marginBottom: 10 }}>{label}</p>
+    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <div>
+        <p className="fg-section-kicker" style={{ marginBottom: 6 }}>{label}</p>
+        {hint && (
+          <p style={{
+            margin: 0,
+            fontFamily: "'Cormorant Garamond',serif",
+            fontSize: 16,
+            lineHeight: 1.5,
+            color: C.cardMuted,
+          }}>
+            {hint}
+          </p>
+        )}
+      </div>
       {multiline ? (
         <textarea
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          rows={6}
+          rows={5}
           className="dg-input"
-          style={{ ...sharedStyle, resize: "vertical", minHeight: 130 }}
-          onFocus={e => { e.target.style.borderColor = C.gold; }}
-          onBlur={e => { e.target.style.borderColor = "rgba(201,168,76,0.20)"; }}
+          style={{ ...sharedStyle, resize: "vertical", minHeight: 136 }}
+          onFocus={e => {
+            e.target.style.borderColor = C.gold;
+            e.target.style.background = "#F3EDE1";
+          }}
+          onBlur={e => {
+            e.target.style.borderColor = "rgba(201,168,76,0.16)";
+            e.target.style.background = "#EEE7DA";
+          }}
         />
       ) : (
         <input
@@ -153,8 +176,14 @@ function FieldInput({ label, value, onChange, placeholder, multiline }) {
           placeholder={placeholder}
           className="dg-input"
           style={sharedStyle}
-          onFocus={e => { e.target.style.borderColor = C.gold; }}
-          onBlur={e => { e.target.style.borderColor = C.cardBorder; }}
+          onFocus={e => {
+            e.target.style.borderColor = C.gold;
+            e.target.style.background = "#F3EDE1";
+          }}
+          onBlur={e => {
+            e.target.style.borderColor = "rgba(201,168,76,0.16)";
+            e.target.style.background = "#EEE7DA";
+          }}
         />
       )}
     </div>
@@ -332,10 +361,10 @@ export default function DevotionGuide() {
         </p>
         <div style={{
           display:         "inline-block",
-          background:      "rgba(201,168,76,0.06)",
+          background:      "rgba(201,168,76,0.05)",
           borderLeft:      `3px solid ${C.gold}`,
           borderRadius:    "0 12px 12px 0",
-          padding:         "20px 28px",
+          padding:         "22px 30px",
           textAlign:       "left",
           maxWidth:        560,
         }}>
@@ -352,80 +381,113 @@ export default function DevotionGuide() {
 
         {/* ── Input card ── */}
         <div style={{
-          background:    `radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 60%), ${C.cardBg}`,
+          background:    "radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 60%), #1C1813",
           border:        `1px solid ${C.cardBorder}`,
           borderRadius:  24,
-          padding:       "clamp(32px,5vw,64px)",
+          padding:       "clamp(30px,5vw,56px)",
           position:      "relative",
           overflow:      "hidden",
           marginBottom:  64,
-          boxShadow:     "0 24px 60px rgba(0,0,0,0.3)",
+          boxShadow:     "0 18px 44px rgba(0,0,0,0.24)",
         }}>
           {/* gold top line */}
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${C.goldMid},transparent)` }} />
 
-          <div style={{ maxWidth: 560, margin: "0 auto 40px", display: "flex", flexDirection: "column", gap: 0 }}>
-            <FieldInput
-              label="1. Scripture Reference"
-              value={passage}
-              onChange={e => setPassage(e.target.value)}
-              placeholder="e.g., Romans 12:1-2"
-            />
-
-            {/* ── or ── */}
-            <div style={{ display: "flex", alignItems: "center", gap: 16, margin: "24px 0" }}>
-              <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${C.goldMid}, transparent)` }} />
-              <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.35em", textTransform: "uppercase", color: C.gold, fontWeight: 600, flexShrink: 0 }}>or</span>
-              <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${C.goldMid}, transparent)` }} />
-            </div>
-
-            <FieldInput
-              label="2. Devotion Theme"
-              value={theme}
-              onChange={e => setTheme(e.target.value)}
-              placeholder="e.g., Intentionality"
-            />
-
-            {/* ── or ── */}
-            <div style={{ display: "flex", alignItems: "center", gap: 16, margin: "24px 0" }}>
-              <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${C.goldMid}, transparent)` }} />
-              <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.35em", textTransform: "uppercase", color: C.gold, fontWeight: 600, flexShrink: 0 }}>or</span>
-              <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${C.goldMid}, transparent)` }} />
-            </div>
-
-            <FieldInput
-              label="3. Subject, Topic, or Question"
-              value={bigIdea}
-              onChange={e => setBigIdea(e.target.value)}
-              placeholder="e.g., How do I resist the pull of distraction?"
-            />
-          </div>
-
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <button
-              onClick={generate}
-              disabled={loading || !canGenerate}
-              className={canGenerate && !loading ? "fg-btn-prim" : ""}
-              style={{
-                padding:       "16px 48px",
-                borderRadius:  999,
-                background:    loading || !canGenerate ? "rgba(201,168,76,0.3)" : C.gold,
-                color:         "#000",
-                border:        "none",
-                fontFamily:    "'Barlow Condensed',sans-serif",
-                fontSize:      13,
-                fontWeight:    800,
-                letterSpacing: "0.26em",
+          <div style={{ maxWidth: 640, margin: "0 auto" }}>
+            <div style={{ marginBottom: 28 }}>
+              <p style={{
+                margin: "0 0 8px",
+                fontFamily: "'Barlow Condensed',sans-serif",
+                fontSize: 12,
+                letterSpacing: "0.28em",
                 textTransform: "uppercase",
-                cursor:        loading || !canGenerate ? "not-allowed" : "pointer",
-                display:       "flex",
-                alignItems:    "center",
-                gap:           10,
-                transition:    "all 0.2s ease",
-              }}
-            >
-              {loading ? "Forming…" : "Begin Formation"}
-            </button>
+                color: C.gold,
+                fontWeight: 700,
+              }}>
+                Build today&apos;s guide
+              </p>
+              <p style={{
+                margin: 0,
+                fontFamily: "'Cormorant Garamond',serif",
+                fontSize: "clamp(18px,2.4vw,24px)",
+                lineHeight: 1.55,
+                color: C.cardMuted,
+                maxWidth: 540,
+              }}>
+                Use one field for a quick devotion, or combine all three for a more shaped and specific formation prompt.
+              </p>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+              <FieldInput
+                label="1. Scripture Reference"
+                hint="Optional, but helpful for grounding the reflection in a specific passage."
+                value={passage}
+                onChange={e => setPassage(e.target.value)}
+                placeholder="e.g., Romans 12:1-2"
+              />
+
+              <FieldInput
+                label="2. Devotion Theme"
+                hint="Name the spiritual emphasis you want the devotion to develop."
+                value={theme}
+                onChange={e => setTheme(e.target.value)}
+                placeholder="e.g., Intentionality"
+              />
+
+              <FieldInput
+                label="3. Subject, Topic, or Question"
+                hint="Use this space for the tension, topic, or question you want today's devotion to speak into."
+                value={bigIdea}
+                onChange={e => setBigIdea(e.target.value)}
+                placeholder="e.g., How do I resist the pull of distraction?"
+                multiline
+              />
+            </div>
+
+            <div style={{ marginTop: 34, paddingTop: 24, borderTop: "1px solid rgba(201,168,76,0.14)" }}>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <button
+                  onClick={generate}
+                  disabled={loading || !canGenerate}
+                  className={canGenerate && !loading ? "fg-btn-prim" : ""}
+                  style={{
+                    width: "100%",
+                    maxWidth: 460,
+                    justifyContent: "center",
+                    padding: "15px 32px",
+                    borderRadius: 18,
+                    background: loading || !canGenerate ? "rgba(201,168,76,0.24)" : C.gold,
+                    color: "#120F08",
+                    border: "1px solid rgba(201,168,76,0.30)",
+                    fontFamily: "'Barlow Condensed',sans-serif",
+                    fontSize: 13,
+                    fontWeight: 800,
+                    letterSpacing: "0.24em",
+                    textTransform: "uppercase",
+                    cursor: loading || !canGenerate ? "not-allowed" : "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    transition: "all 0.2s ease",
+                    boxShadow: loading || !canGenerate ? "none" : "0 10px 24px rgba(201,168,76,0.18)",
+                  }}
+                >
+                  {loading ? "Forming..." : "Begin Formation"}
+                </button>
+              </div>
+              <p style={{
+                margin: "14px auto 0",
+                maxWidth: 460,
+                textAlign: "center",
+                fontFamily: "'Cormorant Garamond',serif",
+                fontSize: 16,
+                lineHeight: 1.5,
+                color: C.cardMuted,
+              }}>
+                Start with whatever you have. A verse, a theme, or a question is enough.
+              </p>
+            </div>
           </div>
 
           {error && (
