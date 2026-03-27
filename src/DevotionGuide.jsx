@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import html2canvas from "html2canvas";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
 
@@ -209,11 +210,55 @@ export default function DevotionGuide() {
     }
   };
 
-  const copy = () => {
-    if (!devotional) return;
-    navigator.clipboard.writeText(devotional);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const captureImage = async () => {
+    if (!resultRef.current) return null;
+    const canvas = await html2canvas(resultRef.current, {
+      backgroundColor: C.bg,
+      scale: 2,
+      useCORS: true,
+    });
+    return canvas;
+  };
+
+  const download = async () => {
+    if (!devotional || loading) return;
+    setCopied("downloading");
+    try {
+      const canvas = await captureImage();
+      if (!canvas) return;
+      const link = document.createElement("a");
+      link.download = "counter-formation-devotion.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+      setCopied("downloaded");
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  const share = async () => {
+    if (!devotional || loading) return;
+    setCopied("sharing");
+    try {
+      const canvas = await captureImage();
+      if (!canvas) return;
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+      const file = new File([blob], "counter-formation-devotion.png", { type: "image/png" });
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: "Counter Formation — Daily Devotion" });
+      } else {
+        // Fallback: download if share not supported
+        const link = document.createElement("a");
+        link.download = "counter-formation-devotion.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      }
+      setCopied("shared");
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
   };
 
   return (
@@ -415,25 +460,48 @@ export default function DevotionGuide() {
           <div ref={resultRef}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16, marginBottom: 32 }}>
               <p className="fg-section-kicker" style={{ margin: 0 }}>Dispatches from the Field</p>
-              <button
-                onClick={copy}
-                style={{
-                  padding:       "10px 20px",
-                  borderRadius:  999,
-                  background:    "rgba(255,255,255,0.03)",
-                  border:        `1px solid ${C.border}`,
-                  color:         copied ? C.gold : C.muted,
-                  fontFamily:    "'Barlow Condensed',sans-serif",
-                  fontSize:      11,
-                  fontWeight:    700,
-                  letterSpacing: "0.22em",
-                  textTransform: "uppercase",
-                  cursor:        "pointer",
-                  transition:    "all 0.2s",
-                }}
-              >
-                {copied ? "Captured ✓" : "Capture Guide"}
-              </button>
+              <div style={{ display: "flex", gap: 10 }}>
+                <button
+                  onClick={share}
+                  disabled={copied === "sharing"}
+                  style={{
+                    padding:       "10px 20px",
+                    borderRadius:  999,
+                    background:    copied === "shared" ? "rgba(201,168,76,0.12)" : "rgba(255,255,255,0.03)",
+                    border:        `1px solid ${copied === "shared" ? C.goldMid : C.border}`,
+                    color:         copied === "shared" ? C.gold : C.muted,
+                    fontFamily:    "'Barlow Condensed',sans-serif",
+                    fontSize:      11,
+                    fontWeight:    700,
+                    letterSpacing: "0.22em",
+                    textTransform: "uppercase",
+                    cursor:        copied === "sharing" ? "wait" : "pointer",
+                    transition:    "all 0.2s",
+                  }}
+                >
+                  {copied === "sharing" ? "Preparing…" : copied === "shared" ? "Shared ✓" : "Share"}
+                </button>
+                <button
+                  onClick={download}
+                  disabled={copied === "downloading"}
+                  style={{
+                    padding:       "10px 20px",
+                    borderRadius:  999,
+                    background:    copied === "downloaded" ? "rgba(201,168,76,0.12)" : "rgba(255,255,255,0.03)",
+                    border:        `1px solid ${copied === "downloaded" ? C.goldMid : C.border}`,
+                    color:         copied === "downloaded" ? C.gold : C.muted,
+                    fontFamily:    "'Barlow Condensed',sans-serif",
+                    fontSize:      11,
+                    fontWeight:    700,
+                    letterSpacing: "0.22em",
+                    textTransform: "uppercase",
+                    cursor:        copied === "downloading" ? "wait" : "pointer",
+                    transition:    "all 0.2s",
+                  }}
+                >
+                  {copied === "downloading" ? "Saving…" : copied === "downloaded" ? "Saved ✓" : "Save Image"}
+                </button>
+              </div>
             </div>
 
             <div style={{ background: C.bgSurf, border: `1px solid ${C.border}`, borderRadius: 24, padding: "clamp(32px,5vw,80px)", position: "relative", overflow: "hidden" }}>
