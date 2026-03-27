@@ -319,27 +319,40 @@ export default function DevotionGuide() {
           {/* gold top line */}
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${C.goldMid},transparent)` }} />
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 40, marginBottom: 40 }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
-              <FieldInput
-                label="1. Scripture Reference"
-                value={passage}
-                onChange={e => setPassage(e.target.value)}
-                placeholder="e.g., Romans 12:1-2"
-              />
-              <FieldInput
-                label="2. Devotion Theme"
-                value={theme}
-                onChange={e => setTheme(e.target.value)}
-                placeholder="e.g., Intentionality"
-              />
+          <div style={{ maxWidth: 560, margin: "0 auto 40px", display: "flex", flexDirection: "column", gap: 0 }}>
+            <FieldInput
+              label="1. Scripture Reference"
+              value={passage}
+              onChange={e => setPassage(e.target.value)}
+              placeholder="e.g., Romans 12:1-2"
+            />
+
+            {/* ── or ── */}
+            <div style={{ display: "flex", alignItems: "center", gap: 16, margin: "24px 0" }}>
+              <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${C.goldMid}, transparent)` }} />
+              <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.35em", textTransform: "uppercase", color: C.gold, fontWeight: 600, flexShrink: 0 }}>or</span>
+              <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${C.goldMid}, transparent)` }} />
             </div>
+
+            <FieldInput
+              label="2. Devotion Theme"
+              value={theme}
+              onChange={e => setTheme(e.target.value)}
+              placeholder="e.g., Intentionality"
+            />
+
+            {/* ── or ── */}
+            <div style={{ display: "flex", alignItems: "center", gap: 16, margin: "24px 0" }}>
+              <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${C.goldMid}, transparent)` }} />
+              <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.35em", textTransform: "uppercase", color: C.gold, fontWeight: 600, flexShrink: 0 }}>or</span>
+              <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${C.goldMid}, transparent)` }} />
+            </div>
+
             <FieldInput
               label="3. Subject, Topic, or Question"
               value={bigIdea}
               onChange={e => setBigIdea(e.target.value)}
               placeholder="e.g., How do I resist the pull of distraction?"
-              multiline
             />
           </div>
 
