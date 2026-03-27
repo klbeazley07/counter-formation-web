@@ -530,95 +530,6 @@ function FieldGuideSection() {
 
 /* ─── 7-DAY CHALLENGE ─────────────────────────────────────────────── */
 
-function ChallengeSection() {
-  const [email, setEmail]         = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading]     = useState(false);
-  const [error, setError]         = useState(null);
-
-  const handleSubmit = async () => {
-    if (!email) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/subscribe`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, source: "7day_challenge" }),
-      });
-      if (!res.ok) throw new Error();
-      setSubmitted(true);
-    } catch {
-      setError("Something went wrong. Try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <section id="challenge" className="relative py-28 md:py-44 px-6 overflow-hidden"
-      style={{ backgroundColor: C.darkBg }}>
-      <div className="absolute inset-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at 50% 50%,rgba(201,168,76,0.07) 0%,transparent 55%)" }} />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-b from-transparent to-white/10 pointer-events-none" />
-
-      <div className="relative z-10 max-w-2xl mx-auto text-center bridge-reveal">
-        <span className="text-[8px] md:text-[10px] text-[#C9A84C] tracking-[0.5em] uppercase font-bold mb-6 block">
-          The Entry Point
-        </span>
-        <h2 className="font-brand text-4xl md:text-6xl uppercase tracking-[0.12em] md:tracking-[0.16em] leading-none text-white mb-5">
-          7-Day Formation<br />Challenge
-        </h2>
-        <p className="font-brand italic text-lg md:text-2xl opacity-30 lowercase mb-8">
-          7 days. a new pattern.
-        </p>
-        <p className="text-[10px] md:text-xs opacity-45 tracking-[0.18em] uppercase leading-loose font-light max-w-sm mx-auto mb-12">
-          A structured initiation into intentional living. One practice per day. No noise.
-        </p>
-
-        {!submitted ? (
-          <div className="max-w-md mx-auto">
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="email" value={email}
-                onChange={e => setEmail(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && handleSubmit()}
-                placeholder="your@email.com"
-                disabled={loading}
-                className="flex-1 px-5 py-4 rounded-full text-[11px] text-white placeholder-white/25 focus:outline-none tracking-widest uppercase disabled:opacity-50"
-                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)" }}
-                onFocus={e => e.currentTarget.style.borderColor = "rgba(201,168,76,0.40)"}
-                onBlur={e  => e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)"}
-              />
-              <button onClick={handleSubmit} disabled={loading}
-                className="px-8 py-4 bg-[#C9A84C] text-black rounded-full text-[10px] uppercase tracking-widest font-bold hover:bg-[#FAF8F5] transition-all whitespace-nowrap flex items-center gap-2 justify-center disabled:opacity-50">
-                {loading ? "..." : <><span>Begin</span> <ArrowRight size={13} /></>}
-              </button>
-            </div>
-            {error && (
-              <p className="mt-3 text-[10px] uppercase tracking-[0.2em] text-red-400">{error}</p>
-            )}
-          </div>
-        ) : (
-          <div className="py-4">
-            <p className="text-[11px] uppercase tracking-[0.38em] text-[#C9A84C] font-bold mb-2">You're in.</p>
-            <p className="text-[10px] opacity-40 tracking-[0.2em] uppercase">Check your inbox. Day 1 begins now.</p>
-            <Link to="/7-day-challenge"
-              className="mt-4 inline-flex items-center gap-2 px-8 py-4 bg-[#C9A84C] text-black rounded-full text-[10px] uppercase tracking-widest font-bold hover:bg-[#FAF8F5] transition-all">
-              Begin Now <ArrowRight size={13} />
-            </Link>
-          </div>
-        )}
-        <p className="mt-8 text-[8px] uppercase tracking-[0.35em] text-white/20">Ephesians 6:10–18</p>
-      </div>
-
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-t from-transparent to-white/10 pointer-events-none" />
-    </section>
-  );
-}
-
-/* ─── GEAR BRIDGE ─────────────────────────────────────────────────── */
-
 function GearBridgeSection() {
   return (
     <section className="relative py-24 md:py-40 px-6 overflow-hidden"
@@ -834,7 +745,7 @@ function GearSection() {
 
 /* ─── FOOTER ──────────────────────────────────────────────────────── */
 
-function Footer() {
+function Footer({ onOpenChallenge }) {
   const [email, setEmail]         = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading]     = useState(false);
@@ -922,7 +833,13 @@ function Footer() {
           {[["Mission","#architecture"],["Rule of Life","#rule"],["Field Guide","#field-guide"],["The Gear","#shop"]].map(([l,h]) => (
             <a key={l} href={h} className="block opacity-35 hover:opacity-70 hover:text-white transition-all">{l}</a>
           ))}
-          <Link to="/7-day-challenge" className="block opacity-35 hover:opacity-70 hover:text-[#C9A84C] transition-all">7-Day Challenge</Link>
+          <button
+            type="button"
+            onClick={onOpenChallenge}
+            className="block border-0 bg-transparent p-0 opacity-35 hover:opacity-70 hover:text-[#C9A84C] transition-all text-left"
+          >
+            7-Day Challenge
+          </button>
         </div>
         <div className="space-y-4 text-[9px] tracking-widest">
           <span className="text-[#C9A84C] opacity-60 uppercase block mb-5">Connect</span>
@@ -946,7 +863,190 @@ function Footer() {
 
 /* ─── FLOATING CHALLENGE TRIGGER ─────────────────────────────────── */
 
-function FloatingChallengeTrigger() {
+function ChallengeModal({ open, onClose }) {
+  const [email, setEmail]         = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading]     = useState(false);
+  const [error, setError]         = useState(null);
+  const dialogRef = useRef(null);
+  const emailRef = useRef(null);
+  const returnFocusRef = useRef(null);
+
+  useEscape(onClose, open);
+
+  useEffect(() => {
+    if (!open) return;
+    returnFocusRef.current = document.activeElement;
+
+    const focusTimer = window.setTimeout(() => {
+      emailRef.current?.focus();
+    }, 80);
+
+    const handleTab = (e) => {
+      if (e.key !== "Tab" || !dialogRef.current) return;
+
+      const focusable = dialogRef.current.querySelectorAll(
+        'button, [href], input, textarea, select, [tabindex]:not([tabindex="-1"])'
+      );
+
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleTab);
+
+    return () => {
+      window.clearTimeout(focusTimer);
+      window.removeEventListener("keydown", handleTab);
+      returnFocusRef.current?.focus?.();
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (open) return;
+    setEmail("");
+    setSubmitted(false);
+    setLoading(false);
+    setError(null);
+  }, [open]);
+
+  const handleSubmit = async () => {
+    if (!email || loading) return;
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/subscribe`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "7day_challenge_modal" }),
+      });
+
+      if (!res.ok) throw new Error();
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[140] px-4 py-6 md:px-6 md:py-10"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      style={{ background: "rgba(6,5,10,0.82)", backdropFilter: "blur(18px)" }}
+    >
+      <div className="flex min-h-full items-center justify-center">
+        <div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="challenge-modal-title"
+          className="relative w-full max-w-3xl overflow-hidden rounded-[2rem] border border-white/10 bg-[#12100D] shadow-[0_30px_120px_rgba(0,0,0,0.55)]"
+          style={{ backgroundImage: "radial-gradient(ellipse at 50% 18%, rgba(201,168,76,0.08) 0%, transparent 52%)" }}
+        >
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/60 transition-colors hover:text-white"
+            aria-label="Close 7-Day Challenge"
+          >
+            <X size={16} />
+          </button>
+
+          <div className="px-6 py-16 text-center md:px-12 md:py-20">
+            <span className="mb-6 block text-[8px] md:text-[10px] font-bold uppercase tracking-[0.5em] text-[#C9A84C]">
+              The Entry Point
+            </span>
+            <h2
+              id="challenge-modal-title"
+              className="font-brand text-4xl leading-[0.92] tracking-[0.12em] text-white uppercase md:text-6xl md:tracking-[0.16em]"
+            >
+              7-Day Formation
+              <br />
+              Challenge
+            </h2>
+            <p className="mt-6 font-brand text-lg italic lowercase text-white/28 md:text-2xl">
+              7 days. a new pattern.
+            </p>
+            <p className="mx-auto mt-8 max-w-lg text-[10px] md:text-xs font-light uppercase tracking-[0.18em] leading-loose text-white/42">
+              A structured initiation into intentional living. One practice per day. No noise.
+            </p>
+
+            {!submitted ? (
+              <div className="mx-auto mt-10 max-w-xl">
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <input
+                    ref={emailRef}
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && handleSubmit()}
+                    placeholder="your@email.com"
+                    disabled={loading}
+                    className="flex-1 rounded-full px-5 py-4 text-[11px] uppercase tracking-[0.18em] text-white placeholder-white/22 focus:outline-none disabled:opacity-50"
+                    style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)" }}
+                    onFocus={e => e.currentTarget.style.borderColor = "rgba(201,168,76,0.40)"}
+                    onBlur={e => e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)"}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSubmit}
+                    disabled={loading}
+                    className="flex items-center justify-center gap-2 rounded-full bg-[#C9A84C] px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-black transition-all hover:bg-[#FAF8F5] disabled:opacity-50"
+                  >
+                    {loading ? "..." : <><span>Begin</span> <ArrowRight size={13} /></>}
+                  </button>
+                </div>
+                {error && (
+                  <p className="mt-3 text-[10px] uppercase tracking-[0.2em] text-red-400">{error}</p>
+                )}
+              </div>
+            ) : (
+              <div className="mt-10">
+                <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.38em] text-[#C9A84C]">You're in.</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-white/40">Check your inbox. Day 1 begins now.</p>
+                <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                  <Link
+                    to="/7-day-challenge"
+                    onClick={onClose}
+                    className="inline-flex items-center gap-2 rounded-full bg-[#C9A84C] px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-black transition-all hover:bg-[#FAF8F5]"
+                  >
+                    Begin Now <ArrowRight size={13} />
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="inline-flex items-center gap-2 rounded-full border border-white/10 px-7 py-4 text-[10px] font-bold uppercase tracking-widest text-white/70 transition-all hover:border-[#C9A84C]/40 hover:text-[#C9A84C]"
+                  >
+                    Keep Exploring
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <p className="mt-10 text-[8px] uppercase tracking-[0.35em] text-white/18">Ephesians 6:10-18</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FloatingChallengeTrigger({ onOpenChallenge }) {
   const [visible,   setVisible]   = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
@@ -965,8 +1065,9 @@ function FloatingChallengeTrigger() {
     <div className="fixed bottom-6 right-6 z-[90] flex items-center gap-2"
       style={{ animation: "fadeUp 0.4s ease forwards" }}>
       <button
-        onClick={() => document.getElementById("challenge")?.scrollIntoView({ behavior: "smooth" })}
-        className="flex items-center gap-3 px-5 py-3 rounded-full text-black text-[10px] uppercase tracking-[0.22em] font-bold transition-all hover:scale-105"
+        type="button"
+        onClick={onOpenChallenge}
+        className="flex items-center gap-3 rounded-full border-0 px-5 py-3 text-[10px] font-bold uppercase tracking-[0.22em] text-black transition-all hover:scale-105"
         style={{ backgroundColor: C.gold, boxShadow: "0 4px 32px rgba(201,168,76,0.35)" }}>
         Begin the 7-Day Challenge <ChevronRight size={13} />
       </button>
@@ -986,8 +1087,18 @@ function FloatingChallengeTrigger() {
 function MainSite() {
   const mainRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  useBodyScrollLock(isMenuOpen);
+  const [isChallengeOpen, setIsChallengeOpen] = useState(false);
+  useBodyScrollLock(isMenuOpen || isChallengeOpen);
   useEscape(() => setIsMenuOpen(false), isMenuOpen);
+
+  const openChallenge = useCallback(() => {
+    setIsMenuOpen(false);
+    setIsChallengeOpen(true);
+  }, []);
+
+  const closeChallenge = useCallback(() => {
+    setIsChallengeOpen(false);
+  }, []);
 
   const navLinks = [
     { label: "Mission",     href: "#architecture" },
@@ -1036,6 +1147,7 @@ function MainSite() {
     <div ref={mainRef}
       className="text-[#FAF8F5] selection:bg-[#C9A84C] selection:text-black min-h-screen overflow-x-hidden font-sans"
       style={{ backgroundColor: C.darkBg }}>
+      <ChallengeModal open={isChallengeOpen} onClose={closeChallenge} />
 
       <nav className="nav-fade fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[100] w-[94%] max-w-5xl px-4 py-3 md:px-5 md:py-4 backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center justify-between"
         style={{ backgroundColor: `${C.darkBg}cc` }}>
@@ -1090,12 +1202,10 @@ function MainSite() {
       <LightTransition />
       <FieldGuideSection />
       <SectionDivider />
-      <ChallengeSection />
-      <SectionDivider />
       <GearBridgeSection />
       <GearSection />
-      <Footer />
-      <FloatingChallengeTrigger />
+      <Footer onOpenChallenge={openChallenge} />
+      <FloatingChallengeTrigger onOpenChallenge={openChallenge} />
     </div>
   );
 }
