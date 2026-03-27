@@ -808,7 +808,8 @@ function Footer({ onOpenChallenge }) {
 
       <div className="footer-reveal max-w-2xl mx-auto py-16 px-6 text-center border-b border-white/[0.05]">
         <span className="text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-[#C9A84C]/60 font-bold mb-3 block">Stay in the Formation</span>
-        <h4 className="font-brand text-xl md:text-2xl uppercase tracking-[0.15em] text-white mb-8">Join the Formation</h4>
+        <h4 className="font-brand text-xl md:text-2xl uppercase tracking-[0.15em] text-white mb-4">Join the Formation</h4>
+        <p className="text-[11px] tracking-[0.3em] text-white/30 uppercase mb-4">Join 500+ in the formation</p>
         {!submitted ? (
           <div className="max-w-md mx-auto">
             <div className="flex flex-col sm:flex-row gap-3">
@@ -840,43 +841,41 @@ function Footer({ onOpenChallenge }) {
       </div>
 
       <div className="footer-reveal max-w-7xl mx-auto py-14 px-6 grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-20">
-        <div className="col-span-2 md:col-span-1 space-y-5">
-          <div className="flex items-center gap-3">
-            <SafeImg src="/helmet.png" className="w-10 h-10 md:w-12 md:h-12 object-contain flex-shrink-0" alt="" />
-            <span className="font-brand text-base md:text-lg text-[#C9A84C]">Counter Formation</span>
-          </div>
-          <p className="text-[9px] uppercase tracking-widest opacity-30 leading-relaxed max-w-[180px]">
-            Formed in Christ.<br />Living counter to culture.
-          </p>
+        <div>
+          <span className="text-[11px] tracking-[0.4em] text-[#C9A84C]/50 uppercase font-bold mb-4 block">The Gear</span>
+          <a href="#shop" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Shop All</a>
+          <a href={SHOPIFY_URL} className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Men's</a>
+          <a href={SHOPIFY_URL} className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Women's</a>
         </div>
-        <div className="space-y-4 text-[9px] tracking-widest">
-          <span className="text-[#C9A84C] opacity-60 uppercase block mb-5">Navigate</span>
-          {[["Mission","#architecture"],["Rule of Life","#rule"],["Field Guide","#field-guide"],["The Gear","#shop"]].map(([l,h]) => (
-            <a key={l} href={h} className="block opacity-35 hover:opacity-70 hover:text-white transition-all">{l}</a>
-          ))}
-          <button
-            type="button"
-            onClick={onOpenChallenge}
-            className="block border-0 bg-transparent p-0 opacity-35 hover:opacity-70 hover:text-[#C9A84C] transition-all text-left"
-          >
+        <div>
+          <span className="text-[11px] tracking-[0.4em] text-[#C9A84C]/50 uppercase font-bold mb-4 block">The Formation</span>
+          <a href="#architecture" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Architecture</a>
+          <a href="#rule" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Rule of Life</a>
+          <button type="button" onClick={onOpenChallenge}
+            className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1 border-0 bg-transparent p-0 text-left cursor-pointer">
             7-Day Challenge
           </button>
         </div>
-        <div className="space-y-4 text-[9px] tracking-widest">
-          <span className="text-[#C9A84C] opacity-60 uppercase block mb-5">Connect</span>
-          <a href="#" className="block opacity-35 hover:opacity-70 hover:text-white transition-all">Instagram</a>
-          <a href="#" className="block opacity-35 hover:opacity-70 hover:text-white transition-all">Email</a>
+        <div>
+          <span className="text-[11px] tracking-[0.4em] text-[#C9A84C]/50 uppercase font-bold mb-4 block">Field Guide</span>
+          <Link to="/field-guide/scripture-before-scroll" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Scripture Before Scroll</Link>
+          <Link to="/field-guide/devotion-guide" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Devotion Guide</Link>
         </div>
-        <div className="space-y-4 text-[9px] tracking-widest">
-          <span className="text-[#C9A84C] opacity-60 uppercase block mb-5">Shop</span>
-          <a href={SHOPIFY_URL} className="block opacity-35 hover:opacity-70 hover:text-white transition-all">All Gear</a>
+        <div>
+          <span className="text-[11px] tracking-[0.4em] text-[#C9A84C]/50 uppercase font-bold mb-4 block">Connect</span>
+          <a href="https://instagram.com/counterformed" target="_blank" rel="noopener noreferrer" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Instagram</a>
+          <a href="#" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Contact</a>
+          <a href="#" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">About</a>
         </div>
       </div>
 
-      <div className="footer-reveal border-t border-white/[0.04] py-8 px-6 flex flex-col md:flex-row items-center justify-between gap-3 max-w-7xl mx-auto">
+      <div className="footer-reveal border-t border-white/[0.04] py-8 px-6 flex flex-col items-center gap-3 max-w-7xl mx-auto">
+        <p className="text-[10px] tracking-[0.35em] text-white/15 uppercase">Built for those being formed.</p>
+        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-3">
         <p className="text-[8px] uppercase tracking-[0.3em] opacity-20">&copy; 2026 Counter Formation</p>
         <p className="text-[8px] uppercase tracking-[0.3em] opacity-15">Discipline · Presence · Formation</p>
         <p className="text-[8px] uppercase tracking-[0.3em] opacity-15">Ephesians 6:10–18</p>
+        </div>
       </div>
     </footer>
   );
@@ -1122,9 +1121,9 @@ function MainSite() {
   }, []);
 
   const navLinks = [
-    { label: "Mission",     href: "#architecture" },
-    { label: "Rule",        href: "#rule" },
-    { label: "Field Guide", href: "#field-guide" },
+    { label: "Shop",         href: "#shop" },
+    { label: "Formation",    href: "#architecture" },
+    { label: "Rule of Life", href: "#rule" },
   ];
 
   useEffect(() => {
@@ -1187,32 +1186,40 @@ function MainSite() {
               </a>
             ))}
           </div>
-          <a href="#shop"
-            className="px-4 py-2 md:px-6 md:py-2 bg-white text-black rounded-full text-[9px] md:text-[10px] hidden md:block hover:bg-[#C9A84C] transition-all uppercase tracking-widest font-bold">
-            Shop the Gear
-          </a>
+          <button onClick={openChallenge}
+            className="px-5 py-2 rounded-full border border-[#C9A84C]/40 text-[#C9A84C] hover:bg-[#C9A84C] hover:text-black transition-all text-[9px] md:text-[10px] hidden md:block uppercase tracking-widest font-bold">
+            7-Day Challenge
+          </button>
           <button onClick={() => setIsMenuOpen(v => !v)} className="md:hidden p-1" aria-label="Toggle menu">
             <Menu size={20} />
           </button>
         </div>
       </nav>
 
-      <div className={cx("fixed inset-0 z-[120] flex flex-col items-center justify-center space-y-8 transition-transform duration-500",
+      <div className={cx("fixed inset-0 z-[120] flex flex-col items-center justify-center transition-transform duration-500",
         isMenuOpen ? "translate-y-0" : "-translate-y-full")}
         style={{ backgroundColor: C.darkBg }}>
         <button onClick={() => setIsMenuOpen(false)} className="absolute top-8 right-8">
           <X size={28} />
         </button>
-        {navLinks.map(l => (
-          <a key={l.label} href={l.href} onClick={() => setIsMenuOpen(false)}
-            className={cx("font-brand text-xl tracking-[0.3em] uppercase", l.gold && "text-[#C9A84C]")}>
-            {l.label}
-          </a>
-        ))}
-        <a href={SHOPIFY_URL}
-          className="text-[10px] text-[#C9A84C] tracking-widest uppercase border border-[#C9A84C]/20 px-8 py-3 rounded-full">
-          Enter Store
-        </a>
+
+        {/* THE GEAR */}
+        <p className="text-[11px] tracking-[0.5em] text-[#C9A84C]/60 uppercase font-bold mb-6">The Gear</p>
+        <a href="#shop" onClick={() => setIsMenuOpen(false)}
+          className="text-xl font-brand uppercase tracking-wider text-white mb-2">Shop All</a>
+
+        <div className="h-[1px] w-16 bg-white/10 mx-auto my-6" />
+
+        {/* THE FORMATION */}
+        <p className="text-[11px] tracking-[0.5em] text-[#C9A84C]/60 uppercase font-bold mb-6">The Formation</p>
+        <a href="#architecture" onClick={() => setIsMenuOpen(false)}
+          className="text-xl font-brand uppercase tracking-wider text-white mb-2">Architecture</a>
+        <a href="#rule" onClick={() => setIsMenuOpen(false)}
+          className="text-xl font-brand uppercase tracking-wider text-white mb-2">Rule of Life</a>
+        <Link to="/field-guide/scripture-before-scroll" onClick={() => setIsMenuOpen(false)}
+          className="text-xl font-brand uppercase tracking-wider text-white mb-2">Field Guide</Link>
+        <button onClick={openChallenge}
+          className="text-xl font-brand uppercase tracking-wider text-white mt-2">7-Day Challenge</button>
       </div>
 
       <CinematicHero />
