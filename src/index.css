@@ -11,8 +11,13 @@
   --color-hero-bg:    #06050A;
   --color-rule-bg:    #17140F;
   --color-field-bg:   #111009;
-  --color-gear-bg:    #F5F2EC;
+  --color-gear-bg:    #0E0C0A;
   --color-light-mid:  #F0EDE6;
+
+  /* Semantic tokens */
+  --color-teaser-bg: rgba(255,255,255,0.03);
+  --color-teaser-border: rgba(255,255,255,0.06);
+  --color-card-hover-border: rgba(201,168,76,0.30);
 }
 
 /* ─── WIDTH SYSTEM ────────────────────────────────────────────────── */
@@ -36,6 +41,21 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 html { scroll-behavior: smooth; }
 
 /* Hero dual-path cards — mobile horizontal scroll */
@@ -50,6 +70,23 @@ html { scroll-behavior: smooth; }
     scroll-snap-type: none;
     overflow: visible;
   }
+}
+
+/* ─── SHARED COMPONENT STYLES ────────────────────────────────────── */
+
+.rhythm-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
+  transition: all 0.5s ease;
+}
+.rhythm-card:hover {
+  border-color: rgba(201,168,76,0.30);
+  background: rgba(255,255,255,0.08);
+  transform: translateY(-5px);
+}
+
+.section-glow {
+  background: radial-gradient(ellipse at 50% 60%, rgba(201,168,76,0.04) 0%, transparent 65%);
 }
 
 input[type="email"] {

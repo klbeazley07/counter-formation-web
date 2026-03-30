@@ -96,6 +96,36 @@ function TiltCard({ children, className, disabled }) {
   );
 }
 
+function AnimatedCounter({ target, suffix = "", prefix = "", duration = 2 }) {
+  const ref = useRef(null);
+  const triggered = useRef(false);
+
+  useEffect(() => {
+    if (!ref.current || triggered.current) return;
+    const el = ref.current;
+
+    ScrollTrigger.create({
+      trigger: el,
+      start: "top 90%",
+      once: true,
+      onEnter: () => {
+        triggered.current = true;
+        const obj = { val: 0 };
+        gsap.to(obj, {
+          val: target,
+          duration,
+          ease: "power2.out",
+          onUpdate: () => {
+            el.textContent = `${prefix}${Math.round(obj.val)}${suffix}`;
+          },
+        });
+      },
+    });
+  }, [target, suffix, prefix, duration]);
+
+  return <span ref={ref}>{prefix}0{suffix}</span>;
+}
+
 function SectionDivider() {
   return (
     <div className="flex items-center justify-center py-6 px-4"
@@ -303,8 +333,7 @@ function RuleOfLifeSection() {
   return (
     <section id="rule" className="py-24 md:py-48 px-4 md:px-6 relative overflow-hidden"
       style={{ backgroundColor: C.ruleBg }}>
-      <div className="absolute inset-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at 50% 60%,rgba(201,168,76,0.04) 0%,transparent 65%)" }} />
+      <div className="section-bg-parallax section-glow absolute inset-0 pointer-events-none" />
       <div className="max-w-7xl mx-auto relative z-10 lg:px-4 xl:px-8">
         <div className="mb-16 md:mb-32 flex flex-col md:flex-row items-start md:items-end justify-between gap-8 md:gap-12">
           <div className="space-y-4 md:space-y-6">
@@ -322,18 +351,8 @@ function RuleOfLifeSection() {
           {rhythms.map((r, i) => (
             <Link key={r.title}
               to={`/rule-of-life/${r.slug}`}
-              className="manifesto-item group relative overflow-hidden rounded-2xl md:rounded-none transition-all duration-500 cursor-pointer"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)", minHeight: "320px", textDecoration: "none", display: "block" }}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = "rgba(201,168,76,0.30)";
-                e.currentTarget.style.background   = "rgba(255,255,255,0.08)";
-                e.currentTarget.style.transform    = "translateY(-5px)";
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)";
-                e.currentTarget.style.background   = "rgba(255,255,255,0.05)";
-                e.currentTarget.style.transform    = "translateY(0)";
-              }}>
+              className="manifesto-item rhythm-card group relative overflow-hidden rounded-2xl md:rounded-none cursor-pointer"
+              style={{ minHeight: "320px", textDecoration: "none", display: "block" }}>
               <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C9A84C]/50 to-transparent z-10" />
               <div className="rhythm-img-wrap absolute inset-0 z-0 opacity-35 group-hover:opacity-60 transition-opacity duration-700">
                 <SafeImg src={r.bg} alt=""
@@ -523,7 +542,7 @@ function GearBridgeSection() {
   return (
     <section className="relative py-24 md:py-40 px-6 overflow-hidden"
       style={{ backgroundColor: C.darkBg }}>
-      <div className="absolute inset-0 pointer-events-none"
+      <div className="section-bg-parallax absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 50%,rgba(201,168,76,0.05) 0%,transparent 58%)" }} />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-b from-transparent to-white/10 pointer-events-none" />
 
@@ -862,8 +881,7 @@ function Footer({ onOpenChallenge }) {
 
       <div className="footer-reveal max-w-2xl mx-auto py-16 px-6 text-center border-b border-white/[0.05]">
         <span className="text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-[#C9A84C]/60 font-bold mb-3 block">Stay in the Formation</span>
-        <h4 className="font-brand text-xl md:text-2xl uppercase tracking-[0.15em] text-white mb-4">Join the Formation</h4>
-        <p className="text-[11px] tracking-[0.3em] text-white/30 uppercase mb-4">Join 500+ in the formation</p>
+        <h4 className="font-brand text-xl md:text-2xl uppercase tracking-[0.15em] text-white mb-8">Join <AnimatedCounter target={500} suffix="+" /> in the Formation</h4>
         {!submitted ? (
           <div className="max-w-md mx-auto">
             <div className="flex flex-col sm:flex-row gap-3">
@@ -1187,19 +1205,33 @@ function MainSite() {
         gsap.from(el, { y: 40, opacity: 0, duration: 0.9, ease: "power3.out",
           scrollTrigger: { trigger: el, start: "top 90%", toggleActions: "play none none reverse" } });
       });
-      const batchReveal = (sel, y = 20) => {
+      const batchReveal = (sel, y = 20, stagger = 0.09) => {
         ScrollTrigger.batch(sel, {
           start: "top 92%",
           onEnter: batch => gsap.fromTo(batch,
             { opacity: 0, y },
-            { opacity: 1, y: 0, duration: 0.75, stagger: 0.09, ease: "power2.out", overwrite: "auto" }),
+            { opacity: 1, y: 0, duration: 0.75, stagger, ease: "power2.out", overwrite: "auto" }),
         });
       };
-      batchReveal(".manifesto-item");
-      batchReveal(".product-card", 24);
-      batchReveal(".footer-reveal", 16);
+      batchReveal(".manifesto-item", 20, 0.07);
+      batchReveal(".product-card", 24, 0.12);
+      batchReveal(".footer-reveal", 16, 0.15);
       batchReveal(".bridge-reveal", 30);
       batchReveal(".journal-card", 20);
+
+      // Parallax for section backgrounds
+      document.querySelectorAll(".section-bg-parallax").forEach(el => {
+        gsap.to(el, {
+          yPercent: -8,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el.parentElement,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      });
 
       gsap.matchMedia().add("(max-width: 767px)", () => {
         gsap.utils.toArray(".pillar-img").forEach(img => {
