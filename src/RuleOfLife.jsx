@@ -902,7 +902,6 @@ export function RhythmPage() {
         <div className="rl-hero-bg" style={{ backgroundImage: `url('${data.img}')` }} />
         <div className="rl-hero-ov" />
         <div className="rl-hero-in">
-          <img className="rl-hero-logo" src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
           <p className="rl-hero-eye">{data.rhythm} · Rule of Life</p>
           <h1 className="rl-hero-h1">{data.title}</h1>
           <p className="rl-hero-sub">{data.sub}</p>

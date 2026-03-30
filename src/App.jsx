@@ -264,10 +264,7 @@ function CinematicHero() {
           Living Counter to Culture.
         </p>
         <div ref={microcopyRef} className="mt-5 md:mt-6 max-w-sm md:max-w-2xl mx-auto px-1 opacity-0">
-          <p className="text-[11px] md:text-[11px] tracking-[0.18em] md:tracking-[0.22em] uppercase leading-loose font-light text-white/68">
-            Premium men&apos;s and women&apos;s athletic lifestyle apparel for those committed to being formed by Christ, not by the world.
-          </p>
-          <p className="mt-2 text-[11px] md:text-[9px] tracking-[0.28em] uppercase leading-loose font-light text-white/36">
+          <p className="text-[11px] md:text-[9px] tracking-[0.28em] uppercase leading-loose font-light text-white/36">
             Limited drops. Purposeful design. Disciplined faith.
           </p>
         </div>
@@ -1010,7 +1007,7 @@ function Footer({ onOpenChallenge }) {
 
       <div className="footer-reveal max-w-2xl mx-auto py-16 px-6 text-center border-b border-white/[0.05]">
         <span className="text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-[#C9A84C]/60 font-bold mb-3 block">Stay in the Formation</span>
-        <h4 className="font-brand text-xl md:text-2xl uppercase tracking-[0.15em] text-white mb-8">Join <AnimatedCounter target={500} suffix="+" /> in the Formation</h4>
+        <h4 className="font-brand text-xl md:text-2xl uppercase tracking-[0.15em] text-white mb-8">Connect with the Community</h4>
         {!submitted ? (
           <div className="max-w-md mx-auto">
             <div className="flex flex-col sm:flex-row gap-3">
@@ -1070,10 +1067,13 @@ function Footer({ onOpenChallenge }) {
         </div>
       </div>
 
-      <div className="footer-reveal border-t border-white/[0.04] py-8 pb-16 md:pb-8 px-6 flex flex-col md:flex-row items-center justify-between gap-3 max-w-7xl mx-auto">
-        <p className="text-[8px] uppercase tracking-[0.3em] opacity-20">&copy; 2026 Counter Formation</p>
-        <p className="text-[8px] uppercase tracking-[0.3em] opacity-15">Discipline · Presence · Formation</p>
-        <p className="text-[8px] uppercase tracking-[0.3em] opacity-15">Ephesians 6:10–18</p>
+      <div className="footer-reveal border-t border-white/[0.04] pt-6 pb-16 md:pb-8 px-6 flex flex-col items-center gap-3 max-w-7xl mx-auto">
+        <p className="text-[9px] uppercase tracking-[0.2em] text-white/30 text-center">Premium men&apos;s and women&apos;s athletic lifestyle apparel for those committed to being formed by Christ, not by the world.</p>
+        <div className="flex flex-col md:flex-row items-center justify-between w-full gap-3 mt-2">
+          <p className="text-[8px] uppercase tracking-[0.3em] opacity-20">&copy; 2026 Counter Formation</p>
+          <p className="text-[8px] uppercase tracking-[0.3em] opacity-15">Discipline · Presence · Formation</p>
+          <p className="text-[8px] uppercase tracking-[0.3em] opacity-15">Ephesians 6:10–18</p>
+        </div>
       </div>
     </footer>
   );
