@@ -324,6 +324,65 @@ input[type="email"] {
   .fg-meta-grid { grid-template-columns: 1fr 1fr; }
 }
 
+/* Rhythm cards - mobile swipe carousel */
+.rhythm-carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  gap: 12px;
+  padding: 0 16px;
+  scrollbar-width: none;
+}
+.rhythm-carousel::-webkit-scrollbar { display: none; }
+.rhythm-carousel > * {
+  scroll-snap-align: center;
+  flex: 0 0 82vw;
+  min-height: 340px;
+}
+
+@media (min-width: 768px) {
+  .rhythm-carousel {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    overflow: visible;
+    padding: 0;
+    scroll-snap-type: none;
+  }
+  .rhythm-carousel > * {
+    flex: unset;
+    min-height: 320px;
+  }
+}
+
+/* Field guide cards - mobile horizontal scroll */
+.fg-card-scroll {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 12px;
+  padding-bottom: 8px;
+  scrollbar-width: none;
+}
+.fg-card-scroll::-webkit-scrollbar { display: none; }
+.fg-card-scroll > * {
+  scroll-snap-align: start;
+  flex: 0 0 85vw;
+}
+
+@media (min-width: 768px) {
+  .fg-card-scroll {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    overflow: visible;
+    scroll-snap-type: none;
+    padding-bottom: 0;
+  }
+  .fg-card-scroll > * { flex: unset; }
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    LARGE DESKTOP ≥1440px
    ═══════════════════════════════════════════════════════════════════ */

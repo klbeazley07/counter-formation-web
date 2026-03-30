@@ -597,6 +597,7 @@ const TICKS_TO_RELEASE = 1;   // extra ticks on last panel before exiting
 export function ArchitectureSlider() {
   const outerRef    = useRef(null);
   const trackRef    = useRef(null);
+  const touchStartRef = useRef(null);
   const [idx, setIdx] = useState(0);
   const TOTAL = PILLARS.length;
 
@@ -756,6 +757,41 @@ export function ArchitectureSlider() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [idx, TOTAL]);
+
+  // ── Touch/swipe handling for mobile
+  useEffect(() => {
+    const el = outerRef.current;
+    if (!el) return;
+
+    const onTouchStart = (e) => {
+      touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    };
+
+    const onTouchEnd = (e) => {
+      if (!touchStartRef.current) return;
+      const dx = e.changedTouches[0].clientX - touchStartRef.current.x;
+      const dy = e.changedTouches[0].clientY - touchStartRef.current.y;
+      touchStartRef.current = null;
+
+      // Only register horizontal swipes (more horizontal than vertical, minimum 50px)
+      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+
+      if (dx < 0) {
+        // Swipe left = next
+        setIdx(prev => Math.min(prev + 1, PILLARS.length - 1));
+      } else {
+        // Swipe right = previous
+        setIdx(prev => Math.max(prev - 1, 0));
+      }
+    };
+
+    el.addEventListener('touchstart', onTouchStart, { passive: true });
+    el.addEventListener('touchend', onTouchEnd, { passive: true });
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart);
+      el.removeEventListener('touchend', onTouchEnd);
+    };
+  }, []);
 
   // ── Continue button (last panel)
   const handleContinue = useCallback(() => {
