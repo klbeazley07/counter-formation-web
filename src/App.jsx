@@ -268,28 +268,35 @@ function CinematicHero() {
             Limited drops. Purposeful design. Disciplined faith.
           </p>
         </div>
-        <div ref={ctaRef}
-          className="mt-10 md:mt-12 flex overflow-x-auto md:overflow-visible gap-4 md:gap-6 justify-start md:justify-center items-stretch w-full max-w-none px-[7.5vw] md:px-0 hero-path-scroll">
+        {/* Mobile: two compact buttons */}
+        <div ref={ctaRef} className="mt-10 md:hidden flex gap-3 justify-center px-6 opacity-0">
           <a ref={pathCard1Ref} href="#architecture"
-            className="relative flex-[0_0_85vw] md:flex-none md:w-[280px] snap-center bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm rounded-2xl p-6 md:p-8 flex flex-col items-start text-left transition-all duration-300 hover:border-[#C9A84C]/30 hover:bg-white/[0.07] group opacity-0">
+            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-white/[0.06] border border-white/[0.12] rounded-xl text-[10px] uppercase tracking-[0.18em] text-white font-bold transition-all duration-300 hover:border-[#C9A84C]/40">
+            Enter the Formation <ArrowRight size={12} className="opacity-50 shrink-0" />
+          </a>
+          <a ref={pathCard2Ref} href="#shop"
+            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-white/[0.06] border border-white/[0.12] rounded-xl text-[10px] uppercase tracking-[0.18em] text-white font-bold transition-all duration-300 hover:border-[#C9A84C]/40">
+            Shop the Gear <ArrowRight size={12} className="opacity-50 shrink-0" />
+          </a>
+        </div>
+        {/* Desktop: full cards */}
+        <div className="hidden md:flex mt-12 gap-6 justify-center items-stretch">
+          <a href="#architecture"
+            className="relative md:w-[280px] bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm rounded-2xl p-8 flex flex-col items-start text-left transition-all duration-300 hover:border-[#C9A84C]/30 hover:bg-white/[0.07] group">
             <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C9A84C]/50 to-transparent" />
-            <h3 className="font-brand text-[11px] md:text-[13px] uppercase tracking-[0.22em] text-white mb-4">
-              Enter the Formation
-            </h3>
-            <p className="text-[10px] md:text-[11px] tracking-[0.14em] uppercase leading-relaxed text-white/50 font-light">
+            <h3 className="font-brand text-[13px] uppercase tracking-[0.22em] text-white mb-4">Enter the Formation</h3>
+            <p className="text-[11px] tracking-[0.14em] uppercase leading-relaxed text-white/50 font-light">
               Architecture.<br />Practice.<br />Community.
             </p>
             <div className="mt-auto pt-6">
               <ArrowRight size={16} className="text-white/30 group-hover:text-[#C9A84C]/70 transition-colors duration-300" />
             </div>
           </a>
-          <a ref={pathCard2Ref} href="#shop"
-            className="relative flex-[0_0_85vw] md:flex-none md:w-[280px] snap-center bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm rounded-2xl p-6 md:p-8 flex flex-col items-start text-left transition-all duration-300 hover:border-[#C9A84C]/30 hover:bg-white/[0.07] group opacity-0">
+          <a href="#shop"
+            className="relative md:w-[280px] bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm rounded-2xl p-8 flex flex-col items-start text-left transition-all duration-300 hover:border-[#C9A84C]/30 hover:bg-white/[0.07] group">
             <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C9A84C]/50 to-transparent" />
-            <h3 className="font-brand text-[11px] md:text-[13px] uppercase tracking-[0.22em] text-white mb-4">
-              Shop the Gear
-            </h3>
-            <p className="text-[10px] md:text-[11px] tracking-[0.14em] uppercase leading-relaxed text-white/50 font-light">
+            <h3 className="font-brand text-[13px] uppercase tracking-[0.22em] text-white mb-4">Shop the Gear</h3>
+            <p className="text-[11px] tracking-[0.14em] uppercase leading-relaxed text-white/50 font-light">
               Apparel as anchor.<br />Limited drops.
             </p>
             <div className="mt-auto pt-6">
