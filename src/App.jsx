@@ -231,21 +231,21 @@ function CinematicHero() {
           Living Counter to Culture.
         </p>
         <div ref={microcopyRef} className="mt-5 md:mt-6 max-w-sm md:max-w-2xl mx-auto px-1 opacity-0">
-          <p className="text-[9px] md:text-[11px] tracking-[0.18em] md:tracking-[0.22em] uppercase leading-loose font-light text-white/68">
+          <p className="text-[11px] md:text-[11px] tracking-[0.18em] md:tracking-[0.22em] uppercase leading-loose font-light text-white/68">
             Premium men&apos;s and women&apos;s athletic lifestyle apparel for those committed to being formed by Christ, not by the world.
           </p>
-          <p className="mt-2 text-[8px] md:text-[9px] tracking-[0.28em] uppercase leading-loose font-light text-white/36">
+          <p className="mt-2 text-[11px] md:text-[9px] tracking-[0.28em] uppercase leading-loose font-light text-white/36">
             Limited drops. Purposeful design. Disciplined faith.
           </p>
         </div>
         <div ref={ctaRef}
           className="mt-10 md:mt-12 flex flex-col md:flex-row gap-3 md:gap-5 justify-center items-center w-full max-w-sm md:max-w-none opacity-0">
           <a href="#architecture"
-            className="w-full md:w-auto px-8 md:px-12 py-4 md:py-5 bg-white/5 text-white rounded-full text-[9px] md:text-[10px] border border-white/10 hover:border-[#C9A84C]/40 hover:text-[#C9A84C] transition-all uppercase tracking-widest font-bold">
+            className="w-full md:w-auto px-8 md:px-12 py-4 md:py-5 bg-white/5 text-white rounded-full text-[11px] md:text-[10px] border border-white/10 hover:border-[#C9A84C]/40 hover:text-[#C9A84C] transition-all uppercase tracking-widest font-bold">
             Explore the Architecture
           </a>
           <a href="#shop"
-            className="w-full md:w-auto px-8 md:px-12 py-4 md:py-5 bg-[#FAF8F5] text-black rounded-full text-[9px] md:text-[10px] border-2 border-[#C9A84C] hover:bg-[#C9A84C] transition-all flex items-center justify-center gap-3 uppercase tracking-widest font-bold shadow-[0_0_24px_rgba(201,168,76,0.18)]">
+            className="w-full md:w-auto px-8 md:px-12 py-4 md:py-5 bg-[#FAF8F5] text-black rounded-full text-[11px] md:text-[10px] border-2 border-[#C9A84C] hover:bg-[#C9A84C] transition-all flex items-center justify-center gap-3 uppercase tracking-widest font-bold shadow-[0_0_24px_rgba(201,168,76,0.18)]">
             Shop the Gear <ArrowRight size={14} />
           </a>
         </div>
@@ -257,7 +257,7 @@ function CinematicHero() {
 
       <div ref={scrollIndicatorRef}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0 pointer-events-none z-20">
-        <span className="text-[7px] uppercase tracking-[0.35em] text-white/40">Scroll</span>
+        <span className="text-[10px] uppercase tracking-[0.35em] text-white/40">Scroll</span>
         <svg width="16" height="10" viewBox="0 0 16 10" fill="none" className="text-white/35">
           <path d="M1 1L8 8L15 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
@@ -270,6 +270,17 @@ function CinematicHero() {
 
 /* ─── RULE OF LIFE ────────────────────────────────────────────────── */
 
+function CarouselDots({ count, activeIndex }) {
+  return (
+    <div className="flex justify-center gap-2 mt-6 md:hidden">
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="w-1.5 h-1.5 rounded-full transition-all duration-300"
+          style={{ backgroundColor: i === activeIndex ? '#C9A84C' : 'rgba(255,255,255,0.2)' }} />
+      ))}
+    </div>
+  );
+}
+
 function RuleOfLifeSection() {
   const rhythms = [
     { title: "Presence",  desc: "Attention before God",    slug: "presence",  bg: "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=600" },
@@ -279,6 +290,28 @@ function RuleOfLifeSection() {
     { title: "Community", desc: "Formation together",       slug: "community", bg: "/Community_8k.png" },
   ];
 
+  const [activeRhythm, setActiveRhythm] = useState(0);
+  const carouselRef = useRef(null);
+
+  useEffect(() => {
+    if (window.innerWidth >= 768) return;
+    const cards = carouselRef.current?.children;
+    if (!cards) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const idx = Array.from(cards).indexOf(entry.target);
+            if (idx >= 0) setActiveRhythm(idx);
+          }
+        });
+      },
+      { root: carouselRef.current, threshold: 0.6 }
+    );
+    Array.from(cards).forEach(card => observer.observe(card));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section id="rule" className="py-24 md:py-48 px-4 md:px-6 relative overflow-hidden"
       style={{ backgroundColor: C.ruleBg }}>
@@ -287,7 +320,7 @@ function RuleOfLifeSection() {
       <div className="max-w-7xl mx-auto relative z-10 lg:px-4 xl:px-8">
         <div className="mb-16 md:mb-32 flex flex-col md:flex-row items-start md:items-end justify-between gap-8 md:gap-12">
           <div className="space-y-4 md:space-y-6">
-            <span className="text-[8px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] md:tracking-[0.5em] uppercase font-bold">The Pattern</span>
+            <span className="text-[11px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] md:tracking-[0.5em] uppercase font-bold">The Pattern</span>
             <h2 className="font-brand text-3xl md:text-7xl uppercase tracking-[0.1em] md:tracking-[0.12em] text-white leading-none">
               Rule of Life
             </h2>
@@ -297,7 +330,7 @@ function RuleOfLifeSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-5">
+        <div ref={carouselRef} className="rhythm-carousel">
           {rhythms.map((r, i) => (
             <Link key={r.title}
               to={`/rule-of-life/${r.slug}`}
@@ -322,16 +355,17 @@ function RuleOfLifeSection() {
                 style={{ background: `linear-gradient(to top,${C.ruleBg},${C.ruleBg}88 55%,${C.ruleBg}26)` }} />
               <div className="relative z-10 p-6 md:p-8 flex flex-col justify-between" style={{ minHeight: "320px" }}>
                 <div className="space-y-3">
-                  <span className="block font-mono text-[8px] text-[#C9A84C]/70 tracking-[0.3em] group-hover:text-[#C9A84C] transition-colors">
+                  <span className="block font-mono text-[11px] text-[#C9A84C]/70 tracking-[0.3em] group-hover:text-[#C9A84C] transition-colors">
                     RHYTHM 0{i + 1}
                   </span>
                   <h3 className="font-brand text-base md:text-xl uppercase tracking-[0.1em] text-white">{r.title}</h3>
                 </div>
-                <p className="text-[10px] md:text-xs opacity-60 tracking-wide leading-relaxed font-light mt-6">{r.desc}</p>
+                <p className="text-[12px] md:text-xs opacity-60 tracking-wide leading-relaxed font-light mt-6">{r.desc}</p>
               </div>
             </Link>
           ))}
         </div>
+        <CarouselDots count={5} activeIndex={activeRhythm} />
       </div>
     </section>
   );
@@ -374,7 +408,7 @@ function LightTransition() {
         <p className="font-brand text-sm md:text-xl uppercase tracking-[0.38em]" style={{ color: "#2A2018" }}>
           Formation begins in the light.
         </p>
-        <div className="mt-4 text-[9px] uppercase tracking-[0.38em] opacity-40" style={{ color: "#2A2018" }}>
+        <div className="mt-4 text-[11px] uppercase tracking-[0.38em] opacity-40" style={{ color: "#2A2018" }}>
           Romans 12:2
         </div>
       </div>
@@ -433,7 +467,7 @@ function FieldGuideSection() {
       <div className="max-w-7xl mx-auto relative z-10 lg:px-4 xl:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-8">
           <div className="space-y-4 md:space-y-6">
-            <span className="text-[8px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] md:tracking-[0.5em] uppercase font-bold">
+            <span className="text-[11px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] md:tracking-[0.5em] uppercase font-bold">
               Dispatches from the Field
             </span>
             <h2 className="font-brand text-3xl md:text-7xl uppercase tracking-[0.1em] md:tracking-[0.12em] text-white leading-none">
@@ -446,7 +480,7 @@ function FieldGuideSection() {
               Each release opens a deeper layer of scripture, discipline, and daily rhythm designed to shape a different kind of life.
             </p>
           </div>
-          <Link to={FG_BASE} className="self-start md:self-auto text-[9px] md:text-[10px] text-[#C9A84C] border border-white/10 px-6 md:px-8 py-3 hover:bg-white/5 transition-all whitespace-nowrap rounded-full uppercase tracking-[0.22em] font-bold">
+          <Link to={FG_BASE} className="self-start md:self-auto text-[11px] md:text-[10px] text-[#C9A84C] border border-white/10 px-6 md:px-8 py-3 hover:bg-white/5 transition-all whitespace-nowrap rounded-full uppercase tracking-[0.22em] font-bold">
             Explore Archive
           </Link>
         </div>
@@ -464,7 +498,7 @@ function FieldGuideSection() {
             <div className="absolute inset-0 bg-gradient-to-t from-[#111009] via-[#11100966] to-transparent" />
             <div className="absolute top-0 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-[#C9A84C]/60 to-transparent" />
             <div className="relative z-10 h-full flex flex-col justify-end p-8 md:p-10">
-              <div className="flex items-center gap-3 text-[8px] md:text-[9px] uppercase tracking-[0.28em] mb-4">
+              <div className="flex items-center gap-3 text-[11px] md:text-[9px] uppercase tracking-[0.28em] mb-4">
                 <span className="text-[#C9A84C]">{featured.type}</span>
                 <span className="text-white/20">·</span>
                 <span className="text-white/35">{featured.rhythm}</span>
@@ -477,13 +511,13 @@ function FieldGuideSection() {
               <p className="mt-5 text-[11px] md:text-[12px] leading-relaxed text-white/50 max-w-md">
                 {featured.desc}
               </p>
-              <div className="mt-8 inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.22em] font-bold text-[#C9A84C]">
+              <div className="mt-8 inline-flex items-center gap-3 text-[12px] uppercase tracking-[0.22em] font-bold text-[#C9A84C]">
                 {featured.isLink ? "Open Guide" : "Enter the Rhythm"} <ArrowRight size={14} />
               </div>
             </div>
           </Link>
 
-          <div className="grid grid-cols-1 gap-6">
+          <div className="fg-card-scroll">
             {secondary.map((art, i) => {
               const CardTag = art.isLink ? Link : "a";
               const cardProps = art.isLink ? { to: art.href } : { href: art.href };
@@ -497,7 +531,7 @@ function FieldGuideSection() {
                     </div>
                     <div className="p-6 md:p-7 flex flex-col justify-between">
                       <div>
-                        <div className="flex items-center gap-3 text-[8px] uppercase tracking-[0.28em] mb-3">
+                        <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.28em] mb-3">
                           <span className="text-[#C9A84C]">{art.type}</span>
                           <span className="text-white/20">·</span>
                           <span className="text-white/25">{art.date}</span>
@@ -505,11 +539,11 @@ function FieldGuideSection() {
                         <h3 className="font-brand text-xl md:text-2xl uppercase tracking-[0.08em] text-white leading-snug">
                           {art.title}
                         </h3>
-                        <p className="mt-3 text-[10px] md:text-[11px] leading-relaxed text-white/45">
+                        <p className="mt-3 text-[12px] md:text-[11px] leading-relaxed text-white/45">
                           {art.desc}
                         </p>
                       </div>
-                      <div className="pt-5 flex items-center gap-2 text-[9px] text-[#C9A84C] uppercase tracking-[0.22em] font-bold">
+                      <div className="pt-5 flex items-center gap-2 text-[11px] text-[#C9A84C] uppercase tracking-[0.22em] font-bold">
                         {art.isLink ? "Open Guide" : "Coming Next"} <ArrowRight size={12} />
                       </div>
                     </div>
@@ -540,7 +574,7 @@ function GearBridgeSection() {
 
       <div className="relative z-10 max-w-5xl mx-auto">
         <div className="text-center mb-16 md:mb-20 bridge-reveal">
-          <p className="text-[9px] md:text-[10px] uppercase tracking-[0.5em] text-[#C9A84C]/70 font-bold mb-8">
+          <p className="text-[11px] md:text-[10px] uppercase tracking-[0.5em] text-[#C9A84C]/70 font-bold mb-8">
             On the Gear
           </p>
           <h2 className="font-brand text-4xl md:text-6xl lg:text-7xl uppercase leading-none tracking-[0.15em] md:tracking-[0.18em] text-white mb-5">
@@ -554,13 +588,13 @@ function GearBridgeSection() {
 
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 md:gap-16 bridge-reveal">
           <div className="space-y-4 max-w-xl text-center md:text-left">
-            <span className="text-[9px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] uppercase font-bold">
+            <span className="text-[11px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] uppercase font-bold">
               Linked to the Gear
             </span>
             <p className="text-xs md:text-sm text-white/45 leading-relaxed">
               Every release unlocks a hub of formation content — devotion, practice, reflection, video, and challenge — accessed through QR touchpoints built into the gear itself.
             </p>
-            <div className="flex items-center justify-center md:justify-start gap-3 md:gap-2 text-[10px] uppercase tracking-[0.26em] text-white/30 font-bold pt-2">
+            <div className="flex items-center justify-center md:justify-start gap-3 md:gap-2 text-[12px] uppercase tracking-[0.26em] text-white/30 font-bold pt-2">
               <span>Gear</span>
               <span className="text-[#C9A84C]">→</span>
               <span>QR</span>
@@ -585,7 +619,7 @@ function GearBridgeSection() {
                 }}
               />
             </div>
-            <span className="text-[7px] uppercase tracking-[0.3em] text-white/20">Scan to access</span>
+            <span className="text-[10px] uppercase tracking-[0.3em] text-white/20">Scan to access</span>
           </div>
         </div>
 
@@ -656,7 +690,7 @@ function GearSection() {
         <div className="max-w-7xl mx-auto relative z-10 text-[#0D0D12]">
           <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 md:gap-12 mb-10 md:mb-14 pt-4">
             <div className="max-w-3xl">
-              <p className="text-[9px] md:text-[10px] uppercase tracking-[0.38em] text-black/45 font-bold mb-4">
+              <p className="text-[11px] md:text-[10px] uppercase tracking-[0.38em] text-black/45 font-bold mb-4">
                 Built with purpose. Worn as a reminder.
               </p>
               <h2 className="font-brand text-4xl md:text-7xl uppercase tracking-[0.08em]">The Gear</h2>
@@ -666,7 +700,7 @@ function GearSection() {
                 const isActive = active === key;
                 return (
                   <button key={key} onClick={() => switchTab(key)}
-                    className="relative px-5 py-2 rounded-full text-[9px] md:text-[10px] uppercase tracking-[0.22em] font-bold transition-all duration-300"
+                    className="relative px-5 py-2 rounded-full text-[11px] md:text-[10px] uppercase tracking-[0.22em] font-bold transition-all duration-300"
                     style={{ background: isActive ? "#0D0D12" : "transparent", color: isActive ? t.accent : "rgba(13,13,18,0.45)", boxShadow: isActive ? "0 2px 12px rgba(0,0,0,0.18)" : "none" }}>
                     {t.sublabel}
                     {isActive && <span className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full" style={{ backgroundColor: t.accent }} />}
@@ -680,7 +714,7 @@ function GearSection() {
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-8 md:mb-10">
               <div className="flex items-center gap-3 flex-wrap">
                 {active === "women" && (
-                  <span className="text-[8px] uppercase tracking-[0.38em] font-bold px-3 py-1 rounded-full"
+                  <span className="text-[11px] uppercase tracking-[0.38em] font-bold px-3 py-1 rounded-full"
                     style={{ background: "rgba(143,175,138,0.15)", color: "#8FAF8A", border: "1px solid rgba(143,175,138,0.25)" }}>
                     Collective
                   </span>
@@ -690,10 +724,10 @@ function GearSection() {
                   {tab.phrase}
                 </p>
               </div>
-              <p className="text-[8px] md:text-[10px] uppercase tracking-[0.22em] opacity-40 font-bold">{tab.sub}</p>
+              <p className="text-[11px] md:text-[10px] uppercase tracking-[0.22em] opacity-40 font-bold">{tab.sub}</p>
             </div>
 
-            <p className="text-[9px] md:text-[10px] uppercase tracking-[0.18em] md:tracking-[0.22em] opacity-42 leading-loose max-w-xl mb-10 md:mb-12">
+            <p className="text-[11px] md:text-[10px] uppercase tracking-[0.18em] md:tracking-[0.22em] opacity-42 leading-loose max-w-xl mb-10 md:mb-12">
               Designed as a reminder: you are being formed every day.
             </p>
 
@@ -709,16 +743,16 @@ function GearSection() {
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
                     {active === "women" && cat.phrase && (
-                      <div className="absolute top-5 left-5 text-[7px] uppercase tracking-[0.32em] font-bold"
+                      <div className="absolute top-5 left-5 text-[10px] uppercase tracking-[0.32em] font-bold"
                         style={{ color: "rgba(143,175,138,0.55)" }}>{cat.phrase}</div>
                     )}
                     <div className="relative z-10 h-full p-8 md:p-12 flex flex-col justify-end text-white">
                       <h3 className="font-brand text-2xl md:text-4xl uppercase italic">{cat.name}</h3>
-                      <p className="text-[9px] md:text-[10px] opacity-60 uppercase mt-2 tracking-widest">{cat.copy}</p>
+                      <p className="text-[11px] md:text-[10px] opacity-60 uppercase mt-2 tracking-widest">{cat.copy}</p>
                       {cat.comingSoon ? (
-                        <p className="text-[8px] tracking-widest uppercase mt-3 font-bold" style={{ color: `${tab.accent}99` }}>Coming Soon</p>
+                        <p className="text-[11px] tracking-widest uppercase mt-3 font-bold" style={{ color: `${tab.accent}99` }}>Coming Soon</p>
                       ) : (
-                        <div className="flex items-center gap-3 text-[9px] pt-4 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: tab.accent }}>
+                        <div className="flex items-center gap-3 text-[11px] pt-4 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: tab.accent }}>
                           Shop <ArrowRight size={14} />
                         </div>
                       )}
@@ -730,8 +764,8 @@ function GearSection() {
 
             {active === "women" && (
               <div className="mt-12 md:mt-16 text-center">
-                <p className="text-[9px] uppercase tracking-[0.32em] font-bold mb-2" style={{ color: "rgba(143,175,138,0.65)" }}>The Collective</p>
-                <p className="text-[10px] md:text-xs opacity-40 tracking-[0.14em] max-w-sm mx-auto leading-relaxed" style={{ color: "#2A3A28" }}>
+                <p className="text-[11px] uppercase tracking-[0.32em] font-bold mb-2" style={{ color: "rgba(143,175,138,0.65)" }}>The Collective</p>
+                <p className="text-[12px] md:text-xs opacity-40 tracking-[0.14em] max-w-sm mx-auto leading-relaxed" style={{ color: "#2A3A28" }}>
                   Same Rule. Different expression. Strength, rooted in light.
                 </p>
               </div>
@@ -773,20 +807,20 @@ function Footer({ onOpenChallenge }) {
   return (
     <footer style={{ backgroundColor: C.darkBg }} className="border-t border-white/[0.06]">
       <div className="footer-reveal max-w-5xl mx-auto pt-24 md:pt-40 pb-16 md:pb-24 px-6 text-center border-b border-white/[0.05]">
-        <p className="text-[9px] md:text-[10px] uppercase tracking-[0.5em] text-[#C9A84C]/60 mb-8 font-bold">The Mission</p>
+        <p className="text-[11px] md:text-[10px] uppercase tracking-[0.5em] text-[#C9A84C]/60 mb-8 font-bold">The Mission</p>
         <h3 className="font-brand text-4xl md:text-6xl lg:text-7xl uppercase tracking-[0.12em] md:tracking-[0.16em] leading-none text-white mb-3">
           Formed in Christ.
         </h3>
         <h3 className="font-brand text-xl md:text-3xl lg:text-4xl uppercase tracking-[0.12em] leading-none text-white/20 mb-10">
           Not drifting.
         </h3>
-        <p className="text-[9px] md:text-xs opacity-35 tracking-[0.25em] uppercase max-w-sm mx-auto leading-loose">
+        <p className="text-[11px] md:text-xs opacity-35 tracking-[0.25em] uppercase max-w-sm mx-auto leading-loose">
           Intentional formation in a world designed for drift.
         </p>
       </div>
 
       <div className="footer-reveal max-w-2xl mx-auto py-16 px-6 text-center border-b border-white/[0.05]">
-        <span className="text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-[#C9A84C]/60 font-bold mb-3 block">Stay in the Formation</span>
+        <span className="text-[11px] md:text-[9px] uppercase tracking-[0.4em] text-[#C9A84C]/60 font-bold mb-3 block">Stay in the Formation</span>
         <h4 className="font-brand text-xl md:text-2xl uppercase tracking-[0.15em] text-white mb-8">Join the Formation</h4>
         {!submitted ? (
           <div className="max-w-md mx-auto">
@@ -803,19 +837,19 @@ function Footer({ onOpenChallenge }) {
                 onBlur={e  => e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)"}
               />
               <button onClick={handleSubmit} disabled={loading}
-                className="px-8 py-4 rounded-full text-[10px] uppercase tracking-widest font-bold transition-all whitespace-nowrap border hover:bg-[#C9A84C] hover:text-black hover:border-[#C9A84C] disabled:opacity-50"
+                className="px-8 py-4 rounded-full text-[12px] uppercase tracking-widest font-bold transition-all whitespace-nowrap border hover:bg-[#C9A84C] hover:text-black hover:border-[#C9A84C] disabled:opacity-50"
                 style={{ background: "rgba(255,255,255,0.06)", borderColor: "rgba(255,255,255,0.12)", color: C.ivory }}>
                 {loading ? "..." : "Join"}
               </button>
             </div>
             {error && (
-              <p className="mt-3 text-[10px] uppercase tracking-[0.2em] text-red-400">{error}</p>
+              <p className="mt-3 text-[12px] uppercase tracking-[0.2em] text-red-400">{error}</p>
             )}
           </div>
         ) : (
-          <p className="text-[10px] uppercase tracking-[0.35em] text-[#C9A84C]">You're in. Weekly field notes incoming.</p>
+          <p className="text-[12px] uppercase tracking-[0.35em] text-[#C9A84C]">You're in. Weekly field notes incoming.</p>
         )}
-        <p className="mt-4 text-[8px] uppercase tracking-[0.3em] text-white/20">Weekly field notes. No noise.</p>
+        <p className="mt-4 text-[11px] uppercase tracking-[0.3em] text-white/20">Weekly field notes. No noise.</p>
       </div>
 
       <div className="footer-reveal max-w-7xl mx-auto py-14 px-6 grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-20">
@@ -824,11 +858,11 @@ function Footer({ onOpenChallenge }) {
             <SafeImg src="/helmet.png" className="w-10 h-10 md:w-12 md:h-12 object-contain flex-shrink-0" alt="" />
             <span className="font-brand text-base md:text-lg text-[#C9A84C]">Counter Formation</span>
           </div>
-          <p className="text-[9px] uppercase tracking-widest opacity-30 leading-relaxed max-w-[180px]">
+          <p className="text-[11px] uppercase tracking-widest opacity-30 leading-relaxed max-w-[180px]">
             Formed in Christ.<br />Living counter to culture.
           </p>
         </div>
-        <div className="space-y-4 text-[9px] tracking-widest">
+        <div className="space-y-4 text-[11px] tracking-widest">
           <span className="text-[#C9A84C] opacity-60 uppercase block mb-5">Navigate</span>
           {[["Mission","#architecture"],["Rule of Life","#rule"],["Field Guide","#field-guide"],["The Gear","#shop"]].map(([l,h]) => (
             <a key={l} href={h} className="block opacity-35 hover:opacity-70 hover:text-white transition-all">{l}</a>
@@ -841,21 +875,21 @@ function Footer({ onOpenChallenge }) {
             7-Day Challenge
           </button>
         </div>
-        <div className="space-y-4 text-[9px] tracking-widest">
+        <div className="space-y-4 text-[11px] tracking-widest">
           <span className="text-[#C9A84C] opacity-60 uppercase block mb-5">Connect</span>
           <a href="#" className="block opacity-35 hover:opacity-70 hover:text-white transition-all">Instagram</a>
           <a href="#" className="block opacity-35 hover:opacity-70 hover:text-white transition-all">Email</a>
         </div>
-        <div className="space-y-4 text-[9px] tracking-widest">
+        <div className="space-y-4 text-[11px] tracking-widest">
           <span className="text-[#C9A84C] opacity-60 uppercase block mb-5">Shop</span>
           <a href={SHOPIFY_URL} className="block opacity-35 hover:opacity-70 hover:text-white transition-all">All Gear</a>
         </div>
       </div>
 
-      <div className="footer-reveal border-t border-white/[0.04] py-8 px-6 flex flex-col md:flex-row items-center justify-between gap-3 max-w-7xl mx-auto">
-        <p className="text-[8px] uppercase tracking-[0.3em] opacity-20">&copy; 2026 Counter Formation</p>
-        <p className="text-[8px] uppercase tracking-[0.3em] opacity-15">Discipline · Presence · Formation</p>
-        <p className="text-[8px] uppercase tracking-[0.3em] opacity-15">Ephesians 6:10–18</p>
+      <div className="footer-reveal border-t border-white/[0.04] py-8 pb-16 md:pb-8 px-6 flex flex-col md:flex-row items-center justify-between gap-3 max-w-7xl mx-auto">
+        <p className="text-[11px] uppercase tracking-[0.3em] opacity-20">&copy; 2026 Counter Formation</p>
+        <p className="text-[11px] uppercase tracking-[0.3em] opacity-15">Discipline · Presence · Formation</p>
+        <p className="text-[11px] uppercase tracking-[0.3em] opacity-15">Ephesians 6:10–18</p>
       </div>
     </footer>
   );
@@ -968,7 +1002,7 @@ function ChallengeModal({ open, onClose }) {
           </button>
 
           <div className="px-6 py-16 text-center md:px-12 md:py-20">
-            <span className="mb-6 block text-[8px] md:text-[10px] font-bold uppercase tracking-[0.5em] text-[#C9A84C]">
+            <span className="mb-6 block text-[11px] md:text-[10px] font-bold uppercase tracking-[0.5em] text-[#C9A84C]">
               The Entry Point
             </span>
             <h2
@@ -982,7 +1016,7 @@ function ChallengeModal({ open, onClose }) {
             <p className="mt-6 font-brand text-lg italic lowercase text-white/28 md:text-2xl">
               7 days. a new pattern.
             </p>
-            <p className="mx-auto mt-8 max-w-lg text-[10px] md:text-xs font-light uppercase tracking-[0.18em] leading-loose text-white/42">
+            <p className="mx-auto mt-8 max-w-lg text-[12px] md:text-xs font-light uppercase tracking-[0.18em] leading-loose text-white/42">
               A structured initiation into intentional living. One practice per day. No noise.
             </p>
 
@@ -1006,31 +1040,31 @@ function ChallengeModal({ open, onClose }) {
                     type="button"
                     onClick={handleSubmit}
                     disabled={loading}
-                    className="flex items-center justify-center gap-2 rounded-full bg-[#C9A84C] px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-black transition-all hover:bg-[#FAF8F5] disabled:opacity-50"
+                    className="flex items-center justify-center gap-2 rounded-full bg-[#C9A84C] px-8 py-4 text-[12px] font-bold uppercase tracking-widest text-black transition-all hover:bg-[#FAF8F5] disabled:opacity-50"
                   >
                     {loading ? "..." : <><span>Begin</span> <ArrowRight size={13} /></>}
                   </button>
                 </div>
                 {error && (
-                  <p className="mt-3 text-[10px] uppercase tracking-[0.2em] text-red-400">{error}</p>
-                )}
+                  <p className="mt-3 text-[12px] uppercase tracking-[0.2em] text-red-400">{error}</p>
+)}
               </div>
             ) : (
               <div className="mt-10">
                 <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.38em] text-[#C9A84C]">You're in.</p>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-white/40">Check your inbox. Day 1 begins now.</p>
+                <p className="text-[12px] uppercase tracking-[0.2em] text-white/40">Check your inbox. Day 1 begins now.</p>
                 <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
                   <Link
                     to="/7-day-challenge"
                     onClick={onClose}
-                    className="inline-flex items-center gap-2 rounded-full bg-[#C9A84C] px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-black transition-all hover:bg-[#FAF8F5]"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#C9A84C] px-8 py-4 text-[12px] font-bold uppercase tracking-widest text-black transition-all hover:bg-[#FAF8F5]"
                   >
                     Begin Now <ArrowRight size={13} />
                   </Link>
                   <button
                     type="button"
                     onClick={onClose}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/10 px-7 py-4 text-[10px] font-bold uppercase tracking-widest text-white/70 transition-all hover:border-[#C9A84C]/40 hover:text-[#C9A84C]"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/10 px-7 py-4 text-[12px] font-bold uppercase tracking-widest text-white/70 transition-all hover:border-[#C9A84C]/40 hover:text-[#C9A84C]"
                   >
                     Keep Exploring
                   </button>
@@ -1038,7 +1072,7 @@ function ChallengeModal({ open, onClose }) {
               </div>
             )}
 
-            <p className="mt-10 text-[8px] uppercase tracking-[0.35em] text-white/18">Ephesians 6:10-18</p>
+            <p className="mt-10 text-[11px] uppercase tracking-[0.35em] text-white/18">Ephesians 6:10-18</p>
           </div>
         </div>
       </div>
@@ -1067,7 +1101,7 @@ function FloatingChallengeTrigger({ onOpenChallenge }) {
       <button
         type="button"
         onClick={onOpenChallenge}
-        className="flex items-center gap-3 rounded-full border-0 px-5 py-3 text-[10px] font-bold uppercase tracking-[0.22em] text-black transition-all hover:scale-105"
+        className="flex items-center gap-3 rounded-full border-0 px-5 py-3 text-[12px] font-bold uppercase tracking-[0.22em] text-black transition-all hover:scale-105"
         style={{ backgroundColor: C.gold, boxShadow: "0 4px 32px rgba(201,168,76,0.35)" }}>
         Begin the 7-Day Challenge <ChevronRight size={13} />
       </button>
@@ -1079,6 +1113,46 @@ function FloatingChallengeTrigger({ onOpenChallenge }) {
         <X size={12} />
       </button>
     </div>
+  );
+}
+
+/* ─── MOBILE BOTTOM NAV ──────────────────────────────────────────── */
+
+function MobileBottomNav({ onOpenChallenge }) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setVisible(window.scrollY > window.innerHeight * 0.8);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  return (
+    <nav className={`fixed bottom-0 left-0 right-0 z-[90] md:hidden transition-transform duration-300 ${visible ? 'translate-y-0' : 'translate-y-full'}`}
+      style={{ backgroundColor: 'rgba(14,12,10,0.95)', backdropFilter: 'blur(20px)', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="flex items-center justify-around h-14 px-2">
+        <a href="#shop" className="flex flex-col items-center gap-1 text-white/50 hover:text-[#C9A84C] transition-colors">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <span className="text-[11px] tracking-wider uppercase">Shop</span>
+        </a>
+        <a href="#architecture" className="flex flex-col items-center gap-1 text-white/50 hover:text-[#C9A84C] transition-colors">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+          </svg>
+          <span className="text-[11px] tracking-wider uppercase">Formation</span>
+        </a>
+        <button onClick={onOpenChallenge} className="flex flex-col items-center gap-1 text-[#C9A84C]/70 hover:text-[#C9A84C] transition-colors">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+          </svg>
+          <span className="text-[11px] tracking-wider uppercase">Challenge</span>
+        </button>
+      </div>
+    </nav>
   );
 }
 
@@ -1153,7 +1227,7 @@ function MainSite() {
         style={{ backgroundColor: `${C.darkBg}cc` }}>
         <a href="#top" className="flex items-center gap-2 md:gap-3">
           <SafeImg src="/helmet.png" className="w-8 h-8 md:w-10 md:h-10 object-contain flex-shrink-0" alt="Counter Formation" />
-          <span className="font-brand text-[9px] md:text-sm tracking-[0.2em] md:tracking-[0.28em] uppercase whitespace-nowrap">
+          <span className="font-brand text-[11px] md:text-sm tracking-[0.2em] md:tracking-[0.28em] uppercase whitespace-nowrap">
             Counter Formation
           </span>
         </a>
@@ -1167,7 +1241,7 @@ function MainSite() {
             ))}
           </div>
           <a href="#shop"
-            className="px-4 py-2 md:px-6 md:py-2 bg-white text-black rounded-full text-[9px] md:text-[10px] hidden md:block hover:bg-[#C9A84C] transition-all uppercase tracking-widest font-bold">
+            className="px-4 py-2 md:px-6 md:py-2 bg-white text-black rounded-full text-[11px] md:text-[10px] hidden md:block hover:bg-[#C9A84C] transition-all uppercase tracking-widest font-bold">
             Shop the Gear
           </a>
           <button onClick={() => setIsMenuOpen(v => !v)} className="md:hidden p-1" aria-label="Toggle menu">
@@ -1189,7 +1263,7 @@ function MainSite() {
           </a>
         ))}
         <a href={SHOPIFY_URL}
-          className="text-[10px] text-[#C9A84C] tracking-widest uppercase border border-[#C9A84C]/20 px-8 py-3 rounded-full">
+          className="text-[12px] text-[#C9A84C] tracking-widest uppercase border border-[#C9A84C]/20 px-8 py-3 rounded-full">
           Enter Store
         </a>
       </div>
@@ -1206,6 +1280,7 @@ function MainSite() {
       <GearSection />
       <Footer onOpenChallenge={openChallenge} />
       <FloatingChallengeTrigger onOpenChallenge={openChallenge} />
+      <MobileBottomNav onOpenChallenge={openChallenge} />
     </div>
   );
 }
