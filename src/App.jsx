@@ -227,7 +227,7 @@ function CinematicHero() {
       style={{ backgroundColor: C.heroBg }}>
       {/* Hero background image */}
       <div className="absolute inset-0"
-        style={{ backgroundImage: "url('/Hero_mountaintop_widescreen.png')", backgroundSize: "cover", backgroundPosition: "center 30%", backgroundRepeat: "no-repeat" }} />
+        style={{ backgroundImage: "url('/Hero_mountaintop_widescreen.png')", backgroundSize: "150%", backgroundPosition: "center 40%", backgroundRepeat: "no-repeat" }} />
       <div className="absolute inset-0"
         style={{ background: "linear-gradient(to bottom, rgba(2,3,8,0.55) 0%, rgba(2,3,8,0.35) 40%, rgba(2,3,8,0.75) 100%)" }} />
       <div className="absolute inset-0"
