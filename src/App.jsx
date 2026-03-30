@@ -572,6 +572,98 @@ function FieldGuideSection() {
 
 /* ─── 7-DAY CHALLENGE ─────────────────────────────────────────────── */
 
+function QRAnimation() {
+  const stageRef = useRef(null);
+  const goRef    = useRef(false);
+
+  const runAnim = async () => {
+    if (goRef.current) return;
+    goRef.current = true;
+    const s = stageRef.current;
+    if (!s) return;
+
+    const shirt = s.querySelector('.qra-shirt');
+    const ring  = s.querySelector('.qra-ring');
+    const conn  = s.querySelector('.qra-conn');
+    const phone = s.querySelector('.qra-phone');
+    const scan  = s.querySelector('.qra-scan');
+    const ipc   = s.querySelector('.qra-content');
+
+    // reset
+    shirt.className = 'qra-shirt';
+    ring.classList.remove('pop');
+    conn.classList.remove('ext');
+    phone.classList.remove('in');
+    scan.classList.remove('go');
+    ipc.classList.remove('rev');
+
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    await w(300);
+    shirt.classList.add('vis');
+    await w(1200);
+    shirt.classList.add('zoom');
+    await w(1600);
+    ring.classList.add('pop');
+    await w(1200);
+    conn.classList.add('ext'); phone.classList.add('in');
+    await w(600);
+    scan.classList.add('go');
+    await w(1600);
+    ipc.classList.add('rev');
+    await w(3000);
+    // hold final state — no loop
+  };
+
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        obs.disconnect();
+        runAnim();
+      }
+    }, { threshold: 0.4 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div ref={stageRef} className="qra-stage">
+      {/* Shirt */}
+      <div className="qra-shirt">
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          <img src="/DriFit_White_no background.png" alt="Technical Tee" />
+          <div className="qra-ring" />
+        </div>
+      </div>
+      {/* Connector */}
+      <div className="qra-conn">
+        <div className="qra-conn-line" />
+        <div className="qra-conn-dots"><i></i><i></i><i></i></div>
+      </div>
+      {/* Phone */}
+      <div className="qra-phone">
+        <div className="qra-ip">
+          <div className="qra-notch" />
+          <div className="qra-scan" />
+          <div className="qra-content">
+            <div className="qra-eye">Daily formation</div>
+            <div className="qra-head">Scripture<br />Before Scroll</div>
+            <div className="qra-rows">
+              <div className="qra-row"><div className="qra-dot" style={{ background: '#c9a84c' }} /><div className="qra-rl">Devotion</div></div>
+              <div className="qra-row"><div className="qra-dot" style={{ background: '#8a7a5a' }} /><div className="qra-rl">Practice</div></div>
+              <div className="qra-row"><div className="qra-dot" style={{ background: '#5a5548' }} /><div className="qra-rl">Reflection</div></div>
+              <div className="qra-row"><div className="qra-dot" style={{ background: '#3a3830' }} /><div className="qra-rl">Community</div></div>
+            </div>
+            <div className="qra-cta">Begin today's practice</div>
+          </div>
+          <div className="qra-home" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function GearBridgeSection() {
   return (
     <section className="relative py-24 md:py-40 px-6 overflow-hidden"
@@ -613,21 +705,8 @@ function GearBridgeSection() {
             </div>
           </div>
 
-          <div className="shrink-0 flex flex-col items-center gap-3">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              {/* QR routes directly to the Field Guide landing page */}
-              <img
-                src="/qr-field-guide.png"
-                alt="Field Guide QR code"
-                className="w-24 h-24 md:w-28 md:h-28 opacity-70"
-                loading="lazy"
-                onError={e => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fcounterformed.com${FG_BASE}`;
-                }}
-              />
-            </div>
-            <span className="text-[10px] uppercase tracking-[0.3em] text-white/20">Scan to access</span>
+          <div className="shrink-0 w-full md:w-[420px]">
+            <QRAnimation />
           </div>
         </div>
 
@@ -696,15 +775,30 @@ function DroppingSoonStrip({ products, accent, accentMuted }) {
     <div className="flex gap-4 overflow-x-auto pb-4 -mx-2 px-2" style={{ scrollSnapType: "x mandatory", scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}>
       {products.map(product => (
         <div key={product.slug}
-          className="flex-shrink-0 w-[200px] md:w-[220px] rounded-2xl border border-white/[0.06] flex flex-col p-5"
+          className="flex-shrink-0 w-[200px] md:w-[220px] rounded-2xl border border-white/[0.06] flex flex-col overflow-hidden"
           style={{ aspectRatio: "3/4", scrollSnapAlign: "center", animation: "breathe 4s ease-in-out infinite" }}>
-          {/* Silhouette area */}
-          <div className="flex-1 flex items-center justify-center">
-            <div className="w-16 h-20 rounded-lg"
-              style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.03), rgba(255,255,255,0.01))" }} />
+          {/* Image or silhouette area */}
+          <div className="relative flex-1 flex items-center justify-center overflow-hidden">
+            {product.img && product.img !== "/placeholder.png" ? (
+              <img
+                src={product.img}
+                alt={product.name}
+                className="w-full h-full object-cover opacity-60"
+                loading="lazy"
+              />
+            ) : (
+              <div className="w-16 h-20 rounded-lg"
+                style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.03), rgba(255,255,255,0.01))" }} />
+            )}
+            {/* Dropping soon flag */}
+            <span className="absolute top-3 right-3 text-[9px] tracking-[0.25em] uppercase px-2 py-1 rounded-full"
+              style={{ background: "rgba(201,168,76,0.12)", color: "rgba(201,168,76,0.7)", border: "1px solid rgba(201,168,76,0.2)" }}>
+              Soon
+            </span>
           </div>
 
           {/* Product name */}
+          <div className="p-4 pb-3">
           <p className="text-[11px] font-brand uppercase tracking-wider text-white/70 mb-3">
             {product.name}
           </p>
@@ -744,6 +838,7 @@ function DroppingSoonStrip({ products, accent, accentMuted }) {
               Notify Me
             </button>
           )}
+          </div>
         </div>
       ))}
     </div>
@@ -1384,8 +1479,8 @@ function MainSite() {
       <ArchitectureSlider />
       <SectionDivider />
       <RuleOfLifeSection />
-      <DarkTransition />
       <FieldGuideSection />
+      <DarkTransition />
       <SectionDivider />
       <GearBridgeSection />
       <GearSection />

@@ -58,6 +58,117 @@ body {
 
 html { scroll-behavior: smooth; }
 
+/* ─── QR ANIMATION ────────────────────────────────────────────────── */
+.qra-stage {
+  position: relative;
+  width: 100%;
+  height: clamp(220px, 32vw, 300px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.qra-shirt {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  transform-origin: 69% 26%;
+  transition: all 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+  opacity: 0; z-index: 2;
+}
+.qra-shirt.vis  { opacity: 1; }
+.qra-shirt.zoom { transform: translate(-72%, -30%) scale(3); }
+.qra-shirt img  { height: clamp(200px, 28vw, 280px); width: auto; max-width: none; display: block; }
+
+.qra-ring {
+  position: absolute;
+  top: 20%; left: calc(68% - 1.5px);
+  width: 6%; height: 8%;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  transition: border-color 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none; z-index: 5;
+}
+.qra-ring.pop { border-color: rgba(201,168,76,0.9); }
+.qra-ring.pop::after {
+  content: ''; position: absolute; inset: -6px;
+  border: 1px solid rgba(201,168,76,0.3); border-radius: 8px;
+  animation: ringPulse 1.6s ease-out infinite;
+}
+.qra-ring.pop::before {
+  content: ''; position: absolute; inset: -14px;
+  border: 1px solid rgba(201,168,76,0.12); border-radius: 11px;
+  animation: ringPulse 1.6s ease-out 0.3s infinite;
+}
+@keyframes ringPulse {
+  0%   { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+
+.qra-conn {
+  position: absolute; top: 50%; left: 50%;
+  width: 0; opacity: 0;
+  transition: all 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+  z-index: 6; margin-left: 30px; transform: translateY(-50%);
+}
+.qra-conn.ext { width: 50px; opacity: 1; }
+.qra-conn-line { height: 1px; width: 100%; background: linear-gradient(90deg, rgba(201,168,76,0.7), rgba(201,168,76,0.1)); }
+.qra-conn-dots { position: absolute; top: -3px; right: -4px; display: flex; gap: 4px; }
+.qra-conn-dots i { display: block; width: 5px; height: 5px; border-radius: 50%; background: #c9a84c; opacity: 0; animation: cdot 1.2s ease infinite; }
+.qra-conn-dots i:nth-child(2) { animation-delay: 0.25s; }
+.qra-conn-dots i:nth-child(3) { animation-delay: 0.5s; }
+@keyframes cdot { 0%,100% { opacity: 0.15; } 50% { opacity: 1; } }
+
+.qra-phone {
+  position: absolute; right: 4%; top: 50%;
+  transform: translate(140%, -50%); opacity: 0;
+  transition: all 1s cubic-bezier(0.22, 0.61, 0.36, 1); z-index: 7;
+}
+.qra-phone.in { transform: translate(0, -50%); opacity: 1; }
+.qra-ip {
+  width: clamp(90px, 10vw, 110px);
+  height: clamp(185px, 21vw, 228px);
+  background: #111; border: 2px solid #2a2a24;
+  border-radius: clamp(16px, 2vw, 22px);
+  position: relative; overflow: hidden;
+}
+.qra-notch {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 50px; height: 14px; background: #111; border-radius: 0 0 10px 10px; z-index: 10;
+}
+.qra-scan {
+  position: absolute; left: 10px; right: 10px; height: 2px;
+  background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+  opacity: 0; top: 35%; z-index: 5; pointer-events: none;
+}
+.qra-scan.go { opacity: 1; animation: scanMove 1.4s ease-in-out 2 forwards; }
+@keyframes scanMove {
+  0%   { opacity: 0.2; top: 22%; }
+  50%  { opacity: 1;   top: 65%; }
+  100% { opacity: 0;   top: 22%; }
+}
+.qra-content {
+  padding: 20px 9px 9px;
+  opacity: 0; transition: opacity 0.8s ease 0.3s;
+  height: 100%; display: flex; flex-direction: column;
+}
+.qra-content.rev { opacity: 1; }
+.qra-eye  { font-size: 6px; letter-spacing: 3px; text-transform: uppercase; color: rgba(201,168,76,0.7); margin-bottom: 4px; font-weight: 600; }
+.qra-head { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #e8e4dc; line-height: 1.2; margin-bottom: 3px; }
+.qra-rows { display: flex; flex-direction: column; gap: 3px; flex: 1; margin: 6px 0; }
+.qra-row  { display: flex; align-items: center; gap: 5px; padding: 3px 5px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.05); border-radius: 5px; }
+.qra-dot  { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
+.qra-rl   { font-size: 6px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(232,228,220,0.5); }
+.qra-cta  {
+  display: flex; align-items: center; justify-content: center; gap: 3px;
+  padding: 4px 6px; margin-top: auto; white-space: nowrap;
+  background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.5);
+  border-radius: 4px; font-size: 5px; letter-spacing: 0.8px; text-transform: uppercase; color: #c9a84c; font-weight: 700;
+}
+.qra-home {
+  position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+  width: 28px; height: 3px; background: rgba(255,255,255,0.12); border-radius: 2px;
+}
+
 /* Hero dual-path cards — mobile horizontal scroll */
 .hero-path-scroll {
   scroll-snap-type: x mandatory;
