@@ -225,8 +225,13 @@ function CinematicHero() {
     <section ref={heroRef} id="top"
       className="relative min-h-screen overflow-hidden flex items-center justify-center text-center"
       style={{ backgroundColor: C.heroBg }}>
+      {/* Hero background image */}
       <div className="absolute inset-0"
-        style={{ background: "radial-gradient(circle at 20% 12%,rgba(171,122,68,0.14),transparent 26%),radial-gradient(circle at 55% 48%,rgba(32,64,120,0.10),transparent 32%),linear-gradient(to bottom,rgba(3,4,10,0.92),rgba(2,3,8,1))" }} />
+        style={{ backgroundImage: "url('/Hero_mountaintop_widescreen.png')", backgroundSize: "cover", backgroundPosition: "center 30%", backgroundRepeat: "no-repeat" }} />
+      <div className="absolute inset-0"
+        style={{ background: "linear-gradient(to bottom, rgba(2,3,8,0.55) 0%, rgba(2,3,8,0.35) 40%, rgba(2,3,8,0.75) 100%)" }} />
+      <div className="absolute inset-0"
+        style={{ background: "radial-gradient(circle at 20% 12%,rgba(171,122,68,0.10),transparent 26%),radial-gradient(circle at 55% 48%,rgba(32,64,120,0.06),transparent 32%)" }} />
       <div ref={bgGlowRef} className="absolute inset-0 opacity-0 pointer-events-none"
         style={{ background: "radial-gradient(circle at center,rgba(255,255,255,0.06) 0%,rgba(171,122,68,0.04) 18%,transparent 44%)", filter: "blur(56px)" }} />
       <div ref={bloomRef} className="absolute left-1/2 pointer-events-none opacity-0"
