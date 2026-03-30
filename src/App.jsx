@@ -912,7 +912,7 @@ function GearSection() {
             Designed as a reminder: you are being formed every day.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {available.map(cat => (
               <TiltCard key={cat.name}
                 className="product-card group relative overflow-hidden bg-black aspect-[4/5] rounded-[2rem] md:rounded-[3rem] transition-transform duration-700 hover:-translate-y-2 md:hover:-translate-y-4 shadow-2xl shadow-black/25">
