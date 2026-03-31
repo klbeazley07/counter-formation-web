@@ -19,10 +19,10 @@ import { RuleStyles, RhythmPage, BookPage } from "./RuleOfLife";
 import {
   ArchitectureStyles,
   ArchitectureSlider,
-  IdentityPage,
   PracticePage,
   CommunityPage,
 } from "./Architecture";
+import { IdentityLanding, ArmorPiecePlaceholder } from "./Identity";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1538,9 +1538,15 @@ export default function App() {
         <Route path="/rule-of-life/:rhythm/book/:bookIndex" element={<BookPage />} />
 
         {/* Architecture routes */}
-        <Route path="/identity"  element={<IdentityPage />} />
-        <Route path="/practice"  element={<PracticePage />} />
-        <Route path="/community" element={<CommunityPage />} />
+        <Route path="/identity"  element={<IdentityLanding />} />
+        <Route path="/identity/belt-of-truth"               element={<ArmorPiecePlaceholder />} />
+        <Route path="/identity/breastplate-of-righteousness" element={<ArmorPiecePlaceholder />} />
+        <Route path="/identity/gospel-of-peace"             element={<ArmorPiecePlaceholder />} />
+        <Route path="/identity/shield-of-faith"             element={<ArmorPiecePlaceholder />} />
+        <Route path="/identity/helmet-of-salvation"         element={<ArmorPiecePlaceholder />} />
+        <Route path="/identity/sword-of-the-spirit"         element={<ArmorPiecePlaceholder />} />
+        <Route path="/practice"   element={<PracticePage />} />
+        <Route path="/community"  element={<CommunityPage />} />
 
         {/* Fallback */}
         <Route path="*" element={<MainSite />} />
