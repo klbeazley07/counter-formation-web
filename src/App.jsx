@@ -389,7 +389,7 @@ function RuleOfLifeSection() {
             <Link key={r.title}
               to={`/rule-of-life/${r.slug}`}
               className="manifesto-item rhythm-card group relative overflow-hidden rounded-2xl md:rounded-none cursor-pointer"
-              style={{ minHeight: "320px", textDecoration: "none", display: "block" }}>
+              style={{ minHeight: "320px", textDecoration: "none", display: "flex", flexDirection: "column" }}>
               <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C9A84C]/50 to-transparent z-10" />
               <div className="rhythm-img-wrap absolute inset-0 z-0 opacity-35 group-hover:opacity-60 transition-opacity duration-700">
                 <SafeImg src={r.bg} alt=""
@@ -397,7 +397,7 @@ function RuleOfLifeSection() {
               </div>
               <div className="absolute inset-0 z-0"
                 style={{ background: `linear-gradient(to top,${C.ruleBg},${C.ruleBg}88 55%,${C.ruleBg}26)` }} />
-              <div className="relative z-10 p-6 md:p-8 flex flex-col justify-between" style={{ minHeight: "320px" }}>
+              <div className="relative z-10 p-6 md:p-8 flex flex-col" style={{ flex: 1 }}>
                 <div className="space-y-3">
                   <span className="block font-mono text-[11px] text-[#C9A84C]/70 tracking-[0.3em] group-hover:text-[#C9A84C] transition-colors">
                     RHYTHM 0{i + 1}
@@ -490,7 +490,7 @@ function FieldGuideSection() {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-8">
           <div className="space-y-4 md:space-y-6">
             <span className="text-[11px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] md:tracking-[0.5em] uppercase font-bold">
-              Dispatches from the Field
+              Inspiration for the Field
             </span>
             <h2 className="font-brand text-3xl md:text-7xl uppercase tracking-[0.1em] md:tracking-[0.12em] text-white leading-none">
               Field Guide
