@@ -338,11 +338,11 @@ function CarouselDots({ count, activeIndex }) {
 
 function RuleOfLifeSection() {
   const rhythms = [
-    { title: "Presence",  desc: "Attention before God",    slug: "presence",  bg: "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=600" },
-    { title: "Scripture", desc: "Truth before noise",       slug: "scripture", bg: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600" },
-    { title: "Prayer",    desc: "Dependence before action", slug: "prayer",    bg: "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=600" },
-    { title: "Sabbath",   desc: "Rest before production",   slug: "sabbath",   bg: "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=600" },
-    { title: "Community", desc: "Formation together",       slug: "community", bg: "/Community_8k.png" },
+    { title: "Presence",  desc: "Attention before God",    slug: "presence",  bg: "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=600", summary: "Learning to abide in Christ so deeply that His presence overflows from your life into everything you touch." },
+    { title: "Scripture", desc: "Truth before noise",       slug: "scripture", bg: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600",    summary: "The world has a script for your day. So does God. Only one of them is true." },
+    { title: "Prayer",    desc: "Dependence before action", slug: "prayer",    bg: "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=600",  summary: "You were never meant to figure this out alone. Prayer is the admission that you can't." },
+    { title: "Sabbath",   desc: "Rest before production",   slug: "sabbath",   bg: "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=600",  summary: "A life that cannot stop is a life that does not trust. Sabbath is how you prove you believe God is in control." },
+    { title: "Community", desc: "Formation together",       slug: "community", bg: "/Community_8k.png",                                                         summary: "You cannot be formed alone. The practices that change your life require people who will hold you to them." },
   ];
 
   const [activeRhythm, setActiveRhythm] = useState(0);
@@ -404,7 +404,17 @@ function RuleOfLifeSection() {
                   </span>
                   <h3 className="font-brand text-base md:text-xl uppercase tracking-[0.1em] text-white">{r.title}</h3>
                 </div>
-                <p className="text-[12px] md:text-xs opacity-60 tracking-wide leading-relaxed font-light mt-6">{r.desc}</p>
+                <div>
+                  <p className="text-[12px] md:text-xs opacity-60 tracking-wide leading-relaxed font-light mt-6">{r.desc}</p>
+                  <p className="text-[12px] md:text-[13px] leading-relaxed px-0 mt-2
+                    font-['Cormorant_Garamond'] italic text-[#FAF8F5]
+                    md:opacity-0 md:translate-y-2 md:group-hover:opacity-85 md:group-hover:translate-y-0
+                    opacity-45 translate-y-0
+                    transition-all duration-300 ease-out"
+                    style={{ maxWidth: "100%" }}>
+                    {r.summary}
+                  </p>
+                </div>
               </div>
             </Link>
           ))}
