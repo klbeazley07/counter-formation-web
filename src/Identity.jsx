@@ -163,7 +163,7 @@ function HeroSection() {
         <img
           src="/shield-white.png"
           alt=""
-          style={{ height: "45vh", width: "auto", filter: "brightness(0) invert(1)", opacity: 0.09 }}
+          style={{ height: "45vh", width: "auto", filter: "brightness(0) invert(1)" }}
         />
       </div>
 
