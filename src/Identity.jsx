@@ -72,6 +72,42 @@ const ARMOR_PIECES = [
   },
 ];
 
+const DROP_PRODUCTS = [
+  {
+    slug: "helmet-of-salvation", num: "05", name: "Helmet of Salvation",
+    product: "Technical Hoodie",
+    hook: "What is the first thing your mind reaches for in the morning?",
+    available: true,
+  },
+  {
+    slug: "shield-of-faith", num: "04", name: "Shield of Faith",
+    product: "Premium Everyday Tee",
+    hook: "What lie keeps recurring? What would it take to simply refuse it?",
+    available: true,
+  },
+  {
+    slug: "sword-of-the-spirit", num: "06", name: "Sword of the Spirit",
+    product: "Technical Tee",
+    hook: "Could you answer with Scripture — not the gist of it, but the words themselves?",
+    available: true,
+  },
+  {
+    slug: "belt-of-truth", num: "01", name: "Belt of Truth",
+    product: "Formation content · Product coming",
+    hook: null, available: false,
+  },
+  {
+    slug: "breastplate-of-righteousness", num: "02", name: "Breastplate of Righteousness",
+    product: "Formation content · Product coming",
+    hook: null, available: false,
+  },
+  {
+    slug: "gospel-of-peace", num: "03", name: "Gospel of Peace",
+    product: "Formation content · Product coming",
+    hook: null, available: false,
+  },
+];
+
 function BackNav() {
   return (
     <Link
@@ -586,6 +622,118 @@ function BrandSection() {
   );
 }
 
+function CollectionSection() {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray(".drop-card").forEach(el => {
+        gsap.from(el, {
+          opacity: 0, y: 30,
+          duration: 0.85, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none reverse" },
+        });
+      });
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="py-24 md:py-40 px-4"
+      style={{ background: `linear-gradient(to bottom, ${C.ruleBg}, #1A1510)` }}
+    >
+      <div className="max-w-[1100px] mx-auto">
+        <div className="mb-16 md:mb-24 flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
+          <div>
+            <span
+              className="block text-[10px] tracking-[0.5em] uppercase font-bold mb-4"
+              style={{ color: C.gold }}
+            >
+              Drop 002 · The Armor of God
+            </span>
+            <h2 className="font-brand text-3xl md:text-6xl uppercase tracking-[0.1em] text-white leading-none">
+              The Collection
+            </h2>
+          </div>
+          <p
+            className="max-w-sm text-xs md:text-sm leading-relaxed font-light md:text-right"
+            style={{ color: `${C.ivory}44` }}
+          >
+            Three hero pieces. Six formation pathways. One armor.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {DROP_PRODUCTS.map(p => (
+            <Link
+              key={p.slug}
+              to={`/identity/${p.slug}`}
+              className="drop-card group relative rounded-2xl overflow-hidden flex flex-col transition-all duration-500"
+              style={{
+                textDecoration: "none",
+                minHeight: "320px",
+                background: `${C.ivory}05`,
+                border: `1px solid ${C.ivory}${p.available ? "0F" : "07"}`,
+              }}
+            >
+              <div
+                className="absolute top-0 left-0 right-0 h-[1px]"
+                style={{
+                  background: `linear-gradient(to right, transparent, ${C.gold}${p.available ? "55" : "22"}, transparent)`,
+                }}
+              />
+              <div className="p-6 md:p-8 flex flex-col flex-1">
+                <div className="flex items-center justify-between mb-6">
+                  <span
+                    className="text-[9px] tracking-[0.4em] uppercase"
+                    style={{ color: `${C.gold}${p.available ? "99" : "44"}` }}
+                  >
+                    {p.num}
+                  </span>
+                  {p.available && (
+                    <span
+                      className="text-[8px] tracking-[0.3em] uppercase px-2 py-1 rounded-full"
+                      style={{ color: C.gold, border: `1px solid ${C.gold}33` }}
+                    >
+                      Drop 002
+                    </span>
+                  )}
+                </div>
+                <h3
+                  className="font-brand text-base uppercase tracking-[0.1em] mb-2"
+                  style={{ color: p.available ? C.ivory : `${C.ivory}44` }}
+                >
+                  {p.name}
+                </h3>
+                <p
+                  className="text-[11px] tracking-[0.2em] uppercase mb-6"
+                  style={{ color: p.available ? `${C.ivory}55` : `${C.ivory}22` }}
+                >
+                  {p.product}
+                </p>
+                {p.hook && (
+                  <p
+                    className="text-[13px] leading-relaxed mt-auto"
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontStyle: "italic",
+                      color: `${C.ivory}66`,
+                    }}
+                  >
+                    "{p.hook}"
+                  </p>
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function IdentityLanding() {
   return (
     <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: C.heroBg }}>
@@ -595,6 +743,7 @@ export function IdentityLanding() {
       <GodsArmorSection />
       <SixPiecesSection />
       <BrandSection />
+      <CollectionSection />
     </div>
   );
 }
