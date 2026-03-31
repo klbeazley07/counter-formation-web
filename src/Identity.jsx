@@ -377,6 +377,166 @@ function GodsArmorSection() {
   );
 }
 
+function SixPiecesSection() {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray(".piece-block").forEach(el => {
+        gsap.from(el, {
+          opacity: 0, y: 40,
+          duration: 1.0, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" },
+        });
+      });
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="py-24 md:py-40 px-4" style={{ backgroundColor: C.ruleBg }}>
+      <div className="max-w-[1100px] mx-auto">
+
+        <div className="mb-16 md:mb-24">
+          <span className="block text-[10px] tracking-[0.5em] uppercase font-bold mb-4" style={{ color: C.gold }}>
+            The Six Pieces
+          </span>
+          <h2 className="font-brand text-3xl md:text-6xl uppercase tracking-[0.1em] text-white leading-none">
+            The Armor of God
+          </h2>
+        </div>
+
+        <div className="space-y-28 md:space-y-44">
+          {ARMOR_PIECES.map((piece, i) => (
+            <div
+              key={piece.slug}
+              className={`piece-block relative grid md:grid-cols-2 gap-12 md:gap-20 items-start ${i % 2 === 1 ? "md:[direction:rtl]" : ""}`}
+            >
+              <div
+                className="absolute inset-0 flex items-center pointer-events-none overflow-hidden"
+                style={{ justifyContent: i % 2 === 0 ? "flex-end" : "flex-start" }}
+              >
+                <span
+                  style={{
+                    fontFamily: "'Michroma', sans-serif",
+                    fontSize: "clamp(140px, 20vw, 260px)",
+                    fontWeight: 700,
+                    color: `${C.ivory}07`,
+                    lineHeight: 1,
+                    userSelect: "none",
+                  }}
+                >
+                  {piece.num}
+                </span>
+              </div>
+
+              <div className={i % 2 === 1 ? "md:[direction:ltr]" : ""}>
+                <div className="flex items-baseline gap-4 mb-6">
+                  <span className="text-[9px] tracking-[0.4em] uppercase" style={{ color: `${C.gold}77` }}>
+                    {piece.num}
+                  </span>
+                  <div className="h-[1px] flex-1" style={{ background: `${C.gold}22` }} />
+                </div>
+                <h3 className="font-brand text-2xl md:text-4xl uppercase tracking-[0.1em] text-white mb-3">
+                  {piece.title}
+                </h3>
+                <p className="text-[10px] tracking-[0.35em] uppercase mb-8" style={{ color: `${C.gold}99` }}>
+                  {piece.scripture}
+                </p>
+
+                <div className="space-y-6">
+                  <div>
+                    <span className="text-[9px] tracking-[0.35em] uppercase block mb-2" style={{ color: `${C.ivory}44` }}>
+                      Theology
+                    </span>
+                    <p className="text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+                      {piece.theology}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-[9px] tracking-[0.35em] uppercase block mb-2" style={{ color: `${C.ivory}44` }}>
+                      Modern Tension
+                    </span>
+                    <p className="text-sm leading-relaxed font-light" style={{ color: `${C.ivory}55` }}>
+                      {piece.tension}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-[9px] tracking-[0.35em] uppercase block mb-2" style={{ color: `${C.ivory}44` }}>
+                      Daily Practice
+                    </span>
+                    <p className="text-sm leading-relaxed font-light" style={{ color: `${C.ivory}66` }}>
+                      {piece.practice}
+                    </p>
+                  </div>
+                </div>
+
+                <blockquote
+                  className="mt-8 pl-4 border-l"
+                  style={{
+                    borderColor: `${C.gold}33`,
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontStyle: "italic",
+                    fontSize: "16px",
+                    color: `${C.ivory}88`,
+                  }}
+                >
+                  "{piece.hook}"
+                </blockquote>
+
+                <div className="mt-8 flex items-center gap-5">
+                  <Link
+                    to={`/identity/${piece.slug}`}
+                    className="text-[10px] tracking-[0.3em] uppercase font-bold flex items-center gap-2 transition-opacity hover:opacity-100"
+                    style={{ color: C.gold, opacity: 0.8, textDecoration: "none" }}
+                  >
+                    Explore this piece
+                    <ArrowRight size={12} />
+                  </Link>
+                  {piece.product && (
+                    <span className="text-[9px] tracking-[0.28em] uppercase" style={{ color: `${C.ivory}33` }}>
+                      {piece.product}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className={`hidden md:flex items-center justify-center ${i % 2 === 1 ? "md:[direction:ltr]" : ""}`}>
+                <div
+                  className="w-full rounded-2xl relative overflow-hidden"
+                  style={{
+                    aspectRatio: "3/4",
+                    background: `linear-gradient(135deg, ${C.heroBg} 0%, ${C.ruleBg} 100%)`,
+                    border: `1px solid ${C.ivory}0A`,
+                  }}
+                >
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span
+                      style={{
+                        fontFamily: "'Michroma', sans-serif",
+                        fontSize: "clamp(60px, 8vw, 100px)",
+                        fontWeight: 700,
+                        color: `${C.gold}12`,
+                      }}
+                    >
+                      {piece.num}
+                    </span>
+                  </div>
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <p className="text-[9px] tracking-[0.3em] uppercase" style={{ color: `${C.gold}44` }}>
+                      {piece.product || "Formation content · Coming soon"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function IdentityLanding() {
   return (
     <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: C.heroBg }}>
@@ -384,6 +544,7 @@ export function IdentityLanding() {
       <HeroSection />
       <ArmorIntroSection />
       <GodsArmorSection />
+      <SixPiecesSection />
     </div>
   );
 }
