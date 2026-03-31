@@ -537,6 +537,55 @@ function SixPiecesSection() {
   );
 }
 
+function BrandSection() {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray(".brand-reveal").forEach(el => {
+        gsap.from(el, {
+          opacity: 0, y: 24,
+          duration: 0.9, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none reverse" },
+        });
+      });
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="py-24 md:py-40 px-4" style={{ backgroundColor: C.ruleBg }}>
+      <div className="max-w-[740px] mx-auto">
+        <span
+          className="brand-reveal block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
+          style={{ color: C.gold }}
+        >
+          Why the Armor
+        </span>
+        <div className="space-y-8">
+          <p className="brand-reveal text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+            The armor is not a costume. It is what God has provided for people who are being formed in a system that is actively working against them. Every culture in history has had a comprehensive formation project — a set of values, narratives, and practices designed to shape people into its image. The digital age is no different, except that its reach is total and its pace is unprecedented.
+          </p>
+          <p className="brand-reveal text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+            The gear is not the armor. It is a marker — a daily reminder that you belong to a different formation project. The QR code connects to the formation content: the theology, the practice, the community. The garment anchors the identity. The content forms it.
+          </p>
+          <p className="brand-reveal text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+            The gear is the entry point. The content is the formation. The practice is the armor. These three move together, or they don't move at all.
+          </p>
+        </div>
+        <div className="brand-reveal mt-16">
+          <p
+            className="text-lg md:text-2xl tracking-[0.14em] uppercase font-bold leading-tight"
+            style={{ fontFamily: "'Michroma', sans-serif", color: C.gold }}
+          >
+            "The gear is not the mission.<br className="hidden md:block" /> It's a marker of it."
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function IdentityLanding() {
   return (
     <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: C.heroBg }}>
@@ -545,6 +594,7 @@ export function IdentityLanding() {
       <ArmorIntroSection />
       <GodsArmorSection />
       <SixPiecesSection />
+      <BrandSection />
     </div>
   );
 }
