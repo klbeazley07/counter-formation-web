@@ -404,14 +404,14 @@ function RuleOfLifeSection() {
                   </span>
                   <h3 className="font-brand text-base md:text-xl uppercase tracking-[0.1em] text-white">{r.title}</h3>
                 </div>
-                <div className="mt-auto">
+                <div className="mt-auto relative">
                   <p className="text-[12px] md:text-xs opacity-60 tracking-wide leading-relaxed font-light">{r.desc}</p>
                   <p className="text-[12px] md:text-[13px] leading-relaxed px-0 mt-2
                     font-['Cormorant_Garamond'] italic text-[#FAF8F5]
+                    md:absolute md:top-full md:left-0 md:right-0
                     md:opacity-0 md:translate-y-2 md:group-hover:opacity-85 md:group-hover:translate-y-0
                     opacity-45 translate-y-0
-                    transition-all duration-300 ease-out"
-                    style={{ maxWidth: "100%" }}>
+                    transition-all duration-300 ease-out">
                     {r.summary}
                   </p>
                 </div>
