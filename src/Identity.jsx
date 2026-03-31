@@ -303,12 +303,87 @@ function ArmorIntroSection() {
   );
 }
 
+function GodsArmorSection() {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray(".godsarmor-reveal").forEach(el => {
+        gsap.from(el, {
+          opacity: 0, y: 30,
+          duration: 0.9, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none reverse" },
+        });
+      });
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="py-24 md:py-40 px-4"
+      style={{ background: `linear-gradient(to bottom, ${C.heroBg}, ${C.ruleBg})` }}
+    >
+      <div className="max-w-[1100px] mx-auto">
+        <div className="grid md:grid-cols-2 gap-16 md:gap-24 items-start">
+
+          <div>
+            <span
+              className="godsarmor-reveal block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
+              style={{ color: C.gold }}
+            >
+              The Revelation
+            </span>
+            <p className="godsarmor-reveal text-sm md:text-base leading-relaxed font-light mb-6" style={{ color: `${C.ivory}77` }}>
+              The armor Paul describes is not a metaphor invented for the church. It is drawn from Isaiah's descriptions of God Himself. Isaiah 59:17 describes God putting on righteousness as a breastplate, salvation as a helmet. Isaiah 11:5 pictures the belt of faithfulness. Isaiah 52:7 speaks of feet bringing good news of peace.
+            </p>
+            <p className="godsarmor-reveal text-sm md:text-base leading-relaxed font-light mb-12" style={{ color: `${C.ivory}77` }}>
+              When you put on the armor of God, you are not assembling your own defenses. You are stepping into God's own character — the same righteousness, the same salvation, the same peace that belong to Him. The armor is His before it is yours.
+            </p>
+            <p
+              className="godsarmor-reveal text-lg md:text-2xl tracking-[0.12em] uppercase font-bold leading-tight"
+              style={{ fontFamily: "'Michroma', sans-serif", color: C.gold }}
+            >
+              "You are not inventing identity.<br className="hidden md:block" /> You are receiving it."
+            </p>
+          </div>
+
+          <div className="godsarmor-reveal">
+            <div className="border-l-2 pl-8" style={{ borderColor: `${C.gold}33` }}>
+              <span
+                className="block text-[9px] tracking-[0.4em] uppercase mb-6"
+                style={{ color: `${C.gold}77` }}
+              >
+                Isaiah 59:17
+              </span>
+              <p
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontStyle: "italic",
+                  fontSize: "clamp(22px, 3.5vw, 48px)",
+                  lineHeight: 1.3,
+                  color: `${C.ivory}bb`,
+                }}
+              >
+                He put on righteousness as his breastplate, and the helmet of salvation on his head.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function IdentityLanding() {
   return (
     <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: C.heroBg }}>
       <BackNav />
       <HeroSection />
       <ArmorIntroSection />
+      <GodsArmorSection />
     </div>
   );
 }
