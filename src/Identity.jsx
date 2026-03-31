@@ -227,11 +227,88 @@ function HeroSection() {
   );
 }
 
+function ArmorIntroSection() {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray(".armor-reveal").forEach(el => {
+        gsap.from(el, {
+          opacity: 0, y: 30,
+          duration: 0.9, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none reverse" },
+        });
+      });
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="py-24 md:py-40 px-4" style={{ backgroundColor: C.heroBg }}>
+      <div className="max-w-[740px] mx-auto">
+        <span
+          className="armor-reveal block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
+          style={{ color: C.gold }}
+        >
+          Ephesians 6:10–18
+        </span>
+
+        <blockquote
+          className="armor-reveal mb-12"
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontStyle: "italic",
+            fontSize: "clamp(16px, 2vw, 22px)",
+            lineHeight: 1.85,
+            color: `${C.ivory}cc`,
+          }}
+        >
+          <p className="mb-5">
+            Finally, be strong in the Lord and in his mighty power. Put on the full armor of God, so that you can take your stand against the devil's schemes. For our struggle is not against flesh and blood, but against the rulers, against the authorities, against the powers of this dark world and against the spiritual forces of evil in the heavenly realms.
+          </p>
+          <p className="mb-5">
+            Therefore put on the full armor of God, so that when the day of evil comes, you may be able to stand your ground, and after you have done everything, to stand. Stand firm then, with the belt of truth buckled around your waist, with the breastplate of righteousness in place, and with your feet fitted with the readiness that comes from the gospel of peace.
+          </p>
+          <p>
+            In addition to all this, take up the shield of faith, with which you can extinguish all the flaming arrows of the evil one. Take the helmet of salvation and the sword of the Spirit, which is the word of God.
+          </p>
+        </blockquote>
+
+        <div
+          className="armor-reveal h-[1px] mb-12"
+          style={{ background: `linear-gradient(to right, transparent, ${C.gold}55, transparent)` }}
+        />
+
+        <div className="space-y-8">
+          <p className="armor-reveal text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+            Paul is writing to people under real pressure — not offering a metaphor for self-improvement but a survival framework for people living inside a hostile formation system. Rome's empire was total: emperor worship, cultural assimilation, a comprehensive narrative about power, identity, and worth. The parallel to the modern formation environment is not metaphorical. It is structural.
+          </p>
+          <p className="armor-reveal text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+            The armor is not something you build. It is something you receive and put on. Identity in Christ is given, not constructed. The belt, the breastplate, the shield — each piece represents a dimension of God's own character that He extends to those who are in Christ. You are not assembling virtue through effort. You are stepping into what has already been provided.
+          </p>
+          <p className="armor-reveal text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+            "Putting on" is a daily, deliberate act. You drift without it by default. The armor does not go on automatically — it requires intentional return, morning by morning, to the reality of who you are in Christ before the world has a chance to tell you otherwise. That is why this collection pairs every piece with a formation pathway.
+          </p>
+        </div>
+
+        <div className="mt-20 flex justify-center pointer-events-none">
+          <img
+            src="/helmet.png"
+            alt=""
+            style={{ height: "100px", filter: "brightness(0) invert(1)", opacity: 0.06 }}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function IdentityLanding() {
   return (
     <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: C.heroBg }}>
       <BackNav />
       <HeroSection />
+      <ArmorIntroSection />
     </div>
   );
 }
