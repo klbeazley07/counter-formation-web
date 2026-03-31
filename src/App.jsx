@@ -404,8 +404,8 @@ function RuleOfLifeSection() {
                   </span>
                   <h3 className="font-brand text-base md:text-xl uppercase tracking-[0.1em] text-white">{r.title}</h3>
                 </div>
-                <div>
-                  <p className="text-[12px] md:text-xs opacity-60 tracking-wide leading-relaxed font-light mt-6">{r.desc}</p>
+                <div className="mt-auto">
+                  <p className="text-[12px] md:text-xs opacity-60 tracking-wide leading-relaxed font-light">{r.desc}</p>
                   <p className="text-[12px] md:text-[13px] leading-relaxed px-0 mt-2
                     font-['Cormorant_Garamond'] italic text-[#FAF8F5]
                     md:opacity-0 md:translate-y-2 md:group-hover:opacity-85 md:group-hover:translate-y-0
@@ -1376,7 +1376,6 @@ function MainSite() {
   }, []);
 
   const navLinks = [
-    { label: "Shop",         href: "#shop" },
     { label: "Formation",    href: "#architecture" },
     { label: "Rule of Life", href: "#rule" },
   ];
@@ -1455,10 +1454,10 @@ function MainSite() {
               </a>
             ))}
           </div>
-          <button onClick={openChallenge}
+          <a href="#shop"
             className="px-5 py-2 rounded-full border border-[#C9A84C]/40 text-[#C9A84C] hover:bg-[#C9A84C] hover:text-black transition-all text-[9px] md:text-[10px] hidden md:block uppercase tracking-widest font-bold">
-            7-Day Challenge
-          </button>
+            Shop the Gear
+          </a>
           <button onClick={() => setIsMenuOpen(v => !v)} className="md:hidden p-1" aria-label="Toggle menu">
             <Menu size={20} />
           </button>
