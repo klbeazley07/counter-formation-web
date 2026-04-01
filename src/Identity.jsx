@@ -796,6 +796,9 @@ function CTASection() {
 }
 
 export function IdentityLanding() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: C.heroBg }}>
       <HeroSection />
