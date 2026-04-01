@@ -855,7 +855,10 @@ function SiteNav() {
 
 export function IdentityLanding() {
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, []);
   return (
     <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: C.heroBg }}>
