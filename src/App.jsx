@@ -1431,6 +1431,22 @@ function MainSite() {
     return () => ctx.revert();
   }, []);
 
+  // Handle hash links from external pages (e.g. navigating from /identity)
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash) return;
+    const id = hash.replace("#", "");
+    const attempt = (tries = 0) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      } else if (tries < 10) {
+        setTimeout(() => attempt(tries + 1), 80);
+      }
+    };
+    attempt();
+  }, []);
+
   return (
     <div ref={mainRef}
       className="text-[#FAF8F5] selection:bg-[#C9A84C] selection:text-black min-h-screen overflow-x-hidden font-sans"
