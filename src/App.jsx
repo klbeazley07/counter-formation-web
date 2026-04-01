@@ -22,7 +22,7 @@ import {
   PracticePage,
   CommunityPage,
 } from "./Architecture";
-import { IdentityLanding, ArmorPiecePlaceholder } from "./Identity";
+import { IdentityLanding, ArmorPiecePlaceholder, ArmorStyles } from "./Identity";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1537,6 +1537,7 @@ export default function App() {
       <ChallengeStyles />
       <RuleStyles />
       <ArchitectureStyles />
+      <ArmorStyles />
       <Routes>
         {/* Main site */}
         <Route path="/" element={<MainSite />} />
