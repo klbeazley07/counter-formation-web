@@ -1,0 +1,995 @@
+# ==== ARCHITECTURE.JSX ====
+1	import React, { useEffect, useRef, useState, useCallback } from "react";
+2	import { Link } from "react-router-dom";
+3	
+4	const SHOPIFY_URL = "https://shop.counterformed.com/collections/the-gear";
+5	
+6	/* ─── PILLAR DATA ─────────────────────────────────────────────────── */
+7	
+8	const PILLARS = [
+9	  {
+10	    num: "I", slug: "identity", title: "Identity", route: "/identity",
+11	    img: "/Identity_wide.png",
+12	    challenge: "You are not your output.",
+13	
+14	    manifesto: "The modern world measures you by what you produce, how you appear, and how many people are watching. Counter Formation begins by refusing that metric entirely — and anchoring identity in Christ before anything else gets to name you.",
+15	    cta: "Enter Identity",
+16	    heroLine: "The world has been forming your identity since you were old enough to scroll.",
+17	    sections: [
+18	      { eyebrow: "The Problem", headline: "You didn't choose most of what you believe about yourself.", body: "Platform metrics. Productivity output. Approval from people whose names you don't know. These are the identity systems of the digital age — and they run on you without your permission. You absorbed them quietly, and now they feel like truth." },
+19	      { eyebrow: "The Counter", headline: "Identity anchored in Christ is not a feeling. It is a fact that precedes performance.", body: "Before you produced anything. Before anyone saw you. Before the algorithm had a chance to assess your worth — you were made in the image of God, named by Christ, and sealed by the Spirit. That is the only identity that cannot be taken by a bad quarter, a silent comment section, or a season of failure." },
+20	      { eyebrow: "The Practice", headline: "Formation begins with what you believe about who you are.", body: "Counter Formation calls you to daily surrender — not as religious performance, but as the repeated act of releasing the identity metrics the world hands you and returning to the one God has already declared. This is the first pillar because nothing else holds without it." },
+21	    ],
+22	    pullQuote: "You are not what the algorithm says you are. You are who God says you are.",
+23	    scripture: { t: "See what great love the Father has lavished on us, that we should be called children of God — and that is what we are.", r: "1 John 3:1" },
+24	    connectedRhythm: "presence", connectedChallenge: 1,
+25	  },
+26	  {
+27	    num: "II", slug: "practice", title: "Practice", route: "/practice",
+28	    img: "/Practice_wide.png",
+29	    challenge: "Intention without rhythm is just wishful thinking.",
+30	    manifesto: "You do not drift into a formed life. You build one — through scripture before screen, through silence before noise, through sabbath before production. The practices are not the goal. They are the conditions under which formation becomes possible.",
+31	    cta: "Enter Practice",
+32	    heroLine: "You become what you repeatedly do — not what you occasionally decide.",
+33	    sections: [
+34	      { eyebrow: "The Problem", headline: "Modern life has a rhythm. You just didn't choose it.", body: "Wake. Check phone. Consume. Produce. Repeat. The rhythm of the digital age is relentless and it is forming you — training your attention span, shaping your desires, calibrating what you reach for under pressure. It does not need your consent. It just needs your habit." },
+35	      { eyebrow: "The Counter", headline: "Spiritual disciplines are not religious obligations. They are training.", body: "Paul calls it gymnazō — the same word used for an athlete conditioning their body. You are not earning God's approval through practice. You are arranging your life so that you are present, available, and trainable by the One who actually transforms. The discipline creates the conditions. Grace does the work." },
+36	      { eyebrow: "The Rule", headline: "A Rule of Life is simply the decision to stop leaving your formation to chance.", body: "Scripture before the algorithm. Silence before the meeting. Sabbath before the next sprint. These are not rigid legalisms — they are chosen rhythms that accumulate, over months and years, into a recognizably different kind of life. One that looks unhurried. One that looks formed." },
+37	    ],
+38	    pullQuote: "You don't drift into a formed life. You build one — one repeated practice at a time.",
+39	    scripture: { t: "Train yourself for godliness; for while bodily training is of some value, godliness is of value in every way.", r: "1 Timothy 4:7–8" },
+40	    connectedRhythm: "scripture", connectedChallenge: 2,
+41	  },
+42	  {
+43	    num: "III", slug: "community", title: "Community", route: "/community",
+44	    img: "/Community_wide.png",
+45	    challenge: "You cannot become like Christ alone.",
+46	    manifesto: "This is not a motivational claim. It is a structural one. Jesus did not form his disciples through content or curriculum — he lived with them. Proximity over time, through honesty and failure and shared rhythm, is the actual environment in which transformation happens.",
+47	    cta: "Enter Community",
+48	    heroLine: "We have more ways to connect than any generation in history — and we are more alone.",
+49	    sections: [
+50	      { eyebrow: "The Problem", headline: "Digital connection creates the sensation of community without its substance.", body: "You can be seen by thousands and known by no one. The feed gives you the dopamine hit of social belonging while insulating you from the cost of actual presence — vulnerability, accountability, inconvenience, and the slow work of being truly known. That insulation feels like freedom. It is actually a formation trap." },
+51	      { eyebrow: "The Counter", headline: "The New Testament vision of community was never a weekly gathering. It was shared life.", body: "Koinonia — the Greek word translated 'fellowship' — meant something far more substantive than attendance. It meant common participation. Mutual bearing of burdens. The kind of proximity where people see you tired, failing, doubting, and keep showing up anyway. That environment is where formation actually happens." },
+52	      { eyebrow: "The Commitment", headline: "Formation community is not found. It is built — through initiative, honesty, and sustained presence.", body: "Counter Formation calls you into small, intentional communities committed to shared rhythms of discipleship — not as a program, but as a posture. Four to eight people who have agreed, explicitly, to stop performing for one another and start being honest with one another. That is the container in which everything else grows." },
+53	    ],
+54	    pullQuote: "Most of us have mastered the art of being known without being known.",
+55	    scripture: { t: "They devoted themselves to the apostles' teaching and to fellowship, to the breaking of bread and to prayer.", r: "Acts 2:42" },
+56	    connectedRhythm: "community", connectedChallenge: 6,
+57	  },
+58	];
+59	
+60	/* ─── STYLES ──────────────────────────────────────────────────────── */
+61	
+62	export function ArchitectureStyles() {
+63	  return (
+64	    <style>{`
+65	      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+66	
+67	      /* ══════════════════════════════════════════
+68	         SLIDER
+69	      ══════════════════════════════════════════ */
+70	
+71	      .arch-outer {
+72	        position: relative;
+73	        /* Tall enough that sticky holds while wheel handler runs.
+74	           Extra 20svh = minimal buffer so native scroll doesn't
+75	           immediately release the sticky container. */
+76	        height: 120svh;
+77	        background: #06050A;
+78	      }
+79	
+80	      .arch-sticky {
+81	        position: sticky;
+82	        top: 0;
+83	        height: 100svh;
+84	        overflow: hidden;
+85	      }
+86	
+87	      .arch-viewport {
+88	        position: relative;
+89	        width: 100%;
+90	        height: 100%;
+91	        overflow: hidden;
+92	      }
+93	
+94	      /* sliding track — 3 panels wide */
+95	      .arch-track {
+96	        display: flex;
+97	        width: 300%;
+98	        height: 100%;
+99	        transition: transform .78s cubic-bezier(.76,0,.24,1);
+100	        will-change: transform;
+101	      }
+102	
+103	      .arch-panel {
+104	        position: relative;
+105	        width: calc(100% / 3);
+106	        height: 100%;
+107	        flex-shrink: 0;
+108	        overflow: hidden;
+109	        display: flex;
+110	        flex-direction: column;
+111	        justify-content: flex-end;
+112	      }
+113	
+114	      /* background image — less zoom, wide fit */
+115	      .arch-bg {
+116	        position: absolute;
+117	        inset: 0;
+118	        background-size: cover;
+119	        background-position: center 20%;
+120	        transform: scale(1.03); /* subtle — just enough for Ken Burns */
+121	        transition: transform 1.2s cubic-bezier(.16,1,.3,1);
+122	      }
+123	      .arch-panel.is-active .arch-bg {
+124	        transform: scale(1.0);
+125	      }
+126	
+127	      /* overlays */
+128	      .arch-ov-bottom {
+129	        position: absolute; inset: 0;
+130	        background: linear-gradient(to top,
+131	          rgba(6,5,10,0.96) 0%,
+132	          rgba(6,5,10,0.62) 35%,
+133	          rgba(6,5,10,0.22) 62%,
+134	          rgba(6,5,10,0.06) 100%);
+135	      }
+136	      .arch-ov-top {
+137	        position: absolute; inset: 0;
+138	        background: linear-gradient(to bottom,
+139	          rgba(6,5,10,0.48) 0%,
+140	          transparent 28%);
+141	      }
+142	
+143	      /* panel content */
+144	      .arch-content {
+145	        position: relative;
+146	        z-index: 10;
+147	        padding: clamp(2rem,4vw,3.5rem) clamp(1.75rem,5vw,5rem) clamp(3rem,5.5vw,5rem);
+148	        max-width: 820px;
+149	      }
+150	
+151	      /* eyebrow — gold, stronger contrast */
+152	      .arch-eyebrow {
+153	        display: flex;
+154	        align-items: center;
+155	        gap: 14px;
+156	        font-family: 'Michroma', sans-serif;
+157	        font-size: clamp(9px,1vw,11px);
+158	        letter-spacing: .48em;
+159	        text-transform: uppercase;
+160	        color: #C9A84C;
+161	        text-shadow: 0 1px 12px rgba(0,0,0,0.8), 0 0 24px rgba(0,0,0,0.6);
+162	        margin-bottom: clamp(.75rem,1.5vw,1.25rem);
+163	        opacity: 0;
+164	        transform: translateY(16px);
+165	        transition: opacity .6s .1s, transform .6s .1s cubic-bezier(.16,1,.3,1);
+166	      }
+167	      .arch-eyebrow::before {
+168	        content: '';
+169	        display: block;
+170	        width: 28px;
+171	        height: 1px;
+172	        background: #C9A84C;
+173	        opacity: .7;
+174	        flex-shrink: 0;
+175	      }
+176	      .arch-panel.is-active .arch-eyebrow { opacity: 1; transform: none; }
+177	
+178	      .arch-headline {
+179	        font-family: 'Michroma', sans-serif;
+180	        font-size: clamp(32px,5.8vw,78px);
+181	        font-weight: 700;
+182	        text-transform: uppercase;
+183	        letter-spacing: .03em;
+184	        line-height: .9;
+185	        color: #FAF8F5;
+186	        text-shadow: 0 2px 20px rgba(0,0,0,0.7);
+187	        margin-bottom: clamp(1rem,2vw,1.75rem);
+188	        opacity: 0;
+189	        transform: translateY(22px);
+190	        transition: opacity .65s .2s, transform .65s .2s cubic-bezier(.16,1,.3,1);
+191	      }
+192	      .arch-panel.is-active .arch-headline { opacity: 1; transform: none; }
+193	
+194	      .arch-manifesto {
+195	        font-family: 'Cormorant Garamond', serif;
+196	        font-size: clamp(14px,1.6vw,19px);
+197	        line-height: 1.82;
+198	        color: rgba(250,248,245,0.55);
+199	        max-width: 520px;
+200	        margin-bottom: clamp(1.5rem,2.5vw,2.25rem);
+201	        opacity: 0;
+202	        transform: translateY(18px);
+203	        transition: opacity .6s .32s, transform .6s .32s cubic-bezier(.16,1,.3,1);
+204	      }
+205	      .arch-panel.is-active .arch-manifesto { opacity: 1; transform: none; }
+206	
+207	      .arch-cta-row {
+208	        display: flex;
+209	        align-items: center;
+210	        gap: 14px;
+211	        opacity: 0;
+212	        transform: translateY(14px);
+213	        transition: opacity .6s .42s, transform .6s .42s cubic-bezier(.16,1,.3,1);
+214	      }
+215	      .arch-panel.is-active .arch-cta-row { opacity: 1; transform: none; }
+216	
+217	      .arch-cta-enter {
+218	        display: inline-flex;
+219	        align-items: center;
+220	        gap: 9px;
+221	        padding: 13px 28px;
+222	        border-radius: 999px;
+223	        background: transparent;
+224	        border: 1px solid rgba(201,168,76,0.65);
+225	        color: #C9A84C;
+226	        font-family: 'Michroma', sans-serif;
+227	        font-size: clamp(8px,.9vw,10px);
+228	        letter-spacing: .28em;
+229	        text-transform: uppercase;
+230	        font-weight: 700;
+231	        text-decoration: none;
+232	        transition: background .25s, color .25s, border-color .25s, transform .2s;
+233	        white-space: nowrap;
+234	        box-shadow: 0 0 20px rgba(0,0,0,0.4);
+235	      }
+236	      .arch-cta-enter:hover {
+237	        background: #C9A84C;
+238	        color: #0A0A0A;
+239	        border-color: #C9A84C;
+240	        transform: translateY(-2px);
+241	      }
+242	
+243	      /* ── RIGHT-SIDE INDICATOR ──
+244	         Replaces arrows + bottom dots.
+245	         Sits on the right edge: panel dots stacked + gold chevron below.
+246	      ── */
+247	      .arch-right-ui {
+248	        position: absolute;
+249	        right: clamp(1.5rem,2.5vw,2.5rem);
+250	        top: 50%;
+251	        transform: translateY(-50%);
+252	        z-index: 30;
+253	        display: flex;
+254	        flex-direction: column;
+255	        align-items: center;
+256	        gap: 10px;
+257	      }
+258	
+259	      /* panel dots — vertical stack */
+260	      .arch-rdot {
+261	        width: 6px;
+262	        height: 6px;
+263	        border-radius: 50%;
+264	        background: rgba(255,255,255,0.2);
+265	        border: none;
+266	        padding: 0;
+267	        cursor: pointer;
+268	        transition: background .3s, height .3s, border-radius .3s;
+269	        display: block;
+270	      }
+271	      .arch-rdot.active {
+272	        background: #C9A84C;
+273	        height: 20px;
+274	        border-radius: 3px;
+275	      }
+276	
+277	      /* separator */
+278	      .arch-right-sep {
+279	        width: 1px;
+280	        height: 20px;
+281	        background: rgba(255,255,255,0.1);
+282	        margin: 2px 0;
+283	      }
+284	
+285	      /* gold chevron — advances panel */
+286	      .arch-right-next {
+287	        display: flex;
+288	        flex-direction: column;
+289	        align-items: center;
+290	        gap: 5px;
+291	        background: none;
+292	        border: none;
+293	        cursor: pointer;
+294	        padding: 6px;
+295	        color: #C9A84C;
+296	        opacity: .85;
+297	        transition: opacity .25s, transform .2s;
+298	      }
+299	      .arch-right-next:hover { opacity: 1; transform: scale(1.1); }
+300	      .arch-right-next:disabled { opacity: .2; cursor: default; transform: none; }
+301	      .arch-right-next span {
+302	        font-family: 'Michroma', sans-serif;
+303	        font-size: 7px;
+304	        letter-spacing: .32em;
+305	        text-transform: uppercase;
+306	        color: rgba(255,255,255,0.3);
+307	        writing-mode: vertical-rl;
+308	        margin-bottom: 4px;
+309	      }
+310	
+311	      @keyframes archChevronPulse {
+312	        0%,100% { transform: translateY(0); }
+313	        50% { transform: translateY(4px); }
+314	      }
+315	      .arch-right-next svg {
+316	        animation: archChevronPulse 2s ease-in-out infinite;
+317	      }
+318	      .arch-right-next:disabled svg { animation: none; }
+319	
+320	      /* ── SCROLL PROGRESS BAR (thin, bottom) ── */
+321	      .arch-prog {
+322	        position: absolute;
+323	        bottom: 0; left: 0; right: 0;
+324	        height: 2px;
+325	        background: rgba(255,255,255,0.06);
+326	        z-index: 30;
+327	      }
+328	      .arch-prog-fill {
+329	        height: 100%;
+330	        background: linear-gradient(to right, #C9A84C, rgba(201,168,76,0.35));
+331	        transition: width .5s cubic-bezier(.76,0,.24,1);
+332	      }
+333	
+334	      /* ── PANEL COUNTER (top left) ── */
+335	      .arch-counter {
+336	        position: absolute;
+337	        top: clamp(1.5rem,2.5vw,2rem);
+338	        left: clamp(1.75rem,3.5vw,3.5rem);
+339	        z-index: 30;
+340	        font-family: 'Michroma', sans-serif;
+341	        font-size: 9px;
+342	        letter-spacing: .38em;
+343	        text-transform: uppercase;
+344	        color: rgba(255,255,255,0.22);
+345	      }
+346	      .arch-counter strong { color: rgba(255,255,255,0.5); }
+347	
+348	      /* ── SCROLL HINT (top right) ── */
+349	      .arch-scroll-hint {
+350	        position: absolute;
+351	        top: clamp(1.5rem,2.5vw,2rem);
+352	        right: clamp(1.75rem,3.5vw,3.5rem);
+353	        z-index: 30;
+354	        display: flex;
+355	        align-items: center;
+356	        gap: 7px;
+357	        opacity: 0;
+358	        animation: archFadeIn .8s 1.6s forwards;
+359	        pointer-events: none;
+360	      }
+361	      @keyframes archFadeIn { to { opacity: 1; } }
+362	      .arch-scroll-hint span {
+363	        font-family: 'Michroma', sans-serif;
+364	        font-size: 8px;
+365	        letter-spacing: .36em;
+366	        text-transform: uppercase;
+367	        color: rgba(255,255,255,0.2);
+368	      }
+369	
+370	      /* ── CONTINUE (last panel) ── */
+371	      .arch-continue {
+372	        position: absolute;
+373	        bottom: clamp(1.75rem,3vw,2.5rem);
+374	        left: 50%;
+375	        transform: translateX(-50%) translateY(10px);
+376	        z-index: 30;
+377	        display: flex;
+378	        flex-direction: column;
+379	        align-items: center;
+380	        gap: 7px;
+381	        opacity: 0;
+382	        pointer-events: none;
+383	        transition: opacity .5s, transform .5s cubic-bezier(.16,1,.3,1);
+384	        background: none;
+385	        border: none;
+386	        cursor: pointer;
+387	        padding: 0;
+388	      }
+389	      .arch-continue.visible {
+390	        opacity: 1;
+391	        transform: translateX(-50%) translateY(0);
+392	        pointer-events: auto;
+393	      }
+394	      .arch-continue span {
+395	        font-family: 'Michroma', sans-serif;
+396	        font-size: 8px;
+397	        letter-spacing: .42em;
+398	        text-transform: uppercase;
+399	        color: rgba(255,255,255,0.35);
+400	      }
+401	      @keyframes archBounce {
+402	        0%,100% { transform: translateY(0); }
+403	        50% { transform: translateY(5px); }
+404	      }
+405	      .arch-continue svg { animation: archBounce 1.8s ease-in-out infinite; }
+406	
+407	      /* ── MOBILE ── */
+408	      @media (max-width: 767px) {
+409	        .arch-outer { height: auto; }
+410	        .arch-sticky { position: relative; height: auto; }
+411	        .arch-track {
+412	          flex-direction: column;
+413	          width: 100%;
+414	          transition: none;
+415	          transform: none !important;
+416	        }
+417	        .arch-panel { width: 100%; height: 100svh; }
+418	        .arch-panel .arch-eyebrow,
+419	        .arch-panel .arch-headline,
+420	        .arch-panel .arch-manifesto,
+421	        .arch-panel .arch-cta-row { opacity: 1; transform: none; }
+422	        .arch-right-ui,
+423	        .arch-continue,
+424	        .arch-scroll-hint,
+425	        .arch-counter,
+426	        .arch-prog { display: none; }
+427	        .arch-content { padding: 2rem 1.5rem 3rem; }
+428	      }
+429	
+430	
+431	      /* ══════════════════════════════════════════
+432	         CAMPAIGN PAGES
+433	      ══════════════════════════════════════════ */
+434	
+435	      .camp-wrap {
+436	        min-height: 100svh;
+437	        background: #FAF8F5;
+438	        color: #0E0C0A;
+439	        font-family: 'Barlow Condensed', sans-serif;
+440	        overflow-x: hidden;
+441	      }
+442	      .camp-nav {
+443	        position: fixed; top: 1rem; left: 50%; transform: translateX(-50%);
+444	        z-index: 200; display: flex; align-items: center; gap: 10px;
+445	        padding: 10px 20px 10px 14px; border-radius: 999px;
+446	        background: rgba(6,5,10,0.88); backdrop-filter: blur(20px);
+447	        border: 1px solid rgba(255,255,255,0.08); text-decoration: none;
+448	        transition: border-color .25s;
+449	      }
+450	      .camp-nav:hover { border-color: rgba(201,168,76,0.35); }
+451	      .camp-nav img  { width: 28px; height: 28px; object-fit: contain; filter: brightness(0) invert(1); }
+452	      .camp-nav span { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: rgba(250,248,245,0.6); font-weight: 600; }
+453	
+454	      .camp-hero {
+455	        position: relative; height: 100svh; overflow: hidden;
+456	        display: flex; flex-direction: column; justify-content: flex-end;
+457	      }
+458	      .camp-hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center 20%; }
+459	      .camp-hero-ov {
+460	        position: absolute; inset: 0;
+461	        background: linear-gradient(to top, rgba(245,240,232,0.98) 0%, rgba(245,240,232,0.55) 40%, rgba(6,5,10,0.25) 100%);
+462	      }
+463	      .camp-hero-in {
+464	        position: relative; z-index: 2;
+465	        padding: clamp(2rem,4vw,3.5rem) clamp(1.5rem,5vw,5rem);
+466	        max-width: 1200px; margin: 0 auto; width: 100%;
+467	      }
+468	      .camp-pillar-tag {
+469	        display: inline-flex; align-items: center; gap: 10px;
+470	        font-size: 12px; letter-spacing: .42em; text-transform: uppercase; font-weight: 700;
+471	        color: #C9A84C; margin-bottom: 1.25rem;
+472	      }
+473	      .camp-pillar-num {
+474	        width: 24px; height: 24px; border-radius: 50%;
+475	        border: 1px solid rgba(201,168,76,0.55);
+476	        display: flex; align-items: center; justify-content: center;
+477	        font-size: 8px; color: #C9A84C; font-weight: 700;
+478	      }
+479	      .camp-hero-h1 {
+480	        font-family: 'Michroma', sans-serif;
+481	        font-size: clamp(52px,9vw,120px); font-weight: 700;
+482	        text-transform: uppercase; letter-spacing: .04em; line-height: .86;
+483	        color: #0E0C0A; margin-bottom: 1.25rem;
+484	      }
+485	      .camp-hero-line {
+486	        font-family: 'Cormorant Garamond', serif; font-style: italic;
+487	        font-size: clamp(17px,2.2vw,24px); line-height: 1.65;
+488	        color: rgba(14,12,10,0.82); max-width: 560px; margin-bottom: 2rem;
+489	      }
+490	      .camp-banner {
+491	        background: #0E0C0A;
+492	        padding: clamp(2.5rem,5vw,4.5rem) clamp(1.5rem,5vw,5rem);
+493	      }
+494	      .camp-banner-inner { max-width: 1100px; margin: 0 auto; }
+495	      .camp-banner-eye {
+496	        font-size: 12px; letter-spacing: .44em; text-transform: uppercase; font-weight: 700;
+497	        color: #C9A84C; margin-bottom: .85rem; display: block;
+498	      }
+499	      .camp-banner-h {
+500	        font-family: 'Michroma', sans-serif;
+501	        font-size: clamp(28px,5vw,58px); font-weight: 700;
+502	        text-transform: uppercase; letter-spacing: .04em;
+503	        line-height: .92; color: #FAF8F5;
+504	      }
+505	      .camp-banner-h em { font-style: normal; color: #C9A84C; }
+506	      .camp-body { background: #FAF8F5; padding: clamp(3rem,6vw,6rem) clamp(1.5rem,5vw,5rem); }
+507	      .camp-body-inner { max-width: 1100px; margin: 0 auto; }
+508	      .camp-pull {
+509	        padding: clamp(2rem,3.5vw,3rem) 0;
+510	        border-top: 1px solid rgba(14,12,10,0.1);
+511	        border-bottom: 1px solid rgba(14,12,10,0.1);
+512	        margin-bottom: clamp(3rem,5vw,4.5rem);
+513	      }
+514	      .camp-pull p {
+515	        font-family: 'Cormorant Garamond', serif; font-style: italic;
+516	        font-size: clamp(22px,3.8vw,44px); line-height: 1.25;
+517	        color: #0E0C0A; max-width: 780px;
+518	      }
+519	      .camp-scripture {
+520	        border-left: 3px solid #C9A84C; padding: 1.4rem 1.75rem;
+521	        background: rgba(201,168,76,0.06); border-radius: 0 16px 16px 0;
+522	        margin-bottom: clamp(2.5rem,5vw,4rem);
+523	      }
+524	      .camp-scripture p {
+525	        font-family: 'Cormorant Garamond', serif; font-style: italic;
+526	        font-size: clamp(16px,2vw,21px); color: rgba(14,12,10,0.75);
+527	        line-height: 1.7; margin-bottom: .6rem;
+528	      }
+529	      .camp-scripture cite { font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: #C9A84C; font-style: normal; }
+530	      .camp-sections { display: flex; flex-direction: column; gap: clamp(2.5rem,5vw,4.5rem); margin-bottom: clamp(2.5rem,5vw,4rem); }
+531	      .camp-sect { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+532	      @media (min-width: 768px) { .camp-sect { grid-template-columns: 160px 1fr; gap: 2.5rem; align-items: start; } }
+533	      .camp-sect-eye { font-size: 13px; letter-spacing: .42em; text-transform: uppercase; color: #C9A84C; font-weight: 800; display: block; margin-bottom: .75rem; }
+534	      .camp-sect-rule { width: 28px; height: 1px; background: rgba(14,12,10,0.16); }
+535	      .camp-sect-h {
+536	        font-family: 'Michroma', sans-serif; font-size: clamp(16px,2.2vw,24px);
+537	        font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+538	        line-height: 1.1; color: #0E0C0A; margin-bottom: .9rem;
+539	      }
+540	      .camp-sect-body {
+541	        font-family: 'Cormorant Garamond', serif; font-size: clamp(16px,2vw,20px);
+542	        line-height: 1.84; color: rgba(14,12,10,0.58);
+543	      }
+544	      .camp-ctas {
+545	        display: flex; flex-wrap: wrap; gap: 12px;
+546	        padding-top: clamp(2rem,3.5vw,3rem);
+547	        border-top: 1px solid rgba(14,12,10,0.1);
+548	      }
+549	      .camp-btn-p {
+550	        display: inline-flex; align-items: center; gap: 9px;
+551	        padding: 14px 30px; border-radius: 999px;
+552	        background: #0E0C0A; color: #FAF8F5; border: 2px solid #0E0C0A;
+553	        font-family: 'Barlow Condensed', sans-serif; font-size: 10px;
+554	        letter-spacing: .26em; text-transform: uppercase; font-weight: 700;
+555	        text-decoration: none; transition: background .25s, border-color .25s, color .25s;
+556	      }
+557	      .camp-btn-p:hover { background: #C9A84C; border-color: #C9A84C; color: #0A0A0A; }
+558	      .camp-btn-s {
+559	        display: inline-flex; align-items: center; gap: 9px;
+560	        padding: 14px 30px; border-radius: 999px;
+561	        background: #0E0C0A; color: #FAF8F5;
+562	        border: 1px solid #0E0C0A;
+563	        font-family: 'Barlow Condensed', sans-serif; font-size: 10px;
+564	        letter-spacing: .26em; text-transform: uppercase; font-weight: 700;
+565	        text-decoration: none; transition: border-color .25s, color .25s;
+566	      }
+567	      .camp-btn-s:hover { border-color: #C9A84C; color: #C9A84C; }
+568	      .camp-others { background: #0E0C0A; padding: clamp(2.5rem,5vw,4.5rem) clamp(1.5rem,5vw,5rem); }
+569	      .camp-others-inner { max-width: 1100px; margin: 0 auto; }
+570	      .camp-others-label { font-size: 9px; letter-spacing: .42em; text-transform: uppercase; color: rgba(201,168,76,0.6); margin-bottom: 1.5rem; font-weight: 700; }
+571	      .camp-others-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px,100%),1fr)); gap: 12px; }
+572	      .camp-other-card {
+573	        position: relative; overflow: hidden; border-radius: 16px;
+574	        border: 1px solid rgba(255,255,255,0.08); aspect-ratio: 4/3;
+575	        text-decoration: none; display: block; transition: border-color .3s, transform .3s;
+576	      }
+577	      .camp-other-card:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-4px); }
+578	      .camp-other-bg { position: absolute; inset: 0; background-size: cover; background-position: center 20%; filter: grayscale(.3); opacity: .5; transition: opacity .5s, filter .5s; }
+579	      .camp-other-card:hover .camp-other-bg { opacity: .82; filter: grayscale(0); }
+580	      .camp-other-ov { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,5,10,0.92), rgba(6,5,10,0.28) 60%, transparent); }
+581	      .camp-other-body { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.25rem; z-index: 2; }
+582	      .camp-other-num { font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: #C9A84C; margin-bottom: .3rem; }
+583	      .camp-other-title { font-family: 'Michroma', sans-serif; font-size: clamp(15px,2.2vw,22px); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; }
+584	      .camp-footer { background: #06050A; border-top: 1px solid rgba(255,255,255,0.05); padding: 28px 1.5rem; text-align: center; }
+585	      .camp-footer img { width: 24px; height: 24px; opacity: .2; filter: invert(1); display: block; margin: 0 auto .75rem; }
+586	      .camp-footer p { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
+587	    `}</style>
+588	  );
+589	}
+590	
+591	/* ─── ARCHITECTURE SLIDER ─────────────────────────────────────────── */
+592	
+593	// How many wheel "ticks" to consume before advancing a panel or releasing
+594	const TICKS_TO_ADVANCE = 5;   // ticks to move to next panel
+595	const TICKS_TO_RELEASE = 1;   // extra ticks on last panel before exiting
+596	
+597	export function ArchitectureSlider() {
+598	  const outerRef    = useRef(null);
+599	  const trackRef    = useRef(null);
+600	  const touchStartRef = useRef(null);
+601	  const [idx, setIdx] = useState(0);
+602	  const TOTAL = PILLARS.length;
+603	
+604	  // Accumulated wheel delta — use a ref so wheel handler closure stays fresh
+605	  const accumRef    = useRef(0);
+606	  const lockedRef   = useRef(false); // debounce between advances
+607	  const exitAccRef  = useRef(0);     // extra ticks on last panel before release
+608	
+609	  // ── Apply track translation whenever idx changes
+610	  useEffect(() => {
+611	    const track = trackRef.current;
+612	    if (!track) return;
+613	    track.style.transform = `translateX(-${idx * (100 / TOTAL)}%)`;
+614	
+615	    // Update is-active class
+616	    track.querySelectorAll(".arch-panel").forEach((p, i) => {
+617	      p.classList.toggle("is-active", i === idx);
+618	    });
+619	
+620	    // Reset accumulators when panel changes
+621	    accumRef.current = 0;
+622	    exitAccRef.current = 0;
+623	  }, [idx, TOTAL]);
+624	
+625	  // ── Mark first panel active on mount
+626	  useEffect(() => {
+627	    const track = trackRef.current;
+628	    if (!track) return;
+629	    const panels = track.querySelectorAll(".arch-panel");
+630	    if (panels[0]) panels[0].classList.add("is-active");
+631	  }, []);
+632	
+633	  // ── Snap into viewport — fires on scroll, only during manual wheel/touch
+634	  useEffect(() => {
+635	    const outer = outerRef.current;
+636	    if (!outer || window.innerWidth < 768) return;
+637	
+638	    let snapping = false;
+639	    let lastInputTime = 0; // timestamp of last wheel/touch — avoids timeout race
+640	
+641	    const markInput = () => { lastInputTime = Date.now(); };
+642	
+643	    const onScroll = () => {
+644	      if (snapping) return;
+645	      // Only act on genuine user input (wheel/touch within last 400ms)
+646	      if (Date.now() - lastInputTime > 400) return;
+647	      const rect = outer.getBoundingClientRect();
+648	      const vh = window.innerHeight;
+649	
+650	      // Snap DOWN: section top entering view from below
+651	      if (rect.top > 10 && rect.top < vh * 0.65) {
+652	        snapping = true;
+653	        window.scrollTo({ top: outer.offsetTop, behavior: "smooth" });
+654	        setTimeout(() => { snapping = false; }, 1200);
+655	        return;
+656	      }
+657	
+658	      // Snap UP: scrolling up and near the top of section (barely passed it)
+659	      if (rect.top < -10 && rect.top > -vh * 0.65) {
+660	        snapping = true;
+661	        window.scrollTo({ top: outer.offsetTop, behavior: "smooth" });
+662	        setTimeout(() => { snapping = false; }, 1200);
+663	      }
+664	    };
+665	
+666	    window.addEventListener("wheel",     markInput, { passive: true });
+667	    window.addEventListener("touchmove", markInput, { passive: true });
+668	    window.addEventListener("scroll",    onScroll,  { passive: true });
+669	
+670	    return () => {
+671	      window.removeEventListener("wheel",     markInput);
+672	      window.removeEventListener("touchmove", markInput);
+673	      window.removeEventListener("scroll",    onScroll);
+674	    };
+675	  }, []);
+676	
+677	  // ── Wheel handler — intercepts scroll when section is pinned
+678	  useEffect(() => {
+679	    const outer = outerRef.current;
+680	    if (!outer) return;
+681	
+682	    const onWheel = (e) => {
+683	      // Only intercept on desktop
+684	      if (window.innerWidth < 768) return;
+685	
+686	      // Is the section currently sticky (i.e. top of viewport)?
+687	      const rect = outer.getBoundingClientRect();
+688	      const isStuck = rect.top <= 2 && rect.top >= -2;
+689	      if (!isStuck) return;
+690	
+691	      // Prevent native scroll while we're intercepting
+692	      e.preventDefault();
+693	
+694	      const dir = e.deltaY > 0 ? 1 : -1;
+695	
+696	      // Going backward — always allow immediately
+697	      if (dir < 0) {
+698	        if (idx > 0) {
+699	          setIdx(i => i - 1);
+700	        } else {
+701	          // Already on first panel — jump to previous section
+702	          const prev = outer.previousElementSibling;
+703	          if (prev) window.scrollTo({ top: prev.offsetTop + prev.offsetHeight - window.innerHeight, behavior: "smooth" });
+704	        }
+705	        return;
+706	      }
+707	
+708	      // Going forward
+709	      if (lockedRef.current) return;
+710	
+711	      accumRef.current += 1;
+712	
+713	      // On last panel, require extra ticks before releasing
+714	      if (idx === TOTAL - 1) {
+715	        exitAccRef.current += 1;
+716	        if (exitAccRef.current >= TICKS_TO_RELEASE) {
+717	          exitAccRef.current = 0;
+718	          accumRef.current = 0;
+719	          const next = outer.nextElementSibling;
+720	          const target = next ? next.offsetTop : outer.offsetTop + outer.offsetHeight;
+721	          window.scrollTo({ top: target, behavior: "smooth" });
+722	        }
+723	        // Don't advance — already on last panel
+724	        return;
+725	      }
+726	
+727	      if (accumRef.current >= TICKS_TO_ADVANCE) {
+728	        accumRef.current = 0;
+729	        lockedRef.current = true;
+730	        setIdx(i => Math.min(TOTAL - 1, i + 1));
+731	        // Brief lock to prevent runaway advances on fast trackpads
+732	        setTimeout(() => { lockedRef.current = false; }, 600);
+733	      }
+734	    };
+735	
+736	    // Must be non-passive to call preventDefault
+737	    outer.addEventListener("wheel", onWheel, { passive: false });
+738	    return () => outer.removeEventListener("wheel", onWheel);
+739	  }, [idx, TOTAL]);
+740	
+741	  // ── Keyboard
+742	  useEffect(() => {
+743	    const onKey = (e) => {
+744	      const outer = outerRef.current;
+745	      if (!outer) return;
+746	      const rect = outer.getBoundingClientRect();
+747	      if (rect.top > 10 || rect.bottom < window.innerHeight - 10) return;
+748	      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+749	        e.preventDefault();
+750	        if (idx < TOTAL - 1) setIdx(i => i + 1);
+751	      }
+752	      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+753	        e.preventDefault();
+754	        if (idx > 0) setIdx(i => i - 1);
+755	      }
+756	    };
+757	    window.addEventListener("keydown", onKey);
+758	    return () => window.removeEventListener("keydown", onKey);
+759	  }, [idx, TOTAL]);
+760	
+761	  // ── Touch/swipe handling for mobile
+762	  useEffect(() => {
+763	    const el = outerRef.current;
+764	    if (!el) return;
+765	
+766	    const onTouchStart = (e) => {
+767	      touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+768	    };
+769	
+770	    const onTouchEnd = (e) => {
+771	      if (!touchStartRef.current) return;
+772	      const dx = e.changedTouches[0].clientX - touchStartRef.current.x;
+773	      const dy = e.changedTouches[0].clientY - touchStartRef.current.y;
+774	      touchStartRef.current = null;
+775	
+776	      // Only register horizontal swipes (more horizontal than vertical, minimum 50px)
+777	      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+778	
+779	      if (dx < 0) {
+780	        // Swipe left = next
+781	        setIdx(prev => Math.min(prev + 1, PILLARS.length - 1));
+782	      } else {
+783	        // Swipe right = previous
+784	        setIdx(prev => Math.max(prev - 1, 0));
+785	      }
+786	    };
+787	
+788	    el.addEventListener('touchstart', onTouchStart, { passive: true });
+789	    el.addEventListener('touchend', onTouchEnd, { passive: true });
+790	    return () => {
+791	      el.removeEventListener('touchstart', onTouchStart);
+792	      el.removeEventListener('touchend', onTouchEnd);
+793	    };
+794	  }, []);
+795	
+796	  // ── Continue button (last panel)
+797	  const handleContinue = useCallback(() => {
+798	    const outer = outerRef.current;
+799	    if (!outer) return;
+800	    const next = outer.nextElementSibling;
+801	    const target = next ? next.offsetTop : outer.offsetTop + outer.offsetHeight;
+802	    window.scrollTo({ top: target, behavior: "smooth" });
+803	  }, []);
+804	
+805	  const progPct = ((idx) / (TOTAL - 1)) * 100;
+806	
+807	  return (
+808	    <section ref={outerRef} id="architecture" className="arch-outer">
+809	      <div className="arch-sticky">
+810	        <div className="arch-viewport">
+811	
+812	          {/* Counter */}
+813	          <div className="arch-counter">
+814	            <strong>{idx + 1}</strong> / {TOTAL}
+815	          </div>
+816	
+817	          {/* Scroll-past hint */}
+818	          <div className="arch-scroll-hint">
+819	            <span>Scroll to explore · scroll past to skip</span>
+820	            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+821	              <path d="M6 1v10M2 7l4 4 4-4" stroke="rgba(255,255,255,0.2)" strokeWidth="1.4" strokeLinecap="round"/>
+822	            </svg>
+823	          </div>
+824	
+825	          {/* Track */}
+826	          <div ref={trackRef} className="arch-track">
+827	            {PILLARS.map((p, i) => (
+828	              <div key={p.slug} className={`arch-panel${i === 0 ? " is-active" : ""}`}>
+829	                <div className="arch-bg" style={{ backgroundImage: `url('${p.img}')` }} />
+830	                <div className="arch-ov-bottom" />
+831	                <div className="arch-ov-top" />
+832	                <div className="arch-content">
+833	                  <div className="arch-eyebrow">
+834	                    Pillar {p.num}&nbsp;&nbsp;·&nbsp;&nbsp;Architecture of the Soul
+835	                  </div>
+836	                  <h2 className="arch-headline">{p.challenge}</h2>
+837	                  <p className="arch-manifesto">{p.manifesto}</p>
+838	                  <div className="arch-cta-row">
+839	                    <Link to={p.route} className="arch-cta-enter">
+840	                      {p.cta}
+841	                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+842	                        <path d="M1 6h10M6.5 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+843	                      </svg>
+844	                    </Link>
+845	                  </div>
+846	                </div>
+847	              </div>
+848	            ))}
+849	          </div>
+850	
+851	          {/* Right-side UI: dots + gold chevron */}
+852	          <div className="arch-right-ui">
+853	            {PILLARS.map((p, i) => (
+854	              <button
+855	                key={p.slug}
+856	                className={`arch-rdot${i === idx ? " active" : ""}`}
+857	                onClick={() => setIdx(i)}
+858	                aria-label={`Go to ${p.title}`}
+859	              />
+860	            ))}
+861	
+862	            <div className="arch-right-sep" />
+863	
+864	            <button
+865	              className="arch-right-next"
+866	              onClick={() => idx < TOTAL - 1 ? setIdx(i => i + 1) : handleContinue()}
+867	              disabled={false}
+868	              aria-label="Next"
+869	            >
+870	              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+871	                <path d="M4 7l5 5 5-5" stroke="#C9A84C" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+872	              </svg>
+873	            </button>
+874	          </div>
+875	
+876	          {/* Continue — last panel */}
+877	          <button
+878	            className={`arch-continue${idx === TOTAL - 1 ? " visible" : ""}`}
+879	            onClick={handleContinue}
+880	          >
+881	            <span>Continue</span>
+882	            <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
+883	              <path d="M1 1L8 8L15 1" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" strokeLinecap="round"/>
+884	            </svg>
+885	          </button>
+886	
+887	          {/* Progress bar */}
+888	          <div className="arch-prog">
+889	            <div className="arch-prog-fill" style={{ width: `${progPct}%` }} />
+890	          </div>
+891	
+892	        </div>
+893	      </div>
+894	    </section>
+895	  );
+896	}
+897	
+898	/* ─── CAMPAIGN PAGE ───────────────────────────────────────────────── */
+899	
+900	function CampaignPage({ pillar }) {
+901	  const others = PILLARS.filter(p => p.slug !== pillar.slug);
+902	  useEffect(() => { window.scrollTo(0, 0); }, [pillar.slug]);
+903	
+904	  return (
+905	    <div className="camp-wrap">
+906	      <Link to="/" className="camp-nav">
+907	        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="Counter Formation" />
+908	        <span>Counter Formation</span>
+909	      </Link>
+910	
+911	      <div className="camp-hero">
+912	        <div className="camp-hero-bg" style={{ backgroundImage: `url('${pillar.img}')` }} />
+913	        <div className="camp-hero-ov" />
+914	        <div className="camp-hero-in">
+915	          <div className="camp-pillar-tag">
+916	            <div className="camp-pillar-num">{pillar.num}</div>
+917	            Architecture of the Soul &nbsp;·&nbsp; {pillar.title}
+918	          </div>
+919	          <h1 className="camp-hero-h1">{pillar.title}</h1>
+920	          <p className="camp-hero-line">{pillar.heroLine}</p>
+921	        </div>
+922	      </div>
+923	
+924	      <div className="camp-banner">
+925	        <div className="camp-banner-inner">
+926	          <span className="camp-banner-eye">The Confrontation</span>
+927	          <h2 className="camp-banner-h">
+928	            {pillar.challenge.split(" ").map((word, i, arr) => (
+929	              i >= arr.length - 2
+930	                ? <em key={i}>{word}{i < arr.length - 1 ? " " : ""}</em>
+931	                : <span key={i}>{word} </span>
+932	            ))}
+933	          </h2>
+934	        </div>
+935	      </div>
+936	
+937	      <div className="camp-body">
+938	        <div className="camp-body-inner">
+939	          <div className="camp-pull"><p>"{pillar.pullQuote}"</p></div>
+940	          <div className="camp-scripture">
+941	            <p>"{pillar.scripture.t}"</p>
+942	            <cite>— {pillar.scripture.r}</cite>
+943	          </div>
+944	          <div className="camp-sections">
+945	            {pillar.sections.map((s, i) => (
+946	              <div key={i} className="camp-sect">
+947	                <div>
+948	                  <span className="camp-sect-eye">{s.eyebrow}</span>
+949	                  <div className="camp-sect-rule" />
+950	                </div>
+951	                <div>
+952	                  <h3 className="camp-sect-h">{s.headline}</h3>
+953	                  <p className="camp-sect-body">{s.body}</p>
+954	                </div>
+955	              </div>
+956	            ))}
+957	          </div>
+958	          <div className="camp-ctas">
+959	            <a href={SHOPIFY_URL} target="_blank" rel="noopener noreferrer" className="camp-btn-s">
+960	              Shop the Gear →
+961	            </a>
+962	          </div>
+963	        </div>
+964	      </div>
+965	
+966	      <div className="camp-others">
+967	        <div className="camp-others-inner">
+968	          <p className="camp-others-label">The Other Pillars</p>
+969	          <div className="camp-others-grid">
+970	            {others.map(o => (
+971	              <Link key={o.slug} to={o.route} className="camp-other-card">
+972	                <div className="camp-other-bg" style={{ backgroundImage: `url('${o.img}')` }} />
+973	                <div className="camp-other-ov" />
+974	                <div className="camp-other-body">
+975	                  <p className="camp-other-num">Pillar {o.num}</p>
+976	                  <p className="camp-other-title">{o.title}</p>
+977	                </div>
+978	              </Link>
+979	            ))}
+980	          </div>
+981	        </div>
+982	      </div>
+983	
+984	      <footer className="camp-footer">
+985	        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
+986	        <p>Counter Formation · Architecture of the Soul · Ephesians 6:10–18 · © 2026</p>
+987	      </footer>
+988	    </div>
+989	  );
+990	}
+991	
+992	export function IdentityPage()  { return <CampaignPage pillar={PILLARS[0]} />; }
+993	export function PracticePage()  { return <CampaignPage pillar={PILLARS[1]} />; }
+994	export function CommunityPage() { return <CampaignPage pillar={PILLARS[2]} />; }

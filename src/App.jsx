@@ -742,8 +742,8 @@ const GEAR_TABS = {
     accentMuted: "rgba(201,168,76,0.18)", phrase: "Apparel as a visual anchor.", sub: "Wear the pattern.",
     shopUrl: SHOPIFY_URL,
     products: [
-      { name: "Technical Tee", img: "/DriFit_Black.png",  copy: "Performance tech for training.", tier: "available", slug: "technical-tee" },
-      { name: "Everyday Tee",  img: "/Tshirt_Studio.png", copy: "Premium soft-wash cotton.", tier: "available", slug: "everyday-tee" },
+      { name: "Technical Tee", img: "/DriFit_Black.png", copy: "Performance tech for training.", tier: "available", slug: "technical-tee", shopUrl: "https://shop.counterformed.com/products/counter-formation-spartan-logo-polyester-t-shirt" },
+      { name: "Everyday Tee", img: "/Tshirt_Studio.png", copy: "Premium soft-wash cotton.", tier: "available", slug: "everyday-tee", shopUrl: "https://shop.counterformed.com/products/everyday-tee" },
       { name: "Technical Hoodie", img: "/Hoodie_white.png", copy: "Heavyweight Performance Tech.", tier: "teaser", slug: "technical-hoodie" },
     ],
   },
@@ -933,7 +933,7 @@ function GearSection() {
             {available.map(cat => (
               <TiltCard key={cat.name}
                 className="product-card group relative overflow-hidden bg-black aspect-[4/5] rounded-[2rem] md:rounded-[3rem] transition-transform duration-700 hover:-translate-y-2 md:hover:-translate-y-4 shadow-2xl shadow-black/25">
-                <a href={tab.shopUrl}
+                <a href={product.shopUrl || tab.shopUrl}
                   target="_blank" rel="noopener noreferrer"
                   className="block h-full relative">
                   <div className="absolute inset-0 opacity-100 transition-all duration-1000">
