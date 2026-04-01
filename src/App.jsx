@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState, useCallback } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -1432,19 +1432,16 @@ function MainSite() {
   }, []);
 
   // Handle hash links from external pages (e.g. /identity nav or Shopify back-links)
-  useEffect(() => {
+  // useLayoutEffect fires before paint so the user never sees the hero flash
+  useLayoutEffect(() => {
     const hash = window.location.hash;
     if (!hash) return;
     const id = hash.replace("#", "");
-    // Delay long enough for GSAP to initialise and all sections to paint
-    const timer = setTimeout(() => {
-      const el = document.getElementById(id);
-      if (el) {
-        const top = el.getBoundingClientRect().top + window.scrollY + 80;
-        window.scrollTo({ top, behavior: "instant" });
-      }
-    }, 600);
-    return () => clearTimeout(timer);
+    const el = document.getElementById(id);
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY + 80;
+      window.scrollTo({ top, behavior: "instant" });
+    }
   }, []);
 
   return (
