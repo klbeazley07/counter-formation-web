@@ -1431,20 +1431,20 @@ function MainSite() {
     return () => ctx.revert();
   }, []);
 
-  // Handle hash links from external pages (e.g. navigating from /identity)
+  // Handle hash links from external pages (e.g. /identity nav or Shopify back-links)
   useEffect(() => {
     const hash = window.location.hash;
     if (!hash) return;
     const id = hash.replace("#", "");
-    const attempt = (tries = 0) => {
+    // Delay long enough for GSAP to initialise and all sections to paint
+    const timer = setTimeout(() => {
       const el = document.getElementById(id);
       if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
-      } else if (tries < 10) {
-        setTimeout(() => attempt(tries + 1), 80);
+        const top = el.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top, behavior: "smooth" });
       }
-    };
-    attempt();
+    }, 600);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
