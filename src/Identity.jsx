@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronDown, ArrowRight } from "lucide-react";
@@ -812,5 +812,69 @@ export function IdentityLanding() {
 }
 
 export function ArmorPiecePlaceholder() {
-  return <div style={{ backgroundColor: C.heroBg, minHeight: "100vh", color: C.ivory }}>Piece coming</div>;
+  const location = useLocation();
+  const slug = location.pathname.replace("/identity/", "");
+  const armorPiece = ARMOR_PIECES.find(p => p.slug === slug);
+
+  if (!armorPiece) {
+    return (
+      <div
+        className="min-h-screen flex flex-col items-center justify-center"
+        style={{ backgroundColor: C.heroBg }}
+      >
+        <Link
+          to="/identity"
+          style={{ color: C.gold, textDecoration: "none", fontSize: "12px", letterSpacing: "0.3em" }}
+        >
+          ← Back to Identity
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen text-[#FAF8F5]" style={{ backgroundColor: C.heroBg }}>
+      <BackNav />
+
+      <div className="flex flex-col items-center justify-center min-h-screen px-6 text-center max-w-2xl mx-auto">
+        <span
+          className="text-[10px] tracking-[0.5em] uppercase font-bold mb-6"
+          style={{ color: C.gold }}
+        >
+          {armorPiece.num} · The Armor of God
+        </span>
+        <h1 className="font-brand text-3xl md:text-7xl uppercase tracking-[0.1em] text-white mb-6 leading-none">
+          {armorPiece.title}
+        </h1>
+        <p
+          className="text-[11px] tracking-[0.3em] uppercase mb-10"
+          style={{ color: `${C.ivory}44` }}
+        >
+          {armorPiece.scripture}
+        </p>
+        <p
+          className="text-sm md:text-base leading-relaxed max-w-md mb-6 font-light"
+          style={{ color: `${C.ivory}55` }}
+        >
+          {armorPiece.theology}
+        </p>
+        <blockquote
+          className="mb-12 text-base leading-relaxed max-w-sm"
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontStyle: "italic",
+            color: `${C.ivory}66`,
+          }}
+        >
+          "{armorPiece.hook}"
+        </blockquote>
+        <span
+          className="text-[10px] tracking-[0.4em] uppercase px-6 py-3 rounded-full"
+          style={{ color: `${C.ivory}33`, border: `1px solid ${C.ivory}10` }}
+        >
+          Full formation page coming soon
+        </span>
+      </div>
+    </div>
+  );
 }
