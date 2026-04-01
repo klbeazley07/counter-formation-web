@@ -734,16 +734,79 @@ function CollectionSection() {
   );
 }
 
+function CTASection() {
+  return (
+    <section
+      className="py-24 md:py-48 px-4 text-center"
+      style={{ backgroundColor: C.heroBg }}
+    >
+      <div className="max-w-2xl mx-auto">
+
+        <div className="flex flex-col items-center gap-4 mb-20">
+          <Link
+            to="/identity/belt-of-truth"
+            className="inline-flex items-center gap-3 px-10 py-4 rounded-full font-bold text-[11px] tracking-[0.28em] uppercase transition-all hover:scale-105"
+            style={{
+              backgroundColor: C.gold,
+              color: "#0A0A0A",
+              boxShadow: `0 4px 32px ${C.gold}44`,
+              textDecoration: "none",
+            }}
+          >
+            Begin Formation
+            <ArrowRight size={14} />
+          </Link>
+          <a
+            href={SHOPIFY_URL}
+            className="inline-flex items-center gap-3 px-10 py-4 rounded-full font-bold text-[11px] tracking-[0.28em] uppercase transition-all hover:bg-white/5"
+            style={{ color: C.gold, border: `1px solid ${C.gold}44`, textDecoration: "none" }}
+          >
+            Explore the Collection
+          </a>
+        </div>
+
+        <div>
+          <p
+            className="text-base md:text-xl leading-relaxed mb-3"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontStyle: "italic",
+              color: `${C.ivory}55`,
+            }}
+          >
+            "Be strong in the Lord and in his mighty power. Put on the full armor of God."
+          </p>
+          <p className="text-[10px] tracking-[0.4em] uppercase" style={{ color: `${C.ivory}33` }}>
+            Ephesians 6:10–11
+          </p>
+        </div>
+
+        <div className="mt-16 flex flex-col items-center gap-4">
+          <img
+            src="/helmet.png"
+            alt=""
+            style={{ height: "44px", filter: "brightness(0) invert(1)", opacity: 0.08 }}
+          />
+          <p className="text-[9px] tracking-[0.4em] uppercase" style={{ color: `${C.ivory}22` }}>
+            Discipline · Presence · Formation
+          </p>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
 export function IdentityLanding() {
   return (
     <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: C.heroBg }}>
-      <BackNav />
       <HeroSection />
       <ArmorIntroSection />
       <GodsArmorSection />
       <SixPiecesSection />
       <BrandSection />
       <CollectionSection />
+      <CTASection />
     </div>
   );
 }
