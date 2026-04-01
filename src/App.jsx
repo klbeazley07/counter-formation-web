@@ -1380,6 +1380,14 @@ function MainSite() {
     { label: "Rule of Life", href: "#rule" },
   ];
 
+  const scrollToShop = (e) => {
+    e.preventDefault();
+    const el = document.getElementById("shop");
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY + 160;
+    window.scrollTo({ top, behavior: "smooth" });
+  };
+
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".nav-fade", { opacity: 0, y: -10, duration: 0.9, ease: "power2.out", delay: 0.3 });
@@ -1439,7 +1447,7 @@ function MainSite() {
     const id = hash.replace("#", "");
     const el = document.getElementById(id);
     if (el) {
-      const top = el.getBoundingClientRect().top + window.scrollY + 80;
+      const top = el.getBoundingClientRect().top + window.scrollY + 160;
       window.scrollTo({ top, behavior: "instant" });
     }
   }, []);
@@ -1467,7 +1475,7 @@ function MainSite() {
               </a>
             ))}
           </div>
-          <a href="#shop"
+          <a href="#shop" onClick={scrollToShop}
             className="px-5 py-2 rounded-full border border-[#C9A84C]/40 text-[#C9A84C] hover:bg-[#C9A84C] hover:text-black transition-all text-[9px] md:text-[10px] hidden md:block uppercase tracking-widest font-bold">
             Shop the Gear
           </a>
@@ -1486,7 +1494,7 @@ function MainSite() {
 
         {/* THE GEAR */}
         <p className="text-[11px] tracking-[0.5em] text-[#C9A84C]/60 uppercase font-bold mb-6">The Gear</p>
-        <a href="#shop" onClick={() => setIsMenuOpen(false)}
+        <a href="#shop" onClick={(e) => { setIsMenuOpen(false); scrollToShop(e); }}
           className="text-xl font-brand uppercase tracking-wider text-white mb-2">Shop All</a>
 
         <div className="h-[1px] w-16 bg-white/10 mx-auto my-6" />
