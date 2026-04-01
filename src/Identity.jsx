@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ChevronDown, ArrowRight } from "lucide-react";
+import { ChevronDown, ArrowRight, Menu } from "lucide-react";
 
 const SHOPIFY_URL = "https://shop.counterformed.com/collections/the-gear";
 
@@ -795,12 +795,71 @@ function CTASection() {
   );
 }
 
+function SiteNav() {
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const navLinks = [
+    { label: "Formation",    href: "/#architecture" },
+    { label: "Rule of Life", href: "/#rule" },
+  ];
+  return (
+    <>
+      <nav className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[100] w-[94%] max-w-5xl px-4 py-3 md:px-5 md:py-4 backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center justify-between"
+        style={{ backgroundColor: `${C.heroBg}cc` }}>
+        <a href="/" className="flex items-center gap-2 md:gap-3">
+          <img src="/helmet.png" className="w-8 h-8 md:w-10 md:h-10 object-contain flex-shrink-0" alt="Counter Formation" />
+          <span className="font-brand text-[11px] md:text-sm tracking-[0.2em] md:tracking-[0.28em] uppercase whitespace-nowrap text-[#FAF8F5]">
+            Counter Formation
+          </span>
+        </a>
+        <div className="flex items-center gap-4">
+          <div className="hidden md:flex gap-8 mr-4 text-[10px] uppercase tracking-widest font-brand font-bold">
+            {navLinks.map(l => (
+              <a key={l.label} href={l.href}
+                className="text-[#FAF8F5] hover:text-[#C9A84C] transition-colors">
+                {l.label}
+              </a>
+            ))}
+          </div>
+          <a href="/#shop"
+            className="px-5 py-2 rounded-full border border-[#C9A84C]/40 text-[#C9A84C] hover:bg-[#C9A84C] hover:text-black transition-all text-[9px] md:text-[10px] hidden md:block uppercase tracking-widest font-bold">
+            Shop the Gear
+          </a>
+          <button onClick={() => setMenuOpen(v => !v)} className="md:hidden p-1 text-[#FAF8F5]" aria-label="Toggle menu">
+            <Menu size={20} />
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile menu */}
+      <div className={`fixed inset-0 z-[120] flex flex-col items-center justify-center transition-transform duration-500 md:hidden ${menuOpen ? "translate-y-0" : "-translate-y-full"}`}
+        style={{ backgroundColor: C.heroBg }}>
+        <button onClick={() => setMenuOpen(false)} className="absolute top-6 right-6 text-[#FAF8F5]" aria-label="Close menu">
+          ✕
+        </button>
+        <div className="flex flex-col items-center gap-10">
+          {navLinks.map(l => (
+            <a key={l.label} href={l.href} onClick={() => setMenuOpen(false)}
+              className="font-brand text-2xl uppercase tracking-widest text-[#FAF8F5] hover:text-[#C9A84C] transition-colors">
+              {l.label}
+            </a>
+          ))}
+          <a href="/#shop" onClick={() => setMenuOpen(false)}
+            className="mt-4 px-8 py-3 rounded-full border border-[#C9A84C]/40 text-[#C9A84C] uppercase tracking-widest font-bold text-sm">
+            Shop the Gear
+          </a>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export function IdentityLanding() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   return (
     <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: C.heroBg }}>
+      <SiteNav />
       <HeroSection />
       <ArmorIntroSection />
       <GodsArmorSection />
