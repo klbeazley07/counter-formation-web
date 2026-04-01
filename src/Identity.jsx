@@ -4,8 +4,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronDown, ArrowRight } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
-
 const SHOPIFY_URL = "https://shop.counterformed.com/collections/the-gear";
 
 const C = {
