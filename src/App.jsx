@@ -933,7 +933,7 @@ function GearSection() {
             {available.map(cat => (
               <TiltCard key={cat.name}
                 className="product-card group relative overflow-hidden bg-black aspect-[4/5] rounded-[2rem] md:rounded-[3rem] transition-transform duration-700 hover:-translate-y-2 md:hover:-translate-y-4 shadow-2xl shadow-black/25">
-                <a href={product.shopUrl || tab.shopUrl}
+                <a href={cat.shopUrl || tab.shopUrl}
                   target="_blank" rel="noopener noreferrer"
                   className="block h-full relative">
                   <div className="absolute inset-0 opacity-100 transition-all duration-1000">

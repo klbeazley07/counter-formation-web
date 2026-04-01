@@ -379,7 +379,7 @@ function GodsArmorSection() {
               className="godsarmor-reveal text-lg md:text-2xl tracking-[0.12em] uppercase font-bold leading-tight"
               style={{ fontFamily: "'Michroma', sans-serif", color: C.gold }}
             >
-              "You are not inventing identity.<br className="hidden md:block" /> You are receiving it."
+              "You are not inventing identity. You are receiving it."
             </p>
           </div>
 
@@ -612,7 +612,7 @@ function BrandSection() {
             className="text-lg md:text-2xl tracking-[0.14em] uppercase font-bold leading-tight"
             style={{ fontFamily: "'Michroma', sans-serif", color: C.gold }}
           >
-            "The gear is not the mission.<br className="hidden md:block" /> It's a marker of it."
+            "The gear is not the mission. It's a marker of it."
           </p>
         </div>
       </div>
