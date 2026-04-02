@@ -12,7 +12,7 @@ import { FirstFifteenWidget } from "./widgets/FirstFifteenWidget";
 import { VerseTrackerWidget } from "./widgets/VerseTrackerWidget";
 import { FormationShareable } from "./FormationShareable";
 
-const SHOPIFY_URL = "https://shop.counterformed.com/collections/the-gear";
+const SHOPIFY_URL = "https://shop.counterformed.com/collections/armor-of-god-collection";
 
 const C = {
   heroBg: "#06050A",
@@ -2189,7 +2189,7 @@ function CollectionSection() {
                 )}
                 {p.available && (
                   <a
-                    href="https://shop.counterformed.com/collections/the-gear"
+                    href="https://shop.counterformed.com/collections/armor-of-god-collection"
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={e => e.stopPropagation()}
