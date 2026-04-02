@@ -1353,7 +1353,11 @@ function HeroSection() {
         <img
           src="/shield-white.png"
           alt=""
-          style={{ height: "45vh", width: "auto", filter: "brightness(0) invert(1)" }}
+          style={{
+            height: "clamp(28vw, 45vh, 45vh)",
+            width: "auto",
+            filter: "brightness(0) invert(1)",
+          }}
         />
       </div>
 
@@ -1386,14 +1390,16 @@ function HeroSection() {
         </span>
         <h1
           ref={headlineRef}
-          className="font-brand text-4xl md:text-8xl uppercase tracking-[0.1em] md:tracking-[0.14em] text-white leading-none mb-8 opacity-0"
+          className="font-brand uppercase tracking-[0.1em] md:tracking-[0.14em] text-white leading-none mb-8 opacity-0"
+          style={{ fontSize: "clamp(2.2rem, 7vw, 5rem)" }}
         >
           You Are Being Formed
         </h1>
         <p
           ref={sublineRef}
-          className="text-base md:text-xl leading-relaxed max-w-2xl opacity-0"
+          className="leading-relaxed max-w-2xl opacity-0"
           style={{
+            fontSize: "clamp(0.95rem, 2.5vw, 1.3rem)",
             fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
             color: `${C.ivory}88`,
@@ -1468,7 +1474,7 @@ function ArmorIntroSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-40 px-4" style={{ backgroundColor: C.heroBg }}>
+    <section ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: C.heroBg }}>
       <div className="max-w-[740px] mx-auto">
         <span
           ref={eyebrowBRef}
@@ -1603,7 +1609,7 @@ function GodsArmorSection() {
   return (
     <section
       ref={sectionRef}
-      className="py-24 md:py-40 px-4"
+      className="py-24 md:py-40 px-5"
       style={{ backgroundColor: C.heroBg }}
     >
       <div className="max-w-[1100px] mx-auto">
@@ -1704,7 +1710,7 @@ function SixPiecesSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-40 px-4" style={{ backgroundColor: C.ruleBg }}>
+    <section ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: C.ruleBg }}>
       <div className="max-w-[1100px] mx-auto">
 
         <div className="mb-16 md:mb-24">
@@ -1729,7 +1735,7 @@ function SixPiecesSection() {
                 <span
                   style={{
                     fontFamily: "'Michroma', sans-serif",
-                    fontSize: "clamp(140px, 20vw, 260px)",
+                    fontSize: "clamp(4rem, 18vw, 8rem)",
                     fontWeight: 700,
                     color: `${C.ivory}14`,
                     lineHeight: 1,
@@ -1884,7 +1890,7 @@ function BrandSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-40 px-4" style={{ backgroundColor: C.ruleBg }}>
+    <section ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: C.ruleBg }}>
       <div className="max-w-[740px] mx-auto">
         <span
           className="brand-para block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
@@ -1953,7 +1959,7 @@ function CollectionSection() {
   return (
     <section
       ref={sectionRef}
-      className="py-24 md:py-40 px-4"
+      className="py-24 md:py-40 px-5"
       style={{ backgroundColor: C.ruleBg }}
     >
       <div className="max-w-[1100px] mx-auto">
@@ -1977,7 +1983,13 @@ function CollectionSection() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div
+          className="gap-6"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+          }}
+        >
           {DROP_PRODUCTS.map(p => (
             <Link
               key={p.slug}
@@ -2087,21 +2099,22 @@ function CTASection() {
   return (
     <section
       ref={sectionRef}
-      className="py-24 md:py-48 px-4 text-center"
+      className="py-24 md:py-48 px-5 text-center"
       style={{ backgroundColor: C.heroBg }}
     >
       <div className="max-w-2xl mx-auto">
 
-        <div className="flex flex-col items-center gap-4 mb-20">
+        <div className="flex flex-col items-center gap-4 mb-20 w-full">
           <Link
             ref={primaryBtnRef}
             to="/identity/belt-of-truth"
-            className="inline-flex items-center gap-3 px-10 py-4 rounded-full font-bold text-[11px] tracking-[0.28em] uppercase transition-all hover:scale-105"
+            className="inline-flex items-center justify-center gap-3 px-10 rounded-full font-bold text-[11px] tracking-[0.28em] uppercase transition-all hover:scale-105 w-full sm:w-auto"
             style={{
               backgroundColor: C.gold,
               color: "#0A0A0A",
               boxShadow: `0 4px 32px ${C.gold}44`,
               textDecoration: "none",
+              minHeight: "48px",
             }}
           >
             Begin Formation
@@ -2110,8 +2123,13 @@ function CTASection() {
           <a
             ref={secondaryBtnRef}
             href={SHOPIFY_URL}
-            className="inline-flex items-center gap-3 px-10 py-4 rounded-full font-bold text-[11px] tracking-[0.28em] uppercase transition-all hover:bg-white/5"
-            style={{ color: C.gold, border: `1px solid ${C.gold}44`, textDecoration: "none" }}
+            className="inline-flex items-center justify-center gap-3 px-10 rounded-full font-bold text-[11px] tracking-[0.28em] uppercase transition-all hover:bg-white/5 w-full sm:w-auto"
+            style={{
+              color: C.gold,
+              border: `1px solid ${C.gold}44`,
+              textDecoration: "none",
+              minHeight: "48px",
+            }}
           >
             Explore the Collection
           </a>
