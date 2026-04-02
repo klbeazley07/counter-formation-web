@@ -891,6 +891,7 @@ function GearSection() {
   const panelRef = useRef(null);
   const carouselRef = useRef(null);
   const sectionRef = useRef(null);
+  const hasShownHint = useRef(false);
 
   const active = COLLECTIONS.find(c => c.key === activeKey) || COLLECTIONS[0];
   const available = active.products.filter(p => p.tier === "available");
@@ -948,6 +949,26 @@ function GearSection() {
     return () => el.removeEventListener("scroll", onScroll);
   }, [available.length, activeKey]);
 
+  // Swipe hint — nudge right and snap back on first view of each collection
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el || window.innerWidth >= 768) return;
+    hasShownHint.current = false;
+    const timeout = setTimeout(() => {
+      if (hasShownHint.current) return;
+      hasShownHint.current = true;
+      gsap.to(el, {
+        scrollLeft: 50,
+        duration: 0.5,
+        ease: "power2.out",
+        onComplete: () => {
+          gsap.to(el, { scrollLeft: 0, duration: 0.4, ease: "power2.inOut" });
+        },
+      });
+    }, 800);
+    return () => clearTimeout(timeout);
+  }, [activeKey]);
+
   return (
     <section id="shop" ref={sectionRef} className="py-24 md:py-48 px-4 md:px-6 relative overflow-hidden gear-section-mobile"
       style={{ backgroundColor: C.darkBg }}>
@@ -963,7 +984,7 @@ function GearSection() {
           .gear-desktop-only { display: none !important; }
           .gear-lookbook { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-left: 0; margin-right: 0; }
           .gear-lookbook::-webkit-scrollbar { display: none; }
-          .gear-slide { flex: 0 0 100vw; width: 100vw; scroll-snap-align: start; position: relative; overflow: hidden; height: calc(100vh - 60px - 56px); height: calc(100svh - 60px - 56px); }
+          .gear-slide { flex: 0 0 100vw; width: 100vw; scroll-snap-align: start; scroll-snap-stop: always; position: relative; overflow: hidden; height: calc(100vh - 60px - 56px); height: calc(100svh - 60px - 56px); }
           .gear-grid-desktop { display: none !important; }
         }
         .gear-pill-enter { animation: gearPillSlideUp 0.3s ease forwards; }
@@ -1121,11 +1142,18 @@ function GearSection() {
                     {product.copy}
                   </p>
                   {!product.future && (
-                    <a href={product.shopUrl || active.shopUrl} target="_blank" rel="noopener noreferrer"
-                      style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "12px 28px", borderRadius: "999px", background: active.accent, color: "#0A0A0A", fontFamily: "'Barlow Condensed', sans-serif", fontSize: "11px", letterSpacing: "0.24em", textTransform: "uppercase", fontWeight: 700, textDecoration: "none", boxShadow: `0 4px 24px ${active.accent}44` }}>
-                      Shop This Piece
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </a>
+                    <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                      <a href={product.shopUrl || active.shopUrl} target="_blank" rel="noopener noreferrer"
+                        style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "12px 24px", borderRadius: "999px", background: active.accent, color: "#0A0A0A", fontFamily: "'Barlow Condensed', sans-serif", fontSize: "10px", letterSpacing: "0.24em", textTransform: "uppercase", fontWeight: 700, textDecoration: "none", boxShadow: `0 4px 24px ${active.accent}44`, flexShrink: 0 }}>
+                        Shop This Piece
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                      </a>
+                      <a href={active.shopUrl} target="_blank" rel="noopener noreferrer"
+                        style={{ display: "inline-flex", alignItems: "center", gap: "6px", padding: "12px 20px", borderRadius: "999px", background: "transparent", border: `1px solid ${active.accent}55`, color: active.accent, fontFamily: "'Barlow Condensed', sans-serif", fontSize: "10px", letterSpacing: "0.24em", textTransform: "uppercase", fontWeight: 700, textDecoration: "none", flexShrink: 0 }}>
+                        Full Collection
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                      </a>
+                    </div>
                   )}
                 </div>
               </div>
@@ -1187,8 +1215,8 @@ function GearSection() {
             </>
           )}
 
-          {/* Shop CTA */}
-          <div style={{ marginTop: "clamp(2rem, 4vw, 3rem)", textAlign: "center" }}>
+          {/* Shop CTA — desktop only (mobile has per-slide CTAs) */}
+          <div className="hidden md:block" style={{ marginTop: "clamp(2rem, 4vw, 3rem)", textAlign: "center" }}>
             <a
               href={active.shopUrl}
               target="_blank"
