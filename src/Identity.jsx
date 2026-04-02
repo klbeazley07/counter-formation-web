@@ -126,6 +126,7 @@ const ARMOR_TRACKS = {
   "belt-of-truth": {
     num: "01",
     title: "Belt of Truth",
+    icon: "/Belt_icon.png",
     trackTitle: "Living in the Light",
     img: "/Belt of Truth_Hero_wide.png",
     cumulative: "Written personal examination (5 weekly questions)",
@@ -292,6 +293,7 @@ const ARMOR_TRACKS = {
   "breastplate-of-righteousness": {
     num: "02",
     title: "Breastplate of Righteousness",
+    icon: "/Breastplate_icon.png",
     trackTitle: "Already Clothed",
     img: "/Breastplate_Hero_wide.png",
     cumulative: "Morning declaration (3–5 identity sentences)",
@@ -455,6 +457,7 @@ const ARMOR_TRACKS = {
   "gospel-of-peace": {
     num: "03",
     title: "Gospel of Peace",
+    icon: "/Sandal_icon.png",
     trackTitle: "Ground Beneath You",
     img: "/Gospel of Peace_Hero_wide.png",
     cumulative: "Peace Pause rhythm (3 daily anchoring statements)",
@@ -618,6 +621,7 @@ const ARMOR_TRACKS = {
   "shield-of-faith": {
     num: "04",
     title: "Shield of Faith",
+    icon: "/Shield_black_icon.png",
     trackTitle: "Behind What God Has Said",
     img: "/Shield of Faith_Hero_wide.png",
     cumulative: "Arrow log (lies vs. truth document)",
@@ -780,6 +784,7 @@ const ARMOR_TRACKS = {
   "helmet-of-salvation": {
     num: "05",
     title: "Helmet of Salvation",
+    icon: "/Helmet_black_icon.png",
     trackTitle: "A Protected Mind",
     img: "/Helmet_Hero_wide.png",
     cumulative: "First Fifteen morning practice design",
@@ -936,6 +941,7 @@ const ARMOR_TRACKS = {
   "sword-of-the-spirit": {
     num: "06",
     title: "Sword of the Spirit",
+    icon: "/Sword_black_icon.png",
     trackTitle: "The Word as Weapon",
     img: "/Sword_Hero_wide.png",
     cumulative: "Verse memorization system + first 5 verses",
@@ -1122,8 +1128,8 @@ export function ArmorStyles() {
       .ap-hero { position: relative; overflow: hidden; min-height: clamp(35vh, 40vw, 55vh); display: flex; flex-direction: column; justify-content: flex-end; width: 100%; }
       .ap-hero-bg  { position: absolute; inset: 0; background-size: cover; background-position: center center; filter: grayscale(.2); }
       .ap-hero-ov  { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,5,10,0.97) 0%, rgba(6,5,10,0.45) 50%, rgba(6,5,10,0.1) 100%); }
-      .ap-hero-num { position: absolute; right: 2%; top: 50%; transform: translateY(-50%); font-family: 'Michroma', sans-serif; font-size: clamp(5rem, 22vw, 10rem); color: #FAF8F5; opacity: 0.05; line-height: 1; pointer-events: none; z-index: 1; }
-      @media (min-width: 1024px) { .ap-hero-num { font-size: clamp(120px, 18vw, 220px); } }
+      .ap-hero-icon { position: absolute; right: 4%; top: 50%; transform: translateY(-50%); width: clamp(100px, 20vw, 200px); height: clamp(100px, 20vw, 200px); opacity: 0.07; pointer-events: none; z-index: 1; }
+      @media (min-width: 1024px) { .ap-hero-icon { width: clamp(160px, 18vw, 280px); height: clamp(160px, 18vw, 280px); } }
       .ap-hero-in  { position: relative; z-index: 2; padding: 2rem 24px 2.5rem; max-width: 860px; margin: 0 auto; width: 100%; }
       .ap-hero-eye { font-size: 10px; letter-spacing: .5em; text-transform: uppercase; color: #C9A84C; margin-bottom: .75rem; font-weight: 700; }
       .ap-hero-h1  { font-family: 'Michroma', sans-serif; font-size: clamp(36px, 8vw, 88px); text-transform: uppercase; letter-spacing: 0.1em; color: #FAF8F5; line-height: .9; margin-bottom: 1rem; }
@@ -1140,6 +1146,7 @@ export function ArmorStyles() {
       .ap-day-btn:hover:not(.active) { color: rgba(250,248,245,0.55); }
       .ap-day-btn.completed::after { content: ''; display: block; width: 4px; height: 4px; border-radius: 50%; background: #C9A84C; margin: 4px auto 0; opacity: 0.6; }
       .ap-day-btn.active.completed::after { opacity: 1; }
+      .ap-day-nav-icon { align-self: center; }
 
       /* Section labels */
       .ap-sec-label { font-size: 9px; letter-spacing: .45em; text-transform: uppercase; color: #C9A84C; margin-bottom: 1.25rem; padding-bottom: .75rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -1811,10 +1818,22 @@ function SixPiecesSection() {
               </div>
 
               <div className={i % 2 === 1 ? "md:[direction:ltr]" : ""}>
+                {piece.icon && (
+                  <img
+                    src={piece.icon}
+                    alt=""
+                    className="piece-icon-anchor"
+                    style={{
+                      width: "clamp(40px, 5vw, 52px)",
+                      height: "auto",
+                      objectFit: "contain",
+                      filter: "brightness(0) invert(1)",
+                      opacity: 0.6,
+                      marginBottom: "1.25rem",
+                    }}
+                  />
+                )}
                 <div className="flex items-center gap-4 mb-6">
-                  {piece.icon && (
-                    <img src={piece.icon} alt="" style={{ width: "22px", height: "22px", objectFit: "contain", opacity: 0.55, flexShrink: 0 }} />
-                  )}
                   <span className="piece-gold-eyebrow text-[9px] tracking-[0.4em] uppercase" style={{ color: `${C.gold}77` }}>
                     {piece.num}
                   </span>
@@ -1903,10 +1922,31 @@ function SixPiecesSection() {
                       objectFit: "cover", objectPosition: "center top",
                     }}
                   />
+                  {/* Icon atmospheric overlay */}
+                  {piece.icon && (
+                    <img
+                      src={piece.icon}
+                      alt=""
+                      style={{
+                        position: "absolute",
+                        top: "20%",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        width: "clamp(90px, 10vw, 120px)",
+                        height: "auto",
+                        objectFit: "contain",
+                        filter: "brightness(0) invert(1)",
+                        opacity: 0.12,
+                        pointerEvents: "none",
+                        zIndex: 1,
+                      }}
+                    />
+                  )}
                   {/* Gradient overlay — bottom fade for text legibility */}
                   <div style={{
                     position: "absolute", inset: 0,
                     background: `linear-gradient(to top, ${C.heroBg}EE 0%, ${C.heroBg}44 45%, transparent 100%)`,
+                    zIndex: 2,
                   }} />
                   {/* Piece number watermark */}
                   <span
@@ -2095,6 +2135,19 @@ function CollectionSection() {
                 }}
               />
               <div className="p-6 md:p-8 flex flex-col flex-1">
+                <div className="flex justify-center mb-6">
+                  <img
+                    src={ARMOR_PIECES.find(ap => ap.slug === p.slug)?.icon || ""}
+                    alt=""
+                    style={{
+                      width: p.available ? "44px" : "36px",
+                      height: "auto",
+                      objectFit: "contain",
+                      filter: "brightness(0) invert(1)",
+                      opacity: p.available ? 0.5 : 0.12,
+                    }}
+                  />
+                </div>
                 <div className="flex items-center justify-between mb-6">
                   <span
                     className="text-[9px] tracking-[0.4em] uppercase"
@@ -2839,7 +2892,15 @@ export function ArmorPiecePage() {
       <div className="ap-hero">
         <div className="ap-hero-bg" ref={heroBgRef} style={{ backgroundImage: `url('${data.img}')` }} />
         <div className="ap-hero-ov" />
-        <div className="ap-hero-num">{data.num}</div>
+        <div className="ap-hero-icon">
+          {data.icon && (
+            <img
+              src={data.icon}
+              alt=""
+              style={{ width: "100%", height: "100%", objectFit: "contain", filter: "brightness(0) invert(1)" }}
+            />
+          )}
+        </div>
         <div className="ap-hero-in">
           <p className="ap-hero-eye" ref={heroEyeRef}>Piece {data.num} · Armor of God</p>
           <h1 className="ap-hero-h1" ref={heroH1Ref}>{data.title}</h1>
@@ -2852,6 +2913,22 @@ export function ArmorPiecePage() {
 
         {/* Day selector */}
         <div className="ap-day-nav">
+          {data.icon && (
+            <img
+              src={data.icon}
+              alt=""
+              className="ap-day-nav-icon"
+              style={{
+                width: "18px",
+                height: "18px",
+                objectFit: "contain",
+                filter: "brightness(0) invert(1)",
+                opacity: 0.3,
+                flexShrink: 0,
+                marginRight: "8px",
+              }}
+            />
+          )}
           {data.days.map(d => (
             <button
               key={d.num}
@@ -2952,6 +3029,21 @@ export function ArmorPiecePage() {
                     to={`/identity/${slug}`}
                     className={`ap-armor-link${slug === piece ? " active" : ""}`}
                   >
+                    {p.icon && (
+                      <img
+                        src={p.icon}
+                        alt=""
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                          objectFit: "contain",
+                          filter: "brightness(0) invert(1)",
+                          opacity: slug === piece ? 0.7 : 0.15,
+                          flexShrink: 0,
+                          transition: "opacity 0.2s",
+                        }}
+                      />
+                    )}
                     <span className="ap-armor-link-num">{p.num}</span>
                     <span className="ap-armor-link-title">{p.title}</span>
                   </Link>
@@ -2965,7 +3057,7 @@ export function ArmorPiecePage() {
         <div className="ap-piece-nav" ref={pieceNavRef}>
           {prevData ? (
             <Link to={`/identity/${prevSlug}`} className="ap-nav-btn">
-              {prevData.icon && <img src={prevData.icon} alt="" style={{ width: "18px", height: "18px", objectFit: "contain", opacity: 0.45, flexShrink: 0 }} />}
+              {prevData.icon && <img src={prevData.icon} alt="" style={{ width: "24px", height: "24px", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.55, flexShrink: 0 }} />}
               <span>
                 <span className="ap-nav-btn-dir">← Piece {prevData.num}</span>
                 <span className="ap-nav-btn-title">{prevData.title}</span>
@@ -2978,7 +3070,7 @@ export function ArmorPiecePage() {
                 <span className="ap-nav-btn-dir">Piece {nextData.num} →</span>
                 <span className="ap-nav-btn-title">{nextData.title}</span>
               </span>
-              {nextData.icon && <img src={nextData.icon} alt="" style={{ width: "18px", height: "18px", objectFit: "contain", opacity: 0.45, flexShrink: 0 }} />}
+              {nextData.icon && <img src={nextData.icon} alt="" style={{ width: "24px", height: "24px", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.55, flexShrink: 0 }} />}
             </Link>
           ) : <div />}
         </div>
