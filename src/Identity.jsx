@@ -1098,7 +1098,7 @@ export function ArmorStyles() {
       .ap-hero { position: relative; overflow: hidden; min-height: clamp(480px, 65vw, 780px); display: flex; flex-direction: column; justify-content: flex-end; }
       .ap-hero-bg  { position: absolute; inset: 0; background-size: cover; background-position: center center; filter: grayscale(.2); }
       .ap-hero-ov  { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,5,10,0.97) 0%, rgba(6,5,10,0.45) 50%, rgba(6,5,10,0.1) 100%); }
-      .ap-hero-num { position: absolute; right: -0.02em; bottom: -0.1em; font-family: 'Michroma', sans-serif; font-size: clamp(120px, 18vw, 220px); color: #FAF8F5; opacity: 0.07; line-height: 1; pointer-events: none; z-index: 1; }
+      .ap-hero-num { position: absolute; right: 2%; top: 50%; transform: translateY(-50%); font-family: 'Michroma', sans-serif; font-size: clamp(120px, 18vw, 220px); color: #FAF8F5; opacity: 0.05; line-height: 1; pointer-events: none; z-index: 1; }
       .ap-hero-in  { position: relative; z-index: 2; padding: 2rem 24px 2.5rem; max-width: 860px; margin: 0 auto; width: 100%; }
       .ap-hero-eye { font-size: 10px; letter-spacing: .5em; text-transform: uppercase; color: #C9A84C; margin-bottom: .75rem; font-weight: 700; }
       .ap-hero-h1  { font-family: 'Michroma', sans-serif; font-size: clamp(36px, 8vw, 88px); text-transform: uppercase; letter-spacing: 0.1em; color: #FAF8F5; line-height: .9; margin-bottom: 1rem; }
