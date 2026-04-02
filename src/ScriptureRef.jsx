@@ -201,6 +201,7 @@ function ScripturePopover({ reference, text, translation, triggerRef, onClose, o
 export function ScriptureRef({ reference, text, translation }) {
   const [open, setOpen]       = useState(false);
   const [visible, setVisible] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const triggerRef            = useRef(null);
   const closeTimerRef         = useRef(null);
   const isMobile              = useRef(false);
@@ -230,8 +231,8 @@ export function ScriptureRef({ reference, text, translation }) {
   }, []);
 
   // Desktop hover handlers
-  const handleMouseEnter = () => { if (!isMobile.current) openPopover(); };
-  const handleMouseLeave = () => { if (!isMobile.current) scheduleClose(); };
+  const handleMouseEnter = () => { if (!isMobile.current) { setHovered(true); openPopover(); } };
+  const handleMouseLeave = () => { if (!isMobile.current) { setHovered(false); scheduleClose(); } };
 
   // Mobile tap handler
   const handleClick = (e) => {
@@ -271,8 +272,10 @@ export function ScriptureRef({ reference, text, translation }) {
           padding:        0,
           borderBottom:   open
             ? "1px solid rgba(201,168,76,0.85)"
-            : "1px dotted rgba(201,168,76,0.30)",
-          transition:     "border-color 180ms ease",
+            : hovered
+              ? "1px solid rgba(201,168,76,0.6)"
+              : "1px dotted rgba(201,168,76,0.30)",
+          transition:     "border-color 200ms ease",
         }}
       >
         {reference}
