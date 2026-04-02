@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState, useCallback } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, Menu, X, ChevronRight } from "lucide-react";
@@ -25,6 +25,14 @@ import {
 import { IdentityLanding, ArmorPiecePage, ArmorStyles } from "./Identity";
 
 gsap.registerPlugin(ScrollTrigger);
+
+/* ─── SCROLL RESTORATION ──────────────────────────────────────────── */
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+}
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
 
@@ -1470,7 +1478,7 @@ function MainSite() {
           <div className="hidden md:flex gap-8 mr-4 text-[10px] uppercase tracking-widest font-brand font-bold">
             {navLinks.map(l => (
               <a key={l.label} href={l.href}
-                className={cx("hover:text-[#C9A84C] transition-colors", l.gold && "text-[#C9A84C]")}>
+                className={cx("hover:text-[#C9A84C] transition-colors py-2", l.gold && "text-[#C9A84C]")}>
                 {l.label}
               </a>
             ))}
@@ -1533,6 +1541,7 @@ function MainSite() {
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <FieldGuideStyles />
       <ChallengeStyles />
       <RuleStyles />

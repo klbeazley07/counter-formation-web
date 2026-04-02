@@ -123,7 +123,7 @@ function ScripturePopover({ reference, text, translation, triggerRef, onClose, o
         top:           pos.top,
         left:          pos.left,
         zIndex:        9999,
-        maxWidth:      420,
+        maxWidth:      "min(420px, calc(100vw - 32px))",
         width:         "calc(100vw - 16px)",
         background:    "#0E0C0A",
         border:        "1px solid rgba(201,168,76,0.15)",
