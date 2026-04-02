@@ -1269,20 +1269,21 @@ function HeroSection() {
         .fromTo(headlineRef.current,
           { opacity: 0, y: 20, scale: 0.97 },
           { opacity: 1, y: 0, scale: 1.0, duration: 1.2, ease: "power3.out" }, "-=0.55")
-        .to(sublineRef.current,    { opacity: 0.55, y: 0, duration: 0.8 }, "-=0.8")
+        .to(sublineRef.current,    { opacity: 0.55, y: 0, duration: 0.8 }, "+=0.4")
         .to(chevronRef.current,    { opacity: 0.6,  y: 0, duration: 0.7 }, "-=0.5");
 
       // --- Scroll indicator pulse: opacity 0.4 → 1.0 ---
-      gsap.to(chevronRef.current, {
-        opacity: 1, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2.5,
-      });
+      gsap.fromTo(chevronRef.current,
+        { opacity: 0.4 },
+        { opacity: 1.0, duration: 1.4, ease: "sine.inOut", repeat: -1, yoyo: true, delay: 2.5 }
+      );
       gsap.to(chevronRef.current, {
         y: 8, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2.5,
       });
 
       // --- Watermark parallax (scrub) ---
       gsap.to(watermarkRef.current, {
-        yPercent: -15,
+        yPercent: -30,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
