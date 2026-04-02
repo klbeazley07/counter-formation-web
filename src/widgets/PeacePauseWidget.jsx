@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 
 const TRACKER_KEY   = "cf-peace-tracker";
 const STATEMENT_KEY = "cf-peace-statements";
@@ -396,6 +397,25 @@ export function PeacePauseWidget() {
           )}
         </div>
       )}
+
+      {/* Rule of Life Cross-Link */}
+      <div style={{ padding: "0 1.75rem 0.5rem", textAlign: "center" }}>
+        <Link
+          to="/rule-of-life/sabbath"
+          style={{
+            fontFamily:    "'Barlow Condensed', sans-serif",
+            fontSize:      "9px",
+            letterSpacing: ".32em",
+            textTransform: "uppercase",
+            color:         C.gold,
+            opacity:       0.6,
+            textDecoration:"none",
+            display:       "inline-block",
+          }}
+        >
+          Part of the Sabbath rhythm →
+        </Link>
+      </div>
 
       {/* Divider */}
       <div style={{ height: "1px", background: C.goldDiv, margin: "0 1.75rem" }} />

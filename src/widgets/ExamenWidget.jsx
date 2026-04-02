@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const STORAGE_KEY = "cf-examen-log";
 
@@ -207,6 +208,25 @@ export function ExamenWidget() {
             {savedMsg}
           </p>
         )}
+      </div>
+
+      {/* ── Rule of Life Cross-Link ── */}
+      <div style={{ padding: "0 1.75rem 0.5rem", textAlign: "center" }}>
+        <Link
+          to="/rule-of-life/presence"
+          style={{
+            ...barlow,
+            fontSize:      "9px",
+            letterSpacing: ".32em",
+            textTransform: "uppercase",
+            color:         C.gold,
+            opacity:       0.6,
+            textDecoration:"none",
+            display:       "inline-block",
+          }}
+        >
+          Part of the Presence rhythm →
+        </Link>
       </div>
 
       {/* ── View Previous Toggle ── */}

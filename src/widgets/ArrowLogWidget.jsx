@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 
 const STORAGE_KEY = "cf-arrow-log";
 
@@ -177,6 +178,25 @@ export function ArrowLogWidget() {
             Add
           </button>
         </div>
+      </div>
+
+      {/* ── Rule of Life Cross-Link ── */}
+      <div style={{ padding: "0 1.75rem 1rem", textAlign: "center" }}>
+        <Link
+          to="/rule-of-life/community"
+          style={{
+            fontFamily:    "'Barlow Condensed', sans-serif",
+            fontSize:      "9px",
+            letterSpacing: ".32em",
+            textTransform: "uppercase",
+            color:         C.gold,
+            opacity:       0.6,
+            textDecoration:"none",
+            display:       "inline-block",
+          }}
+        >
+          Part of the Community rhythm →
+        </Link>
       </div>
 
       {/* ── Divider ── */}

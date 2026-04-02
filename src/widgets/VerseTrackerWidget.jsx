@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const KEY_CURRENT = "cf-sword-current";
 const KEY_LIBRARY = "cf-sword-library";
@@ -405,6 +406,25 @@ export function VerseTrackerWidget() {
           </p>
         </div>
       )}
+
+      {/* Rule of Life Cross-Link */}
+      <div style={{ padding: "0 1.75rem 1rem", textAlign: "center" }}>
+        <Link
+          to="/rule-of-life/scripture"
+          style={{
+            fontFamily:    "'Barlow Condensed', sans-serif",
+            fontSize:      "9px",
+            letterSpacing: ".32em",
+            textTransform: "uppercase",
+            color:         C.gold,
+            opacity:       0.6,
+            textDecoration:"none",
+            display:       "inline-block",
+          }}
+        >
+          Part of the Scripture rhythm →
+        </Link>
+      </div>
 
       {/* Divider */}
       <div style={{ height: "1px", background: C.goldDiv, margin: "0 1.75rem" }} />
