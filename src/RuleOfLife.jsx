@@ -370,7 +370,7 @@ function ExamenWalkthrough() {
       <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "16px", color: "rgba(250,248,245,0.45)", lineHeight: 1.7, maxWidth: "420px", margin: "0 auto 2.5rem" }}>
         This is how formation happens — not by intensity, but by the daily, faithful act of return. Come back tomorrow.
       </p>
-      <p style={{ ...base, fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)", marginBottom: "2rem" }}>— Psalm 139:23–24</p>
+      <p style={{ ...base, fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)", marginBottom: "2rem" }}>— <ScriptureRef reference="Psalm 139:23–24" text="Search me, O God, and know my heart; test me and know my anxious thoughts. See if there is any offensive way in me, and lead me in the way everlasting." /></p>
       <button onClick={handleRestart} style={{ padding: "12px 32px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.12)", background: "transparent", color: "rgba(250,248,245,0.4)", ...base, fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", cursor: "pointer" }}>
         Begin Again
       </button>

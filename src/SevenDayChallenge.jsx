@@ -752,7 +752,7 @@ export function CFLanding() {
               <path d="M1 6.5h11M7 2.5l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </a>
-          <p className="cf7-scripture">Ephesians 6:10–18</p>
+          <p className="cf7-scripture"><ScriptureRef reference="Ephesians 6:10–18" /></p>
         </div>
         <div className="cf7-scroll-hint" ref={shRef}>
           <span>Scroll</span>

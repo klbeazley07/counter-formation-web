@@ -2708,6 +2708,11 @@ export function ArmorPiecePage() {
       return stored ? JSON.parse(stored) : [];
     } catch { return []; }
   });
+  const [showQRWelcome, setShowQRWelcome] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('qr') === 'true';
+  });
+  const [qrFadingOut, setQRFadingOut] = useState(false);
   const progRef       = useRef(null);
   const wrapRef       = useRef(null);
   const heroBgRef     = useRef(null);
@@ -2885,6 +2890,54 @@ export function ArmorPiecePage() {
   const isLastDay = day === 6;
 
   return (
+    <>
+    {showQRWelcome && (
+      <div
+        className="fixed inset-0 z-[500] flex flex-col items-center justify-center text-center px-8"
+        style={{
+          backgroundColor: "#06050A",
+          opacity: qrFadingOut ? 0 : 1,
+          transition: "opacity 0.4s ease",
+          pointerEvents: qrFadingOut ? "none" : "auto",
+        }}
+      >
+        {data.icon && (
+          <img src={data.icon} alt="" style={{ width: 40, filter: "brightness(0) invert(1)", opacity: 0.12, marginBottom: "2rem" }} />
+        )}
+        <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "10px", letterSpacing: "0.5em", textTransform: "uppercase", color: "#C9A84C", marginBottom: "1.5rem", fontWeight: 700 }}>
+          You're Wearing the Armor
+        </p>
+        <h2 style={{ fontFamily: "'Michroma', sans-serif", fontSize: "clamp(28px, 6vw, 52px)", textTransform: "uppercase", letterSpacing: "0.1em", color: "#FAF8F5", lineHeight: 0.9, marginBottom: "1rem" }}>
+          {data.title}
+        </h2>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "clamp(15px, 3vw, 20px)", color: "rgba(250,248,245,0.4)", marginBottom: "3rem" }}>
+          {data.trackTitle}
+        </p>
+        <button
+          onClick={() => {
+            setQRFadingOut(true);
+            window.history.replaceState({}, '', window.location.pathname);
+            setTimeout(() => setShowQRWelcome(false), 400);
+          }}
+          style={{
+            fontFamily: "'Barlow Condensed', sans-serif",
+            fontSize: "11px",
+            letterSpacing: "0.28em",
+            textTransform: "uppercase",
+            fontWeight: 700,
+            padding: "14px 36px",
+            borderRadius: "999px",
+            border: "none",
+            background: "#C9A84C",
+            color: "#0A0A0A",
+            cursor: "pointer",
+            boxShadow: "0 4px 32px rgba(201,168,76,0.3)",
+          }}
+        >
+          Begin Formation →
+        </button>
+      </div>
+    )}
     <div className="ap-wrap" ref={wrapRef}>
       <BackNav progRef={progRef} />
 
@@ -3082,5 +3135,6 @@ export function ArmorPiecePage() {
         <p>Counter Formation · Armor of God · Ephesians 6:10–18 · © 2026</p>
       </footer>
     </div>
+    </>
   );
 }
