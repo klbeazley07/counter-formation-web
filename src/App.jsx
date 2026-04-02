@@ -969,6 +969,14 @@ function GearSection() {
     return () => clearTimeout(timeout);
   }, [activeKey]);
 
+  const lockToFullScreen = () => {
+    if (window.innerWidth >= 768) return;
+    const el = sectionRef.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  };
+
   return (
     <section id="shop" ref={sectionRef} className="py-24 md:py-48 px-4 md:px-6 relative overflow-hidden gear-section-mobile"
       style={{ backgroundColor: C.darkBg }}>
@@ -1117,7 +1125,7 @@ function GearSection() {
           {/* Mobile: full-screen lookbook */}
           <div ref={carouselRef} className="gear-lookbook">
             {available.map((product) => (
-              <div key={product.slug || product.name} className="gear-slide">
+              <div key={product.slug || product.name} className="gear-slide" onClick={lockToFullScreen}>
                 <SafeImg src={product.img} alt={product.name}
                   style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", objectPosition: "center 40%", ...(product.future ? { filter: "grayscale(1)", opacity: 0.25 } : {}) }} />
                 {/* Top gradient — subtle, for nav legibility */}
