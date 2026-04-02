@@ -212,7 +212,7 @@ export function VerseTrackerWidget() {
     borderRadius: "10px",
     padding: "10px 14px",
     color: C.ivory,
-    fontSize: "15px",
+    fontSize: "16px",
     lineHeight: 1.55,
     fontStyle: "italic",
     outline: "none",
@@ -265,7 +265,7 @@ export function VerseTrackerWidget() {
           onFocus={() => setRefFocus(true)}
           onBlur={() => setRefFocus(false)}
           placeholder="Romans 8:1"
-          style={{ ...inputStyle(refFocus), fontStyle: "normal", ...barlow, fontSize: "13px", letterSpacing: ".06em" }}
+          style={{ ...inputStyle(refFocus), fontStyle: "normal", ...barlow, fontSize: "16px", letterSpacing: ".06em" }}
         />
         <textarea
           className="vt-textarea"
@@ -284,6 +284,7 @@ export function VerseTrackerWidget() {
           style={{
             ...barlow,
             padding: "11px 0",
+            minHeight: "44px",
             background: (!refInput.trim() && !textInput.trim()) ? "rgba(201,168,76,0.25)" : C.gold,
             color: (!refInput.trim() && !textInput.trim()) ? "rgba(10,10,10,0.4)" : "#0A0A0A",
             border: "none",
@@ -336,7 +337,7 @@ export function VerseTrackerWidget() {
             )}
 
             {/* 7-day circles */}
-            <div style={{ display: "flex", gap: "8px", marginBottom: "10px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "nowrap", marginBottom: "10px" }}>
               {DAY_LABELS.map((label, i) => {
                 const checked = current.days[i];
                 const isToday = i === todayDayIndex();
@@ -347,8 +348,8 @@ export function VerseTrackerWidget() {
                       onClick={() => toggleDay(i)}
                       aria-label={`Toggle ${label}`}
                       style={{
-                        width: "28px",
-                        height: "28px",
+                        width: "36px",
+                        height: "36px",
                         borderRadius: "50%",
                         background: checked ? C.gold : "transparent",
                         border: `1px solid ${checked ? C.gold : isToday ? "rgba(201,168,76,0.4)" : "rgba(201,168,76,0.2)"}`,

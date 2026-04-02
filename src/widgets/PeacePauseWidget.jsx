@@ -264,7 +264,7 @@ export function PeacePauseWidget() {
       </div>
 
       {/* Pause Buttons */}
-      <div style={{ padding: "0 1.75rem 1.5rem", display: "flex", gap: "10px" }}>
+      <div style={{ padding: "0 1.75rem 1.5rem", display: "flex", gap: "8px", flexWrap: "wrap" }}>
         {PAUSE_KEYS.map(key => {
           const done = todayData[key];
           const isActive = active === key;
@@ -276,6 +276,8 @@ export function PeacePauseWidget() {
               style={{
                 ...barlow,
                 flex: 1,
+                minWidth: "80px",
+                minHeight: "44px",
                 padding: "9px 6px",
                 background: done ? C.gold : "transparent",
                 border: `1px solid ${done ? C.gold : "rgba(201,168,76,0.3)"}`,
@@ -337,6 +339,7 @@ export function PeacePauseWidget() {
                   style={{
                     ...barlow,
                     padding: "7px 18px",
+                    minHeight: "44px",
                     background: C.gold,
                     color: "#0A0A0A",
                     border: "none",

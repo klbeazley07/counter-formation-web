@@ -76,7 +76,7 @@ export function ArrowLogWidget() {
     borderRadius: "10px",
     padding: "10px 14px",
     color: C.ivory,
-    fontSize: "15px",
+    fontSize: "16px",
     lineHeight: 1.5,
     outline: "none",
     transition: "border-color .2s",
@@ -159,6 +159,7 @@ export function ArrowLogWidget() {
             style={{
               ...barlow,
               padding: "8px 22px",
+              minHeight: "44px",
               background: (!lie.trim() || !truth.trim()) ? "rgba(201,168,76,0.25)" : C.gold,
               color: (!lie.trim() || !truth.trim()) ? "rgba(10,10,10,0.4)" : "#0A0A0A",
               border: "none",

@@ -133,7 +133,7 @@ export function DeclarationWidget() {
     borderRadius: "10px",
     padding:      "10px 14px",
     color:        C.ivory,
-    fontSize:     "15px",
+    fontSize:     "16px",
     lineHeight:   1.5,
     outline:      "none",
     transition:   "border-color .2s",
@@ -277,6 +277,7 @@ export function DeclarationWidget() {
             ...barlow,
             flex:          1,
             padding:       "10px 18px",
+            minHeight:     "44px",
             background:    hasContent ? C.gold : "rgba(201,168,76,0.25)",
             color:         hasContent ? "#0A0A0A" : "rgba(10,10,10,0.4)",
             border:        "none",
@@ -301,6 +302,7 @@ export function DeclarationWidget() {
             ...barlow,
             flex:          1,
             padding:       "10px 18px",
+            minHeight:     "44px",
             background:    "transparent",
             color:         hasContent ? C.gold : "rgba(201,168,76,0.35)",
             border:        `1px solid ${hasContent ? C.goldBorder : "rgba(201,168,76,0.1)"}`,
@@ -324,8 +326,10 @@ export function DeclarationWidget() {
             background:   C.darkBg,
             border:       `1px solid ${C.goldBorder}`,
             borderRadius: "16px",
-            padding:      "2rem",
+            padding:      "1.5rem",
             textAlign:    "center",
+            width:        "100%",
+            boxSizing:    "border-box",
           }}>
             {/* Card Eyebrow */}
             <p style={{
