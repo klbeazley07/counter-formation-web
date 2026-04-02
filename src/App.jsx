@@ -995,8 +995,8 @@ function GearSection() {
           .gear-slide { flex: 0 0 100vw; width: 100vw; scroll-snap-align: start; scroll-snap-stop: always; position: relative; overflow: hidden; height: calc(100vh - 60px - 56px); height: calc(100svh - 60px - 56px); }
           .gear-grid-desktop { display: none !important; }
         }
-        .gear-pill-enter { animation: gearPillSlideUp 0.3s ease forwards; }
-        @keyframes gearPillSlideUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        .gear-pill-enter { animation: gearPillDropIn 0.3s ease forwards; }
+        @keyframes gearPillDropIn { from { opacity: 0; transform: translateX(-50%) translateY(-16px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
         .gear-picker-backdrop { animation: gearFadeIn 0.2s ease forwards; }
         .gear-picker-sheet { animation: gearSheetUp 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
         @keyframes gearFadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -1246,7 +1246,7 @@ function GearSection() {
           className="md:hidden gear-pill-enter"
           style={{
             position: "fixed",
-            bottom: "calc(56px + max(12px, env(safe-area-inset-bottom, 12px)))",
+            top: "68px",
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 95,
