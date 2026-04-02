@@ -1204,11 +1204,13 @@ export function ArmorStyles() {
 
       /* Bottom nav */
       .ap-piece-nav { display: flex; gap: 12px; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.06); }
-      .ap-nav-btn { flex: 1; min-height: 44px; padding: 16px 20px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.03); text-decoration: none; display: flex; flex-direction: column; gap: 4px; transition: border-color .25s, background .25s; }
+      .ap-nav-btn { flex: 1; min-height: 60px; padding: 16px 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.03); text-decoration: none; display: flex; flex-direction: row; align-items: center; gap: 14px; transition: border-color .25s, background .25s; }
       .ap-nav-btn:hover { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.05); }
-      .ap-nav-btn-dir   { font-size: 8px; letter-spacing: .36em; text-transform: uppercase; color: rgba(201,168,76,0.6); }
-      .ap-nav-btn-title { font-family: 'Michroma', sans-serif; font-size: clamp(12px, 1.8vw, 15px); text-transform: uppercase; letter-spacing: .08em; color: #FAF8F5; line-height: 1.1; }
-      .ap-nav-btn.next  { text-align: right; align-items: flex-end; }
+      .ap-nav-btn-text  { display: flex; flex-direction: column; gap: 4px; }
+      .ap-nav-btn-dir   { display: block; font-size: 8px; letter-spacing: .36em; text-transform: uppercase; color: rgba(201,168,76,0.6); }
+      .ap-nav-btn-title { display: block; font-family: 'Michroma', sans-serif; font-size: clamp(11px, 1.6vw, 14px); text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; line-height: 1.2; }
+      .ap-nav-btn.next  { flex-direction: row-reverse; text-align: right; }
+      .ap-nav-btn.next .ap-nav-btn-text { align-items: flex-end; }
 
       /* Footer */
       .ap-footer { background: #06050A; border-top: 1px solid rgba(255,255,255,0.05); padding: 28px 1.5rem; text-align: center; }
@@ -1827,7 +1829,7 @@ function SixPiecesSection() {
                       width: "clamp(40px, 5vw, 52px)",
                       height: "auto",
                       objectFit: "contain",
-                      filter: "brightness(0) invert(1)",
+                      mixBlendMode: "screen",
                       opacity: 0.6,
                       marginBottom: "1.25rem",
                     }}
@@ -1935,7 +1937,7 @@ function SixPiecesSection() {
                         width: "clamp(90px, 10vw, 120px)",
                         height: "auto",
                         objectFit: "contain",
-                        filter: "brightness(0) invert(1)",
+                        mixBlendMode: "screen",
                         opacity: 0.12,
                         pointerEvents: "none",
                         zIndex: 1,
@@ -2143,7 +2145,7 @@ function CollectionSection() {
                       width: p.available ? "44px" : "36px",
                       height: "auto",
                       objectFit: "contain",
-                      filter: "brightness(0) invert(1)",
+                      mixBlendMode: "screen",
                       opacity: p.available ? 0.5 : 0.12,
                     }}
                   />
@@ -2902,7 +2904,7 @@ export function ArmorPiecePage() {
         }}
       >
         {data.icon && (
-          <img src={data.icon} alt="" style={{ width: 40, filter: "brightness(0) invert(1)", opacity: 0.12, marginBottom: "2rem" }} />
+          <img src={data.icon} alt="" style={{ width: 40, mixBlendMode: "screen", opacity: 0.12, marginBottom: "2rem" }} />
         )}
         <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "10px", letterSpacing: "0.5em", textTransform: "uppercase", color: "#C9A84C", marginBottom: "1.5rem", fontWeight: 700 }}>
           You're Wearing the Armor
@@ -2950,7 +2952,7 @@ export function ArmorPiecePage() {
             <img
               src={data.icon}
               alt=""
-              style={{ width: "100%", height: "100%", objectFit: "contain", filter: "brightness(0) invert(1)" }}
+              style={{ width: "100%", height: "100%", objectFit: "contain", mixBlendMode: "screen" }}
             />
           )}
         </div>
@@ -2975,7 +2977,7 @@ export function ArmorPiecePage() {
                 width: "18px",
                 height: "18px",
                 objectFit: "contain",
-                filter: "brightness(0) invert(1)",
+                mixBlendMode: "screen",
                 opacity: 0.3,
                 flexShrink: 0,
                 marginRight: "8px",
@@ -3090,7 +3092,7 @@ export function ArmorPiecePage() {
                           width: "20px",
                           height: "20px",
                           objectFit: "contain",
-                          filter: "brightness(0) invert(1)",
+                          mixBlendMode: "screen",
                           opacity: slug === piece ? 0.7 : 0.15,
                           flexShrink: 0,
                           transition: "opacity 0.2s",
@@ -3110,8 +3112,8 @@ export function ArmorPiecePage() {
         <div className="ap-piece-nav" ref={pieceNavRef}>
           {prevData ? (
             <Link to={`/identity/${prevSlug}`} className="ap-nav-btn">
-              {prevData.icon && <img src={prevData.icon} alt="" style={{ width: "24px", height: "24px", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.55, flexShrink: 0 }} />}
-              <span>
+              {prevData.icon && <img src={prevData.icon} alt="" style={{ width: "24px", height: "24px", objectFit: "contain", mixBlendMode: "screen", opacity: 0.55, flexShrink: 0 }} />}
+              <span className="ap-nav-btn-text">
                 <span className="ap-nav-btn-dir">← Piece {prevData.num}</span>
                 <span className="ap-nav-btn-title">{prevData.title}</span>
               </span>
@@ -3119,11 +3121,11 @@ export function ArmorPiecePage() {
           ) : <div />}
           {nextData ? (
             <Link to={`/identity/${nextSlug}`} className="ap-nav-btn next">
-              <span>
+              <span className="ap-nav-btn-text">
                 <span className="ap-nav-btn-dir">Piece {nextData.num} →</span>
                 <span className="ap-nav-btn-title">{nextData.title}</span>
               </span>
-              {nextData.icon && <img src={nextData.icon} alt="" style={{ width: "24px", height: "24px", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.55, flexShrink: 0 }} />}
+              {nextData.icon && <img src={nextData.icon} alt="" style={{ width: "24px", height: "24px", objectFit: "contain", mixBlendMode: "screen", opacity: 0.55, flexShrink: 0 }} />}
             </Link>
           ) : <div />}
         </div>
