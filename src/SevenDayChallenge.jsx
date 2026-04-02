@@ -1092,6 +1092,12 @@ export function CFDevotion() {
                 <path d="M1 6h10M6.5 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
             </Link>
+            <p style={{ marginTop: "1.75rem", fontSize: "clamp(13px,3.2vw,15px)", color: "rgba(250,248,245,0.55)", lineHeight: 1.7 }}>
+              You've completed the 7-Day Challenge. Ready to go deeper? The Armor of God formation tracks take the disciplines you've started and build them into a daily practice.
+            </p>
+            <Link to="/identity" style={{ display: "inline-flex", alignItems: "center", gap: "6px", marginTop: "0.75rem", color: "#C9A84C", fontSize: "clamp(11px,2.8vw,13px)", letterSpacing: "0.08em", textDecoration: "none" }}>
+              Begin the Armor of God →
+            </Link>
           </div>
         )}
 

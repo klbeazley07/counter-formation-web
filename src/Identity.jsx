@@ -2115,6 +2115,9 @@ function CTASection() {
           >
             Explore the Collection
           </a>
+          <Link to="/7-day-challenge" style={{ color: "rgba(245,242,236,0.5)", fontSize: "0.85rem", textDecoration: "none", display: "block", marginTop: "1.5rem" }}>
+            New to Counter Formation? Start with the 7-Day Challenge →
+          </Link>
         </div>
 
         <div ref={scriptureRef}>
