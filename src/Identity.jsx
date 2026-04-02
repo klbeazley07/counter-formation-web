@@ -1123,11 +1123,13 @@ export function ArmorStyles() {
       .ap-content { max-width: 800px; margin: 0 auto; padding: 44px 20px 100px; }
 
       /* Day selector */
-      .ap-day-nav { display: flex; overflow-x: auto; gap: 4px; padding-bottom: 1px; margin-bottom: 2.5rem; border-bottom: 1px solid rgba(255,255,255,0.07); scrollbar-width: none; }
+      .ap-day-nav { display: flex; overflow-x: auto; gap: 4px; padding-bottom: 1px; margin-bottom: 2.5rem; border-bottom: 1px solid rgba(255,255,255,0.07); scrollbar-width: none; position: sticky; top: 2px; z-index: 50; background: #06050A; padding-top: 12px; box-shadow: 0 8px 24px rgba(6,5,10,0.95); }
       .ap-day-nav::-webkit-scrollbar { display: none; }
       .ap-day-btn { flex-shrink: 0; padding: 10px 18px; border: none; background: transparent; border-bottom: 2px solid transparent; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: rgba(250,248,245,0.28); transition: color .2s, border-color .2s; }
       .ap-day-btn.active { color: #C9A84C; border-bottom-color: #C9A84C; }
       .ap-day-btn:hover:not(.active) { color: rgba(250,248,245,0.55); }
+      .ap-day-btn.completed::after { content: ''; display: block; width: 4px; height: 4px; border-radius: 50%; background: #C9A84C; margin: 4px auto 0; opacity: 0.6; }
+      .ap-day-btn.active.completed::after { opacity: 1; }
 
       /* Section labels */
       .ap-sec-label { font-size: 9px; letter-spacing: .45em; text-transform: uppercase; color: #C9A84C; margin-bottom: 1.25rem; padding-bottom: .75rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -2411,6 +2413,12 @@ export function ArmorPiecePage() {
   const { piece }     = useParams();
   const navigate      = useNavigate();
   const [day, setDay] = useState(1);
+  const [completedDays, setCompletedDays] = useState(() => {
+    try {
+      const stored = localStorage.getItem(`cf-armor-progress-${piece}`);
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
+  });
   const progRef       = useRef(null);
   const wrapRef       = useRef(null);
   const heroBgRef     = useRef(null);
@@ -2429,7 +2437,17 @@ export function ArmorPiecePage() {
   useEffect(() => {
     window.scrollTo(0, 0);
     setDay(1);
+    try {
+      const stored = localStorage.getItem(`cf-armor-progress-${piece}`);
+      setCompletedDays(stored ? JSON.parse(stored) : []);
+    } catch { setCompletedDays([]); }
   }, [piece]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(`cf-armor-progress-${piece}`, JSON.stringify(completedDays));
+    } catch {}
+  }, [completedDays, piece]);
 
   useEffect(() => {
     if (!data) return;
@@ -2437,10 +2455,13 @@ export function ArmorPiecePage() {
       const d = document.documentElement;
       const pct = d.scrollTop / (d.scrollHeight - d.clientHeight) || 0;
       if (progRef.current) progRef.current.style.width = (pct * 100) + "%";
+      if (pct > 0.8 && !completedDays.includes(day)) {
+        setCompletedDays(prev => [...new Set([...prev, day])]);
+      }
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [data]);
+  }, [data, day, completedDays]);
 
   /* ─── GSAP Piece Page Animations ─── */
   useEffect(() => {
@@ -2599,8 +2620,16 @@ export function ArmorPiecePage() {
           {data.days.map(d => (
             <button
               key={d.num}
-              className={`ap-day-btn${day === d.num ? " active" : ""}`}
-              onClick={() => { setDay(d.num); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+              className={`ap-day-btn${day === d.num ? " active" : ""}${completedDays.includes(d.num) ? " completed" : ""}`}
+              onClick={() => {
+                setDay(d.num);
+                const contentEl = document.querySelector('.ap-main');
+                if (contentEl) {
+                  const navHeight = document.querySelector('.ap-day-nav')?.offsetHeight || 60;
+                  const top = contentEl.getBoundingClientRect().top + window.scrollY - navHeight - 16;
+                  window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+                }
+              }}
             >
               Day {d.num}
             </button>
