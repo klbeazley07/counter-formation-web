@@ -10,6 +10,7 @@ import { PeacePauseWidget }   from "./widgets/PeacePauseWidget";
 import { ArrowLogWidget }     from "./widgets/ArrowLogWidget";
 import { FirstFifteenWidget } from "./widgets/FirstFifteenWidget";
 import { VerseTrackerWidget } from "./widgets/VerseTrackerWidget";
+import { FormationShareable } from "./FormationShareable";
 
 const SHOPIFY_URL = "https://shop.counterformed.com/collections/the-gear";
 
@@ -2209,14 +2210,12 @@ export function ArmorPiecePage() {
           </div>
 
           {/* Declare */}
-          <div className="ap-declare">
-            <p className="ap-declare-label">Declare</p>
-            <p className="ap-declare-prompt">
-              {isLastDay
-                ? "What is the one thing God showed you this week?"
-                : "What is the one thing God showed you today?"}
-            </p>
-          </div>
+          <FormationShareable
+            trackName={data.title}
+            dayNumber={curDay.num}
+            scriptureRef={curDay.scriptures[0]?.ref ?? ""}
+            isLastDay={isLastDay}
+          />
         </div>
 
         {/* Sticky sidebar */}
