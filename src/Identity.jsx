@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronDown, ArrowRight, Menu } from "lucide-react";
@@ -1984,70 +1984,208 @@ export function IdentityLanding() {
   );
 }
 
-export function ArmorPiecePlaceholder() {
-  const location = useLocation();
-  const slug = location.pathname.replace("/identity/", "");
-  const armorPiece = ARMOR_PIECES.find(p => p.slug === slug);
+const PIECE_ORDER = [
+  "belt-of-truth",
+  "breastplate-of-righteousness",
+  "gospel-of-peace",
+  "shield-of-faith",
+  "helmet-of-salvation",
+  "sword-of-the-spirit",
+];
 
-  if (!armorPiece) {
-    return (
-      <div
-        className="min-h-screen flex flex-col items-center justify-center"
-        style={{ backgroundColor: C.heroBg }}
-      >
-        <Link
-          to="/identity"
-          style={{ color: C.gold, textDecoration: "none", fontSize: "12px", letterSpacing: "0.3em" }}
-        >
-          ← Back to Identity
-        </Link>
-      </div>
-    );
-  }
+const WIDGET_META = {
+  "belt-of-truth":               { name: "Daily Examen",               desc: "Five guided examination questions with journaling fields. A nightly review of the day through the lens of consolation and desolation." },
+  "breastplate-of-righteousness":{ name: "Declaration Builder",        desc: "Build a morning declaration card from your own identity statements. Formatted, printable, and shareable." },
+  "gospel-of-peace":             { name: "Peace Pause Timer",          desc: "A three-checkpoint timer for morning, midday, and evening anchoring moments throughout the day." },
+  "shield-of-faith":             { name: "Arrow Log",                  desc: "A two-column journal: lies you're hearing on the left, what God has said on the right. Patterns emerge over time." },
+  "helmet-of-salvation":         { name: "First Fifteen Designer",     desc: "Design your morning first-fifteen-minute practice: Scripture, silence, prayer, declaration — in the order that forms you." },
+  "sword-of-the-spirit":         { name: "Verse Memorization Tracker", desc: "Input your weekly verse, mark daily review completions, and build a growing library of memorized Scripture." },
+};
+
+export function ArmorPiecePage() {
+  const { piece }     = useParams();
+  const navigate      = useNavigate();
+  const [day, setDay] = useState(1);
+  const progRef       = useRef(null);
+
+  const data = ARMOR_TRACKS[piece];
+
+  useEffect(() => {
+    if (!data) navigate("/identity", { replace: true });
+  }, [data, navigate]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    setDay(1);
+  }, [piece]);
+
+  useEffect(() => {
+    if (!data) return;
+    const onScroll = () => {
+      const d = document.documentElement;
+      const pct = d.scrollTop / (d.scrollHeight - d.clientHeight) || 0;
+      if (progRef.current) progRef.current.style.width = (pct * 100) + "%";
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [data]);
+
+  if (!data) return null;
+
+  const idx      = PIECE_ORDER.indexOf(piece);
+  const prevSlug = PIECE_ORDER[idx - 1] ?? null;
+  const nextSlug = PIECE_ORDER[idx + 1] ?? null;
+  const prevData = prevSlug ? ARMOR_TRACKS[prevSlug] : null;
+  const nextData = nextSlug ? ARMOR_TRACKS[nextSlug] : null;
+  const curDay   = data.days[day - 1];
+  const widget   = WIDGET_META[piece];
+  const isLastDay = day === 6;
 
   return (
-    <div className="min-h-screen text-[#FAF8F5]" style={{ backgroundColor: C.heroBg }}>
+    <div className="ap-wrap">
       <BackNav />
+      <div className="ap-prog-bar"><div className="ap-prog-fill" ref={progRef} /></div>
 
-      <div className="flex flex-col items-center justify-center min-h-screen px-6 text-center max-w-2xl mx-auto">
-        <span
-          className="text-[10px] tracking-[0.5em] uppercase font-bold mb-6"
-          style={{ color: C.gold }}
-        >
-          {armorPiece.num} · The Armor of God
-        </span>
-        <h1 className="font-brand text-3xl md:text-7xl uppercase tracking-[0.1em] text-white mb-6 leading-none">
-          {armorPiece.title}
-        </h1>
-        <p
-          className="text-[11px] tracking-[0.3em] uppercase mb-10"
-          style={{ color: `${C.ivory}44` }}
-        >
-          {armorPiece.scripture}
-        </p>
-        <p
-          className="text-sm md:text-base leading-relaxed max-w-md mb-6 font-light"
-          style={{ color: `${C.ivory}55` }}
-        >
-          {armorPiece.theology}
-        </p>
-        <blockquote
-          className="mb-12 text-base leading-relaxed max-w-sm"
-          style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontStyle: "italic",
-            color: `${C.ivory}66`,
-          }}
-        >
-          "{armorPiece.hook}"
-        </blockquote>
-        <span
-          className="text-[10px] tracking-[0.4em] uppercase px-6 py-3 rounded-full"
-          style={{ color: `${C.ivory}33`, border: `1px solid ${C.ivory}10` }}
-        >
-          Full formation page coming soon
-        </span>
+      {/* ── Hero ── */}
+      <div className="ap-hero">
+        <div className="ap-hero-bg" style={{ backgroundImage: `url('${data.img}')` }} />
+        <div className="ap-hero-ov" />
+        <div className="ap-hero-num">{data.num}</div>
+        <div className="ap-hero-in">
+          <p className="ap-hero-eye">Piece {data.num} · Armor of God</p>
+          <h1 className="ap-hero-h1">{data.title}</h1>
+          <p className="ap-hero-sub">{data.trackTitle}</p>
+        </div>
       </div>
+
+      {/* ── Two-column content ── */}
+      <div className="ap-content">
+
+        {/* Day selector */}
+        <div className="ap-day-nav">
+          {data.days.map(d => (
+            <button
+              key={d.num}
+              className={`ap-day-btn${day === d.num ? " active" : ""}`}
+              onClick={() => { setDay(d.num); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+            >
+              Day {d.num}
+            </button>
+          ))}
+        </div>
+
+        {/* Main column */}
+        <div className="ap-main">
+          <p className="ap-sec-label">Day {curDay.num} · {curDay.title}</p>
+
+          {/* Stillness */}
+          <p className="ap-stillness">{curDay.stillness}</p>
+
+          {/* Scripture */}
+          <div className="ap-scriptures">
+            {curDay.scriptures.map((s, i) => (
+              <div key={i} className="ap-scripture">
+                <p>"{s.text}"</p>
+                <cite>{s.ref}</cite>
+              </div>
+            ))}
+          </div>
+
+          <div className="ap-rule" />
+
+          {/* Teaching */}
+          <div className="ap-teaching">
+            <p className="ap-sec-label">Teaching</p>
+            {curDay.teaching.map((para, i) => (
+              <p key={i} className="ap-body">{para}</p>
+            ))}
+          </div>
+
+          <div className="ap-rule" />
+
+          {/* Practice */}
+          <div className="ap-practice">
+            <div className="ap-practice-head">
+              <p className="ap-sec-label" style={{ margin: 0, border: "none", paddingBottom: 0 }}>Practice</p>
+              <span className="ap-practice-badge">{curDay.practice.duration}</span>
+            </div>
+            <p className="ap-practice-body">{curDay.practice.body}</p>
+          </div>
+
+          {/* Reflection */}
+          <div className="ap-reflection">
+            <p className="ap-sec-label" style={{ marginBottom: ".75rem" }}>Reflection</p>
+            {curDay.reflection}
+          </div>
+
+          {/* Prayer */}
+          <div>
+            <p className="ap-sec-label">Prayer</p>
+            <div className="ap-prayer">{curDay.prayer}</div>
+          </div>
+
+          {/* Declare */}
+          <div className="ap-declare">
+            <p className="ap-declare-label">Declare</p>
+            <p className="ap-declare-prompt">
+              {isLastDay
+                ? "What is the one thing God showed you this week?"
+                : "What is the one thing God showed you today?"}
+            </p>
+          </div>
+        </div>
+
+        {/* Sticky sidebar */}
+        <div className="ap-sidebar">
+          <div className="ap-widget-placeholder">
+            <p className="ap-widget-label">Interactive Widget</p>
+            <p className="ap-widget-title">{widget.name}</p>
+            <p className="ap-widget-desc">{widget.desc}</p>
+            <p className="ap-widget-soon">Coming in next session</p>
+          </div>
+
+          <div>
+            <p className="ap-armor-nav-label">The Six Pieces</p>
+            <div className="ap-armor-nav">
+              {PIECE_ORDER.map(slug => {
+                const p = ARMOR_TRACKS[slug];
+                return (
+                  <Link
+                    key={slug}
+                    to={`/identity/${slug}`}
+                    className={`ap-armor-link${slug === piece ? " active" : ""}`}
+                  >
+                    <span className="ap-armor-link-num">{p.num}</span>
+                    <span className="ap-armor-link-title">{p.title}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom navigation */}
+        <div className="ap-piece-nav">
+          {prevData ? (
+            <Link to={`/identity/${prevSlug}`} className="ap-nav-btn">
+              <span className="ap-nav-btn-dir">← Piece {prevData.num}</span>
+              <span className="ap-nav-btn-title">{prevData.title}</span>
+            </Link>
+          ) : <div />}
+          {nextData ? (
+            <Link to={`/identity/${nextSlug}`} className="ap-nav-btn next">
+              <span className="ap-nav-btn-dir">Piece {nextData.num} →</span>
+              <span className="ap-nav-btn-title">{nextData.title}</span>
+            </Link>
+          ) : <div />}
+        </div>
+
+      </div>
+
+      <footer className="ap-footer">
+        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
+        <p>Counter Formation · Armor of God · Ephesians 6:10–18 · © 2026</p>
+      </footer>
     </div>
   );
 }

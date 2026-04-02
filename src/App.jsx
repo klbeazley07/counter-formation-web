@@ -22,7 +22,7 @@ import {
   PracticePage,
   CommunityPage,
 } from "./Architecture";
-import { IdentityLanding, ArmorPiecePlaceholder, ArmorStyles } from "./Identity";
+import { IdentityLanding, ArmorPiecePage, ArmorStyles } from "./Identity";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1561,12 +1561,7 @@ export default function App() {
 
         {/* Architecture routes */}
         <Route path="/identity"  element={<IdentityLanding />} />
-        <Route path="/identity/belt-of-truth"               element={<ArmorPiecePlaceholder />} />
-        <Route path="/identity/breastplate-of-righteousness" element={<ArmorPiecePlaceholder />} />
-        <Route path="/identity/gospel-of-peace"             element={<ArmorPiecePlaceholder />} />
-        <Route path="/identity/shield-of-faith"             element={<ArmorPiecePlaceholder />} />
-        <Route path="/identity/helmet-of-salvation"         element={<ArmorPiecePlaceholder />} />
-        <Route path="/identity/sword-of-the-spirit"         element={<ArmorPiecePlaceholder />} />
+        <Route path="/identity/:piece" element={<ArmorPiecePage />} />
         <Route path="/practice"   element={<PracticePage />} />
         <Route path="/community"  element={<CommunityPage />} />
 
