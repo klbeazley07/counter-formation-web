@@ -1395,7 +1395,7 @@ function HeroSection() {
     <section
       id="hero"
       ref={sectionRef}
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-16 md:pt-0"
       style={{ backgroundColor: C.heroBg }}
     >
       {/* Hero image — very low opacity atmospheric */}
@@ -1462,8 +1462,8 @@ function HeroSection() {
         </span>
         <h1
           ref={headlineRef}
-          className="font-brand uppercase tracking-[0.1em] md:tracking-[0.14em] text-white leading-none mb-8 opacity-0"
-          style={{ fontSize: "clamp(2.2rem, 7vw, 5rem)" }}
+          className="font-brand uppercase tracking-[0.06em] md:tracking-[0.14em] text-white leading-none mb-8 opacity-0"
+          style={{ fontSize: "clamp(1.8rem, 7vw, 5rem)" }}
         >
           You Are Being Formed
         </h1>
