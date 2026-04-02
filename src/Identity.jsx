@@ -1820,6 +1820,43 @@ function SixPiecesSection() {
               </div>
 
               <div className={i % 2 === 1 ? "md:[direction:ltr]" : ""}>
+                {/* Mobile image card — visible below 768px only */}
+                <div
+                  className="md:hidden rounded-xl overflow-hidden relative mb-6"
+                  style={{
+                    aspectRatio: "16/9",
+                    background: `linear-gradient(135deg, ${C.heroBg} 0%, ${C.ruleBg} 100%)`,
+                  }}
+                >
+                  <img
+                    src={ARMOR_TRACKS[piece.slug]?.img || ""}
+                    alt={piece.title}
+                    style={{
+                      position: "absolute", inset: 0,
+                      width: "100%", height: "100%",
+                      objectFit: "cover", objectPosition: "center top",
+                    }}
+                  />
+                  <div style={{
+                    position: "absolute", inset: 0,
+                    background: `linear-gradient(to top, ${C.heroBg}DD 0%, transparent 60%)`,
+                  }} />
+                  {piece.icon && (
+                    <img
+                      src={piece.icon}
+                      alt=""
+                      style={{
+                        position: "absolute",
+                        top: "50%", left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        width: "60px", height: "auto",
+                        objectFit: "contain",
+                        opacity: 0.15,
+                        pointerEvents: "none",
+                      }}
+                    />
+                  )}
+                </div>
                 {piece.icon && (
                   <img
                     src={piece.icon}
