@@ -977,7 +977,7 @@ function GearSection() {
         .gear-lookbook { display: none; }
         .gear-grid-desktop { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: clamp(20px, 2.5vw, 32px); }
         @media (max-width: 767px) {
-          .gear-section-mobile { padding-top: 0 !important; padding-bottom: 0 !important; padding-left: 0 !important; padding-right: 0 !important; }
+          .gear-section-mobile { padding-top: 0 !important; padding-bottom: 0 !important; padding-left: 0 !important; padding-right: 0 !important; overflow: visible !important; }
           .gear-section-header { display: none; }
           .gear-capsule-shelf { display: none; }
           .gear-collection-hero { display: none; }
