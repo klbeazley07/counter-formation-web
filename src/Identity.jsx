@@ -127,7 +127,7 @@ const ARMOR_TRACKS = {
     num: "01",
     title: "Belt of Truth",
     trackTitle: "Living in the Light",
-    img: "/Belt_wide.png",
+    img: "/Belt of Truth_Hero_wide.png",
     cumulative: "Written personal examination (5 weekly questions)",
     days: [
       {
@@ -293,7 +293,7 @@ const ARMOR_TRACKS = {
     num: "02",
     title: "Breastplate of Righteousness",
     trackTitle: "Already Clothed",
-    img: "/Breastplate_wide.png",
+    img: "/Breastplate_Hero_wide.png",
     cumulative: "Morning declaration (3–5 identity sentences)",
     days: [
       {
@@ -456,7 +456,7 @@ const ARMOR_TRACKS = {
     num: "03",
     title: "Gospel of Peace",
     trackTitle: "Ground Beneath You",
-    img: "/GosPeace_wide.png",
+    img: "/Gospel of Peace_Hero_wide.png",
     cumulative: "Peace Pause rhythm (3 daily anchoring statements)",
     days: [
       {
@@ -619,7 +619,7 @@ const ARMOR_TRACKS = {
     num: "04",
     title: "Shield of Faith",
     trackTitle: "Behind What God Has Said",
-    img: "/Shield_wide.png",
+    img: "/Shield of Faith_Hero_wide.png",
     cumulative: "Arrow log (lies vs. truth document)",
     days: [
       {
@@ -781,7 +781,7 @@ const ARMOR_TRACKS = {
     num: "05",
     title: "Helmet of Salvation",
     trackTitle: "A Protected Mind",
-    img: "/Helmet_wide.png",
+    img: "/Helmet_Hero_wide.png",
     cumulative: "First Fifteen morning practice design",
     days: [
       {
@@ -937,7 +937,7 @@ const ARMOR_TRACKS = {
     num: "06",
     title: "Sword of the Spirit",
     trackTitle: "The Word as Weapon",
-    img: "/Sword_wide.png",
+    img: "/Sword_Hero_wide.png",
     cumulative: "Verse memorization system + first 5 verses",
     days: [
       {
@@ -1350,7 +1350,7 @@ function HeroSection() {
       <div
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: "url('/identity_wide.png')",
+          backgroundImage: "url('/Identity_wide.png')",
           backgroundSize: "cover",
           backgroundPosition: "center 20%",
           opacity: 0.18,
