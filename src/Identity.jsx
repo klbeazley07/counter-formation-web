@@ -2160,7 +2160,7 @@ function CollectionSection() {
               className="drop-card group relative rounded-2xl overflow-hidden flex flex-col"
               style={{
                 textDecoration: "none",
-                minHeight: "320px",
+                minHeight: p.available ? "320px" : "clamp(160px, 40vw, 320px)",
                 background: `${C.ivory}05`,
                 border: `1px solid ${C.ivory}${p.available ? "0F" : "07"}`,
               }}
@@ -2214,7 +2214,7 @@ function CollectionSection() {
                 </p>
                 {p.hook && (
                   <p
-                    className="text-[13px] leading-relaxed mt-auto"
+                    className={`text-[13px] leading-relaxed mt-auto ${!p.available ? "hidden md:block" : ""}`}
                     style={{
                       fontFamily: "'Cormorant Garamond', serif",
                       fontStyle: "italic",
