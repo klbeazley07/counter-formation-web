@@ -1342,6 +1342,7 @@ function HeroSection() {
 
   return (
     <section
+      id="hero"
       ref={sectionRef}
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
       style={{ backgroundColor: C.heroBg }}
@@ -1494,7 +1495,7 @@ function ArmorIntroSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: C.heroBg }}>
+    <section id="scripture" ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: C.heroBg }}>
       <div className="max-w-[740px] mx-auto">
         <span
           ref={eyebrowBRef}
@@ -1628,6 +1629,7 @@ function GodsArmorSection() {
 
   return (
     <section
+      id="revelation"
       ref={sectionRef}
       className="py-24 md:py-40 px-5"
       style={{ backgroundColor: C.heroBg }}
@@ -1730,7 +1732,7 @@ function SixPiecesSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: C.ruleBg }}>
+    <section id="six-pieces" ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: C.ruleBg }}>
       <div className="max-w-[1100px] mx-auto">
 
         <div className="mb-16 md:mb-24">
@@ -1849,20 +1851,38 @@ function SixPiecesSection() {
                     border: `1px solid ${C.ivory}0A`,
                   }}
                 >
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span
-                      style={{
-                        fontFamily: "'Michroma', sans-serif",
-                        fontSize: "clamp(60px, 8vw, 100px)",
-                        fontWeight: 700,
-                        color: `${C.gold}12`,
-                      }}
-                    >
-                      {piece.num}
-                    </span>
-                  </div>
+                  {/* Hero image */}
+                  <img
+                    src={ARMOR_TRACKS[piece.slug]?.img || ""}
+                    alt={piece.title}
+                    style={{
+                      position: "absolute", inset: 0,
+                      width: "100%", height: "100%",
+                      objectFit: "cover", objectPosition: "center top",
+                    }}
+                  />
+                  {/* Gradient overlay — bottom fade for text legibility */}
+                  <div style={{
+                    position: "absolute", inset: 0,
+                    background: `linear-gradient(to top, ${C.heroBg}EE 0%, ${C.heroBg}44 45%, transparent 100%)`,
+                  }} />
+                  {/* Piece number watermark */}
+                  <span
+                    style={{
+                      position: "absolute", top: "1.25rem", right: "1.25rem",
+                      fontFamily: "'Michroma', sans-serif",
+                      fontSize: "clamp(1.5rem, 2.5vw, 2.25rem)",
+                      fontWeight: 700,
+                      color: `${C.ivory}22`,
+                      lineHeight: 1,
+                      userSelect: "none",
+                    }}
+                  >
+                    {piece.num}
+                  </span>
+                  {/* Bottom label */}
                   <div className="absolute bottom-6 left-6 right-6">
-                    <p className="text-[9px] tracking-[0.3em] uppercase" style={{ color: `${C.gold}44` }}>
+                    <p className="font-brand text-[8px] tracking-[0.3em] uppercase" style={{ color: `${C.gold}88` }}>
                       {piece.product || "Formation content · Coming soon"}
                     </p>
                   </div>
@@ -1913,7 +1933,7 @@ function BrandSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: C.ruleBg }}>
+    <section id="why" ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: C.ruleBg }}>
       <div className="max-w-[740px] mx-auto">
         <span
           className="brand-para block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
@@ -1981,6 +2001,7 @@ function CollectionSection() {
 
   return (
     <section
+      id="collection"
       ref={sectionRef}
       className="py-24 md:py-40 px-5"
       style={{ backgroundColor: C.ruleBg }}
@@ -2072,6 +2093,18 @@ function CollectionSection() {
                     "{p.hook}"
                   </p>
                 )}
+                {p.available && (
+                  <a
+                    href="https://shop.counterformed.com/collections/the-gear"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={e => e.stopPropagation()}
+                    className="text-[9px] tracking-[0.3em] uppercase font-bold mt-4 inline-flex items-center gap-2 hover:opacity-100 transition-opacity"
+                    style={{ color: "#C9A84C", opacity: 0.6, textDecoration: "none" }}
+                  >
+                    Shop this piece →
+                  </a>
+                )}
               </div>
             </Link>
           ))}
@@ -2121,6 +2154,7 @@ function CTASection() {
 
   return (
     <section
+      id="begin"
       ref={sectionRef}
       className="py-24 md:py-48 px-5 text-center"
       style={{ backgroundColor: C.heroBg }}
@@ -2266,6 +2300,25 @@ export function IdentityLanding() {
   }, []);
   return (
     <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: C.heroBg }}>
+      <style>{`
+        @keyframes shimmerSweep {
+          0%   { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        .shimmer-sweep {
+          background: linear-gradient(
+            90deg,
+            rgba(201,168,76,0.47) 0%,
+            rgba(250,248,245,0.85) 50%,
+            rgba(201,168,76,0.47) 100%
+          );
+          background-size: 200% 100%;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: shimmerSweep 0.9s ease-in-out;
+        }
+      `}</style>
       <SiteNav />
       <HeroSection />
       <ArmorIntroSection />
