@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
+import { ScriptureRef } from "./ScriptureRef";
 
 const SHOPIFY_URL = "https://shop.counterformed.com/collections/the-gear";
 
@@ -939,7 +940,7 @@ function CampaignPage({ pillar }) {
           <div className="camp-pull"><p>"{pillar.pullQuote}"</p></div>
           <div className="camp-scripture">
             <p>"{pillar.scripture.t}"</p>
-            <cite>— {pillar.scripture.r}</cite>
+            <cite>— <ScriptureRef reference={pillar.scripture.r} text={pillar.scripture.t} /></cite>
           </div>
           <div className="camp-sections">
             {pillar.sections.map((s, i) => (

@@ -17,7 +17,8 @@ const C = {
 const ARMOR_PIECES = [
   {
     num: "01", slug: "belt-of-truth", title: "Belt of Truth",
-    scripture: "Ephesians 6:14a",
+    scripture: "Ephesians 6:14",
+    scriptureText: "Stand firm then, with the belt of truth buckled around your waist.",
     theology: "The belt was the first piece — everything else attached to it. Truth is foundational. Not abstract doctrine but lived reality.",
     tension: "Curated identity. Social media trains you to perform a self rather than know one.",
     practice: "Five-minute evening examination rooted in Ignatian Examen.",
@@ -26,7 +27,8 @@ const ARMOR_PIECES = [
   },
   {
     num: "02", slug: "breastplate-of-righteousness", title: "Breastplate of Righteousness",
-    scripture: "Ephesians 6:14b",
+    scripture: "Ephesians 6:14",
+    scriptureText: "Stand firm then, with the breastplate of righteousness in place.",
     theology: "Protects the heart. Positional righteousness, not moral performance. Christ's righteousness credited to you.",
     tension: "Performance engine. Worth = output.",
     practice: "Morning declaration spoken aloud.",
@@ -36,6 +38,7 @@ const ARMOR_PIECES = [
   {
     num: "03", slug: "gospel-of-peace", title: "Gospel of Peace",
     scripture: "Ephesians 6:15",
+    scriptureText: "And with your feet fitted with the readiness that comes from the gospel of peace.",
     theology: "Roman sandals had cleats for standing firm. Peace is grounding, not absence of conflict.",
     tension: "Anxiety as ambient condition. Systems engineered for reactivity.",
     practice: "\"Peace pause\" three times daily, sixty seconds of stillness.",
@@ -45,6 +48,7 @@ const ARMOR_PIECES = [
   {
     num: "04", slug: "shield-of-faith", title: "Shield of Faith",
     scripture: "Ephesians 6:16",
+    scriptureText: "In addition to all this, take up the shield of faith, with which you can extinguish all the flaming arrows of the evil one.",
     theology: "Full-body thureos soaked in water to quench fire arrows. Faith is positioning, not feeling.",
     tension: "Flaming arrows are lies about identity, God's character, whether obedience is worth it.",
     practice: "\"Arrow log\" to catch lies and answer with Scripture.",
@@ -53,7 +57,8 @@ const ARMOR_PIECES = [
   },
   {
     num: "05", slug: "helmet-of-salvation", title: "Helmet of Salvation",
-    scripture: "Ephesians 6:17a",
+    scripture: "Ephesians 6:17",
+    scriptureText: "Take the helmet of salvation and the sword of the Spirit, which is the word of God.",
     theology: "Protects the mind. Salvation as present reality and settled identity, not just future promise.",
     tension: "Mind is most contested territory. Anxiety, doom-scrolling, information overload.",
     practice: "\"Helmet check\" — morning identity declaration before digital input.",
@@ -62,7 +67,8 @@ const ARMOR_PIECES = [
   },
   {
     num: "06", slug: "sword-of-the-spirit", title: "Sword of the Spirit",
-    scripture: "Ephesians 6:17b",
+    scripture: "Ephesians 6:17",
+    scriptureText: "Take the sword of the Spirit, which is the word of God.",
     theology: "Only offensive weapon. Scripture as living, active, spoken weapon. Rhema = specific utterance.",
     tension: "Biblical illiteracy at historic highs.",
     practice: "Scripture memorization, one verse per week.",
@@ -1595,7 +1601,7 @@ function SixPiecesSection() {
                   {piece.title}
                 </h3>
                 <p className="text-[10px] tracking-[0.35em] uppercase mb-8" style={{ color: `${C.gold}99` }}>
-                  {piece.scripture}
+                  <ScriptureRef reference={piece.scripture} text={piece.scriptureText} />
                 </p>
 
                 <div className="space-y-6">
