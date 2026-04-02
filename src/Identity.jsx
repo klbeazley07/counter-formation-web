@@ -1250,31 +1250,67 @@ function HeroSection() {
   const sublineRef  = useRef(null);
   const chevronRef  = useRef(null);
   const watermarkRef = useRef(null);
+  const particleRef = useRef(null);
 
   useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
     const ctx = gsap.context(() => {
-      gsap.set([eyebrowRef.current, headlineRef.current, sublineRef.current, chevronRef.current], { opacity: 0, y: 20 });
+      // --- Initial states ---
+      gsap.set([eyebrowRef.current, sublineRef.current, chevronRef.current], { opacity: 0, y: 20 });
+      gsap.set(headlineRef.current, { opacity: 0, y: 20, scale: 0.97 });
       gsap.set(watermarkRef.current, { opacity: 0 });
 
+      // --- Hero entrance timeline (page load, not scroll) ---
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
       tl.to(watermarkRef.current,  { opacity: 0.10, duration: 2.0 })
         .to(eyebrowRef.current,    { opacity: 1,    y: 0, duration: 0.8 }, "-=1.5")
-        .to(headlineRef.current,   { opacity: 1,    y: 0, duration: 0.9 }, "-=0.55")
-        .to(sublineRef.current,    { opacity: 0.55, y: 0, duration: 0.8 }, "-=0.5")
-        .to(chevronRef.current,    { opacity: 0.6,  y: 0, duration: 0.7 }, "-=0.4");
+        .fromTo(headlineRef.current,
+          { opacity: 0, y: 20, scale: 0.97 },
+          { opacity: 1, y: 0, scale: 1.0, duration: 1.2, ease: "power3.out" }, "-=0.55")
+        .to(sublineRef.current,    { opacity: 0.55, y: 0, duration: 0.8 }, "-=0.8")
+        .to(chevronRef.current,    { opacity: 0.6,  y: 0, duration: 0.7 }, "-=0.5");
 
-      // Chevron pulse
+      // --- Scroll indicator pulse: opacity 0.4 → 1.0 ---
+      gsap.to(chevronRef.current, {
+        opacity: 1, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2.5,
+      });
       gsap.to(chevronRef.current, {
         y: 8, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2.5,
       });
 
-      // Watermark parallax on scroll
+      // --- Watermark parallax (scrub) ---
       gsap.to(watermarkRef.current, {
         yPercent: -15,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      // --- Particle field drift ---
+      if (particleRef.current) {
+        gsap.to(particleRef.current, {
+          y: -18,
+          duration: 14,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+      }
+
+      // --- Hero exit parallax: fade headline + subline out on scroll past ---
+      gsap.to([headlineRef.current, sublineRef.current, eyebrowRef.current], {
+        y: -30,
+        opacity: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "60% top",
           end: "bottom top",
           scrub: true,
         },
@@ -1322,6 +1358,7 @@ function HeroSection() {
 
       {/* Particle field — CSS radial-gradient dots */}
       <div
+        ref={particleRef}
         className="absolute inset-0 pointer-events-none z-0"
         style={{
           backgroundImage: [
@@ -1382,15 +1419,47 @@ function HeroSection() {
 
 function ArmorIntroSection() {
   const sectionRef = useRef(null);
+  const eyebrowBRef = useRef(null);
+  const scriptureBRef = useRef(null);
+  const goldRuleRef = useRef(null);
 
   useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
     const ctx = gsap.context(() => {
-      gsap.utils.toArray(".armor-reveal").forEach(el => {
-        gsap.from(el, {
-          opacity: 0, y: 30,
-          duration: 0.9, ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none reverse" },
+      // --- Eyebrow entrance ---
+      if (eyebrowBRef.current) {
+        gsap.fromTo(eyebrowBRef.current,
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: "power2.out",
+            scrollTrigger: { trigger: eyebrowBRef.current, start: "top 85%", toggleActions: "play none none reverse" } });
+      }
+
+      // --- Scripture block: +200ms stagger after eyebrow trigger ---
+      if (scriptureBRef.current) {
+        gsap.fromTo(scriptureBRef.current,
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 1.0, ease: "power2.out", delay: 0.2,
+            scrollTrigger: { trigger: eyebrowBRef.current, start: "top 85%", toggleActions: "play none none reverse" } });
+      }
+
+      // --- Gold horizontal rule: width 0 → 100% via scaleX ---
+      if (goldRuleRef.current) {
+        gsap.set(goldRuleRef.current, { scaleX: 0, transformOrigin: "left center" });
+        gsap.to(goldRuleRef.current, {
+          scaleX: 1, duration: 0.8, ease: "power2.out",
+          scrollTrigger: { trigger: goldRuleRef.current, start: "top 85%", toggleActions: "play none none reverse" },
         });
+      }
+
+      // --- Teaching paragraphs: batch stagger ---
+      ScrollTrigger.batch(".armor-para", {
+        start: "top 88%",
+        onEnter: batch => gsap.fromTo(batch,
+          { opacity: 0, y: 15 },
+          { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power2.out", overwrite: "auto" }),
+        onLeaveBack: batch => gsap.to(batch, { opacity: 0, y: 15, duration: 0.4, overwrite: "auto" }),
       });
     }, sectionRef);
     return () => ctx.revert();
@@ -1400,14 +1469,16 @@ function ArmorIntroSection() {
     <section ref={sectionRef} className="py-24 md:py-40 px-4" style={{ backgroundColor: C.heroBg }}>
       <div className="max-w-[740px] mx-auto">
         <span
-          className="armor-reveal block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
+          ref={eyebrowBRef}
+          className="block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
           style={{ color: C.gold }}
         >
           Ephesians 6:10–18
         </span>
 
         <blockquote
-          className="armor-reveal mb-12"
+          ref={scriptureBRef}
+          className="mb-12"
           style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
@@ -1428,13 +1499,14 @@ function ArmorIntroSection() {
         </blockquote>
 
         <div
-          className="armor-reveal h-[1px] mb-12"
+          ref={goldRuleRef}
+          className="h-[1px] mb-12"
           style={{ background: `linear-gradient(to right, transparent, ${C.gold}55, transparent)` }}
         />
 
         {/* Pull quote */}
         <p
-          className="armor-reveal mb-12"
+          className="armor-para mb-12"
           style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
@@ -1447,13 +1519,13 @@ function ArmorIntroSection() {
         </p>
 
         <div className="space-y-10">
-          <p className="armor-reveal text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}99` }}>
+          <p className="armor-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}99` }}>
             Paul is writing to people under real pressure — not offering a metaphor for self-improvement but a survival framework for people living inside a hostile formation system. Rome's empire was total: emperor worship, cultural assimilation, a comprehensive narrative about power, identity, and worth. The parallel to the modern formation environment is not metaphorical. It is structural.
           </p>
-          <p className="armor-reveal text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}99` }}>
+          <p className="armor-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}99` }}>
             Identity in Christ is given, not constructed. The belt, the breastplate, the shield — each piece represents a dimension of God's own character that He extends to those who are in Christ. You are not assembling virtue through effort. You are stepping into what has already been provided.
           </p>
-          <p className="armor-reveal text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}99` }}>
+          <p className="armor-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}99` }}>
             "Putting on" is a daily, deliberate act. You drift without it by default. The armor does not go on automatically — it requires intentional return, morning by morning, to the reality of who you are in Christ before the world has a chance to tell you otherwise. That is why this collection pairs every piece with a formation pathway.
           </p>
         </div>
@@ -1472,16 +1544,56 @@ function ArmorIntroSection() {
 
 function GodsArmorSection() {
   const sectionRef = useRef(null);
+  const leftColRef = useRef(null);
+  const rightColRef = useRef(null);
+  const brandLineRef = useRef(null);
 
   useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
     const ctx = gsap.context(() => {
-      gsap.utils.toArray(".godsarmor-reveal").forEach(el => {
-        gsap.from(el, {
-          opacity: 0, y: 30,
-          duration: 0.9, ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none reverse" },
+      // --- Left column entrance ---
+      if (leftColRef.current) {
+        gsap.fromTo(leftColRef.current,
+          { y: 25, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.9, ease: "power2.out",
+            scrollTrigger: { trigger: leftColRef.current, start: "top 80%", toggleActions: "play none none reverse" } });
+      }
+
+      // --- Right column entrance: +300ms delay ---
+      if (rightColRef.current) {
+        gsap.fromTo(rightColRef.current,
+          { y: 25, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.9, ease: "power2.out", delay: 0.3,
+            scrollTrigger: { trigger: leftColRef.current, start: "top 80%", toggleActions: "play none none reverse" } });
+      }
+
+      // --- Brand line gold glow dissipation ---
+      if (brandLineRef.current) {
+        gsap.fromTo(brandLineRef.current,
+          { opacity: 0, scale: 1.03 },
+          { opacity: 1, scale: 1.0, duration: 1.0, ease: "power2.out",
+            scrollTrigger: { trigger: brandLineRef.current, start: "top 85%", toggleActions: "play none none reverse" },
+            onComplete: () => {
+              gsap.fromTo(brandLineRef.current,
+                { textShadow: "0 0 20px rgba(201,168,76,0.4)" },
+                { textShadow: "0 0 0px rgba(201,168,76,0)", duration: 2.0, ease: "power2.out" });
+            },
+          });
+      }
+
+      // --- Background color transition: Hero Black → Rule Brown via scrub ---
+      gsap.fromTo(sectionRef.current,
+        { backgroundColor: C.heroBg },
+        { backgroundColor: C.ruleBg, ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1.5,
+          },
         });
-      });
     }, sectionRef);
     return () => ctx.revert();
   }, []);
@@ -1490,33 +1602,34 @@ function GodsArmorSection() {
     <section
       ref={sectionRef}
       className="py-24 md:py-40 px-4"
-      style={{ background: `linear-gradient(to bottom, ${C.heroBg}, ${C.ruleBg})` }}
+      style={{ backgroundColor: C.heroBg }}
     >
       <div className="max-w-[1100px] mx-auto">
         <div className="grid md:grid-cols-2 gap-16 md:gap-24 items-start">
 
-          <div>
+          <div ref={leftColRef}>
             <span
-              className="godsarmor-reveal block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
+              className="block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
               style={{ color: C.gold }}
             >
               The Revelation
             </span>
-            <p className="godsarmor-reveal text-sm md:text-base leading-relaxed font-light mb-6" style={{ color: `${C.ivory}77` }}>
+            <p className="text-sm md:text-base leading-relaxed font-light mb-6" style={{ color: `${C.ivory}77` }}>
               The armor Paul describes is not a metaphor invented for the church. It is drawn from Isaiah's descriptions of God Himself. Isaiah 59:17 describes God putting on righteousness as a breastplate, salvation as a helmet. Isaiah 11:5 pictures the belt of faithfulness. Isaiah 52:7 speaks of feet bringing good news of peace.
             </p>
-            <p className="godsarmor-reveal text-sm md:text-base leading-relaxed font-light mb-12" style={{ color: `${C.ivory}77` }}>
+            <p className="text-sm md:text-base leading-relaxed font-light mb-12" style={{ color: `${C.ivory}77` }}>
               When you put on the armor of God, you are not assembling your own defenses. You are stepping into God's own character — the same righteousness, the same salvation, the same peace that belong to Him. The armor is His before it is yours.
             </p>
             <p
-              className="godsarmor-reveal text-lg md:text-2xl tracking-[0.12em] uppercase font-bold leading-tight"
+              ref={brandLineRef}
+              className="text-lg md:text-2xl tracking-[0.12em] uppercase font-bold leading-tight"
               style={{ fontFamily: "'Michroma', sans-serif", color: C.gold }}
             >
               "You are not inventing identity. You are receiving it."
             </p>
           </div>
 
-          <div className="godsarmor-reveal">
+          <div ref={rightColRef}>
             <div className="border-l-2 pl-8" style={{ borderColor: `${C.gold}33` }}>
               <span
                 className="block text-[9px] tracking-[0.4em] uppercase mb-6"
@@ -1548,13 +1661,41 @@ function SixPiecesSection() {
   const sectionRef = useRef(null);
 
   useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
     const ctx = gsap.context(() => {
-      gsap.utils.toArray(".piece-block").forEach(el => {
-        gsap.from(el, {
-          opacity: 0, y: 40,
-          duration: 1.0, ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" },
-        });
+      // --- Alternating lateral entrance for each piece block ---
+      gsap.utils.toArray(".piece-block").forEach((el, i) => {
+        const isOdd = i % 2 === 0; // 0-indexed: 01=index0, 02=index1...
+        const xStart = isOdd ? -30 : 30;
+
+        gsap.fromTo(el,
+          { x: xStart, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.9, ease: "power2.out",
+            scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none reverse" } });
+
+        // --- "Explore this piece →" link: fade in +300ms after parent ---
+        const exploreLink = el.querySelector(".piece-explore-link");
+        if (exploreLink) {
+          gsap.fromTo(exploreLink,
+            { opacity: 0 },
+            { opacity: 0.8, duration: 0.7, ease: "power2.out", delay: 0.3,
+              scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none reverse" } });
+        }
+
+        // --- Gold eyebrow shimmer: toggle CSS class on enter ---
+        const goldEyebrow = el.querySelector(".piece-gold-eyebrow");
+        if (goldEyebrow) {
+          ScrollTrigger.create({
+            trigger: el,
+            start: "top 80%",
+            onEnter: () => {
+              goldEyebrow.classList.add("shimmer-sweep");
+              setTimeout(() => goldEyebrow.classList.remove("shimmer-sweep"), 900);
+            },
+          });
+        }
       });
     }, sectionRef);
     return () => ctx.revert();
@@ -1588,7 +1729,7 @@ function SixPiecesSection() {
                     fontFamily: "'Michroma', sans-serif",
                     fontSize: "clamp(140px, 20vw, 260px)",
                     fontWeight: 700,
-                    color: `${C.ivory}07`,
+                    color: `${C.ivory}14`,
                     lineHeight: 1,
                     userSelect: "none",
                   }}
@@ -1599,7 +1740,7 @@ function SixPiecesSection() {
 
               <div className={i % 2 === 1 ? "md:[direction:ltr]" : ""}>
                 <div className="flex items-baseline gap-4 mb-6">
-                  <span className="text-[9px] tracking-[0.4em] uppercase" style={{ color: `${C.gold}77` }}>
+                  <span className="piece-gold-eyebrow text-[9px] tracking-[0.4em] uppercase" style={{ color: `${C.gold}77` }}>
                     {piece.num}
                   </span>
                   <div className="h-[1px] flex-1" style={{ background: `${C.gold}22` }} />
@@ -1654,8 +1795,8 @@ function SixPiecesSection() {
                 <div className="mt-8 flex items-center gap-5">
                   <Link
                     to={`/identity/${piece.slug}`}
-                    className="text-[10px] tracking-[0.3em] uppercase font-bold flex items-center gap-2 transition-opacity hover:opacity-100"
-                    style={{ color: C.gold, opacity: 0.8, textDecoration: "none" }}
+                    className="piece-explore-link text-[10px] tracking-[0.3em] uppercase font-bold flex items-center gap-2 transition-opacity hover:opacity-100"
+                    style={{ color: C.gold, opacity: 0, textDecoration: "none" }}
                   >
                     Explore this piece
                     <ArrowRight size={12} />
@@ -1706,16 +1847,35 @@ function SixPiecesSection() {
 
 function BrandSection() {
   const sectionRef = useRef(null);
+  const brandLineERef = useRef(null);
 
   useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
     const ctx = gsap.context(() => {
-      gsap.utils.toArray(".brand-reveal").forEach(el => {
-        gsap.from(el, {
-          opacity: 0, y: 24,
-          duration: 0.9, ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none reverse" },
-        });
+      // --- Prose paragraphs: batch stagger ---
+      ScrollTrigger.batch(".brand-para", {
+        start: "top 88%",
+        onEnter: batch => gsap.fromTo(batch,
+          { opacity: 0, y: 15 },
+          { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power2.out", overwrite: "auto" }),
+        onLeaveBack: batch => gsap.to(batch, { opacity: 0, y: 15, duration: 0.4, overwrite: "auto" }),
       });
+
+      // --- Brand closing line with gold glow dissipation ---
+      if (brandLineERef.current) {
+        gsap.fromTo(brandLineERef.current,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.9, ease: "power2.out",
+            scrollTrigger: { trigger: brandLineERef.current, start: "top 88%", toggleActions: "play none none reverse" },
+            onComplete: () => {
+              gsap.fromTo(brandLineERef.current,
+                { textShadow: "0 0 20px rgba(201,168,76,0.4)" },
+                { textShadow: "0 0 0px rgba(201,168,76,0)", duration: 2.0, ease: "power2.out" });
+            },
+          });
+      }
     }, sectionRef);
     return () => ctx.revert();
   }, []);
@@ -1724,24 +1884,25 @@ function BrandSection() {
     <section ref={sectionRef} className="py-24 md:py-40 px-4" style={{ backgroundColor: C.ruleBg }}>
       <div className="max-w-[740px] mx-auto">
         <span
-          className="brand-reveal block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
+          className="brand-para block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
           style={{ color: C.gold }}
         >
           Why the Armor
         </span>
         <div className="space-y-8">
-          <p className="brand-reveal text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+          <p className="brand-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
             The armor is not a costume. It is what God has provided for people who are being formed in a system that is actively working against them. Every culture in history has had a comprehensive formation project — a set of values, narratives, and practices designed to shape people into its image. The digital age is no different, except that its reach is total and its pace is unprecedented.
           </p>
-          <p className="brand-reveal text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+          <p className="brand-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
             The gear is not the armor. It is a marker — a daily reminder that you belong to a different formation project. The QR code connects to the formation content: the theology, the practice, the community. The garment anchors the identity. The content forms it.
           </p>
-          <p className="brand-reveal text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+          <p className="brand-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
             The gear is the entry point. The content is the formation. The practice is the armor. These three move together, or they don't move at all.
           </p>
         </div>
-        <div className="brand-reveal mt-16">
+        <div className="mt-16">
           <p
+            ref={brandLineERef}
             className="text-lg md:text-2xl tracking-[0.14em] uppercase font-bold leading-tight"
             style={{ fontFamily: "'Michroma', sans-serif", color: C.gold }}
           >
@@ -1757,13 +1918,29 @@ function CollectionSection() {
   const sectionRef = useRef(null);
 
   useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
     const ctx = gsap.context(() => {
-      gsap.utils.toArray(".drop-card").forEach(el => {
-        gsap.from(el, {
-          opacity: 0, y: 30,
-          duration: 0.85, ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none reverse" },
+      // --- Background transition: dark → Gear Warm ---
+      gsap.fromTo(sectionRef.current,
+        { backgroundColor: C.ruleBg },
+        { backgroundColor: "#F5F2EC", ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1,
+          },
         });
+
+      // --- Product cards: batch stagger ---
+      ScrollTrigger.batch(".drop-card", {
+        start: "top 88%",
+        onEnter: batch => gsap.fromTo(batch,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power2.out", overwrite: "auto" }),
+        onLeaveBack: batch => gsap.to(batch, { opacity: 0, y: 20, duration: 0.4, overwrite: "auto" }),
       });
     }, sectionRef);
     return () => ctx.revert();
@@ -1773,7 +1950,7 @@ function CollectionSection() {
     <section
       ref={sectionRef}
       className="py-24 md:py-40 px-4"
-      style={{ background: `linear-gradient(to bottom, ${C.ruleBg}, #1A1510)` }}
+      style={{ backgroundColor: C.ruleBg }}
     >
       <div className="max-w-[1100px] mx-auto">
         <div className="mb-16 md:mb-24 flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
@@ -1801,7 +1978,7 @@ function CollectionSection() {
             <Link
               key={p.slug}
               to={`/identity/${p.slug}`}
-              className="drop-card group relative rounded-2xl overflow-hidden flex flex-col transition-all duration-500"
+              className="drop-card group relative rounded-2xl overflow-hidden flex flex-col"
               style={{
                 textDecoration: "none",
                 minHeight: "320px",
@@ -1866,8 +2043,46 @@ function CollectionSection() {
 }
 
 function CTASection() {
+  const sectionRef = useRef(null);
+  const primaryBtnRef = useRef(null);
+  const secondaryBtnRef = useRef(null);
+  const scriptureRef = useRef(null);
+
+  useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const ctx = gsap.context(() => {
+      // --- Primary button entrance ---
+      if (primaryBtnRef.current) {
+        gsap.fromTo(primaryBtnRef.current,
+          { y: 15, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: "power2.out",
+            scrollTrigger: { trigger: primaryBtnRef.current, start: "top 85%", toggleActions: "play none none reverse" } });
+      }
+
+      // --- Secondary button: +150ms delay ---
+      if (secondaryBtnRef.current) {
+        gsap.fromTo(secondaryBtnRef.current,
+          { y: 15, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: "power2.out", delay: 0.15,
+            scrollTrigger: { trigger: primaryBtnRef.current, start: "top 85%", toggleActions: "play none none reverse" } });
+      }
+
+      // --- Closing scripture: +300ms after secondary ---
+      if (scriptureRef.current) {
+        gsap.fromTo(scriptureRef.current,
+          { y: 15, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: "power2.out", delay: 0.3,
+            scrollTrigger: { trigger: primaryBtnRef.current, start: "top 85%", toggleActions: "play none none reverse" } });
+      }
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       className="py-24 md:py-48 px-4 text-center"
       style={{ backgroundColor: C.heroBg }}
     >
@@ -1875,6 +2090,7 @@ function CTASection() {
 
         <div className="flex flex-col items-center gap-4 mb-20">
           <Link
+            ref={primaryBtnRef}
             to="/identity/belt-of-truth"
             className="inline-flex items-center gap-3 px-10 py-4 rounded-full font-bold text-[11px] tracking-[0.28em] uppercase transition-all hover:scale-105"
             style={{
@@ -1888,6 +2104,7 @@ function CTASection() {
             <ArrowRight size={14} />
           </Link>
           <a
+            ref={secondaryBtnRef}
             href={SHOPIFY_URL}
             className="inline-flex items-center gap-3 px-10 py-4 rounded-full font-bold text-[11px] tracking-[0.28em] uppercase transition-all hover:bg-white/5"
             style={{ color: C.gold, border: `1px solid ${C.gold}44`, textDecoration: "none" }}
@@ -1896,7 +2113,7 @@ function CTASection() {
           </a>
         </div>
 
-        <div>
+        <div ref={scriptureRef}>
           <p
             className="text-base md:text-xl leading-relaxed mb-3"
             style={{
@@ -2000,6 +2217,28 @@ export function IdentityLanding() {
   }, []);
   return (
     <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: C.heroBg }}>
+      <style>{`
+        @keyframes shimmerSweep {
+          0%   { background-position: -100% 0; }
+          100% { background-position: 200% 0; }
+        }
+        .shimmer-sweep {
+          background-image: linear-gradient(90deg, transparent 0%, rgba(201,168,76,0.6) 50%, transparent 100%) !important;
+          background-size: 200% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          animation: shimmerSweep 0.8s ease forwards;
+        }
+        @media (hover: hover) {
+          .drop-card {
+            transition: transform 300ms ease, box-shadow 300ms ease;
+          }
+          .drop-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+          }
+        }
+      `}</style>
       <SiteNav />
       <HeroSection />
       <ArmorIntroSection />
