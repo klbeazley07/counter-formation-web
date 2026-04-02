@@ -2314,6 +2314,13 @@ export function ArmorPiecePage() {
   const navigate      = useNavigate();
   const [day, setDay] = useState(1);
   const progRef       = useRef(null);
+  const wrapRef       = useRef(null);
+  const heroBgRef     = useRef(null);
+  const heroEyeRef    = useRef(null);
+  const heroH1Ref     = useRef(null);
+  const heroSubRef    = useRef(null);
+  const sidebarRef    = useRef(null);
+  const pieceNavRef   = useRef(null);
 
   const data = ARMOR_TRACKS[piece];
 
@@ -2337,6 +2344,128 @@ export function ArmorPiecePage() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [data]);
 
+  /* ─── GSAP Piece Page Animations ─── */
+  useEffect(() => {
+    if (!data) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const ctx = gsap.context(() => {
+      /* === PAGE LOAD ANIMATIONS (immediate, not scroll-triggered) === */
+
+      // Hero image: Ken Burns settle
+      if (heroBgRef.current) {
+        gsap.set(heroBgRef.current, { scale: 1.02 });
+        gsap.fromTo(heroBgRef.current,
+          { scale: 1.02 },
+          { scale: 1.0, duration: 1.5, ease: "power2.out" }
+        );
+      }
+
+      // Gold eyebrow label
+      if (heroEyeRef.current) {
+        gsap.set(heroEyeRef.current, { opacity: 0, y: 15 });
+        gsap.fromTo(heroEyeRef.current,
+          { y: 15, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: "power2.out", delay: 0.1 }
+        );
+      }
+
+      // Piece title
+      if (heroH1Ref.current) {
+        gsap.set(heroH1Ref.current, { opacity: 0, y: 20 });
+        gsap.fromTo(heroH1Ref.current,
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.9, ease: "power3.out", delay: 0.3 }
+        );
+      }
+
+      // Anchor scripture / track title subtitle
+      if (heroSubRef.current) {
+        gsap.set(heroSubRef.current, { opacity: 0, y: 15 });
+        gsap.fromTo(heroSubRef.current,
+          { y: 15, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: "power2.out", delay: 0.6 }
+        );
+      }
+
+      /* === SCROLL-TRIGGERED: Day section containers === */
+      const daySections = [".ap-stillness", ".ap-scriptures", ".ap-teaching", ".ap-practice", ".ap-reflection"];
+      daySections.forEach(sel => {
+        const el = wrapRef.current?.querySelector(sel);
+        if (el) {
+          gsap.set(el, { opacity: 0, y: 25 });
+          gsap.fromTo(el,
+            { y: 25, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.9, ease: "power2.out",
+              scrollTrigger: { trigger: el, start: "top 82%", toggleActions: "play none none reverse" } }
+          );
+        }
+      });
+
+      // Prayer section
+      const prayerEl = wrapRef.current?.querySelector(".ap-prayer");
+      if (prayerEl) {
+        gsap.set(prayerEl, { opacity: 0, y: 15 });
+        gsap.fromTo(prayerEl,
+          { y: 15, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: "power2.out",
+            scrollTrigger: { trigger: prayerEl, start: "top 82%", toggleActions: "play none none reverse" } }
+        );
+      }
+
+      /* === SCROLL-TRIGGERED: Section labels (gold eyebrow-style) === */
+      const secLabels = wrapRef.current?.querySelectorAll(".ap-sec-label");
+      if (secLabels) {
+        secLabels.forEach(el => {
+          gsap.set(el, { opacity: 0, y: 15 });
+          gsap.fromTo(el,
+            { y: 15, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.7, ease: "power2.out",
+              scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" } }
+          );
+        });
+      }
+
+      /* === SCROLL-TRIGGERED: Scripture blocks within day section === */
+      const scriptureBlocks = wrapRef.current?.querySelectorAll(".ap-scripture");
+      if (scriptureBlocks) {
+        scriptureBlocks.forEach(el => {
+          gsap.set(el, { opacity: 0, y: 15 });
+          gsap.fromTo(el,
+            { y: 15, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.8, delay: 0.2, ease: "power2.out",
+              scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" } }
+          );
+        });
+      }
+
+      /* === SIDEBAR WIDGET: once: true fade-in === */
+      if (sidebarRef.current) {
+        gsap.set(sidebarRef.current, { opacity: 0, y: 20 });
+        gsap.fromTo(sidebarRef.current,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.9, ease: "power2.out",
+            scrollTrigger: { trigger: sidebarRef.current, start: "top 80%", once: true } }
+        );
+      }
+
+      /* === PIECE NAVIGATION: bottom prev/next === */
+      if (pieceNavRef.current) {
+        const navBtns = pieceNavRef.current.querySelectorAll(".ap-nav-btn");
+        if (navBtns.length) {
+          gsap.set(navBtns, { opacity: 0, y: 15 });
+          gsap.fromTo(navBtns,
+            { y: 15, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: "power2.out",
+              scrollTrigger: { trigger: pieceNavRef.current, start: "top 90%", toggleActions: "play none none reverse" } }
+          );
+        }
+      }
+
+    }, wrapRef);
+    return () => ctx.revert();
+  }, [data, piece, day]);
+
   if (!data) return null;
 
   const idx      = PIECE_ORDER.indexOf(piece);
@@ -2348,19 +2477,19 @@ export function ArmorPiecePage() {
   const isLastDay = day === 6;
 
   return (
-    <div className="ap-wrap">
+    <div className="ap-wrap" ref={wrapRef}>
       <BackNav />
       <div className="ap-prog-bar"><div className="ap-prog-fill" ref={progRef} /></div>
 
       {/* ── Hero ── */}
       <div className="ap-hero">
-        <div className="ap-hero-bg" style={{ backgroundImage: `url('${data.img}')` }} />
+        <div className="ap-hero-bg" ref={heroBgRef} style={{ backgroundImage: `url('${data.img}')` }} />
         <div className="ap-hero-ov" />
         <div className="ap-hero-num">{data.num}</div>
         <div className="ap-hero-in">
-          <p className="ap-hero-eye">Piece {data.num} · Armor of God</p>
-          <h1 className="ap-hero-h1">{data.title}</h1>
-          <p className="ap-hero-sub">{data.trackTitle}</p>
+          <p className="ap-hero-eye" ref={heroEyeRef}>Piece {data.num} · Armor of God</p>
+          <h1 className="ap-hero-h1" ref={heroH1Ref}>{data.title}</h1>
+          <p className="ap-hero-sub" ref={heroSubRef}>{data.trackTitle}</p>
         </div>
       </div>
 
@@ -2440,7 +2569,7 @@ export function ArmorPiecePage() {
         </div>
 
         {/* Sticky sidebar */}
-        <div className="ap-sidebar">
+        <div className="ap-sidebar" ref={sidebarRef}>
           <div>
             <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "8px", letterSpacing: ".4em", textTransform: "uppercase", color: "rgba(201,168,76,0.5)", marginBottom: "1rem" }}>
               Formation Tool
@@ -2471,7 +2600,7 @@ export function ArmorPiecePage() {
         </div>
 
         {/* Bottom navigation */}
-        <div className="ap-piece-nav">
+        <div className="ap-piece-nav" ref={pieceNavRef}>
           {prevData ? (
             <Link to={`/identity/${prevSlug}`} className="ap-nav-btn">
               <span className="ap-nav-btn-dir">← Piece {prevData.num}</span>
