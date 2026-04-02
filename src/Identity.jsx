@@ -23,7 +23,7 @@ const C = {
 
 const ARMOR_PIECES = [
   {
-    num: "01", slug: "belt-of-truth", title: "Belt of Truth",
+    num: "01", slug: "belt-of-truth", title: "Belt of Truth", icon: "/Belt_icon.png",
     scripture: "Ephesians 6:14",
     scriptureText: "Stand firm then, with the belt of truth buckled around your waist.",
     theology: "The belt was the first piece — everything else attached to it. Truth is foundational. Not abstract doctrine but lived reality.",
@@ -33,7 +33,7 @@ const ARMOR_PIECES = [
     product: null,
   },
   {
-    num: "02", slug: "breastplate-of-righteousness", title: "Breastplate of Righteousness",
+    num: "02", slug: "breastplate-of-righteousness", title: "Breastplate of Righteousness", icon: "/Breastplate_icon.png",
     scripture: "Ephesians 6:14",
     scriptureText: "Stand firm then, with the breastplate of righteousness in place.",
     theology: "Protects the heart. Positional righteousness, not moral performance. Christ's righteousness credited to you.",
@@ -43,7 +43,7 @@ const ARMOR_PIECES = [
     product: null,
   },
   {
-    num: "03", slug: "gospel-of-peace", title: "Gospel of Peace",
+    num: "03", slug: "gospel-of-peace", title: "Gospel of Peace", icon: "/Sandal_icon.png",
     scripture: "Ephesians 6:15",
     scriptureText: "And with your feet fitted with the readiness that comes from the gospel of peace.",
     theology: "Roman sandals had cleats for standing firm. Peace is grounding, not absence of conflict.",
@@ -53,7 +53,7 @@ const ARMOR_PIECES = [
     product: null,
   },
   {
-    num: "04", slug: "shield-of-faith", title: "Shield of Faith",
+    num: "04", slug: "shield-of-faith", title: "Shield of Faith", icon: "/Shield_black_icon.png",
     scripture: "Ephesians 6:16",
     scriptureText: "In addition to all this, take up the shield of faith, with which you can extinguish all the flaming arrows of the evil one.",
     theology: "Full-body thureos soaked in water to quench fire arrows. Faith is positioning, not feeling.",
@@ -63,7 +63,7 @@ const ARMOR_PIECES = [
     product: "Drop 002 · Premium Everyday Tee",
   },
   {
-    num: "05", slug: "helmet-of-salvation", title: "Helmet of Salvation",
+    num: "05", slug: "helmet-of-salvation", title: "Helmet of Salvation", icon: "/Helmet_black_icon.png",
     scripture: "Ephesians 6:17",
     scriptureText: "Take the helmet of salvation and the sword of the Spirit, which is the word of God.",
     theology: "Protects the mind. Salvation as present reality and settled identity, not just future promise.",
@@ -73,7 +73,7 @@ const ARMOR_PIECES = [
     product: "Drop 002 · Technical Hoodie",
   },
   {
-    num: "06", slug: "sword-of-the-spirit", title: "Sword of the Spirit",
+    num: "06", slug: "sword-of-the-spirit", title: "Sword of the Spirit", icon: "/Sword_black_icon.png",
     scripture: "Ephesians 6:17",
     scriptureText: "Take the sword of the Spirit, which is the word of God.",
     theology: "Only offensive weapon. Scripture as living, active, spoken weapon. Rhema = specific utterance.",
@@ -1767,7 +1767,10 @@ function SixPiecesSection() {
               </div>
 
               <div className={i % 2 === 1 ? "md:[direction:ltr]" : ""}>
-                <div className="flex items-baseline gap-4 mb-6">
+                <div className="flex items-center gap-4 mb-6">
+                  {piece.icon && (
+                    <img src={piece.icon} alt="" style={{ width: "22px", height: "22px", objectFit: "contain", opacity: 0.55, flexShrink: 0 }} />
+                  )}
                   <span className="piece-gold-eyebrow text-[9px] tracking-[0.4em] uppercase" style={{ color: `${C.gold}77` }}>
                     {piece.num}
                   </span>
@@ -2645,14 +2648,20 @@ export function ArmorPiecePage() {
         <div className="ap-piece-nav" ref={pieceNavRef}>
           {prevData ? (
             <Link to={`/identity/${prevSlug}`} className="ap-nav-btn">
-              <span className="ap-nav-btn-dir">← Piece {prevData.num}</span>
-              <span className="ap-nav-btn-title">{prevData.title}</span>
+              {prevData.icon && <img src={prevData.icon} alt="" style={{ width: "18px", height: "18px", objectFit: "contain", opacity: 0.45, flexShrink: 0 }} />}
+              <span>
+                <span className="ap-nav-btn-dir">← Piece {prevData.num}</span>
+                <span className="ap-nav-btn-title">{prevData.title}</span>
+              </span>
             </Link>
           ) : <div />}
           {nextData ? (
             <Link to={`/identity/${nextSlug}`} className="ap-nav-btn next">
-              <span className="ap-nav-btn-dir">Piece {nextData.num} →</span>
-              <span className="ap-nav-btn-title">{nextData.title}</span>
+              <span>
+                <span className="ap-nav-btn-dir">Piece {nextData.num} →</span>
+                <span className="ap-nav-btn-title">{nextData.title}</span>
+              </span>
+              {nextData.icon && <img src={nextData.icon} alt="" style={{ width: "18px", height: "18px", objectFit: "contain", opacity: 0.45, flexShrink: 0 }} />}
             </Link>
           ) : <div />}
         </div>
