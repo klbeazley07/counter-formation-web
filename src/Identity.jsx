@@ -4,6 +4,12 @@ import { ScriptureRef } from "./ScriptureRef";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronDown, ArrowRight, Menu } from "lucide-react";
+import { ExamenWidget }       from "./widgets/ExamenWidget";
+import { DeclarationWidget }  from "./widgets/DeclarationWidget";
+import { PeacePauseWidget }   from "./widgets/PeacePauseWidget";
+import { ArrowLogWidget }     from "./widgets/ArrowLogWidget";
+import { FirstFifteenWidget } from "./widgets/FirstFifteenWidget";
+import { VerseTrackerWidget } from "./widgets/VerseTrackerWidget";
 
 const SHOPIFY_URL = "https://shop.counterformed.com/collections/the-gear";
 
@@ -2023,6 +2029,64 @@ const WIDGET_META = {
   "sword-of-the-spirit":         { name: "Verse Memorization Tracker", desc: "Input your weekly verse, mark daily review completions, and build a growing library of memorized Scripture." },
 };
 
+/* ─── WIDGET MAP ─────────────────────────────────────────────────── */
+
+const WIDGET_COMPONENTS = {
+  "belt-of-truth":               ExamenWidget,
+  "breastplate-of-righteousness": DeclarationWidget,
+  "gospel-of-peace":             PeacePauseWidget,
+  "shield-of-faith":             ArrowLogWidget,
+  "helmet-of-salvation":         FirstFifteenWidget,
+  "sword-of-the-spirit":         VerseTrackerWidget,
+};
+
+/* ─── CROSS-LINK DATA ────────────────────────────────────────────── */
+
+const CROSS_LINKS = {
+  "belt-of-truth":       { to: "/rule-of-life/presence",  rhythm: "PRESENCE",  tagline: "Attention before God" },
+  "gospel-of-peace":     { to: "/rule-of-life/sabbath",   rhythm: "SABBATH",   tagline: "Rest before production" },
+  "shield-of-faith":     { to: "/rule-of-life/community", rhythm: "COMMUNITY", tagline: "Formation together" },
+  "helmet-of-salvation": { to: "/rule-of-life/scripture", rhythm: "SCRIPTURE", tagline: "Truth before noise" },
+  "sword-of-the-spirit": { to: "/rule-of-life/scripture", rhythm: "SCRIPTURE", tagline: "Truth before noise" },
+};
+
+function CrossLinkCard({ piece }) {
+  const link = CROSS_LINKS[piece];
+  if (!link) return null;
+  return (
+    <Link
+      to={link.to}
+      style={{
+        display: "block",
+        textDecoration: "none",
+        background: "rgba(201,168,76,0.04)",
+        border: "1px solid rgba(201,168,76,0.14)",
+        borderRadius: "14px",
+        padding: "1.25rem 1.5rem",
+        transition: "border-color .2s, background .2s",
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.background = "rgba(201,168,76,0.08)";
+        e.currentTarget.style.borderColor = "rgba(201,168,76,0.28)";
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.background = "rgba(201,168,76,0.04)";
+        e.currentTarget.style.borderColor = "rgba(201,168,76,0.14)";
+      }}
+    >
+      <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "8px", letterSpacing: ".36em", textTransform: "uppercase", color: "rgba(201,168,76,0.55)", marginBottom: "6px" }}>
+        Connected Rhythm
+      </p>
+      <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "13px", letterSpacing: ".2em", textTransform: "uppercase", color: "#C9A84C", fontWeight: 700, marginBottom: "4px" }}>
+        {link.rhythm}
+      </p>
+      <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "14px", color: "rgba(250,248,245,0.45)", lineHeight: 1.4 }}>
+        {link.tagline}
+      </p>
+    </Link>
+  );
+}
+
 export function ArmorPiecePage() {
   const { piece }     = useParams();
   const navigate      = useNavigate();
@@ -2059,7 +2123,6 @@ export function ArmorPiecePage() {
   const prevData = prevSlug ? ARMOR_TRACKS[prevSlug] : null;
   const nextData = nextSlug ? ARMOR_TRACKS[nextSlug] : null;
   const curDay   = data.days[day - 1];
-  const widget   = WIDGET_META[piece];
   const isLastDay = day === 6;
 
   return (
@@ -2158,12 +2221,14 @@ export function ArmorPiecePage() {
 
         {/* Sticky sidebar */}
         <div className="ap-sidebar">
-          <div className="ap-widget-placeholder">
-            <p className="ap-widget-label">Interactive Widget</p>
-            <p className="ap-widget-title">{widget.name}</p>
-            <p className="ap-widget-desc">{widget.desc}</p>
-            <p className="ap-widget-soon">Coming in next session</p>
+          <div>
+            <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "8px", letterSpacing: ".4em", textTransform: "uppercase", color: "rgba(201,168,76,0.5)", marginBottom: "1rem" }}>
+              Formation Tool
+            </p>
+            {React.createElement(WIDGET_COMPONENTS[piece])}
           </div>
+
+          <CrossLinkCard piece={piece} />
 
           <div>
             <p className="ap-armor-nav-label">The Six Pieces</p>
