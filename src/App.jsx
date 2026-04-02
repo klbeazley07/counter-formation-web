@@ -1687,7 +1687,13 @@ function MobileBottomNav({ onOpenChallenge }) {
     <nav className={`fixed bottom-0 left-0 right-0 z-[90] md:hidden transition-transform duration-300 ${visible ? 'translate-y-0' : 'translate-y-full'}`}
       style={{ backgroundColor: 'rgba(14,12,10,0.95)', backdropFilter: 'blur(20px)', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
       <div className="flex items-center justify-around h-14 px-2">
-        <a href="#shop" className="flex flex-col items-center gap-1 text-white/50 hover:text-[#C9A84C] transition-colors">
+        <a href="#shop" onClick={(e) => {
+            e.preventDefault();
+            const el = document.getElementById("shop");
+            if (!el) return;
+            const top = el.getBoundingClientRect().top + window.scrollY - 60;
+            window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+          }} className="flex flex-col items-center gap-1 text-white/50 hover:text-[#C9A84C] transition-colors">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
           </svg>
@@ -1737,8 +1743,11 @@ function MainSite() {
     e.preventDefault();
     const el = document.getElementById("shop");
     if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY + 160;
-    window.scrollTo({ top, behavior: "smooth" });
+    // Mobile: section has no padding, land just below fixed nav (~60px).
+    // Desktop: skip past the section header/padding to the product area.
+    const offset = window.innerWidth < 768 ? -60 : 160;
+    const top = el.getBoundingClientRect().top + window.scrollY + offset;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
   };
 
   useEffect(() => {
