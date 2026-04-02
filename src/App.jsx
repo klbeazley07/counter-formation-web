@@ -744,28 +744,44 @@ function GearBridgeSection() {
 
 /* ─── THE GEAR ────────────────────────────────────────────────────── */
 
-const GEAR_TABS = {
-  men: {
-    label: "Counter Formation", sublabel: "Men", accent: "#C9A84C",
-    accentMuted: "rgba(201,168,76,0.18)", phrase: "Apparel as a visual anchor.", sub: "Wear the pattern.",
-    shopUrl: SHOPIFY_URL,
+const COLLECTIONS = [
+  {
+    key: "counter-formation",
+    drop: "001",
+    title: "Counter Formation",
+    subtitle: "The Foundation",
+    tagline: "Apparel as a visual anchor.",
+    description: "The original Counter Formation gear. Designed as a daily reminder that you are being formed, not drifting.",
+    accent: "#C9A84C",
+    accentMuted: "rgba(201,168,76,0.18)",
+    pillar: "Practice",
+    pillarRoute: "/rule-of-life/presence",
+    shopUrl: "https://shop.counterformed.com/collections/the-gear",
     products: [
       { name: "Technical Tee", img: "/DriFit_Black.png", copy: "Performance tech for training.", tier: "available", slug: "technical-tee", shopUrl: "https://shop.counterformed.com/products/counter-formation-spartan-logo-polyester-t-shirt" },
       { name: "Everyday Tee", img: "/Tshirt_Studio.png", copy: "Premium soft-wash cotton.", tier: "available", slug: "everyday-tee", shopUrl: "https://shop.counterformed.com/products/everyday-tee" },
       { name: "Technical Hoodie", img: "/Hoodie_white.png", copy: "Heavyweight Performance Tech.", tier: "available", slug: "technical-hoodie", shopUrl: "https://shop.counterformed.com/products/counter-formation-technical-hoodie" },
     ],
   },
-  women: {
-    label: "The Collective", sublabel: "Women", accent: "#8FAF8A",
-    accentMuted: "rgba(143,175,138,0.18)", phrase: "Rooted. Rising. Set Apart.", sub: "Wear the formation.",
-    shopUrl: SHOPIFY_URL,
+  {
+    key: "armor-of-god",
+    drop: "002",
+    title: "Armor of God",
+    subtitle: "The Identity Collection",
+    tagline: "Armor Up.",
+    description: "Six pieces of armor. Six formation tracks. Every garment connects to a devotional pathway through the QR code on the back.",
+    accent: "#C9A84C",
+    accentMuted: "rgba(201,168,76,0.18)",
+    pillar: "Identity",
+    pillarRoute: "/identity",
+    shopUrl: "https://shop.counterformed.com/collections/armor-of-god-collection",
     products: [
-      { name: "Rooted Hoodie",    img: "/placeholder.png", copy: "Heavyweight. Oversized. Anchored.", phrase: "Psalm 1", tier: "teaser", slug: "rooted-hoodie" },
-      { name: "Set Apart Tee",    img: "/placeholder.png", copy: "Premium soft-wash cotton.", phrase: "Romans 12:2", tier: "teaser", slug: "set-apart-tee" },
-      { name: "Rise Athletic Set",img: "/placeholder.png", copy: "Cropped hoodie + shorts.", tier: "teaser", slug: "rise-athletic-set" },
+      { name: "Helmet of Salvation Hoodie", img: "/Helmet_Hoodie.png", copy: "Technical Hoodie. Protect the mind.", tier: "available", slug: "helmet-hoodie", shopUrl: "https://shop.counterformed.com/collections/armor-of-god-collection" },
+      { name: "Shield of Faith Tee", img: "/Shield_Tee.png", copy: "Premium Everyday Tee. Stand behind what God has said.", tier: "available", slug: "shield-tee", shopUrl: "https://shop.counterformed.com/collections/armor-of-god-collection" },
+      { name: "Sword of the Spirit Tee", img: "/Sword_Tee.png", copy: "Technical Tee. The Word is a weapon.", tier: "available", slug: "sword-tee", shopUrl: "https://shop.counterformed.com/collections/armor-of-god-collection" },
     ],
   },
-};
+];
 
 function DroppingSoonStrip({ products, accent, accentMuted }) {
   const [notifyOpen, setNotifyOpen] = useState(null);
@@ -868,16 +884,19 @@ function DroppingSoonStrip({ products, accent, accentMuted }) {
 }
 
 function GearSection() {
-  const [active, setActive] = useState("men");
+  const [activeKey, setActiveKey] = useState(COLLECTIONS[0].key);
   const panelRef = useRef(null);
-  const tab = GEAR_TABS[active];
 
-  const switchTab = (key) => {
-    if (key === active) return;
+  const active = COLLECTIONS.find(c => c.key === activeKey) || COLLECTIONS[0];
+  const available = active.products.filter(p => p.tier === "available");
+  const teaser = active.products.filter(p => p.tier === "teaser");
+
+  const switchCollection = (key) => {
+    if (key === activeKey) return;
     gsap.to(panelRef.current, {
       opacity: 0, y: 8, duration: 0.22, ease: "power2.in",
       onComplete: () => {
-        setActive(key);
+        setActiveKey(key);
         gsap.fromTo(panelRef.current,
           { opacity: 0, y: 8 },
           { opacity: 1, y: 0, duration: 0.38, ease: "power2.out" });
@@ -885,77 +904,150 @@ function GearSection() {
     });
   };
 
-  const available = tab.products.filter(p => p.tier === "available");
-  const teaser = tab.products.filter(p => p.tier === "teaser");
-
   return (
     <section id="shop" className="py-24 md:py-48 px-4 md:px-6 relative overflow-hidden"
       style={{ backgroundColor: C.darkBg }}>
+      <style>{`.gear-shelf::-webkit-scrollbar { display: none; }`}</style>
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.03) 0%, transparent 60%)" }} />
       <div className="max-w-7xl mx-auto relative z-10 text-white">
-        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 md:gap-12 mb-10 md:mb-14 pt-4">
-          <div className="max-w-3xl">
-            <p className="text-[9px] md:text-[10px] uppercase tracking-[0.38em] text-white/45 font-bold mb-4">
-              Built with purpose. Worn as a reminder.
-            </p>
-            <h2 className="font-brand text-4xl md:text-7xl uppercase tracking-[0.08em] text-white">The Gear</h2>
-          </div>
-          <div className="flex items-center gap-1 p-1 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
-            {Object.entries(GEAR_TABS).map(([key, t]) => {
-              const isActive = active === key;
-              return (
-                <button key={key} onClick={() => switchTab(key)}
-                  className="relative px-5 py-2 rounded-full text-[9px] md:text-[10px] uppercase tracking-[0.22em] font-bold transition-all duration-300"
-                  style={{ background: isActive ? "rgba(255,255,255,0.10)" : "transparent", color: isActive ? t.accent : "rgba(255,255,255,0.35)", boxShadow: isActive ? "0 2px 12px rgba(0,0,0,0.18)" : "none" }}>
-                  {t.sublabel}
-                  {isActive && <span className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full" style={{ backgroundColor: t.accent }} />}
-                </button>
-              );
-            })}
-          </div>
+
+        {/* Section header */}
+        <div className="flex flex-col items-start gap-4 mb-10 md:mb-14 pt-4">
+          <p className="text-[9px] md:text-[10px] uppercase tracking-[0.38em] text-white/45 font-bold">
+            Built with purpose. Worn as a reminder.
+          </p>
+          <h2 className="font-brand text-4xl md:text-7xl uppercase tracking-[0.08em] text-white">The Gear</h2>
         </div>
 
-        <div ref={panelRef}>
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-8 md:mb-10">
-            <div className="flex items-center gap-3 flex-wrap">
-              {active === "women" && (
-                <span className="text-[8px] uppercase tracking-[0.38em] font-bold px-3 py-1 rounded-full"
-                  style={{ background: "rgba(143,175,138,0.15)", color: "#8FAF8A", border: "1px solid rgba(143,175,138,0.25)" }}>
-                  Collective
+        {/* Drop shelf selector */}
+        <div
+          className="gear-shelf"
+          style={{
+            display: "flex",
+            gap: "12px",
+            overflowX: "auto",
+            scrollSnapType: "x mandatory",
+            WebkitOverflowScrolling: "touch",
+            paddingBottom: "4px",
+            marginBottom: "clamp(2rem, 4vw, 3.5rem)",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            justifyContent: "center",
+          }}
+        >
+          {COLLECTIONS.map(col => {
+            const isActive = col.key === activeKey;
+            return (
+              <button
+                key={col.key}
+                onClick={() => switchCollection(col.key)}
+                style={{
+                  flex: "0 0 auto",
+                  width: "clamp(160px, 18vw, 210px)",
+                  padding: "1.25rem 1.5rem",
+                  background: isActive ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.02)",
+                  border: `1px solid ${isActive ? col.accent + "55" : "rgba(255,255,255,0.06)"}`,
+                  borderRadius: "16px",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  textAlign: "left",
+                  position: "relative",
+                  overflow: "hidden",
+                  scrollSnapAlign: "start",
+                }}
+              >
+                <div style={{
+                  position: "absolute",
+                  top: 0,
+                  left: "20%",
+                  right: "20%",
+                  height: "2px",
+                  background: isActive ? col.accent : `linear-gradient(to right, transparent, ${col.accent}33, transparent)`,
+                  transition: "all 0.3s",
+                }} />
+                <span style={{
+                  fontFamily: "'Barlow Condensed', sans-serif",
+                  fontSize: "9px",
+                  letterSpacing: "0.36em",
+                  textTransform: "uppercase",
+                  color: isActive ? col.accent : "rgba(250,248,245,0.25)",
+                  transition: "color 0.3s",
+                  display: "block",
+                }}>
+                  Drop {col.drop}
                 </span>
-              )}
-              <p className="font-brand text-sm md:text-base uppercase tracking-[0.18em] opacity-60"
-                style={{ color: active === "women" ? "rgba(143,175,138,0.65)" : "white" }}>
-                {tab.phrase}
-              </p>
+                <p style={{
+                  fontFamily: "'Barlow Condensed', sans-serif",
+                  fontSize: "clamp(14px, 1.6vw, 17px)",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  color: isActive ? "#FAF8F5" : "rgba(250,248,245,0.3)",
+                  margin: "6px 0 0",
+                  transition: "color 0.3s",
+                  lineHeight: 1.2,
+                }}>
+                  {col.title}
+                </p>
+                <p style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontStyle: "italic",
+                  fontSize: "13px",
+                  color: isActive ? "rgba(250,248,245,0.45)" : "rgba(250,248,245,0.15)",
+                  margin: "4px 0 0",
+                  transition: "color 0.3s",
+                }}>
+                  {col.subtitle}
+                </p>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Collection showcase */}
+        <div ref={panelRef}>
+
+          {/* Collection hero */}
+          <div style={{ marginBottom: "clamp(2rem, 4vw, 3.5rem)" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: "12px", marginBottom: "8px" }}>
+              <span style={{ fontSize: "9px", letterSpacing: "0.4em", textTransform: "uppercase", color: `${active.accent}88`, fontWeight: 700 }}>
+                {active.pillar} Pillar
+              </span>
+              <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.15)" }}>·</span>
+              <a href={active.pillarRoute} style={{ fontSize: "9px", letterSpacing: "0.3em", textTransform: "uppercase", color: `${active.accent}55`, textDecoration: "none" }}>
+                Explore →
+              </a>
             </div>
-            <p className="text-[8px] md:text-[10px] uppercase tracking-[0.22em] text-white opacity-40 font-bold">{tab.sub}</p>
+            <h3 style={{ fontFamily: "'Michroma', sans-serif", fontSize: "clamp(24px, 4vw, 44px)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#FAF8F5", lineHeight: 0.95, marginBottom: "0.75rem" }}>
+              {active.title}
+            </h3>
+            {active.tagline && (
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "clamp(16px, 2.5vw, 22px)", color: `${active.accent}88`, marginBottom: "1rem" }}>
+                {active.tagline}
+              </p>
+            )}
+            <p style={{ fontSize: "clamp(12px, 1.5vw, 14px)", color: "rgba(250,248,245,0.35)", maxWidth: "600px", lineHeight: 1.7, letterSpacing: "0.02em" }}>
+              {active.description}
+            </p>
           </div>
 
-          <p className="text-[9px] md:text-[10px] uppercase tracking-[0.18em] md:tracking-[0.22em] text-white opacity-42 leading-loose max-w-xl mb-10 md:mb-12">
-            Designed as a reminder: you are being formed every day.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-            {available.map(cat => (
-              <TiltCard key={cat.name}
+          {/* Product grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(280px, 100%), 1fr))", gap: "clamp(16px, 2vw, 24px)" }}>
+            {available.map(product => (
+              <TiltCard key={product.name}
                 className="product-card group relative overflow-hidden bg-black aspect-square rounded-[2rem] md:rounded-[3rem] transition-transform duration-700 hover:-translate-y-2 md:hover:-translate-y-4 shadow-2xl shadow-black/25">
-                <a href={cat.shopUrl || tab.shopUrl}
+                <a href={product.shopUrl || active.shopUrl}
                   target="_blank" rel="noopener noreferrer"
                   className="block h-full relative">
                   <div className="absolute inset-0 opacity-100 transition-all duration-1000">
-                    <SafeImg src={cat.img} className="w-full h-full object-contain" alt={cat.name} />
+                    <SafeImg src={product.img} className="w-full h-full object-contain" alt={product.name} />
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
-                  {active === "women" && cat.phrase && (
-                    <div className="absolute top-5 left-5 text-[7px] uppercase tracking-[0.32em] font-bold"
-                      style={{ color: "rgba(143,175,138,0.55)" }}>{cat.phrase}</div>
-                  )}
                   <div className="relative z-10 h-full p-8 md:p-12 flex flex-col justify-end text-white">
-                    <h3 className="font-brand text-2xl md:text-4xl uppercase italic">{cat.name}</h3>
-                    <p className="text-[9px] md:text-[10px] opacity-60 uppercase mt-2 tracking-widest">{cat.copy}</p>
-                    <div className="flex items-center gap-3 text-[9px] pt-4 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: tab.accent }}>
+                    <h3 className="font-brand text-2xl md:text-4xl uppercase italic">{product.name}</h3>
+                    <p className="text-[9px] md:text-[10px] opacity-60 uppercase mt-2 tracking-widest">{product.copy}</p>
+                    <div className="flex items-center gap-3 text-[9px] pt-4 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: active.accent }}>
                       Shop <ArrowRight size={14} />
                     </div>
                   </div>
@@ -964,24 +1056,30 @@ function GearSection() {
             ))}
           </div>
 
+          {/* Dropping soon */}
           {teaser.length > 0 && (
             <>
-              <p className="text-[11px] tracking-[0.5em] uppercase font-bold mt-14 mb-6"
-                style={{ color: `${tab.accent}80` }}>
+              <p style={{ fontSize: "11px", letterSpacing: "0.5em", textTransform: "uppercase", fontWeight: 700, marginTop: "clamp(2rem, 4vw, 3.5rem)", marginBottom: "1.5rem", color: `${active.accent}80` }}>
                 Dropping Soon
               </p>
-              <DroppingSoonStrip products={teaser} accent={tab.accent} accentMuted={tab.accentMuted} />
+              <DroppingSoonStrip products={teaser} accent={active.accent} accentMuted={active.accentMuted} />
             </>
           )}
 
-          {active === "women" && (
-            <div className="mt-12 md:mt-16 text-center">
-              <p className="text-[9px] uppercase tracking-[0.32em] font-bold mb-2" style={{ color: "rgba(143,175,138,0.65)" }}>The Collective</p>
-              <p className="text-[10px] md:text-xs opacity-40 tracking-[0.14em] max-w-sm mx-auto leading-relaxed" style={{ color: "rgba(143,175,138,0.45)" }}>
-                Same Rule. Different expression. Strength, rooted in light.
-              </p>
-            </div>
-          )}
+          {/* Shop CTA */}
+          <div style={{ marginTop: "clamp(2rem, 4vw, 3rem)", textAlign: "center" }}>
+            <a
+              href={active.shopUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "12px 32px", borderRadius: "999px", border: `1px solid ${active.accent}44`, color: active.accent, fontSize: "10px", letterSpacing: "0.28em", textTransform: "uppercase", fontWeight: 700, fontFamily: "'Barlow Condensed', sans-serif", textDecoration: "none", transition: "all 0.25s" }}
+              onMouseEnter={e => { e.currentTarget.style.background = `${active.accent}15`; e.currentTarget.style.borderColor = active.accent; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = `${active.accent}44`; }}
+            >
+              Shop Full Collection →
+            </a>
+          </div>
+
         </div>
       </div>
     </section>

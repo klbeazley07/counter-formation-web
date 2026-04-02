@@ -23,7 +23,7 @@ const C = {
 
 const ARMOR_PIECES = [
   {
-    num: "01", slug: "belt-of-truth", title: "Belt of Truth", icon: "/Belt_icon.png",
+    num: "01", slug: "belt-of-truth", title: "Belt of Truth", icon: "/Belt_white_icon.png",
     scripture: "Ephesians 6:14",
     scriptureText: "Stand firm then, with the belt of truth buckled around your waist.",
     theology: "The belt was the first piece — everything else attached to it. Truth is foundational. Not abstract doctrine but lived reality.",
@@ -33,7 +33,7 @@ const ARMOR_PIECES = [
     product: null,
   },
   {
-    num: "02", slug: "breastplate-of-righteousness", title: "Breastplate of Righteousness", icon: "/Breastplate_icon.png",
+    num: "02", slug: "breastplate-of-righteousness", title: "Breastplate of Righteousness", icon: "/Breastplate_white_icon.png",
     scripture: "Ephesians 6:14",
     scriptureText: "Stand firm then, with the breastplate of righteousness in place.",
     theology: "Protects the heart. Positional righteousness, not moral performance. Christ's righteousness credited to you.",
@@ -43,7 +43,7 @@ const ARMOR_PIECES = [
     product: null,
   },
   {
-    num: "03", slug: "gospel-of-peace", title: "Gospel of Peace", icon: "/Sandal_icon.png",
+    num: "03", slug: "gospel-of-peace", title: "Gospel of Peace", icon: "/Sandal_white_icon.png",
     scripture: "Ephesians 6:15",
     scriptureText: "And with your feet fitted with the readiness that comes from the gospel of peace.",
     theology: "Roman sandals had cleats for standing firm. Peace is grounding, not absence of conflict.",
@@ -53,7 +53,7 @@ const ARMOR_PIECES = [
     product: null,
   },
   {
-    num: "04", slug: "shield-of-faith", title: "Shield of Faith", icon: "/Shield_black_icon.png",
+    num: "04", slug: "shield-of-faith", title: "Shield of Faith", icon: "/Shield_white_icon.png",
     scripture: "Ephesians 6:16",
     scriptureText: "In addition to all this, take up the shield of faith, with which you can extinguish all the flaming arrows of the evil one.",
     theology: "Full-body thureos soaked in water to quench fire arrows. Faith is positioning, not feeling.",
@@ -63,7 +63,7 @@ const ARMOR_PIECES = [
     product: "Drop 002 · Premium Everyday Tee",
   },
   {
-    num: "05", slug: "helmet-of-salvation", title: "Helmet of Salvation", icon: "/Helmet_black_icon.png",
+    num: "05", slug: "helmet-of-salvation", title: "Helmet of Salvation", icon: "/Helmet_white_icon.png",
     scripture: "Ephesians 6:17",
     scriptureText: "Take the helmet of salvation and the sword of the Spirit, which is the word of God.",
     theology: "Protects the mind. Salvation as present reality and settled identity, not just future promise.",
@@ -73,7 +73,7 @@ const ARMOR_PIECES = [
     product: "Drop 002 · Technical Hoodie",
   },
   {
-    num: "06", slug: "sword-of-the-spirit", title: "Sword of the Spirit", icon: "/Sword_black_icon.png",
+    num: "06", slug: "sword-of-the-spirit", title: "Sword of the Spirit", icon: "/Sword_white_icon.png",
     scripture: "Ephesians 6:17",
     scriptureText: "Take the sword of the Spirit, which is the word of God.",
     theology: "Only offensive weapon. Scripture as living, active, spoken weapon. Rhema = specific utterance.",
@@ -126,7 +126,7 @@ const ARMOR_TRACKS = {
   "belt-of-truth": {
     num: "01",
     title: "Belt of Truth",
-    icon: "/Belt_icon.png",
+    icon: "/Belt_white_icon.png",
     trackTitle: "Living in the Light",
     img: "/Belt of Truth_Hero_wide.png",
     cumulative: "Written personal examination (5 weekly questions)",
@@ -293,7 +293,7 @@ const ARMOR_TRACKS = {
   "breastplate-of-righteousness": {
     num: "02",
     title: "Breastplate of Righteousness",
-    icon: "/Breastplate_icon.png",
+    icon: "/Breastplate_white_icon.png",
     trackTitle: "Already Clothed",
     img: "/Breastplate_Hero_wide.png",
     cumulative: "Morning declaration (3–5 identity sentences)",
@@ -457,7 +457,7 @@ const ARMOR_TRACKS = {
   "gospel-of-peace": {
     num: "03",
     title: "Gospel of Peace",
-    icon: "/Sandal_icon.png",
+    icon: "/Sandal_white_icon.png",
     trackTitle: "Ground Beneath You",
     img: "/Gospel of Peace_Hero_wide.png",
     cumulative: "Peace Pause rhythm (3 daily anchoring statements)",
@@ -621,7 +621,7 @@ const ARMOR_TRACKS = {
   "shield-of-faith": {
     num: "04",
     title: "Shield of Faith",
-    icon: "/Shield_black_icon.png",
+    icon: "/Shield_white_icon.png",
     trackTitle: "Behind What God Has Said",
     img: "/Shield of Faith_Hero_wide.png",
     cumulative: "Arrow log (lies vs. truth document)",
@@ -784,7 +784,7 @@ const ARMOR_TRACKS = {
   "helmet-of-salvation": {
     num: "05",
     title: "Helmet of Salvation",
-    icon: "/Helmet_black_icon.png",
+    icon: "/Helmet_white_icon.png",
     trackTitle: "A Protected Mind",
     img: "/Helmet_Hero_wide.png",
     cumulative: "First Fifteen morning practice design",
@@ -941,7 +941,7 @@ const ARMOR_TRACKS = {
   "sword-of-the-spirit": {
     num: "06",
     title: "Sword of the Spirit",
-    icon: "/Sword_black_icon.png",
+    icon: "/Sword_white_icon.png",
     trackTitle: "The Word as Weapon",
     img: "/Sword_Hero_wide.png",
     cumulative: "Verse memorization system + first 5 verses",
@@ -1141,7 +1141,7 @@ export function ArmorStyles() {
       /* Day selector */
       .ap-day-nav { display: flex; overflow-x: auto; gap: 4px; padding-bottom: 1px; margin-bottom: 2.5rem; border-bottom: 1px solid rgba(255,255,255,0.07); scrollbar-width: none; position: sticky; top: 46px; z-index: 50; background: #06050A; padding-top: 12px; box-shadow: 0 8px 24px rgba(6,5,10,0.95); }
       .ap-day-nav::-webkit-scrollbar { display: none; }
-      .ap-day-btn { flex-shrink: 0; padding: 10px 18px; border: none; background: transparent; border-bottom: 2px solid transparent; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: rgba(250,248,245,0.28); transition: color .2s, border-color .2s; }
+      .ap-day-btn { flex-shrink: 0; padding: 12px 20px; border: none; background: transparent; border-bottom: 2px solid transparent; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: rgba(250,248,245,0.28); transition: color .2s, border-color .2s; }
       .ap-day-btn.active { color: #C9A84C; border-bottom-color: #C9A84C; }
       .ap-day-btn:hover:not(.active) { color: rgba(250,248,245,0.55); }
       .ap-day-btn.completed::after { content: ''; display: block; width: 4px; height: 4px; border-radius: 50%; background: #C9A84C; margin: 4px auto 0; opacity: 0.6; }
@@ -1829,8 +1829,7 @@ function SixPiecesSection() {
                       width: "clamp(40px, 5vw, 52px)",
                       height: "auto",
                       objectFit: "contain",
-                      mixBlendMode: "screen",
-                      opacity: 0.6,
+                                            opacity: 0.6,
                       marginBottom: "1.25rem",
                     }}
                   />
@@ -1937,8 +1936,7 @@ function SixPiecesSection() {
                         width: "clamp(90px, 10vw, 120px)",
                         height: "auto",
                         objectFit: "contain",
-                        mixBlendMode: "screen",
-                        opacity: 0.12,
+                                                opacity: 0.12,
                         pointerEvents: "none",
                         zIndex: 1,
                       }}
@@ -2145,8 +2143,7 @@ function CollectionSection() {
                       width: p.available ? "44px" : "36px",
                       height: "auto",
                       objectFit: "contain",
-                      mixBlendMode: "screen",
-                      opacity: p.available ? 0.5 : 0.12,
+                                            opacity: p.available ? 0.5 : 0.12,
                     }}
                   />
                 </div>
@@ -2974,13 +2971,12 @@ export function ArmorPiecePage() {
               alt=""
               className="ap-day-nav-icon"
               style={{
-                width: "18px",
-                height: "18px",
+                width: "28px",
+                height: "28px",
                 objectFit: "contain",
-                mixBlendMode: "screen",
-                opacity: 0.3,
+                                opacity: 0.35,
                 flexShrink: 0,
-                marginRight: "8px",
+                marginRight: "4px",
               }}
             />
           )}
@@ -3092,8 +3088,7 @@ export function ArmorPiecePage() {
                           width: "20px",
                           height: "20px",
                           objectFit: "contain",
-                          mixBlendMode: "screen",
-                          opacity: slug === piece ? 0.7 : 0.15,
+                                                    opacity: slug === piece ? 0.7 : 0.15,
                           flexShrink: 0,
                           transition: "opacity 0.2s",
                         }}
