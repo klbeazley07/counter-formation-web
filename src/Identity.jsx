@@ -1455,6 +1455,7 @@ function ArmorIntroSection() {
       }
 
       // --- Teaching paragraphs: batch stagger ---
+      gsap.set(".armor-para", { opacity: 0 });
       ScrollTrigger.batch(".armor-para", {
         start: "top 88%",
         onEnter: batch => gsap.fromTo(batch,
@@ -1856,6 +1857,7 @@ function BrandSection() {
 
     const ctx = gsap.context(() => {
       // --- Prose paragraphs: batch stagger ---
+      gsap.set(".brand-para", { opacity: 0 });
       ScrollTrigger.batch(".brand-para", {
         start: "top 88%",
         onEnter: batch => gsap.fromTo(batch,
@@ -1936,6 +1938,7 @@ function CollectionSection() {
         });
 
       // --- Product cards: batch stagger ---
+      gsap.set(".drop-card", { opacity: 0 });
       ScrollTrigger.batch(".drop-card", {
         start: "top 88%",
         onEnter: batch => gsap.fromTo(batch,
@@ -2218,28 +2221,6 @@ export function IdentityLanding() {
   }, []);
   return (
     <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: C.heroBg }}>
-      <style>{`
-        @keyframes shimmerSweep {
-          0%   { background-position: -100% 0; }
-          100% { background-position: 200% 0; }
-        }
-        .shimmer-sweep {
-          background-image: linear-gradient(90deg, transparent 0%, rgba(201,168,76,0.6) 50%, transparent 100%) !important;
-          background-size: 200% 100%;
-          -webkit-background-clip: text;
-          background-clip: text;
-          animation: shimmerSweep 0.8s ease forwards;
-        }
-        @media (hover: hover) {
-          .drop-card {
-            transition: transform 300ms ease, box-shadow 300ms ease;
-          }
-          .drop-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-          }
-        }
-      `}</style>
       <SiteNav />
       <HeroSection />
       <ArmorIntroSection />
