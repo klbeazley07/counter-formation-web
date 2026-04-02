@@ -1109,7 +1109,7 @@ export function ArmorStyles() {
       .ap-prog-fill { height: 100%; width: 0; background: linear-gradient(to right, #C9A84C, rgba(201,168,76,0.35)); transition: width .12s linear; }
 
       /* Hero */
-      .ap-hero { position: relative; overflow: hidden; min-height: clamp(480px, 65vw, 780px); display: flex; flex-direction: column; justify-content: flex-end; }
+      .ap-hero { position: relative; overflow: hidden; min-height: clamp(35vh, 40vw, 55vh); display: flex; flex-direction: column; justify-content: flex-end; width: 100%; }
       .ap-hero-bg  { position: absolute; inset: 0; background-size: cover; background-position: center center; filter: grayscale(.2); }
       .ap-hero-ov  { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,5,10,0.97) 0%, rgba(6,5,10,0.45) 50%, rgba(6,5,10,0.1) 100%); }
       .ap-hero-num { position: absolute; right: 2%; top: 50%; transform: translateY(-50%); font-family: 'Michroma', sans-serif; font-size: clamp(120px, 18vw, 220px); color: #FAF8F5; opacity: 0.05; line-height: 1; pointer-events: none; z-index: 1; }
@@ -1136,8 +1136,8 @@ export function ArmorStyles() {
 
       /* Scripture */
       .ap-scriptures { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2.5rem; }
-      .ap-scripture  { background: rgba(255,255,255,0.025); border-left: 2px solid #C9A84C; border-radius: 0 12px 12px 0; padding: 1.25rem 1.5rem; }
-      .ap-scripture p    { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(15px, 3.5vw, 18px); color: rgba(250,248,245,0.72); line-height: 1.7; margin-bottom: .5rem; }
+      .ap-scripture  { background: rgba(255,255,255,0.025); border-left: 2px solid #C9A84C; border-radius: 0 12px 12px 0; padding: 1.25rem 1.5rem; overflow-wrap: break-word; word-break: break-word; }
+      .ap-scripture p    { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(15px, 3.5vw, 18px); color: rgba(250,248,245,0.72); line-height: 1.7; margin-bottom: .5rem; overflow-wrap: break-word; word-break: break-word; }
       .ap-scripture cite { font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: #C9A84C; font-style: normal; }
 
       /* Teaching */
@@ -1184,7 +1184,7 @@ export function ArmorStyles() {
 
       /* Bottom nav */
       .ap-piece-nav { display: flex; gap: 12px; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.06); }
-      .ap-nav-btn { flex: 1; padding: 16px 20px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.03); text-decoration: none; display: flex; flex-direction: column; gap: 4px; transition: border-color .25s, background .25s; }
+      .ap-nav-btn { flex: 1; min-height: 44px; padding: 16px 20px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.03); text-decoration: none; display: flex; flex-direction: column; gap: 4px; transition: border-color .25s, background .25s; }
       .ap-nav-btn:hover { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.05); }
       .ap-nav-btn-dir   { font-size: 8px; letter-spacing: .36em; text-transform: uppercase; color: rgba(201,168,76,0.6); }
       .ap-nav-btn-title { font-family: 'Michroma', sans-serif; font-size: clamp(12px, 1.8vw, 15px); text-transform: uppercase; letter-spacing: .08em; color: #FAF8F5; line-height: 1.1; }
@@ -1194,6 +1194,27 @@ export function ArmorStyles() {
       .ap-footer { background: #06050A; border-top: 1px solid rgba(255,255,255,0.05); padding: 28px 1.5rem; text-align: center; }
       .ap-footer img { width: 24px; height: 24px; opacity: .2; filter: invert(1); display: block; margin: 0 auto .75rem; }
       .ap-footer p   { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
+
+      /* Mobile: piece nav stacks vertically, watermark numeral smaller */
+      @media (max-width: 639px) {
+        .ap-piece-nav { flex-direction: column; }
+        .ap-nav-btn { width: 100%; flex: none; }
+        .ap-nav-btn.next { text-align: left; align-items: flex-start; }
+        .ap-hero-num { font-size: clamp(5rem, 22vw, 10rem); }
+        .ap-content { padding: 32px 20px 80px; }
+        .ap-main { max-width: 100%; }
+        .ap-scripture { padding: 1rem 1.25rem; }
+      }
+
+      /* Tablet: sidebar appears ABOVE main content (between day tabs and devotional body) */
+      @media (min-width: 640px) and (max-width: 1023px) {
+        .ap-hero-num { font-size: clamp(5rem, 22vw, 10rem); }
+        .ap-content { display: flex; flex-direction: column; }
+        .ap-day-nav { order: 0; }
+        .ap-sidebar { order: 1; margin-top: 0; margin-bottom: 2.5rem; }
+        .ap-main    { order: 2; }
+        .ap-piece-nav { order: 3; }
+      }
 
       /* Desktop two-column layout */
       @media (min-width: 1024px) {
