@@ -751,7 +751,7 @@ const COLLECTIONS = [
     title: "Counter Formation",
     subtitle: "The Foundation",
     tagline: "Apparel as a visual anchor.",
-    description: "The original Counter Formation gear. Designed as a daily reminder that you are being formed, not drifting.",
+    description: "Collection of Counter Formation Branded Gear. Designed as a daily reminder that you are being formed — BATTLE THE DRIFT.",
     accent: "#C9A84C",
     accentMuted: "rgba(201,168,76,0.18)",
     pillar: "Practice",
@@ -921,6 +921,9 @@ function GearSection() {
         </div>
 
         {/* Drop shelf selector */}
+        <p style={{ fontSize: "9px", letterSpacing: "0.4em", textTransform: "uppercase", color: "rgba(250,248,245,0.3)", fontWeight: 700, marginBottom: "12px" }}>
+          Apparel Collections
+        </p>
         <div
           className="gear-shelf"
           style={{
@@ -933,7 +936,7 @@ function GearSection() {
             marginBottom: "clamp(2rem, 4vw, 3.5rem)",
             scrollbarWidth: "none",
             msOverflowStyle: "none",
-            justifyContent: "center",
+            justifyContent: "flex-start",
           }}
         >
           {COLLECTIONS.map(col => {
@@ -1010,15 +1013,6 @@ function GearSection() {
 
           {/* Collection hero */}
           <div style={{ marginBottom: "clamp(2rem, 4vw, 3.5rem)" }}>
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: "12px", marginBottom: "8px" }}>
-              <span style={{ fontSize: "9px", letterSpacing: "0.4em", textTransform: "uppercase", color: `${active.accent}88`, fontWeight: 700 }}>
-                {active.pillar} Pillar
-              </span>
-              <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.15)" }}>·</span>
-              <a href={active.pillarRoute} style={{ fontSize: "9px", letterSpacing: "0.3em", textTransform: "uppercase", color: `${active.accent}55`, textDecoration: "none" }}>
-                Explore →
-              </a>
-            </div>
             <h3 style={{ fontFamily: "'Michroma', sans-serif", fontSize: "clamp(24px, 4vw, 44px)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#FAF8F5", lineHeight: 0.95, marginBottom: "0.75rem" }}>
               {active.title}
             </h3>
@@ -1033,26 +1027,31 @@ function GearSection() {
           </div>
 
           {/* Product grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(280px, 100%), 1fr))", gap: "clamp(16px, 2vw, 24px)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(320px, 100%), 1fr))", gap: "clamp(20px, 2.5vw, 32px)" }}>
             {available.map(product => (
-              <TiltCard key={product.name}
-                className="product-card group relative overflow-hidden bg-black aspect-square rounded-[2rem] md:rounded-[3rem] transition-transform duration-700 hover:-translate-y-2 md:hover:-translate-y-4 shadow-2xl shadow-black/25">
-                <a href={product.shopUrl || active.shopUrl}
-                  target="_blank" rel="noopener noreferrer"
-                  className="block h-full relative">
-                  <div className="absolute inset-0 opacity-100 transition-all duration-1000">
+              <div key={product.name} className="flex flex-col group">
+                <TiltCard className="product-card relative overflow-hidden bg-black rounded-[2rem] md:rounded-[2.5rem] shadow-2xl shadow-black/25" style={{ aspectRatio: "3/4" }}>
+                  <a href={product.shopUrl || active.shopUrl}
+                    target="_blank" rel="noopener noreferrer"
+                    className="block h-full relative">
                     <SafeImg src={product.img} className="w-full h-full object-contain" alt={product.name} />
+                  </a>
+                </TiltCard>
+                <div className="pt-4 px-1 flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="font-brand text-base md:text-lg uppercase tracking-[0.06em] text-white/90">{product.name}</h3>
+                    <p className="text-[10px] uppercase tracking-widest text-white/35 mt-1">{product.copy}</p>
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
-                  <div className="relative z-10 h-full p-8 md:p-12 flex flex-col justify-end text-white">
-                    <h3 className="font-brand text-2xl md:text-4xl uppercase italic">{product.name}</h3>
-                    <p className="text-[9px] md:text-[10px] opacity-60 uppercase mt-2 tracking-widest">{product.copy}</p>
-                    <div className="flex items-center gap-3 text-[9px] pt-4 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: active.accent }}>
-                      Shop <ArrowRight size={14} />
-                    </div>
-                  </div>
-                </a>
-              </TiltCard>
+                  <a
+                    href={product.shopUrl || active.shopUrl}
+                    target="_blank" rel="noopener noreferrer"
+                    className="flex-shrink-0 flex items-center gap-1.5 text-[9px] uppercase tracking-[0.28em] transition-opacity opacity-50 group-hover:opacity-100 pt-0.5"
+                    style={{ color: active.accent }}
+                  >
+                    Shop <ArrowRight size={12} />
+                  </a>
+                </div>
+              </div>
             ))}
           </div>
 
