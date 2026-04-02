@@ -885,7 +885,7 @@ function DroppingSoonStrip({ products, accent, accentMuted }) {
 
 function GearSection() {
   const [activeKey, setActiveKey] = useState(COLLECTIONS[0].key);
-  const [activeProductIdx, setActiveProductIdx] = useState(0);
+  const [activeSlide, setActiveSlide] = useState(0);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [sectionInView, setSectionInView] = useState(false);
   const panelRef = useRef(null);
@@ -908,12 +908,12 @@ function GearSection() {
       opacity: 0, y: 8, duration: 0.22, ease: "power2.in",
       onComplete: () => {
         setActiveKey(key);
-        setActiveProductIdx(0);
+        setActiveSlide(0);
         if (carouselRef.current) {
           carouselRef.current.scrollTo({ left: 0, behavior: "instant" });
         }
         if (window.innerWidth < 768 && panelRef.current) {
-          const top = panelRef.current.getBoundingClientRect().top + window.scrollY - 80;
+          const top = panelRef.current.getBoundingClientRect().top + window.scrollY - 20;
           window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
         }
         gsap.fromTo(panelRef.current,
@@ -940,14 +940,13 @@ function GearSection() {
     if (!sectionInView) setPickerOpen(false);
   }, [sectionInView]);
 
-  // Track active product card via carousel scroll
+  // Track active slide via carousel scroll
   useEffect(() => {
     const el = carouselRef.current;
     if (!el || window.innerWidth >= 768) return;
     const onScroll = () => {
-      const cardWidth = el.querySelector(".gear-product-card")?.offsetWidth || 1;
-      const idx = Math.round(el.scrollLeft / (cardWidth + 16));
-      setActiveProductIdx(Math.min(idx, available.length - 1));
+      const idx = Math.round(el.scrollLeft / el.offsetWidth);
+      setActiveSlide(Math.max(0, Math.min(idx, available.length - 1)));
     };
     el.addEventListener("scroll", onScroll, { passive: true });
     return () => el.removeEventListener("scroll", onScroll);
@@ -958,13 +957,20 @@ function GearSection() {
       style={{ backgroundColor: C.darkBg }}>
       <style>{`
         .gear-shelf::-webkit-scrollbar { display: none; }
-        .gear-products { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 4px; }
-        .gear-products::-webkit-scrollbar { display: none; }
-        .gear-products > .gear-product-card { flex: 0 0 82vw; scroll-snap-align: center; max-width: 400px; }
-        @media (min-width: 768px) {
-          .gear-products { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: clamp(20px, 2.5vw, 32px); overflow-x: visible; scroll-snap-type: none; padding-bottom: 0; }
-          .gear-products > .gear-product-card { flex: none; max-width: none; }
+        .gear-lookbook { display: none; }
+        .gear-grid-desktop { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: clamp(20px, 2.5vw, 32px); }
+        @media (max-width: 767px) {
+          .gear-lookbook { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-left: -16px; margin-right: -16px; }
+          .gear-lookbook::-webkit-scrollbar { display: none; }
+          .gear-slide { flex: 0 0 100vw; scroll-snap-align: start; height: 72vh; position: relative; display: flex; flex-direction: column; }
+          .gear-grid-desktop { display: none; }
         }
+        .gear-pill-enter { animation: gearPillIn 0.3s ease forwards; }
+        @keyframes gearPillIn { from { transform: translateX(-50%) translateY(20px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
+        .gear-picker-backdrop { animation: gearFadeIn 0.2s ease forwards; }
+        .gear-picker-sheet { animation: gearSheetUp 0.3s ease forwards; }
+        @keyframes gearFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes gearSheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
       `}</style>
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.03) 0%, transparent 60%)" }} />
@@ -1084,27 +1090,66 @@ function GearSection() {
             </p>
           </div>
 
-          {/* Product grid / mobile carousel */}
-          <div ref={carouselRef} className="gear-products">
+          {/* Mobile: full-screen lookbook */}
+          <div ref={carouselRef} className="gear-lookbook">
+            {available.map((product) => (
+              <div key={product.slug || product.name} className="gear-slide">
+                <div style={{ flex: 1, position: "relative", overflow: "hidden", background: "#000" }}>
+                  <SafeImg src={product.img} alt={product.name} className="w-full h-full"
+                    style={{ objectFit: "contain", objectPosition: "center center", ...(product.future ? { filter: "grayscale(1)", opacity: 0.3 } : {}) }} />
+                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "45%", background: "linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 40%, transparent 100%)", pointerEvents: "none" }} />
+                  {product.future && (
+                    <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+                      <span style={{ fontSize: "9px", letterSpacing: "0.38em", textTransform: "uppercase", fontWeight: 700, color: "rgba(250,248,245,0.55)", border: "1px solid rgba(250,248,245,0.15)", borderRadius: "999px", padding: "8px 20px", background: "rgba(0,0,0,0.5)", backdropFilter: "blur(8px)" }}>
+                        Future Drop
+                      </span>
+                    </div>
+                  )}
+                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "0 24px 20px", zIndex: 2 }}>
+                    <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "8px", letterSpacing: "0.4em", textTransform: "uppercase", color: `${active.accent}77`, fontWeight: 700, marginBottom: "6px" }}>
+                      Drop {active.drop} · {active.title}
+                    </p>
+                    <h3 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "28px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: product.future ? "rgba(250,248,245,0.3)" : "#FAF8F5", lineHeight: 1.0, marginBottom: "4px" }}>
+                      {product.name}
+                    </h3>
+                    <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "11px", letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(250,248,245,0.3)", marginBottom: "14px" }}>
+                      {product.copy}
+                    </p>
+                    {!product.future && (
+                      <a href={product.shopUrl || active.shopUrl} target="_blank" rel="noopener noreferrer"
+                        style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "10px 24px", borderRadius: "999px", border: `1px solid ${active.accent}55`, color: active.accent, fontFamily: "'Barlow Condensed', sans-serif", fontSize: "10px", letterSpacing: "0.28em", textTransform: "uppercase", fontWeight: 700, textDecoration: "none" }}>
+                        Shop This Piece
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Slide indicator dots — mobile only, tappable */}
+          {available.length > 1 && (
+            <div className="md:hidden" style={{ display: "flex", gap: "6px", justifyContent: "center", padding: "14px 0 0" }}>
+              {available.map((_, i) => (
+                <button key={i} onClick={() => carouselRef.current?.scrollTo({ left: i * window.innerWidth, behavior: "smooth" })}
+                  aria-label={`Go to product ${i + 1}`}
+                  style={{ width: i === activeSlide ? 20 : 8, height: 3, borderRadius: 2, background: i === activeSlide ? active.accent : "rgba(250,248,245,0.12)", transition: "all 0.3s ease", border: "none", padding: 0, cursor: "pointer" }} />
+              ))}
+            </div>
+          )}
+
+          {/* Desktop: unchanged grid */}
+          <div className="gear-grid-desktop">
             {available.map(product => (
-              <div key={product.name} className="gear-product-card flex flex-col group">
+              <div key={product.name} className="flex flex-col group">
                 <TiltCard className="product-card relative overflow-hidden bg-black rounded-[2rem] md:rounded-[2.5rem] shadow-2xl shadow-black/25" style={{ aspectRatio: "3/4" }}>
                   <div className="block h-full relative">
                     <SafeImg src={product.img} className="w-full h-full object-contain" alt={product.name}
                       style={product.future ? { filter: "grayscale(1)", opacity: 0.3 } : {}} />
                     {product.future && (
                       <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                        <span style={{
-                          fontSize: "9px",
-                          letterSpacing: "0.38em",
-                          textTransform: "uppercase",
-                          fontWeight: 700,
-                          color: "rgba(250,248,245,0.55)",
-                          border: "1px solid rgba(250,248,245,0.15)",
-                          borderRadius: "999px",
-                          padding: "6px 16px",
-                          background: "rgba(0,0,0,0.4)",
-                        }}>
+                        <span style={{ fontSize: "9px", letterSpacing: "0.38em", textTransform: "uppercase", fontWeight: 700, color: "rgba(250,248,245,0.55)", border: "1px solid rgba(250,248,245,0.15)", borderRadius: "999px", padding: "6px 16px", background: "rgba(0,0,0,0.4)" }}>
                           Future Drop
                         </span>
                       </div>
@@ -1117,12 +1162,9 @@ function GearSection() {
                     <p className="text-[10px] uppercase tracking-widest text-white/25 mt-1">{product.copy}</p>
                   </div>
                   {!product.future && (
-                    <a
-                      href={product.shopUrl || active.shopUrl}
-                      target="_blank" rel="noopener noreferrer"
+                    <a href={product.shopUrl || active.shopUrl} target="_blank" rel="noopener noreferrer"
                       className="flex-shrink-0 flex items-center gap-1.5 text-[9px] uppercase tracking-[0.28em] transition-opacity opacity-50 group-hover:opacity-100 pt-0.5"
-                      style={{ color: active.accent }}
-                    >
+                      style={{ color: active.accent }}>
                       Shop <ArrowRight size={12} />
                     </a>
                   )}
@@ -1130,21 +1172,6 @@ function GearSection() {
               </div>
             ))}
           </div>
-
-          {/* Scroll indicator dots — mobile only */}
-          {available.length > 1 && (
-            <div className="flex gap-1.5 justify-center mt-4 md:hidden">
-              {available.map((_, i) => (
-                <div key={i} style={{
-                  width: i === activeProductIdx ? 16 : 8,
-                  height: 3,
-                  borderRadius: 2,
-                  background: i === activeProductIdx ? active.accent : "rgba(250,248,245,0.12)",
-                  transition: "all 0.3s ease",
-                }} />
-              ))}
-            </div>
-          )}
 
           {/* Dropping soon */}
           {teaser.length > 0 && (
@@ -1176,7 +1203,7 @@ function GearSection() {
       {/* Floating collection pill — mobile only */}
       {sectionInView && (
         <div
-          className="md:hidden"
+          className="md:hidden gear-pill-enter"
           style={{
             position: "fixed",
             bottom: "calc(56px + max(12px, env(safe-area-inset-bottom, 12px)))",
@@ -1216,9 +1243,9 @@ function GearSection() {
       {/* Bottom sheet collection picker */}
       {pickerOpen && (
         <>
-          <div className="md:hidden" onClick={() => setPickerOpen(false)}
+          <div className="md:hidden gear-picker-backdrop" onClick={() => setPickerOpen(false)}
             style={{ position: "fixed", inset: 0, zIndex: 99, background: "rgba(0,0,0,0.5)" }} />
-          <div className="md:hidden" style={{
+          <div className="md:hidden gear-picker-sheet" style={{
             position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100,
             background: "#111", borderTop: `1px solid ${active.accent}22`,
             borderRadius: "20px 20px 0 0",
