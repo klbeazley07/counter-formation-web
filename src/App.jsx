@@ -776,9 +776,9 @@ const COLLECTIONS = [
     pillarRoute: "/identity",
     shopUrl: "https://shop.counterformed.com/collections/armor-of-god-collection",
     products: [
-      { name: "Helmet of Salvation Hoodie", img: "/Helmet_Hoodie.png", copy: "Technical Hoodie. Protect the mind.", tier: "available", slug: "helmet-hoodie", shopUrl: "https://shop.counterformed.com/collections/armor-of-god-collection" },
-      { name: "Shield of Faith Tee", img: "/Shield_Tee.png", copy: "Premium Everyday Tee. Stand behind what God has said.", tier: "available", slug: "shield-tee", shopUrl: "https://shop.counterformed.com/collections/armor-of-god-collection" },
-      { name: "Sword of the Spirit Tee", img: "/Sword_Tee.png", copy: "Technical Tee. The Word is a weapon.", tier: "available", slug: "sword-tee", shopUrl: "https://shop.counterformed.com/collections/armor-of-god-collection" },
+      { name: "Helmet of Salvation Hoodie", img: "/Hoodie_white.png", copy: "Technical Hoodie. Protect the mind.", tier: "available", future: true, slug: "helmet-hoodie", shopUrl: "https://shop.counterformed.com/collections/armor-of-god-collection" },
+      { name: "Shield of Faith Tee", img: "/DriFit_Black.png", copy: "Premium Everyday Tee. Stand behind what God has said.", tier: "available", future: true, slug: "shield-tee", shopUrl: "https://shop.counterformed.com/collections/armor-of-god-collection" },
+      { name: "Sword of the Spirit Tee", img: "/Tshirt_Studio.png", copy: "Technical Tee. The Word is a weapon.", tier: "available", future: true, slug: "sword-tee", shopUrl: "https://shop.counterformed.com/collections/armor-of-god-collection" },
     ],
   },
 ];
@@ -1031,25 +1031,43 @@ function GearSection() {
             {available.map(product => (
               <div key={product.name} className="flex flex-col group">
                 <TiltCard className="product-card relative overflow-hidden bg-black rounded-[2rem] md:rounded-[2.5rem] shadow-2xl shadow-black/25" style={{ aspectRatio: "3/4" }}>
-                  <a href={product.shopUrl || active.shopUrl}
-                    target="_blank" rel="noopener noreferrer"
-                    className="block h-full relative">
-                    <SafeImg src={product.img} className="w-full h-full object-contain" alt={product.name} />
-                  </a>
+                  <div className="block h-full relative">
+                    <SafeImg src={product.img} className="w-full h-full object-contain" alt={product.name}
+                      style={product.future ? { filter: "grayscale(1)", opacity: 0.3 } : {}} />
+                    {product.future && (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                        <span style={{
+                          fontSize: "9px",
+                          letterSpacing: "0.38em",
+                          textTransform: "uppercase",
+                          fontWeight: 700,
+                          color: "rgba(250,248,245,0.55)",
+                          border: "1px solid rgba(250,248,245,0.15)",
+                          borderRadius: "999px",
+                          padding: "6px 16px",
+                          background: "rgba(0,0,0,0.4)",
+                        }}>
+                          Future Drop
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </TiltCard>
                 <div className="pt-4 px-1 flex items-start justify-between gap-4">
                   <div>
-                    <h3 className="font-brand text-base md:text-lg uppercase tracking-[0.06em] text-white/90">{product.name}</h3>
-                    <p className="text-[10px] uppercase tracking-widest text-white/35 mt-1">{product.copy}</p>
+                    <h3 className={`font-brand text-base md:text-lg uppercase tracking-[0.06em] ${product.future ? "text-white/30" : "text-white/90"}`}>{product.name}</h3>
+                    <p className="text-[10px] uppercase tracking-widest text-white/25 mt-1">{product.copy}</p>
                   </div>
-                  <a
-                    href={product.shopUrl || active.shopUrl}
-                    target="_blank" rel="noopener noreferrer"
-                    className="flex-shrink-0 flex items-center gap-1.5 text-[9px] uppercase tracking-[0.28em] transition-opacity opacity-50 group-hover:opacity-100 pt-0.5"
-                    style={{ color: active.accent }}
-                  >
-                    Shop <ArrowRight size={12} />
-                  </a>
+                  {!product.future && (
+                    <a
+                      href={product.shopUrl || active.shopUrl}
+                      target="_blank" rel="noopener noreferrer"
+                      className="flex-shrink-0 flex items-center gap-1.5 text-[9px] uppercase tracking-[0.28em] transition-opacity opacity-50 group-hover:opacity-100 pt-0.5"
+                      style={{ color: active.accent }}
+                    >
+                      Shop <ArrowRight size={12} />
+                    </a>
+                  )}
                 </div>
               </div>
             ))}
