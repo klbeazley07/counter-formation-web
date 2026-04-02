@@ -1217,14 +1217,21 @@ export function ArmorStyles() {
       .ap-footer img { width: 24px; height: 24px; opacity: .2; filter: invert(1); display: block; margin: 0 auto .75rem; }
       .ap-footer p   { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
 
-      /* Mobile: piece nav stacks vertically, watermark numeral smaller */
+      /* Mobile */
       @media (max-width: 639px) {
         .ap-piece-nav { flex-direction: column; }
         .ap-nav-btn { width: 100%; flex: none; }
-        .ap-nav-btn.next { text-align: left; align-items: flex-start; }
-        .ap-content { padding: 32px 20px 80px; }
-        .ap-main { max-width: 100%; }
+        .ap-nav-btn.next { text-align: right; flex-direction: row-reverse; }
+        .ap-nav-btn.next .ap-nav-btn-text { align-items: flex-end; }
+        .ap-content { padding: 32px 20px 120px; display: flex; flex-direction: column; }
+        .ap-day-nav   { order: 0; top: 44px; padding-top: 8px; }
+        .ap-sidebar   { order: 1; margin-top: 0; margin-bottom: 2rem; }
+        .ap-main      { order: 2; max-width: 100%; }
+        .ap-piece-nav { order: 3; }
         .ap-scripture { padding: 1rem 1.25rem; }
+        .ap-piece-dropdown { left: 10px; right: 10px; transform: none; min-width: auto; }
+        .ap-back-nav { padding: 8px 16px; gap: 10px; }
+        .ap-piece-switcher-title { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       }
 
       /* Tablet: sidebar appears ABOVE main content (between day tabs and devotional body) */
@@ -1287,23 +1294,34 @@ function BackNav({ progRef }) {
       </button>
 
       {open && (
-        <div className="ap-piece-dropdown">
-          {PIECE_ORDER.map(slug => {
-            const p = ARMOR_TRACKS[slug];
-            const isActive = slug === piece;
-            return (
-              <Link
-                key={slug}
-                to={`/identity/${slug}`}
-                className={`ap-piece-dropdown-item${isActive ? " active" : ""}`}
-                onClick={() => setOpen(false)}
-              >
-                <span className="ap-piece-dropdown-num">{p.num}</span>
-                <span>{p.title}</span>
-              </Link>
-            );
-          })}
-        </div>
+        <>
+          <div
+            onClick={() => setOpen(false)}
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 199,
+              background: "rgba(0,0,0,0.3)",
+            }}
+          />
+          <div className="ap-piece-dropdown" style={{ zIndex: 200 }}>
+            {PIECE_ORDER.map(slug => {
+              const p = ARMOR_TRACKS[slug];
+              const isActive = slug === piece;
+              return (
+                <Link
+                  key={slug}
+                  to={`/identity/${slug}`}
+                  className={`ap-piece-dropdown-item${isActive ? " active" : ""}`}
+                  onClick={() => setOpen(false)}
+                >
+                  <span className="ap-piece-dropdown-num">{p.num}</span>
+                  <span>{p.title}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </>
       )}
 
       {/* Progress bar embedded at bottom edge */}
