@@ -569,6 +569,11 @@ export default function DevotionGuide() {
             <div style={{ background: C.bgSurf, border: `1px solid ${C.border}`, borderRadius: 24, padding: "clamp(32px,5vw,80px)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${C.goldMid},transparent)` }} />
               <div className="dg-markdown">
+                {/* TODO: Convert to ScriptureRef when this section is refactored —
+                    AI-generated devotional content may include scripture references as plain
+                    text inside Markdown. To make them interactive, the generate API would need
+                    to return structured data (reference + text pairs) alongside the narrative,
+                    or a post-processing step could parse and replace known reference patterns. */}
                 <ReactMarkdown>{devotional}</ReactMarkdown>
               </div>
               <div style={{ marginTop: 64, paddingTop: 48, borderTop: "1px solid rgba(255,255,255,0.05)", textAlign: "center" }}>

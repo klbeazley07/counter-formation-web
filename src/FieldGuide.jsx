@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
+import { ScriptureRef } from "./ScriptureRef";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
 
@@ -649,11 +650,11 @@ export function FGOffice() {
 
         <div className="fg-reveal" style={{ marginBottom: 22 }}>
           <div className="fg-scripture-card">
-            <FGLabel>Scripture · {office.ref}</FGLabel>
+            <FGLabel>Scripture</FGLabel>
             <p style={{ fontSize: 18, color: C.ivory, fontStyle: "italic", lineHeight: 1.9, marginBottom: 16 }}>
               &ldquo;{office.scripture}&rdquo;
             </p>
-            <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.34em", textTransform: "uppercase", color: C.gold, fontWeight: 700 }}>{office.ref}</span>
+            <ScriptureRef reference={office.ref} text={office.scripture} />
           </div>
         </div>
 

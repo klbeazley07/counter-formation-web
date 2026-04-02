@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { ScriptureRef } from "./ScriptureRef";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
 
@@ -997,7 +998,7 @@ export function CFDevotion() {
               {d.scriptures.map((s, i) => (
                 <div className="cf7-scripture-block" key={i}>
                   <p>"{s.t}"</p>
-                  <cite>— {s.r}</cite>
+                  <cite>— <ScriptureRef reference={s.r} text={s.t} /></cite>
                 </div>
               ))}
             </Section>

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { ScriptureRef } from "./ScriptureRef";
 
 export const RULE_BASE = "/rule-of-life";
 
@@ -909,7 +910,7 @@ export function RhythmPage() {
       </div>
 
       <div className="rl-content">
-        <div className="rl-pullquote"><p>"{data.quote}"</p><cite>— {data.quoteRef}</cite></div>
+        <div className="rl-pullquote"><p>"{data.quote}"</p><cite>— <ScriptureRef reference={data.quoteRef} text={data.quote} /></cite></div>
 
         <div className="rl-why-label"><p className="rl-sec-label">Why This Rhythm</p></div>
 
@@ -920,7 +921,7 @@ export function RhythmPage() {
         <div className="rl-sidebar">
           <div className="rl-section">
             <p className="rl-sec-label">Key Scriptures</p>
-            {data.scriptures.map((s, i) => (<div key={i} className="rl-scripture"><p>"{s.t}"</p><cite>{s.r}</cite></div>))}
+            {data.scriptures.map((s, i) => (<div key={i} className="rl-scripture"><p>"{s.t}"</p><cite><ScriptureRef reference={s.r} text={s.t} /></cite></div>))}
           </div>
           <div className="rl-section">
             <p className="rl-sec-label">Reflection</p>
