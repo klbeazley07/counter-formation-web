@@ -1105,8 +1105,18 @@ export function ArmorStyles() {
       .ap-wrap   { font-family: 'Barlow Condensed', sans-serif; background: #06050A; color: #FAF8F5; min-height: 100svh; overflow-x: hidden; }
 
       /* Progress bar */
-      .ap-prog-bar  { position: sticky; top: 0; z-index: 190; height: 2px; background: rgba(255,255,255,0.05); }
-      .ap-prog-fill { height: 100%; width: 0; background: linear-gradient(to right, #C9A84C, rgba(201,168,76,0.35)); transition: width .12s linear; }
+      .ap-back-nav { position: sticky; top: 0; z-index: 100; background: rgba(6,5,10,0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 10px 20px; display: flex; align-items: center; gap: 16px; }
+      .ap-back-link { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(250,248,245,0.35); text-decoration: none; transition: color 0.2s; flex-shrink: 0; }
+      .ap-back-link:hover { color: #C9A84C; }
+      .ap-piece-switcher { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; padding: 6px 14px 6px 10px; cursor: pointer; transition: border-color 0.2s; }
+      .ap-piece-switcher:hover { border-color: rgba(201,168,76,0.3); }
+      .ap-piece-switcher-num { font-size: 8px; letter-spacing: 0.28em; color: rgba(201,168,76,0.5); }
+      .ap-piece-switcher-title { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: #FAF8F5; }
+      .ap-piece-dropdown { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background: #0E0C0A; border: 1px solid rgba(201,168,76,0.15); border-radius: 12px; padding: 8px; min-width: 260px; box-shadow: 0 12px 40px rgba(0,0,0,0.6); z-index: 200; }
+      .ap-piece-dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: rgba(250,248,245,0.3); transition: background 0.15s, color 0.15s; }
+      .ap-piece-dropdown-item:hover { background: rgba(255,255,255,0.04); color: rgba(250,248,245,0.6); }
+      .ap-piece-dropdown-item.active { color: #C9A84C; background: rgba(201,168,76,0.08); }
+      .ap-piece-dropdown-num { font-size: 8px; letter-spacing: 0.28em; color: rgba(201,168,76,0.45); flex-shrink: 0; }
 
       /* Hero */
       .ap-hero { position: relative; overflow: hidden; min-height: clamp(35vh, 40vw, 55vh); display: flex; flex-direction: column; justify-content: flex-end; width: 100%; }
@@ -1123,7 +1133,7 @@ export function ArmorStyles() {
       .ap-content { max-width: 800px; margin: 0 auto; padding: 44px 20px 100px; }
 
       /* Day selector */
-      .ap-day-nav { display: flex; overflow-x: auto; gap: 4px; padding-bottom: 1px; margin-bottom: 2.5rem; border-bottom: 1px solid rgba(255,255,255,0.07); scrollbar-width: none; position: sticky; top: 2px; z-index: 50; background: #06050A; padding-top: 12px; box-shadow: 0 8px 24px rgba(6,5,10,0.95); }
+      .ap-day-nav { display: flex; overflow-x: auto; gap: 4px; padding-bottom: 1px; margin-bottom: 2.5rem; border-bottom: 1px solid rgba(255,255,255,0.07); scrollbar-width: none; position: sticky; top: 46px; z-index: 50; background: #06050A; padding-top: 12px; box-shadow: 0 8px 24px rgba(6,5,10,0.95); }
       .ap-day-nav::-webkit-scrollbar { display: none; }
       .ap-day-btn { flex-shrink: 0; padding: 10px 18px; border: none; background: transparent; border-bottom: 2px solid transparent; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: rgba(250,248,245,0.28); transition: color .2s, border-color .2s; }
       .ap-day-btn.active { color: #C9A84C; border-bottom-color: #C9A84C; }
@@ -1247,21 +1257,51 @@ export function ArmorStyles() {
   );
 }
 
-function BackNav() {
+function BackNav({ progRef }) {
+  const { piece } = useParams();
+  const [open, setOpen] = useState(false);
+  const current = ARMOR_TRACKS[piece];
+
   return (
-    <Link
-      to="/identity"
-      className="fixed top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full text-[10px] tracking-[0.25em] uppercase font-bold transition-all"
-      style={{
-        backgroundColor: `${C.heroBg}cc`,
-        backdropFilter: "blur(20px)",
-        border: `1px solid ${C.ivory}10`,
-        color: `${C.ivory}60`,
-        textDecoration: "none",
-      }}
-    >
-      ← Identity
-    </Link>
+    <div className="ap-back-nav">
+      <Link to="/identity" className="ap-back-link">
+        ← Identity
+      </Link>
+      <button
+        className="ap-piece-switcher"
+        onClick={() => setOpen(v => !v)}
+        aria-expanded={open}
+      >
+        <span className="ap-piece-switcher-num">{current?.num}</span>
+        <span className="ap-piece-switcher-title">{current?.title}</span>
+        <ChevronDown size={12} style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform .2s", opacity: 0.4 }} />
+      </button>
+
+      {open && (
+        <div className="ap-piece-dropdown">
+          {PIECE_ORDER.map(slug => {
+            const p = ARMOR_TRACKS[slug];
+            const isActive = slug === piece;
+            return (
+              <Link
+                key={slug}
+                to={`/identity/${slug}`}
+                className={`ap-piece-dropdown-item${isActive ? " active" : ""}`}
+                onClick={() => setOpen(false)}
+              >
+                <span className="ap-piece-dropdown-num">{p.num}</span>
+                <span>{p.title}</span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Progress bar embedded at bottom edge */}
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "2px", background: "rgba(255,255,255,0.05)" }}>
+        <div ref={progRef} style={{ height: "100%", width: "0%", background: "linear-gradient(to right, #C9A84C, rgba(201,168,76,0.35))", transition: "width .12s linear" }} />
+      </div>
+    </div>
   );
 }
 
@@ -2229,12 +2269,31 @@ function CTASection() {
   );
 }
 
+const ARMOR_PIECE_TITLES = {
+  "belt-of-truth": "Belt of Truth",
+  "breastplate-of-righteousness": "Breastplate of Righteousness",
+  "gospel-of-peace": "Gospel of Peace",
+  "shield-of-faith": "Shield of Faith",
+  "helmet-of-salvation": "Helmet of Salvation",
+  "sword-of-the-spirit": "Sword of the Spirit",
+};
+
 function SiteNav() {
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const navLinks = [
-    { label: "Formation",    href: "/#architecture" },
-    { label: "Rule of Life", href: "/#rule" },
-  ];
+  const location = useLocation();
+  const isIdentity = location.pathname.startsWith('/identity');
+
+  const navLinks = isIdentity
+    ? [
+        { label: "Identity Home", href: "/identity" },
+        { label: "Formation",     href: "/#architecture" },
+        { label: "Rule of Life",  href: "/#rule" },
+      ]
+    : [
+        { label: "Formation",    href: "/#architecture" },
+        { label: "Rule of Life", href: "/#rule" },
+      ];
+
   return (
     <>
       <nav className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[100] w-[94%] max-w-5xl px-4 py-3 md:px-5 md:py-4 backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center justify-between"
@@ -2266,12 +2325,12 @@ function SiteNav() {
       </nav>
 
       {/* Mobile menu */}
-      <div className={`fixed inset-0 z-[120] flex flex-col items-center justify-center transition-transform duration-500 md:hidden ${menuOpen ? "translate-y-0" : "-translate-y-full"}`}
+      <div className={`fixed inset-0 z-[120] flex flex-col items-center justify-center overflow-y-auto transition-transform duration-500 md:hidden ${menuOpen ? "translate-y-0" : "-translate-y-full"}`}
         style={{ backgroundColor: C.heroBg }}>
         <button onClick={() => setMenuOpen(false)} className="absolute top-6 right-6 text-[#FAF8F5]" aria-label="Close menu">
           ✕
         </button>
-        <div className="flex flex-col items-center gap-10">
+        <div className="flex flex-col items-center gap-10 py-16">
           {navLinks.map(l => (
             <a key={l.label} href={l.href} onClick={() => setMenuOpen(false)}
               className="font-brand text-2xl uppercase tracking-widest text-[#FAF8F5] hover:text-[#C9A84C] transition-colors">
@@ -2282,6 +2341,27 @@ function SiteNav() {
             className="mt-4 px-8 py-3 rounded-full border border-[#C9A84C]/40 text-[#C9A84C] uppercase tracking-widest font-bold text-sm">
             Shop the Gear
           </a>
+          {isIdentity && (
+            <div className="flex flex-col items-center gap-4 mt-6 pt-6" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+              <span className="text-[9px] tracking-[0.4em] uppercase" style={{ color: "rgba(201,168,76,0.4)" }}>
+                The Six Pieces
+              </span>
+              {Object.entries(ARMOR_PIECE_TITLES).map(([slug, title]) => (
+                <Link
+                  key={slug}
+                  to={`/identity/${slug}`}
+                  onClick={() => setMenuOpen(false)}
+                  className="text-sm uppercase tracking-widest transition-colors"
+                  style={{
+                    color: location.pathname === `/identity/${slug}` ? "#C9A84C" : "rgba(250,248,245,0.4)",
+                    textDecoration: "none",
+                  }}
+                >
+                  {title}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -2753,8 +2833,7 @@ export function ArmorPiecePage() {
 
   return (
     <div className="ap-wrap" ref={wrapRef}>
-      <BackNav />
-      <div className="ap-prog-bar"><div className="ap-prog-fill" ref={progRef} /></div>
+      <BackNav progRef={progRef} />
 
       {/* ── Hero ── */}
       <div className="ap-hero">
