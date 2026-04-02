@@ -885,11 +885,22 @@ function DroppingSoonStrip({ products, accent, accentMuted }) {
 
 function GearSection() {
   const [activeKey, setActiveKey] = useState(COLLECTIONS[0].key);
+  const [activeProductIdx, setActiveProductIdx] = useState(0);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [sectionInView, setSectionInView] = useState(false);
   const panelRef = useRef(null);
+  const carouselRef = useRef(null);
+  const sectionRef = useRef(null);
 
   const active = COLLECTIONS.find(c => c.key === activeKey) || COLLECTIONS[0];
   const available = active.products.filter(p => p.tier === "available");
   const teaser = active.products.filter(p => p.tier === "teaser");
+
+  const activeIdx = COLLECTIONS.findIndex(c => c.key === activeKey);
+  const hasPrev = activeIdx > 0;
+  const hasNext = activeIdx < COLLECTIONS.length - 1;
+  const goToPrev = () => { if (hasPrev) switchCollection(COLLECTIONS[activeIdx - 1].key); };
+  const goToNext = () => { if (hasNext) switchCollection(COLLECTIONS[activeIdx + 1].key); };
 
   const switchCollection = (key) => {
     if (key === activeKey) return;
@@ -897,6 +908,14 @@ function GearSection() {
       opacity: 0, y: 8, duration: 0.22, ease: "power2.in",
       onComplete: () => {
         setActiveKey(key);
+        setActiveProductIdx(0);
+        if (carouselRef.current) {
+          carouselRef.current.scrollTo({ left: 0, behavior: "instant" });
+        }
+        if (window.innerWidth < 768 && panelRef.current) {
+          const top = panelRef.current.getBoundingClientRect().top + window.scrollY - 80;
+          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+        }
         gsap.fromTo(panelRef.current,
           { opacity: 0, y: 8 },
           { opacity: 1, y: 0, duration: 0.38, ease: "power2.out" });
@@ -904,10 +923,49 @@ function GearSection() {
     });
   };
 
+  // Track section visibility for floating pill
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setSectionInView(entry.isIntersecting),
+      { threshold: 0.05 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Close picker when section leaves view
+  useEffect(() => {
+    if (!sectionInView) setPickerOpen(false);
+  }, [sectionInView]);
+
+  // Track active product card via carousel scroll
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el || window.innerWidth >= 768) return;
+    const onScroll = () => {
+      const cardWidth = el.querySelector(".gear-product-card")?.offsetWidth || 1;
+      const idx = Math.round(el.scrollLeft / (cardWidth + 16));
+      setActiveProductIdx(Math.min(idx, available.length - 1));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [available.length, activeKey]);
+
   return (
-    <section id="shop" className="py-24 md:py-48 px-4 md:px-6 relative overflow-hidden"
+    <section id="shop" ref={sectionRef} className="py-24 md:py-48 px-4 md:px-6 relative overflow-hidden"
       style={{ backgroundColor: C.darkBg }}>
-      <style>{`.gear-shelf::-webkit-scrollbar { display: none; }`}</style>
+      <style>{`
+        .gear-shelf::-webkit-scrollbar { display: none; }
+        .gear-products { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 4px; }
+        .gear-products::-webkit-scrollbar { display: none; }
+        .gear-products > .gear-product-card { flex: 0 0 82vw; scroll-snap-align: center; max-width: 400px; }
+        @media (min-width: 768px) {
+          .gear-products { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: clamp(20px, 2.5vw, 32px); overflow-x: visible; scroll-snap-type: none; padding-bottom: 0; }
+          .gear-products > .gear-product-card { flex: none; max-width: none; }
+        }
+      `}</style>
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.03) 0%, transparent 60%)" }} />
       <div className="max-w-7xl mx-auto relative z-10 text-white">
@@ -1026,10 +1084,10 @@ function GearSection() {
             </p>
           </div>
 
-          {/* Product grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(320px, 100%), 1fr))", gap: "clamp(20px, 2.5vw, 32px)" }}>
+          {/* Product grid / mobile carousel */}
+          <div ref={carouselRef} className="gear-products">
             {available.map(product => (
-              <div key={product.name} className="flex flex-col group">
+              <div key={product.name} className="gear-product-card flex flex-col group">
                 <TiltCard className="product-card relative overflow-hidden bg-black rounded-[2rem] md:rounded-[2.5rem] shadow-2xl shadow-black/25" style={{ aspectRatio: "3/4" }}>
                   <div className="block h-full relative">
                     <SafeImg src={product.img} className="w-full h-full object-contain" alt={product.name}
@@ -1073,6 +1131,21 @@ function GearSection() {
             ))}
           </div>
 
+          {/* Scroll indicator dots — mobile only */}
+          {available.length > 1 && (
+            <div className="flex gap-1.5 justify-center mt-4 md:hidden">
+              {available.map((_, i) => (
+                <div key={i} style={{
+                  width: i === activeProductIdx ? 16 : 8,
+                  height: 3,
+                  borderRadius: 2,
+                  background: i === activeProductIdx ? active.accent : "rgba(250,248,245,0.12)",
+                  transition: "all 0.3s ease",
+                }} />
+              ))}
+            </div>
+          )}
+
           {/* Dropping soon */}
           {teaser.length > 0 && (
             <>
@@ -1099,6 +1172,92 @@ function GearSection() {
 
         </div>
       </div>
+
+      {/* Floating collection pill — mobile only */}
+      {sectionInView && (
+        <div
+          className="md:hidden"
+          style={{
+            position: "fixed",
+            bottom: "calc(56px + max(12px, env(safe-area-inset-bottom, 12px)))",
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 95,
+            display: "flex",
+            alignItems: "center",
+            background: "rgba(6,5,10,0.94)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            border: `1px solid ${active.accent}33`,
+            borderRadius: "999px",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+          }}
+        >
+          <button onClick={goToPrev} disabled={!hasPrev} aria-label="Previous collection"
+            style={{ padding: "10px 12px", background: "none", border: "none", color: hasPrev ? "rgba(250,248,245,0.4)" : "rgba(250,248,245,0.1)", fontSize: "16px", cursor: hasPrev ? "pointer" : "default", lineHeight: 1 }}>
+            ‹
+          </button>
+          <button onClick={() => setPickerOpen(v => !v)} aria-label="Open collection picker"
+            style={{ padding: "8px 14px", background: "none", border: "none", borderLeft: "1px solid rgba(255,255,255,0.06)", borderRight: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
+            <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "8px", letterSpacing: "0.28em", textTransform: "uppercase", color: active.accent, fontWeight: 700 }}>
+              {active.drop}
+            </span>
+            <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(250,248,245,0.7)", fontWeight: 600, whiteSpace: "nowrap" }}>
+              {active.title}
+            </span>
+          </button>
+          <button onClick={goToNext} disabled={!hasNext} aria-label="Next collection"
+            style={{ padding: "10px 12px", background: "none", border: "none", color: hasNext ? `${active.accent}99` : "rgba(250,248,245,0.1)", fontSize: "16px", cursor: hasNext ? "pointer" : "default", lineHeight: 1 }}>
+            ›
+          </button>
+        </div>
+      )}
+
+      {/* Bottom sheet collection picker */}
+      {pickerOpen && (
+        <>
+          <div className="md:hidden" onClick={() => setPickerOpen(false)}
+            style={{ position: "fixed", inset: 0, zIndex: 99, background: "rgba(0,0,0,0.5)" }} />
+          <div className="md:hidden" style={{
+            position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100,
+            background: "#111", borderTop: `1px solid ${active.accent}22`,
+            borderRadius: "20px 20px 0 0",
+            padding: "16px 20px calc(24px + env(safe-area-inset-bottom, 0px))",
+          }}>
+            <div style={{ width: 32, height: 3, background: "rgba(255,255,255,0.15)", borderRadius: 2, margin: "0 auto 16px" }} />
+            <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "9px", letterSpacing: "0.4em", textTransform: "uppercase", color: `${active.accent}77`, fontWeight: 700, marginBottom: "12px" }}>
+              Collections
+            </p>
+            {COLLECTIONS.map(col => {
+              const isCurrent = col.key === activeKey;
+              return (
+                <button key={col.key} onClick={() => { switchCollection(col.key); setPickerOpen(false); }}
+                  style={{
+                    display: "flex", alignItems: "center", gap: "12px", width: "100%",
+                    padding: "14px 16px", borderRadius: "12px",
+                    background: isCurrent ? `${col.accent}12` : "transparent",
+                    border: `1px solid ${isCurrent ? col.accent + "33" : "rgba(255,255,255,0.05)"}`,
+                    marginBottom: "8px", cursor: "pointer", textAlign: "left", transition: "background 0.2s",
+                  }}>
+                  <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "9px", letterSpacing: "0.28em", color: isCurrent ? col.accent : `${col.accent}55`, fontWeight: 700, flexShrink: 0 }}>
+                    {col.drop}
+                  </span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: isCurrent ? "#FAF8F5" : "rgba(250,248,245,0.4)", margin: 0, lineHeight: 1.2 }}>
+                      {col.title}
+                    </p>
+                    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "12px", color: isCurrent ? "rgba(250,248,245,0.4)" : "rgba(250,248,245,0.15)", margin: "2px 0 0" }}>
+                      {col.subtitle}
+                    </p>
+                  </div>
+                  {isCurrent && <div style={{ width: 8, height: 8, borderRadius: "50%", background: col.accent, flexShrink: 0 }} />}
+                </button>
+              );
+            })}
+          </div>
+        </>
+      )}
+
     </section>
   );
 }
