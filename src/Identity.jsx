@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
+import { ScriptureRef } from "./ScriptureRef";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronDown, ArrowRight, Menu } from "lucide-react";
@@ -2100,7 +2101,7 @@ export function ArmorPiecePage() {
             {curDay.scriptures.map((s, i) => (
               <div key={i} className="ap-scripture">
                 <p>"{s.text}"</p>
-                <cite>{s.ref}</cite>
+                <cite><ScriptureRef reference={s.ref} text={s.text} /></cite>
               </div>
             ))}
           </div>
