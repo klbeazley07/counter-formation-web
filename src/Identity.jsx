@@ -1112,7 +1112,8 @@ export function ArmorStyles() {
       .ap-hero { position: relative; overflow: hidden; min-height: clamp(35vh, 40vw, 55vh); display: flex; flex-direction: column; justify-content: flex-end; width: 100%; }
       .ap-hero-bg  { position: absolute; inset: 0; background-size: cover; background-position: center center; filter: grayscale(.2); }
       .ap-hero-ov  { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,5,10,0.97) 0%, rgba(6,5,10,0.45) 50%, rgba(6,5,10,0.1) 100%); }
-      .ap-hero-num { position: absolute; right: 2%; top: 50%; transform: translateY(-50%); font-family: 'Michroma', sans-serif; font-size: clamp(120px, 18vw, 220px); color: #FAF8F5; opacity: 0.05; line-height: 1; pointer-events: none; z-index: 1; }
+      .ap-hero-num { position: absolute; right: 2%; top: 50%; transform: translateY(-50%); font-family: 'Michroma', sans-serif; font-size: clamp(5rem, 22vw, 10rem); color: #FAF8F5; opacity: 0.05; line-height: 1; pointer-events: none; z-index: 1; }
+      @media (min-width: 1024px) { .ap-hero-num { font-size: clamp(120px, 18vw, 220px); } }
       .ap-hero-in  { position: relative; z-index: 2; padding: 2rem 24px 2.5rem; max-width: 860px; margin: 0 auto; width: 100%; }
       .ap-hero-eye { font-size: 10px; letter-spacing: .5em; text-transform: uppercase; color: #C9A84C; margin-bottom: .75rem; font-weight: 700; }
       .ap-hero-h1  { font-family: 'Michroma', sans-serif; font-size: clamp(36px, 8vw, 88px); text-transform: uppercase; letter-spacing: 0.1em; color: #FAF8F5; line-height: .9; margin-bottom: 1rem; }
@@ -1200,7 +1201,6 @@ export function ArmorStyles() {
         .ap-piece-nav { flex-direction: column; }
         .ap-nav-btn { width: 100%; flex: none; }
         .ap-nav-btn.next { text-align: left; align-items: flex-start; }
-        .ap-hero-num { font-size: clamp(5rem, 22vw, 10rem); }
         .ap-content { padding: 32px 20px 80px; }
         .ap-main { max-width: 100%; }
         .ap-scripture { padding: 1rem 1.25rem; }
@@ -1208,7 +1208,6 @@ export function ArmorStyles() {
 
       /* Tablet: sidebar appears ABOVE main content (between day tabs and devotional body) */
       @media (min-width: 640px) and (max-width: 1023px) {
-        .ap-hero-num { font-size: clamp(5rem, 22vw, 10rem); }
         .ap-content { display: flex; flex-direction: column; }
         .ap-day-nav { order: 0; }
         .ap-sidebar { order: 1; margin-top: 0; margin-bottom: 2.5rem; }
@@ -2211,7 +2210,8 @@ function SiteNav() {
           <div className="hidden md:flex gap-8 mr-4 text-[10px] uppercase tracking-widest font-brand font-bold">
             {navLinks.map(l => (
               <a key={l.label} href={l.href}
-                className="text-[#FAF8F5] hover:text-[#C9A84C] transition-colors">
+                className="text-[#FAF8F5] hover:text-[#C9A84C] transition-colors"
+                style={{ paddingTop: "10px", paddingBottom: "10px", display: "inline-flex", alignItems: "center" }}>
                 {l.label}
               </a>
             ))}

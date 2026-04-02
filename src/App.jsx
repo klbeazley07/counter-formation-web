@@ -1478,7 +1478,8 @@ function MainSite() {
           <div className="hidden md:flex gap-8 mr-4 text-[10px] uppercase tracking-widest font-brand font-bold">
             {navLinks.map(l => (
               <a key={l.label} href={l.href}
-                className={cx("hover:text-[#C9A84C] transition-colors py-2", l.gold && "text-[#C9A84C]")}>
+                className={cx("hover:text-[#C9A84C] transition-colors py-2", l.gold && "text-[#C9A84C]")}
+                style={{ minHeight: "44px", display: "inline-flex", alignItems: "center" }}>
                 {l.label}
               </a>
             ))}
