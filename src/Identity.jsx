@@ -2645,6 +2645,11 @@ export function IdentityLanding() {
           background-clip: text;
           animation: shimmerSweep 0.9s ease-in-out;
         }
+        @media (max-width: 767px) {
+          .piece-explore-link {
+            opacity: 0.85 !important;
+          }
+        }
       `}</style>
       <SiteNav />
       <HeroSection />
