@@ -2050,7 +2050,7 @@ function ArmorRingSection() {
                 transform: "translate(-50%, -50%)",
                 display: "flex", flexDirection: "column",
                 alignItems: "center", justifyContent: "center",
-                textAlign: "center", width: "44%",
+                textAlign: "center", width: "52%",
                 pointerEvents: "none",
               }}
             >
@@ -2059,15 +2059,15 @@ function ArmorRingSection() {
                   <img
                     src={piece.icon} alt=""
                     style={{
-                      width: "clamp(36px, 7vw, 96px)", height: "auto",
+                      width: "clamp(96px, 9vw, 110px)", height: "auto",
                       objectFit: "contain", opacity: 0.95, marginBottom: "0.6rem",
                     }}
                   />
                   <span style={{
                     fontFamily: "'Michroma', sans-serif",
-                    fontSize: "clamp(8px, 1.4vw, 18px)",
+                    fontSize: "clamp(13px, 1.5vw, 19px)",
                     color: C.gold, textTransform: "uppercase",
-                    letterSpacing: "0.08em", lineHeight: 1.25,
+                    letterSpacing: "0.07em", lineHeight: 1.25,
                   }}>
                     {piece.title}
                   </span>
@@ -2133,7 +2133,7 @@ function ArmorRingSection() {
                     src={p.icon}
                     alt={p.title}
                     style={{
-                      width: "clamp(32px, 4.5vw, 60px)", height: "auto",
+                      width: "clamp(62px, 5vw, 64px)", height: "auto",
                       objectFit: "contain",
                       opacity: isActive ? 1 : 0.7,
                       filter: isActive ? `drop-shadow(0 0 6px ${C.gold}66)` : "none",
@@ -2146,7 +2146,7 @@ function ArmorRingSection() {
                     style={{
                       marginTop: "0.35rem",
                       fontFamily: "'Michroma', sans-serif",
-                      fontSize: "clamp(6px, 0.75vw, 8px)",
+                      fontSize: "clamp(9px, 0.85vw, 10px)",
                       color: isActive ? C.gold : `${C.ivory}55`,
                       textTransform: "uppercase",
                       letterSpacing: "0.08em",
