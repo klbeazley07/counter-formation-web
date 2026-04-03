@@ -3185,6 +3185,115 @@ export function ArmorPiecePage() {
           ) : <div />}
         </div>
 
+        {/* Mobile floating progress bar */}
+        <div
+          className="md:hidden"
+          style={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 80,
+            background: "rgba(6,5,10,0.94)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            borderTop: "1px solid rgba(255,255,255,0.06)",
+            padding: "10px 20px",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+          }}
+        >
+          {/* Progress dots */}
+          <div style={{ display: "flex", gap: "4px", flexShrink: 0 }}>
+            {data.days.map(d => (
+              <div
+                key={d.num}
+                style={{
+                  width: d.num === day ? 16 : 6,
+                  height: 4,
+                  borderRadius: 2,
+                  background: completedDays.includes(d.num)
+                    ? "#C9A84C"
+                    : d.num === day
+                      ? "rgba(201,168,76,0.5)"
+                      : "rgba(255,255,255,0.1)",
+                  transition: "all 0.3s",
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Day label */}
+          <span style={{
+            fontFamily: "'Barlow Condensed', sans-serif",
+            fontSize: "10px",
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            color: "rgba(250,248,245,0.4)",
+            flex: 1,
+            minWidth: 0,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}>
+            Day {day} · {curDay.title}
+          </span>
+
+          {/* Next day / complete action */}
+          {day < 6 ? (
+            <button
+              onClick={() => {
+                setDay(day + 1);
+                const contentEl = document.querySelector('.ap-main');
+                if (contentEl) {
+                  const navHeight = document.querySelector('.ap-day-nav')?.offsetHeight || 60;
+                  const top = contentEl.getBoundingClientRect().top + window.scrollY - navHeight - 16;
+                  window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+                }
+              }}
+              style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontSize: "9px",
+                letterSpacing: "0.24em",
+                textTransform: "uppercase",
+                fontWeight: 700,
+                padding: "8px 16px",
+                borderRadius: "999px",
+                border: "none",
+                background: "#C9A84C",
+                color: "#0A0A0A",
+                cursor: "pointer",
+                flexShrink: 0,
+                whiteSpace: "nowrap",
+              }}
+            >
+              Day {day + 1} →
+            </button>
+          ) : (
+            <Link
+              to={nextSlug ? `/identity/${nextSlug}` : "/identity"}
+              style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontSize: "9px",
+                letterSpacing: "0.24em",
+                textTransform: "uppercase",
+                fontWeight: 700,
+                padding: "8px 16px",
+                borderRadius: "999px",
+                border: "1px solid rgba(201,168,76,0.4)",
+                background: "transparent",
+                color: "#C9A84C",
+                textDecoration: "none",
+                flexShrink: 0,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {nextSlug ? "Next Piece →" : "← Identity"}
+            </Link>
+          )}
+        </div>
+
       </div>
 
       <footer className="ap-footer">
