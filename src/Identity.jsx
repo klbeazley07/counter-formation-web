@@ -1761,14 +1761,13 @@ function ArmorRingSection() {
   const sectionRef    = useRef(null);
   const ringRef       = useRef(null);
   const centerRef     = useRef(null);
-  const panelRef      = useRef(null);
-  const panelInnerRef = useRef(null);
-  const [activePiece, setActivePiece]       = useState(null);
-  const [hasEntered, setHasEntered]         = useState(false);
+  const imageRef      = useRef(null);
+  const contentRef    = useRef(null);
+  const [activePiece, setActivePiece]         = useState(null);
+  const [hasEntered, setHasEntered]           = useState(false);
   const [hasEverSelected, setHasEverSelected] = useState(false);
-  const iconRefs    = useRef([]);
-  const lineRefs    = useRef([]);
-  const prevPieceRef  = useRef(null);
+  const iconRefs   = useRef([]);
+  const prevPieceRef = useRef(null);
   const [prefersReduced] = useState(
     () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
@@ -1781,24 +1780,19 @@ function ArmorRingSection() {
     y: 50 - r * Math.cos(toRad(deg)),
   });
 
-  /* ── Entry animation observer ── */
+  /* ── Entry observer ── */
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasEntered) {
-          setHasEntered(true);
-          observer.disconnect();
-        }
-      },
+      ([entry]) => { if (entry.isIntersecting && !hasEntered) { setHasEntered(true); observer.disconnect(); } },
       { threshold: 0.2 }
     );
     observer.observe(el);
     return () => observer.disconnect();
   }, [hasEntered]);
 
-  /* ── Entry animation GSAP ── */
+  /* ── Entry animation ── */
   useEffect(() => {
     if (!hasEntered || !ringRef.current) return;
     const reduced = prefersReduced;
@@ -1835,24 +1829,62 @@ function ArmorRingSection() {
     });
   }, [activePiece, hasEntered]);
 
+  /* ── Image crossfade ── */
+  useEffect(() => {
+    if (!imageRef.current) return;
+    if (activePiece === null) {
+      gsap.to(imageRef.current, { opacity: 0, duration: 0.4, ease: "power2.out" });
+    } else {
+      // If switching pieces: dip out briefly, src already updated, fade in
+      if (prevPieceRef.current !== null) {
+        gsap.fromTo(imageRef.current,
+          { opacity: 0 },
+          { opacity: 0.32, duration: 0.5, ease: "power2.out" }
+        );
+      } else {
+        // First selection: bloom in
+        gsap.fromTo(imageRef.current,
+          { opacity: 0 },
+          { opacity: 0.32, duration: 0.8, ease: "power2.out" }
+        );
+      }
+    }
+  }, [activePiece]);
+
+  /* ── Center name crossfade ── */
+  useEffect(() => {
+    if (!centerRef.current) return;
+    gsap.fromTo(centerRef.current,
+      { opacity: 0, scale: 0.95 },
+      { opacity: 1, scale: 1, duration: 0.35, ease: "power2.out" }
+    );
+  }, [activePiece]);
+
+  /* ── Right column content fade ── */
+  useEffect(() => {
+    if (!contentRef.current) return;
+    if (activePiece === null) {
+      gsap.to(contentRef.current, { opacity: 0, y: 8, duration: 0.25, ease: "power2.in" });
+    } else {
+      gsap.fromTo(contentRef.current,
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.45, ease: "power2.out", delay: 0.1 }
+      );
+    }
+  }, [activePiece]);
+
   /* ── Selection handler ── */
   const handleSelect = (idx) => {
     if (idx === activePiece) {
       prevPieceRef.current = activePiece;
       setActivePiece(null);
-      if (panelRef.current) {
-        gsap.to(panelRef.current, {
-          maxHeight: 0, opacity: 0, duration: 0.4, ease: "power2.inOut",
-          onComplete: () => { panelRef.current?.classList.remove("open"); },
-        });
-      }
     } else {
       const wasNull = activePiece === null;
       if (!hasEverSelected) setHasEverSelected(true);
       prevPieceRef.current = activePiece;
-      if (!wasNull && panelInnerRef.current) {
-        gsap.to(panelInnerRef.current, {
-          opacity: 0, y: 10, duration: 0.2, ease: "power2.in",
+      if (!wasNull && contentRef.current) {
+        gsap.to(contentRef.current, {
+          opacity: 0, y: 8, duration: 0.18, ease: "power2.in",
           onComplete: () => setActivePiece(idx),
         });
       } else {
@@ -1860,48 +1892,6 @@ function ArmorRingSection() {
       }
     }
   };
-
-  /* ── Panel expand + content fade-in ── */
-  useEffect(() => {
-    if (activePiece === null || !panelRef.current || !panelInnerRef.current) return;
-    panelRef.current.classList.add("open");
-    const naturalHeight = panelInnerRef.current.scrollHeight + 80;
-    if (prevPieceRef.current === null) {
-      gsap.fromTo(panelRef.current,
-        { maxHeight: 0, opacity: 0 },
-        { maxHeight: naturalHeight + 200, opacity: 1, duration: 0.5, ease: "power2.out" }
-      );
-    } else {
-      gsap.set(panelRef.current, { maxHeight: naturalHeight + 200, opacity: 1 });
-    }
-    gsap.fromTo(panelInnerRef.current,
-      { opacity: 0, y: 12 },
-      { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", delay: 0.05 }
-    );
-  }, [activePiece]);
-
-  /* ── Connection lines ── */
-  useEffect(() => {
-    lineRefs.current.forEach((line, i) => {
-      if (!line) return;
-      if (i === activePiece) {
-        gsap.to(line, { strokeDashoffset: 0, opacity: 0.5, duration: 0.4, ease: "power2.out" });
-        gsap.to(line, { opacity: 0.7, duration: 1.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 0.4, overwrite: false });
-      } else {
-        gsap.killTweensOf(line);
-        gsap.to(line, { strokeDashoffset: 60, opacity: 0, duration: 0.2, ease: "power2.in" });
-      }
-    });
-  }, [activePiece]);
-
-  /* ── Center crossfade ── */
-  useEffect(() => {
-    if (!centerRef.current) return;
-    gsap.fromTo(centerRef.current,
-      { opacity: 0, scale: 0.95 },
-      { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" }
-    );
-  }, [activePiece]);
 
   const piece = activePiece !== null ? ARMOR_PIECES[activePiece] : null;
 
@@ -1928,34 +1918,12 @@ function ArmorRingSection() {
           from { transform: translate(0.5px, -0.8px); }
           to   { transform: translate(-0.5px, 0.8px); }
         }
-        .ring-panel {
-          max-height: 0;
-          overflow: hidden;
-          opacity: 0;
-          transition: none;
-        }
-        .ring-panel.open {
-          overflow: visible;
-        }
-        @media (min-width: 1024px) {
-          .ring-panel-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: start;
-          }
-        }
-        @media (max-width: 767px) {
-          .ring-panel-img {
-            aspect-ratio: 16 / 9 !important;
-          }
-        }
       `}</style>
 
-      <div className="max-w-[1100px] mx-auto">
+      <div className="max-w-[1200px] mx-auto">
 
         {/* Section header */}
-        <div className="mb-16 md:mb-24">
+        <div className="mb-12 md:mb-16">
           <span className="block text-[10px] tracking-[0.5em] uppercase font-bold mb-4" style={{ color: C.gold }}>
             The Six Pieces
           </span>
@@ -1964,336 +1932,289 @@ function ArmorRingSection() {
           </h2>
         </div>
 
-        {/* Ring + panel */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+        {/* Side-by-side grid */}
+        <div className="flex flex-col md:flex-row gap-0 md:gap-12 items-stretch">
 
-          {/* Ring container */}
+          {/* LEFT: Ring column with atmospheric image */}
           <div
-            ref={ringRef}
+            className="relative flex-shrink-0 flex items-center justify-center"
             style={{
-              position: "relative",
-              width: "clamp(280px, 52vw, 620px)",
-              height: "clamp(280px, 52vw, 620px)",
+              width: "clamp(280px, 42vw, 520px)",
+              minHeight: "clamp(280px, 42vw, 520px)",
+              borderRadius: "1.5rem",
+              overflow: "hidden",
+              background: C.heroBg,
+              alignSelf: "flex-start",
               margin: "0 auto",
             }}
           >
-            {/* SVG: arc, particles, connection lines */}
-            <svg
-              viewBox="0 0 100 100"
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", overflow: "visible" }}
-            >
-              {/* Slowly rotating group: arc + ambient particles */}
-              <g style={{
-                transformOrigin: "50px 50px",
-                animation: prefersReduced ? "none" : "ringRotate 60s linear infinite",
-              }}>
-                <circle
-                  className="ring-arc"
-                  cx="50" cy="50" r={ICON_R}
-                  fill="none"
-                  stroke={C.gold}
-                  strokeOpacity="0.12"
-                  strokeWidth="0.4"
-                />
-                {/* Ambient particles — 2 per arc segment */}
-                {RING_ANGLES.map((angle, segIdx) => {
-                  const midAngle = angle + 30;
-                  const p1 = getPos(midAngle - 8, ICON_R);
-                  const p2 = getPos(midAngle + 8, ICON_R);
-                  const anim = segIdx % 2 === 0
-                    ? "particleDriftA 4s ease-in-out infinite alternate"
-                    : "particleDriftB 5s ease-in-out infinite alternate";
-                  return (
-                    <g key={segIdx}>
-                      <circle cx={p1.x} cy={p1.y} r="0.35" fill={C.gold} opacity="0.08"
-                        style={{ animation: prefersReduced ? "none" : anim }} />
-                      <circle cx={p2.x} cy={p2.y} r="0.35" fill={C.gold} opacity="0.06"
-                        style={{ animation: prefersReduced ? "none" : anim }} />
-                    </g>
-                  );
-                })}
-              </g>
-
-              {/* Connection lines — fixed, not rotating */}
-              {ARMOR_PIECES.map((p, i) => {
-                const pos = getPos(RING_ANGLES[i], ICON_R);
-                return (
-                  <line
-                    key={p.slug}
-                    ref={el => { lineRefs.current[i] = el; }}
-                    x1={pos.x} y1={pos.y} x2="50" y2="50"
-                    stroke={C.gold}
-                    strokeWidth="0.5"
-                    strokeDasharray={ICON_R}
-                    strokeDashoffset={ICON_R}
-                    opacity="0"
-                  />
-                );
-              })}
-            </svg>
-
-            {/* Center radial glow */}
-            <div style={{
-              position: "absolute", top: "50%", left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "40%", height: "40%",
-              borderRadius: "50%",
-              background: `radial-gradient(circle, ${C.gold}22 0%, transparent 70%)`,
-              animation: prefersReduced ? "none" : "centerGlow 3s ease-in-out infinite",
-              pointerEvents: "none",
-            }} />
-
-            {/* Center content — shield at rest, piece icon+title when active */}
-            <div
-              ref={centerRef}
+            {/* Atmospheric hero image — blooms in on selection */}
+            <img
+              ref={imageRef}
+              src={piece ? (ARMOR_TRACKS[piece.slug]?.img || "") : ""}
+              alt=""
               style={{
-                position: "absolute", top: "50%", left: "50%",
-                transform: "translate(-50%, -50%)",
-                display: "flex", flexDirection: "column",
-                alignItems: "center", justifyContent: "center",
-                textAlign: "center", width: "55%",
+                position: "absolute", inset: 0,
+                width: "100%", height: "100%",
+                objectFit: "cover", objectPosition: "center top",
+                opacity: 0,
                 pointerEvents: "none",
               }}
+            />
+            {/* Radial overlay — darkens edges, keeps center readable */}
+            <div style={{
+              position: "absolute", inset: 0,
+              background: `radial-gradient(ellipse at center, ${C.heroBg}88 0%, ${C.heroBg}CC 55%, ${C.heroBg}F0 100%)`,
+              pointerEvents: "none",
+              zIndex: 1,
+            }} />
+
+            {/* Ring SVG */}
+            <div
+              ref={ringRef}
+              style={{
+                position: "relative",
+                width: "clamp(240px, 36vw, 460px)",
+                height: "clamp(240px, 36vw, 460px)",
+                zIndex: 2,
+              }}
             >
-              {piece ? (
-                <>
-                  <img
-                    src={piece.icon} alt=""
-                    style={{
-                      width: "clamp(96px, 9vw, 110px)", height: "auto",
-                      objectFit: "contain", opacity: 0.95, marginBottom: "0.6rem",
-                    }}
+              <svg
+                viewBox="0 0 100 100"
+                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", overflow: "visible" }}
+              >
+                {/* Rotating group: arc + particles */}
+                <g style={{
+                  transformOrigin: "50px 50px",
+                  animation: prefersReduced ? "none" : "ringRotate 60s linear infinite",
+                }}>
+                  <circle
+                    className="ring-arc"
+                    cx="50" cy="50" r={ICON_R}
+                    fill="none"
+                    stroke={C.gold}
+                    strokeOpacity="0.15"
+                    strokeWidth="0.4"
                   />
+                  {RING_ANGLES.map((angle, segIdx) => {
+                    const midAngle = angle + 30;
+                    const p1 = getPos(midAngle - 8, ICON_R);
+                    const p2 = getPos(midAngle + 8, ICON_R);
+                    const anim = segIdx % 2 === 0
+                      ? "particleDriftA 4s ease-in-out infinite alternate"
+                      : "particleDriftB 5s ease-in-out infinite alternate";
+                    return (
+                      <g key={segIdx}>
+                        <circle cx={p1.x} cy={p1.y} r="0.35" fill={C.gold} opacity="0.08"
+                          style={{ animation: prefersReduced ? "none" : anim }} />
+                        <circle cx={p2.x} cy={p2.y} r="0.35" fill={C.gold} opacity="0.06"
+                          style={{ animation: prefersReduced ? "none" : anim }} />
+                      </g>
+                    );
+                  })}
+                </g>
+              </svg>
+
+              {/* Center radial glow */}
+              <div style={{
+                position: "absolute", top: "50%", left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "45%", height: "45%",
+                borderRadius: "50%",
+                background: `radial-gradient(circle, ${C.gold}22 0%, transparent 70%)`,
+                animation: prefersReduced ? "none" : "centerGlow 3s ease-in-out infinite",
+                pointerEvents: "none",
+              }} />
+
+              {/* Center content — name only */}
+              <div
+                ref={centerRef}
+                style={{
+                  position: "absolute", top: "50%", left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  textAlign: "center",
+                  width: "52%",
+                  pointerEvents: "none",
+                }}
+              >
+                {piece ? (
                   <span style={{
                     fontFamily: "'Michroma', sans-serif",
-                    fontSize: "clamp(13px, 1.5vw, 19px)",
-                    color: C.gold, textTransform: "uppercase",
-                    letterSpacing: "0.07em", lineHeight: 1.25,
+                    fontSize: "clamp(9px, 1.6vw, 20px)",
+                    color: C.gold,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
+                    lineHeight: 1.3,
                   }}>
                     {piece.title}
                   </span>
-                </>
-              ) : (
-                <>
-                  <img
-                    src="/shield-white.png" alt=""
-                    style={{
-                      width: "clamp(56px, 9vw, 120px)", height: "auto",
-                      objectFit: "contain", opacity: 0.18, marginBottom: "0.75rem",
-                    }}
-                  />
+                ) : (
                   <span style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     fontStyle: "italic",
-                    fontSize: "clamp(12px, 2vw, 26px)",
-                    color: C.gold, opacity: 0.6,
+                    fontSize: "clamp(10px, 1.8vw, 22px)",
+                    color: C.gold,
+                    opacity: 0.5,
                   }}>
                     Armor Up.
                   </span>
-                </>
-              )}
-            </div>
+                )}
+              </div>
 
-            {/* Six icon buttons */}
-            {ARMOR_PIECES.map((p, i) => {
-              const pos = getPos(RING_ANGLES[i], ICON_R);
-              const isActive = activePiece === i;
-              return (
-                <div
-                  key={p.slug}
-                  ref={el => { iconRefs.current[i] = el; }}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={p.title}
-                  aria-pressed={isActive}
-                  onClick={() => handleSelect(i)}
-                  onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleSelect(i); } }}
-                  style={{
-                    position: "absolute",
-                    left: `${pos.x}%`, top: `${pos.y}%`,
-                    display: "flex", flexDirection: "column", alignItems: "center",
-                    cursor: "pointer",
-                    opacity: 0,
-                    zIndex: 2,
-                    outline: "none",
-                    userSelect: "none",
-                  }}
-                >
-                  {/* Halo — only for active icon */}
-                  {isActive && (
-                    <div style={{
-                      position: "absolute", inset: "-8px",
-                      borderRadius: "50%",
-                      border: `1px solid ${C.gold}`,
-                      animation: prefersReduced ? "none" : "haloPulse 1.5s ease-in-out infinite",
-                      pointerEvents: "none",
-                    }} />
-                  )}
-                  <img
-                    src={p.icon}
-                    alt={p.title}
+              {/* Six icon buttons */}
+              {ARMOR_PIECES.map((p, i) => {
+                const pos = getPos(RING_ANGLES[i], ICON_R);
+                const isActive = activePiece === i;
+                return (
+                  <div
+                    key={p.slug}
+                    ref={el => { iconRefs.current[i] = el; }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={p.title}
+                    aria-pressed={isActive}
+                    onClick={() => handleSelect(i)}
+                    onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleSelect(i); } }}
                     style={{
-                      width: "clamp(62px, 8.5vw, 110px)", height: "auto",
-                      objectFit: "contain",
-                      opacity: isActive ? 1 : 0.7,
-                      filter: isActive ? `drop-shadow(0 0 8px ${C.gold}88)` : "none",
-                      transition: "opacity 0.3s ease, filter 0.3s ease",
+                      position: "absolute",
+                      left: `${pos.x}%`, top: `${pos.y}%`,
+                      display: "flex", flexDirection: "column", alignItems: "center",
+                      cursor: "pointer",
+                      opacity: 0,
+                      zIndex: 3,
+                      outline: "none",
+                      userSelect: "none",
                     }}
-                  />
-                </div>
-              );
-            })}
-          </div>
-
-          {/* "Tap a piece to begin" hint — disappears after first selection */}
-          {!hasEverSelected && (
-            <p style={{
-              marginTop: "1.75rem",
-              fontSize: "10px",
-              letterSpacing: "0.3em",
-              textTransform: "uppercase",
-              color: `${C.ivory}33`,
-              fontFamily: "'Michroma', sans-serif",
-            }}>
-              Tap a piece to begin
-            </p>
-          )}
-
-          {/* Reveal panel */}
-          <div
-            ref={panelRef}
-            className="ring-panel"
-            aria-live="polite"
-            style={{ width: "100%", marginTop: "3rem" }}
-          >
-            {piece && (
-              <div ref={panelInnerRef} className="ring-panel-grid">
-
-                {/* LEFT: Hero image card */}
-                <div
-                  className="ring-panel-img rounded-2xl relative overflow-hidden"
-                  style={{
-                    aspectRatio: "3/4",
-                    background: `linear-gradient(135deg, ${C.heroBg} 0%, ${C.ruleBg} 100%)`,
-                    border: `1px solid ${C.ivory}0A`,
-                  }}
-                >
-                  <img
-                    src={ARMOR_TRACKS[piece.slug]?.img || ""}
-                    alt={piece.title}
-                    style={{
-                      position: "absolute", inset: 0,
-                      width: "100%", height: "100%",
-                      objectFit: "cover", objectPosition: "center top",
-                    }}
-                  />
-                  {piece.icon && (
+                  >
+                    {isActive && (
+                      <div style={{
+                        position: "absolute", inset: "-8px",
+                        borderRadius: "50%",
+                        border: `1px solid ${C.gold}`,
+                        animation: prefersReduced ? "none" : "haloPulse 1.5s ease-in-out infinite",
+                        pointerEvents: "none",
+                      }} />
+                    )}
                     <img
-                      src={piece.icon} alt=""
+                      src={p.icon}
+                      alt={p.title}
                       style={{
-                        position: "absolute",
-                        top: "20%", left: "50%",
-                        transform: "translateX(-50%)",
-                        width: "clamp(90px, 10vw, 120px)", height: "auto",
-                        objectFit: "contain", opacity: 0.1,
-                        pointerEvents: "none", zIndex: 1,
+                        width: "clamp(36px, 5.5vw, 72px)", height: "auto",
+                        objectFit: "contain",
+                        opacity: isActive ? 1 : 0.65,
+                        filter: isActive ? `drop-shadow(0 0 8px ${C.gold}88)` : "none",
+                        transition: "opacity 0.3s ease, filter 0.3s ease",
                       }}
                     />
-                  )}
-                  <div style={{
-                    position: "absolute", inset: 0,
-                    background: `linear-gradient(to top, ${C.heroBg}EE 0%, ${C.heroBg}44 45%, transparent 100%)`,
-                    zIndex: 2,
-                  }} />
-                  <span style={{
-                    position: "absolute", top: "1.25rem", right: "1.25rem",
-                    fontFamily: "'Michroma', sans-serif",
-                    fontSize: "clamp(1.5rem, 2.5vw, 2.25rem)",
-                    fontWeight: 700, color: `${C.ivory}22`,
-                    lineHeight: 1, userSelect: "none", zIndex: 3,
-                  }}>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* "Tap a piece to begin" hint — over the ring */}
+            {!hasEverSelected && (
+              <p style={{
+                position: "absolute", bottom: "1.5rem", left: 0, right: 0,
+                textAlign: "center",
+                fontSize: "10px",
+                letterSpacing: "0.3em",
+                textTransform: "uppercase",
+                color: `${C.ivory}33`,
+                fontFamily: "'Michroma', sans-serif",
+                zIndex: 4,
+                pointerEvents: "none",
+              }}>
+                Tap a piece to begin
+              </p>
+            )}
+          </div>
+
+          {/* RIGHT: Content panel */}
+          <div
+            className="flex-1 flex items-center"
+            style={{ minHeight: "clamp(280px, 42vw, 520px)" }}
+          >
+            {piece ? (
+              <div ref={contentRef} style={{ width: "100%", opacity: 0 }}>
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="text-[11px] tracking-[0.4em] uppercase" style={{ color: `${C.gold}77` }}>
                     {piece.num}
                   </span>
-                  <div className="absolute bottom-6 left-6 right-6" style={{ zIndex: 3 }}>
-                    <p className="font-brand text-[8px] tracking-[0.3em] uppercase" style={{ color: `${C.gold}88` }}>
-                      {piece.product || "Formation content · Coming soon"}
+                  <div className="h-[1px] flex-1" style={{ background: `${C.gold}22` }} />
+                </div>
+                <h3 className="font-brand text-2xl md:text-4xl uppercase tracking-[0.1em] text-white mb-3">
+                  {piece.title}
+                </h3>
+                <p className="text-[12px] tracking-[0.3em] uppercase mb-8" style={{ color: `${C.gold}99` }}>
+                  <ScriptureRef reference={piece.scripture} text={piece.scriptureText} />
+                </p>
+
+                <div className="space-y-7">
+                  <div>
+                    <span className="text-[11px] tracking-[0.3em] uppercase block mb-2" style={{ color: `${C.ivory}55` }}>
+                      Theology
+                    </span>
+                    <p className="text-base md:text-lg leading-relaxed font-light" style={{ color: `${C.ivory}88` }}>
+                      {piece.theology}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-[11px] tracking-[0.3em] uppercase block mb-2" style={{ color: `${C.ivory}55` }}>
+                      Modern Tension
+                    </span>
+                    <p className="text-base md:text-lg leading-relaxed font-light" style={{ color: `${C.ivory}66` }}>
+                      {piece.tension}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-[11px] tracking-[0.3em] uppercase block mb-2" style={{ color: `${C.ivory}55` }}>
+                      Daily Practice
+                    </span>
+                    <p className="text-base md:text-lg leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+                      {piece.practice}
                     </p>
                   </div>
                 </div>
 
-                {/* RIGHT: Text content */}
-                <div>
-                  <div className="flex items-center gap-4 mb-6">
-                    <span className="text-[11px] tracking-[0.4em] uppercase" style={{ color: `${C.gold}77` }}>
-                      {piece.num}
-                    </span>
-                    <div className="h-[1px] flex-1" style={{ background: `${C.gold}22` }} />
-                  </div>
-                  <h3 className="font-brand text-2xl md:text-4xl uppercase tracking-[0.1em] text-white mb-3">
-                    {piece.title}
-                  </h3>
-                  <p className="text-[12px] tracking-[0.3em] uppercase mb-8" style={{ color: `${C.gold}99` }}>
-                    <ScriptureRef reference={piece.scripture} text={piece.scriptureText} />
-                  </p>
+                <blockquote
+                  className="mt-8 pl-4 border-l"
+                  style={{
+                    borderColor: `${C.gold}33`,
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontStyle: "italic",
+                    fontSize: "clamp(17px, 1.6vw, 22px)",
+                    color: `${C.ivory}99`,
+                  }}
+                >
+                  "{piece.hook}"
+                </blockquote>
 
-                  <div className="space-y-7">
-                    <div>
-                      <span className="text-[11px] tracking-[0.3em] uppercase block mb-2" style={{ color: `${C.ivory}55` }}>
-                        Theology
-                      </span>
-                      <p className="text-base md:text-lg leading-relaxed font-light" style={{ color: `${C.ivory}88` }}>
-                        {piece.theology}
-                      </p>
-                    </div>
-                    <div>
-                      <span className="text-[11px] tracking-[0.3em] uppercase block mb-2" style={{ color: `${C.ivory}55` }}>
-                        Modern Tension
-                      </span>
-                      <p className="text-base md:text-lg leading-relaxed font-light" style={{ color: `${C.ivory}66` }}>
-                        {piece.tension}
-                      </p>
-                    </div>
-                    <div>
-                      <span className="text-[11px] tracking-[0.3em] uppercase block mb-2" style={{ color: `${C.ivory}55` }}>
-                        Daily Practice
-                      </span>
-                      <p className="text-base md:text-lg leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
-                        {piece.practice}
-                      </p>
-                    </div>
-                  </div>
-
-                  <blockquote
-                    className="mt-8 pl-4 border-l"
-                    style={{
-                      borderColor: `${C.gold}33`,
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontStyle: "italic",
-                      fontSize: "clamp(17px, 1.6vw, 22px)",
-                      color: `${C.ivory}99`,
-                    }}
+                <div className="mt-8 flex items-center gap-5">
+                  <Link
+                    to={`/identity/${piece.slug}`}
+                    className="text-[12px] tracking-[0.28em] uppercase font-bold flex items-center gap-2 transition-opacity hover:opacity-100"
+                    style={{ color: C.gold, textDecoration: "none" }}
                   >
-                    "{piece.hook}"
-                  </blockquote>
-
-                  <div className="mt-8 flex items-center gap-5">
-                    <Link
-                      to={`/identity/${piece.slug}`}
-                      className="text-[12px] tracking-[0.28em] uppercase font-bold flex items-center gap-2 transition-opacity hover:opacity-100"
-                      style={{ color: C.gold, textDecoration: "none" }}
-                    >
-                      Explore this piece
-                      <ArrowRight size={14} />
-                    </Link>
-                    {piece.product && (
-                      <span className="text-[11px] tracking-[0.24em] uppercase" style={{ color: `${C.ivory}44` }}>
-                        {piece.product}
-                      </span>
-                    )}
-                  </div>
+                    Explore this piece
+                    <ArrowRight size={14} />
+                  </Link>
+                  {piece.product && (
+                    <span className="text-[11px] tracking-[0.24em] uppercase" style={{ color: `${C.ivory}44` }}>
+                      {piece.product}
+                    </span>
+                  )}
                 </div>
-
               </div>
+            ) : (
+              <p style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontSize: "clamp(16px, 1.8vw, 22px)",
+                color: `${C.ivory}22`,
+                lineHeight: 1.6,
+              }}>
+                Select a piece from the ring to explore its theology, tension, and daily practice.
+              </p>
             )}
           </div>
 
@@ -2302,7 +2223,6 @@ function ArmorRingSection() {
     </section>
   );
 }
-
 
 function BrandSection() {
   const sectionRef = useRef(null);
