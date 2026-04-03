@@ -1768,11 +1768,9 @@ function ArmorRingSection() {
   const iconRefs    = useRef([]);
   const lineRefs    = useRef([]);
   const prevPieceRef  = useRef(null);
-  const prefersReduced = useRef(false);
-
-  useEffect(() => {
-    prefersReduced.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  }, []);
+  const [prefersReduced] = useState(
+    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
 
   const RING_ANGLES = [0, 60, 120, 180, 240, 300];
   const toRad  = (deg) => (deg * Math.PI) / 180;
@@ -1802,7 +1800,7 @@ function ArmorRingSection() {
   /* ── Entry animation GSAP ── */
   useEffect(() => {
     if (!hasEntered || !ringRef.current) return;
-    const reduced = prefersReduced.current;
+    const reduced = prefersReduced;
     const ctx = gsap.context(() => {
       const svgCircle = ringRef.current.querySelector(".ring-arc");
       if (svgCircle && !reduced) {
@@ -1818,7 +1816,7 @@ function ArmorRingSection() {
       });
     }, sectionRef);
     return () => ctx.revert();
-  }, [hasEntered]);
+  }, [hasEntered, prefersReduced]);
 
   /* ── Icon scale/opacity on selection ── */
   useEffect(() => {
@@ -1986,7 +1984,7 @@ function ArmorRingSection() {
               {/* Slowly rotating group: arc + ambient particles */}
               <g style={{
                 transformOrigin: "50px 50px",
-                animation: prefersReduced.current ? "none" : "ringRotate 60s linear infinite",
+                animation: prefersReduced ? "none" : "ringRotate 60s linear infinite",
               }}>
                 <circle
                   className="ring-arc"
@@ -2007,9 +2005,9 @@ function ArmorRingSection() {
                   return (
                     <g key={segIdx}>
                       <circle cx={p1.x} cy={p1.y} r="0.35" fill={C.gold} opacity="0.08"
-                        style={{ animation: prefersReduced.current ? "none" : anim }} />
+                        style={{ animation: prefersReduced ? "none" : anim }} />
                       <circle cx={p2.x} cy={p2.y} r="0.35" fill={C.gold} opacity="0.06"
-                        style={{ animation: prefersReduced.current ? "none" : anim }} />
+                        style={{ animation: prefersReduced ? "none" : anim }} />
                     </g>
                   );
                 })}
@@ -2040,7 +2038,7 @@ function ArmorRingSection() {
               width: "40%", height: "40%",
               borderRadius: "50%",
               background: `radial-gradient(circle, ${C.gold}22 0%, transparent 70%)`,
-              animation: prefersReduced.current ? "none" : "centerGlow 3s ease-in-out infinite",
+              animation: prefersReduced ? "none" : "centerGlow 3s ease-in-out infinite",
               pointerEvents: "none",
             }} />
 
@@ -2127,7 +2125,7 @@ function ArmorRingSection() {
                       position: "absolute", inset: "-8px",
                       borderRadius: "50%",
                       border: `1px solid ${C.gold}`,
-                      animation: prefersReduced.current ? "none" : "haloPulse 1.5s ease-in-out infinite",
+                      animation: prefersReduced ? "none" : "haloPulse 1.5s ease-in-out infinite",
                       pointerEvents: "none",
                     }} />
                   )}
