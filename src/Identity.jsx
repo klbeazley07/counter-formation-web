@@ -1756,54 +1756,204 @@ function GodsArmorSection() {
   );
 }
 
-function SixPiecesSection() {
-  const sectionRef = useRef(null);
+function ArmorRingSection() {
+  const sectionRef    = useRef(null);
+  const ringRef       = useRef(null);
+  const centerRef     = useRef(null);
+  const panelRef      = useRef(null);
+  const panelInnerRef = useRef(null);
+  const [activePiece, setActivePiece]       = useState(null);
+  const [hasEntered, setHasEntered]         = useState(false);
+  const [hasEverSelected, setHasEverSelected] = useState(false);
+  const iconRefs    = useRef([]);
+  const lineRefs    = useRef([]);
+  const prevPieceRef  = useRef(null);
+  const [prefersReduced] = useState(
+    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
 
+  const RING_ANGLES = [0, 60, 120, 180, 240, 300];
+  const toRad  = (deg) => (deg * Math.PI) / 180;
+  const ICON_R = 42;
+  const getPos = (deg, r) => ({
+    x: 50 + r * Math.sin(toRad(deg)),
+    y: 50 - r * Math.cos(toRad(deg)),
+  });
+
+  /* ── Entry animation observer ── */
   useEffect(() => {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) return;
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasEntered) {
+          setHasEntered(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasEntered]);
 
+  /* ── Entry animation GSAP ── */
+  useEffect(() => {
+    if (!hasEntered || !ringRef.current) return;
+    const reduced = prefersReduced;
     const ctx = gsap.context(() => {
-      // --- Alternating lateral entrance for each piece block ---
-      gsap.utils.toArray(".piece-block").forEach((el, i) => {
-        const isOdd = i % 2 === 0; // 0-indexed: 01=index0, 02=index1...
-        const xStart = isOdd ? -30 : 30;
-
-        gsap.fromTo(el,
-          { x: xStart, opacity: 0 },
-          { x: 0, opacity: 1, duration: 0.9, ease: "power2.out",
-            scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none reverse" } });
-
-        // --- "Explore this piece →" link: fade in +300ms after parent ---
-        const exploreLink = el.querySelector(".piece-explore-link");
-        if (exploreLink) {
-          gsap.fromTo(exploreLink,
-            { opacity: 0 },
-            { opacity: 0.8, duration: 0.7, ease: "power2.out", delay: 0.3,
-              scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none reverse" } });
-        }
-
-        // --- Gold eyebrow shimmer: toggle CSS class on enter ---
-        const goldEyebrow = el.querySelector(".piece-gold-eyebrow");
-        if (goldEyebrow) {
-          ScrollTrigger.create({
-            trigger: el,
-            start: "top 80%",
-            onEnter: () => {
-              goldEyebrow.classList.add("shimmer-sweep");
-              setTimeout(() => goldEyebrow.classList.remove("shimmer-sweep"), 900);
-            },
-          });
-        }
+      const svgCircle = ringRef.current.querySelector(".ring-arc");
+      if (svgCircle && !reduced) {
+        const circ = 2 * Math.PI * ICON_R;
+        gsap.set(svgCircle, { strokeDasharray: circ, strokeDashoffset: circ });
+        gsap.to(svgCircle, { strokeDashoffset: 0, duration: 1.2, ease: "power2.inOut" });
+      }
+      iconRefs.current.forEach((icon, i) => {
+        if (!icon) return;
+        if (reduced) { gsap.set(icon, { opacity: 1, scale: 1 }); return; }
+        gsap.set(icon, { opacity: 0, scale: 0.8 });
+        gsap.to(icon, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.4)", delay: 1.0 + i * 0.1 });
       });
     }, sectionRef);
     return () => ctx.revert();
-  }, []);
+  }, [hasEntered, prefersReduced]);
+
+  /* ── Icon scale/opacity on selection ── */
+  useEffect(() => {
+    if (!hasEntered) return;
+    if (activePiece === null && prevPieceRef.current === null) return;
+    iconRefs.current.forEach((icon, i) => {
+      if (!icon) return;
+      if (activePiece === null) {
+        gsap.to(icon, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" });
+      } else if (i === activePiece) {
+        gsap.to(icon, { scale: 1.2, opacity: 1, duration: 0.4, ease: "power2.out" });
+      } else {
+        gsap.to(icon, { scale: 0.85, opacity: 0.15, duration: 0.4, ease: "power2.out" });
+      }
+    });
+  }, [activePiece, hasEntered]);
+
+  /* ── Selection handler ── */
+  const handleSelect = (idx) => {
+    if (idx === activePiece) {
+      prevPieceRef.current = activePiece;
+      setActivePiece(null);
+      if (panelRef.current) {
+        gsap.to(panelRef.current, {
+          maxHeight: 0, opacity: 0, duration: 0.4, ease: "power2.inOut",
+          onComplete: () => { panelRef.current?.classList.remove("open"); },
+        });
+      }
+    } else {
+      const wasNull = activePiece === null;
+      if (!hasEverSelected) setHasEverSelected(true);
+      prevPieceRef.current = activePiece;
+      if (!wasNull && panelInnerRef.current) {
+        gsap.to(panelInnerRef.current, {
+          opacity: 0, y: 10, duration: 0.2, ease: "power2.in",
+          onComplete: () => setActivePiece(idx),
+        });
+      } else {
+        setActivePiece(idx);
+      }
+    }
+  };
+
+  /* ── Panel expand + content fade-in ── */
+  useEffect(() => {
+    if (activePiece === null || !panelRef.current || !panelInnerRef.current) return;
+    panelRef.current.classList.add("open");
+    const naturalHeight = panelInnerRef.current.scrollHeight + 80;
+    if (prevPieceRef.current === null) {
+      gsap.fromTo(panelRef.current,
+        { maxHeight: 0, opacity: 0 },
+        { maxHeight: naturalHeight + 200, opacity: 1, duration: 0.5, ease: "power2.out" }
+      );
+    } else {
+      gsap.set(panelRef.current, { maxHeight: naturalHeight + 200, opacity: 1 });
+    }
+    gsap.fromTo(panelInnerRef.current,
+      { opacity: 0, y: 12 },
+      { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", delay: 0.05 }
+    );
+  }, [activePiece]);
+
+  /* ── Connection lines ── */
+  useEffect(() => {
+    lineRefs.current.forEach((line, i) => {
+      if (!line) return;
+      if (i === activePiece) {
+        gsap.to(line, { strokeDashoffset: 0, opacity: 0.5, duration: 0.4, ease: "power2.out" });
+        gsap.to(line, { opacity: 0.7, duration: 1.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 0.4, overwrite: false });
+      } else {
+        gsap.killTweensOf(line);
+        gsap.to(line, { strokeDashoffset: 60, opacity: 0, duration: 0.2, ease: "power2.in" });
+      }
+    });
+  }, [activePiece]);
+
+  /* ── Center crossfade ── */
+  useEffect(() => {
+    if (!centerRef.current) return;
+    gsap.fromTo(centerRef.current,
+      { opacity: 0, scale: 0.95 },
+      { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" }
+    );
+  }, [activePiece]);
+
+  const piece = activePiece !== null ? ARMOR_PIECES[activePiece] : null;
 
   return (
     <section id="six-pieces" ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: C.ruleBg }}>
+      <style>{`
+        @keyframes ringRotate {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+        @keyframes centerGlow {
+          0%, 100% { opacity: 0.4; }
+          50%      { opacity: 1; }
+        }
+        @keyframes haloPulse {
+          0%, 100% { opacity: 0.25; transform: scale(1); }
+          50%      { opacity: 0.55; transform: scale(1.06); }
+        }
+        @keyframes particleDriftA {
+          from { transform: translate(-0.8px, -0.5px); }
+          to   { transform: translate(0.8px, 0.5px); }
+        }
+        @keyframes particleDriftB {
+          from { transform: translate(0.5px, -0.8px); }
+          to   { transform: translate(-0.5px, 0.8px); }
+        }
+        .ring-panel {
+          max-height: 0;
+          overflow: hidden;
+          opacity: 0;
+          transition: none;
+        }
+        .ring-panel.open {
+          overflow: visible;
+        }
+        @media (min-width: 1024px) {
+          .ring-panel-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+          }
+        }
+        @media (max-width: 767px) {
+          .ring-panel-img {
+            aspect-ratio: 16 / 9 !important;
+          }
+        }
+      `}</style>
+
       <div className="max-w-[1100px] mx-auto">
 
+        {/* Section header */}
         <div className="mb-16 md:mb-24">
           <span className="block text-[10px] tracking-[0.5em] uppercase font-bold mb-4" style={{ color: C.gold }}>
             The Six Pieces
@@ -1813,162 +1963,239 @@ function SixPiecesSection() {
           </h2>
         </div>
 
-        <div className="space-y-28 md:space-y-44">
-          {ARMOR_PIECES.map((piece, i) => (
-            <div
-              key={piece.slug}
-              className={`piece-block relative grid md:grid-cols-2 gap-12 md:gap-20 items-start ${i % 2 === 1 ? "md:[direction:rtl]" : ""}`}
+        {/* Ring + panel */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+
+          {/* Ring container */}
+          <div
+            ref={ringRef}
+            style={{
+              position: "relative",
+              width: "clamp(280px, 50vw, 560px)",
+              height: "clamp(280px, 50vw, 560px)",
+              margin: "0 auto",
+            }}
+          >
+            {/* SVG: arc, particles, connection lines */}
+            <svg
+              viewBox="0 0 100 100"
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", overflow: "visible" }}
             >
-              <div
-                className="absolute inset-0 flex items-center pointer-events-none overflow-hidden"
-                style={{ justifyContent: i % 2 === 0 ? "flex-end" : "flex-start" }}
-              >
-                <span
-                  style={{
+              {/* Slowly rotating group: arc + ambient particles */}
+              <g style={{
+                transformOrigin: "50px 50px",
+                animation: prefersReduced ? "none" : "ringRotate 60s linear infinite",
+              }}>
+                <circle
+                  className="ring-arc"
+                  cx="50" cy="50" r={ICON_R}
+                  fill="none"
+                  stroke={C.gold}
+                  strokeOpacity="0.12"
+                  strokeWidth="0.4"
+                />
+                {/* Ambient particles — 2 per arc segment */}
+                {RING_ANGLES.map((angle, segIdx) => {
+                  const midAngle = angle + 30;
+                  const p1 = getPos(midAngle - 8, ICON_R);
+                  const p2 = getPos(midAngle + 8, ICON_R);
+                  const anim = segIdx % 2 === 0
+                    ? "particleDriftA 4s ease-in-out infinite alternate"
+                    : "particleDriftB 5s ease-in-out infinite alternate";
+                  return (
+                    <g key={segIdx}>
+                      <circle cx={p1.x} cy={p1.y} r="0.35" fill={C.gold} opacity="0.08"
+                        style={{ animation: prefersReduced ? "none" : anim }} />
+                      <circle cx={p2.x} cy={p2.y} r="0.35" fill={C.gold} opacity="0.06"
+                        style={{ animation: prefersReduced ? "none" : anim }} />
+                    </g>
+                  );
+                })}
+              </g>
+
+              {/* Connection lines — fixed, not rotating */}
+              {ARMOR_PIECES.map((p, i) => {
+                const pos = getPos(RING_ANGLES[i], ICON_R);
+                return (
+                  <line
+                    key={p.slug}
+                    ref={el => { lineRefs.current[i] = el; }}
+                    x1={pos.x} y1={pos.y} x2="50" y2="50"
+                    stroke={C.gold}
+                    strokeWidth="0.5"
+                    strokeDasharray={ICON_R}
+                    strokeDashoffset={ICON_R}
+                    opacity="0"
+                  />
+                );
+              })}
+            </svg>
+
+            {/* Center radial glow */}
+            <div style={{
+              position: "absolute", top: "50%", left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "40%", height: "40%",
+              borderRadius: "50%",
+              background: `radial-gradient(circle, ${C.gold}22 0%, transparent 70%)`,
+              animation: prefersReduced ? "none" : "centerGlow 3s ease-in-out infinite",
+              pointerEvents: "none",
+            }} />
+
+            {/* Center content — shield at rest, piece icon+title when active */}
+            <div
+              ref={centerRef}
+              style={{
+                position: "absolute", top: "50%", left: "50%",
+                transform: "translate(-50%, -50%)",
+                display: "flex", flexDirection: "column",
+                alignItems: "center", justifyContent: "center",
+                textAlign: "center", width: "35%",
+                pointerEvents: "none",
+              }}
+            >
+              {piece ? (
+                <>
+                  <img
+                    src={piece.icon} alt=""
+                    style={{
+                      width: "clamp(22px, 3.5vw, 44px)", height: "auto",
+                      objectFit: "contain", opacity: 0.9, marginBottom: "0.35rem",
+                    }}
+                  />
+                  <span style={{
                     fontFamily: "'Michroma', sans-serif",
-                    fontSize: "clamp(4rem, 18vw, 8rem)",
-                    fontWeight: 700,
-                    color: `${C.ivory}14`,
-                    lineHeight: 1,
+                    fontSize: "clamp(6px, 0.9vw, 10px)",
+                    color: C.gold, textTransform: "uppercase",
+                    letterSpacing: "0.1em", lineHeight: 1.2,
+                  }}>
+                    {piece.title}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <img
+                    src="/Shield_white_icon.png" alt=""
+                    style={{
+                      width: "clamp(22px, 3.5vw, 44px)", height: "auto",
+                      objectFit: "contain", opacity: 0.08, marginBottom: "0.35rem",
+                    }}
+                  />
+                  <span style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontStyle: "italic",
+                    fontSize: "clamp(7px, 1vw, 11px)",
+                    color: C.gold, opacity: 0.5,
+                  }}>
+                    Armor Up.
+                  </span>
+                </>
+              )}
+            </div>
+
+            {/* Six icon buttons */}
+            {ARMOR_PIECES.map((p, i) => {
+              const pos = getPos(RING_ANGLES[i], ICON_R);
+              const isActive = activePiece === i;
+              return (
+                <div
+                  key={p.slug}
+                  ref={el => { iconRefs.current[i] = el; }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={p.title}
+                  aria-pressed={isActive}
+                  onClick={() => handleSelect(i)}
+                  onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleSelect(i); } }}
+                  style={{
+                    position: "absolute",
+                    left: `${pos.x}%`, top: `${pos.y}%`,
+                    transform: "translate(-50%, -50%)",
+                    display: "flex", flexDirection: "column", alignItems: "center",
+                    cursor: "pointer",
+                    opacity: 0,
+                    zIndex: 2,
+                    outline: "none",
                     userSelect: "none",
                   }}
                 >
-                  {piece.num}
-                </span>
-              </div>
-
-              <div className={i % 2 === 1 ? "md:[direction:ltr]" : ""}>
-                {/* Mobile image card — visible below 768px only */}
-                <div
-                  className="md:hidden rounded-xl overflow-hidden relative mb-6"
-                  style={{
-                    aspectRatio: "16/9",
-                    background: `linear-gradient(135deg, ${C.heroBg} 0%, ${C.ruleBg} 100%)`,
-                  }}
-                >
-                  <img
-                    src={ARMOR_TRACKS[piece.slug]?.img || ""}
-                    alt={piece.title}
-                    style={{
-                      position: "absolute", inset: 0,
-                      width: "100%", height: "100%",
-                      objectFit: "cover", objectPosition: "center top",
-                    }}
-                  />
-                  <div style={{
-                    position: "absolute", inset: 0,
-                    background: `linear-gradient(to top, ${C.heroBg}DD 0%, transparent 60%)`,
-                  }} />
-                  {piece.icon && (
-                    <img
-                      src={piece.icon}
-                      alt=""
-                      style={{
-                        position: "absolute",
-                        top: "50%", left: "50%",
-                        transform: "translate(-50%, -50%)",
-                        width: "60px", height: "auto",
-                        objectFit: "contain",
-                        opacity: 0.15,
-                        pointerEvents: "none",
-                      }}
-                    />
+                  {/* Halo — only for active icon */}
+                  {isActive && (
+                    <div style={{
+                      position: "absolute", inset: "-8px",
+                      borderRadius: "50%",
+                      border: `1px solid ${C.gold}`,
+                      animation: prefersReduced ? "none" : "haloPulse 1.5s ease-in-out infinite",
+                      pointerEvents: "none",
+                    }} />
                   )}
-                </div>
-                {piece.icon && (
                   <img
-                    src={piece.icon}
-                    alt=""
-                    className="piece-icon-anchor"
+                    src={p.icon}
+                    alt={p.title}
                     style={{
-                      width: "clamp(40px, 5vw, 52px)",
-                      height: "auto",
+                      width: "clamp(32px, 4vw, 48px)", height: "auto",
                       objectFit: "contain",
-                                            opacity: 0.6,
-                      marginBottom: "1.25rem",
+                      opacity: isActive ? 1 : 0.7,
+                      filter: isActive ? `drop-shadow(0 0 6px ${C.gold}66)` : "none",
+                      transition: "opacity 0.3s ease, filter 0.3s ease",
                     }}
                   />
-                )}
-                <div className="flex items-center gap-4 mb-6">
-                  <span className="piece-gold-eyebrow text-[9px] tracking-[0.4em] uppercase" style={{ color: `${C.gold}77` }}>
-                    {piece.num}
-                  </span>
-                  <div className="h-[1px] flex-1" style={{ background: `${C.gold}22` }} />
-                </div>
-                <h3 className="font-brand text-2xl md:text-4xl uppercase tracking-[0.1em] text-white mb-3">
-                  {piece.title}
-                </h3>
-                <p className="text-[10px] tracking-[0.35em] uppercase mb-8" style={{ color: `${C.gold}99` }}>
-                  <ScriptureRef reference={piece.scripture} text={piece.scriptureText} />
-                </p>
-
-                <div className="space-y-6">
-                  <div>
-                    <span className="text-[9px] tracking-[0.35em] uppercase block mb-2" style={{ color: `${C.ivory}44` }}>
-                      Theology
-                    </span>
-                    <p className="text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
-                      {piece.theology}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-[9px] tracking-[0.35em] uppercase block mb-2" style={{ color: `${C.ivory}44` }}>
-                      Modern Tension
-                    </span>
-                    <p className="text-sm leading-relaxed font-light" style={{ color: `${C.ivory}55` }}>
-                      {piece.tension}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-[9px] tracking-[0.35em] uppercase block mb-2" style={{ color: `${C.ivory}44` }}>
-                      Daily Practice
-                    </span>
-                    <p className="text-sm leading-relaxed font-light" style={{ color: `${C.ivory}66` }}>
-                      {piece.practice}
-                    </p>
-                  </div>
-                </div>
-
-                <blockquote
-                  className="mt-8 pl-4 border-l"
-                  style={{
-                    borderColor: `${C.gold}33`,
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontStyle: "italic",
-                    fontSize: "16px",
-                    color: `${C.ivory}88`,
-                  }}
-                >
-                  "{piece.hook}"
-                </blockquote>
-
-                <div className="mt-8 flex items-center gap-5">
-                  <Link
-                    to={`/identity/${piece.slug}`}
-                    className="piece-explore-link text-[10px] tracking-[0.3em] uppercase font-bold flex items-center gap-2 transition-opacity hover:opacity-100"
-                    style={{ color: C.gold, opacity: 0, textDecoration: "none" }}
+                  {/* Labels — tablet and desktop only */}
+                  <span
+                    className="hidden md:block"
+                    style={{
+                      marginTop: "0.35rem",
+                      fontFamily: "'Michroma', sans-serif",
+                      fontSize: "clamp(6px, 0.75vw, 8px)",
+                      color: isActive ? C.gold : `${C.ivory}55`,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.08em",
+                      textAlign: "center",
+                      maxWidth: "70px",
+                      lineHeight: 1.25,
+                      transition: "color 0.3s ease",
+                    }}
                   >
-                    Explore this piece
-                    <ArrowRight size={12} />
-                  </Link>
-                  {piece.product && (
-                    <span className="text-[9px] tracking-[0.28em] uppercase" style={{ color: `${C.ivory}33` }}>
-                      {piece.product}
-                    </span>
-                  )}
+                    {p.title}
+                  </span>
                 </div>
-              </div>
+              );
+            })}
+          </div>
 
-              <div className={`hidden md:flex items-center justify-center ${i % 2 === 1 ? "md:[direction:ltr]" : ""}`}>
+          {/* "Tap a piece to begin" hint — disappears after first selection */}
+          {!hasEverSelected && (
+            <p style={{
+              marginTop: "1.75rem",
+              fontSize: "10px",
+              letterSpacing: "0.3em",
+              textTransform: "uppercase",
+              color: `${C.ivory}33`,
+              fontFamily: "'Michroma', sans-serif",
+            }}>
+              Tap a piece to begin
+            </p>
+          )}
+
+          {/* Reveal panel */}
+          <div
+            ref={panelRef}
+            className="ring-panel"
+            aria-live="polite"
+            style={{ width: "100%", marginTop: "3rem" }}
+          >
+            {piece && (
+              <div ref={panelInnerRef} className="ring-panel-grid">
+
+                {/* LEFT: Hero image card */}
                 <div
-                  className="w-full rounded-2xl relative overflow-hidden"
+                  className="ring-panel-img rounded-2xl relative overflow-hidden"
                   style={{
                     aspectRatio: "3/4",
                     background: `linear-gradient(135deg, ${C.heroBg} 0%, ${C.ruleBg} 100%)`,
                     border: `1px solid ${C.ivory}0A`,
                   }}
                 >
-                  {/* Hero image */}
                   <img
                     src={ARMOR_TRACKS[piece.slug]?.img || ""}
                     alt={piece.title}
@@ -1978,60 +2205,122 @@ function SixPiecesSection() {
                       objectFit: "cover", objectPosition: "center top",
                     }}
                   />
-                  {/* Icon atmospheric overlay */}
                   {piece.icon && (
                     <img
-                      src={piece.icon}
-                      alt=""
+                      src={piece.icon} alt=""
                       style={{
                         position: "absolute",
-                        top: "20%",
-                        left: "50%",
+                        top: "20%", left: "50%",
                         transform: "translateX(-50%)",
-                        width: "clamp(90px, 10vw, 120px)",
-                        height: "auto",
-                        objectFit: "contain",
-                                                opacity: 0.12,
-                        pointerEvents: "none",
-                        zIndex: 1,
+                        width: "clamp(90px, 10vw, 120px)", height: "auto",
+                        objectFit: "contain", opacity: 0.1,
+                        pointerEvents: "none", zIndex: 1,
                       }}
                     />
                   )}
-                  {/* Gradient overlay — bottom fade for text legibility */}
                   <div style={{
                     position: "absolute", inset: 0,
                     background: `linear-gradient(to top, ${C.heroBg}EE 0%, ${C.heroBg}44 45%, transparent 100%)`,
                     zIndex: 2,
                   }} />
-                  {/* Piece number watermark */}
-                  <span
-                    style={{
-                      position: "absolute", top: "1.25rem", right: "1.25rem",
-                      fontFamily: "'Michroma', sans-serif",
-                      fontSize: "clamp(1.5rem, 2.5vw, 2.25rem)",
-                      fontWeight: 700,
-                      color: `${C.ivory}22`,
-                      lineHeight: 1,
-                      userSelect: "none",
-                    }}
-                  >
+                  <span style={{
+                    position: "absolute", top: "1.25rem", right: "1.25rem",
+                    fontFamily: "'Michroma', sans-serif",
+                    fontSize: "clamp(1.5rem, 2.5vw, 2.25rem)",
+                    fontWeight: 700, color: `${C.ivory}22`,
+                    lineHeight: 1, userSelect: "none", zIndex: 3,
+                  }}>
                     {piece.num}
                   </span>
-                  {/* Bottom label */}
-                  <div className="absolute bottom-6 left-6 right-6">
+                  <div className="absolute bottom-6 left-6 right-6" style={{ zIndex: 3 }}>
                     <p className="font-brand text-[8px] tracking-[0.3em] uppercase" style={{ color: `${C.gold}88` }}>
                       {piece.product || "Formation content · Coming soon"}
                     </p>
                   </div>
                 </div>
+
+                {/* RIGHT: Text content */}
+                <div>
+                  <div className="flex items-center gap-4 mb-6">
+                    <span className="text-[9px] tracking-[0.4em] uppercase" style={{ color: `${C.gold}77` }}>
+                      {piece.num}
+                    </span>
+                    <div className="h-[1px] flex-1" style={{ background: `${C.gold}22` }} />
+                  </div>
+                  <h3 className="font-brand text-2xl md:text-4xl uppercase tracking-[0.1em] text-white mb-3">
+                    {piece.title}
+                  </h3>
+                  <p className="text-[10px] tracking-[0.35em] uppercase mb-8" style={{ color: `${C.gold}99` }}>
+                    <ScriptureRef reference={piece.scripture} text={piece.scriptureText} />
+                  </p>
+
+                  <div className="space-y-6">
+                    <div>
+                      <span className="text-[9px] tracking-[0.35em] uppercase block mb-2" style={{ color: `${C.ivory}44` }}>
+                        Theology
+                      </span>
+                      <p className="text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+                        {piece.theology}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-[9px] tracking-[0.35em] uppercase block mb-2" style={{ color: `${C.ivory}44` }}>
+                        Modern Tension
+                      </span>
+                      <p className="text-sm leading-relaxed font-light" style={{ color: `${C.ivory}55` }}>
+                        {piece.tension}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-[9px] tracking-[0.35em] uppercase block mb-2" style={{ color: `${C.ivory}44` }}>
+                        Daily Practice
+                      </span>
+                      <p className="text-sm leading-relaxed font-light" style={{ color: `${C.ivory}66` }}>
+                        {piece.practice}
+                      </p>
+                    </div>
+                  </div>
+
+                  <blockquote
+                    className="mt-8 pl-4 border-l"
+                    style={{
+                      borderColor: `${C.gold}33`,
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontStyle: "italic",
+                      fontSize: "16px",
+                      color: `${C.ivory}88`,
+                    }}
+                  >
+                    "{piece.hook}"
+                  </blockquote>
+
+                  <div className="mt-8 flex items-center gap-5">
+                    <Link
+                      to={`/identity/${piece.slug}`}
+                      className="text-[10px] tracking-[0.3em] uppercase font-bold flex items-center gap-2 transition-opacity hover:opacity-100"
+                      style={{ color: C.gold, textDecoration: "none" }}
+                    >
+                      Explore this piece
+                      <ArrowRight size={12} />
+                    </Link>
+                    {piece.product && (
+                      <span className="text-[9px] tracking-[0.28em] uppercase" style={{ color: `${C.ivory}33` }}>
+                        {piece.product}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
               </div>
-            </div>
-          ))}
+            )}
+          </div>
+
         </div>
       </div>
     </section>
   );
 }
+
 
 function BrandSection() {
   const sectionRef = useRef(null);
@@ -2645,35 +2934,11 @@ export function IdentityLanding() {
   return (
     <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: C.heroBg }}>
       <SectionProgressNav />
-      <style>{`
-        @keyframes shimmerSweep {
-          0%   { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        .shimmer-sweep {
-          background: linear-gradient(
-            90deg,
-            rgba(201,168,76,0.47) 0%,
-            rgba(250,248,245,0.85) 50%,
-            rgba(201,168,76,0.47) 100%
-          );
-          background-size: 200% 100%;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          animation: shimmerSweep 0.9s ease-in-out;
-        }
-        @media (max-width: 767px) {
-          .piece-explore-link {
-            opacity: 0.85 !important;
-          }
-        }
-      `}</style>
       <SiteNav />
       <HeroSection />
       <ArmorIntroSection />
       <GodsArmorSection />
-      <SixPiecesSection />
+      <ArmorRingSection />
       <BrandSection />
       <CollectionSection />
       <CTASection />
