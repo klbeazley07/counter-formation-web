@@ -1393,18 +1393,7 @@ function HeroSection() {
         });
       }
 
-      // --- Hero exit parallax: fade headline + subline out on scroll past ---
-      gsap.to([headlineRef.current, sublineRef.current, eyebrowRef.current], {
-        y: -30,
-        opacity: 0,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "60% top",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
+
     }, sectionRef);
     return () => ctx.revert();
   }, []);
@@ -1515,25 +1504,24 @@ function HeroSection() {
 }
 
 function ArmorIntroSection() {
-  const sectionRef = useRef(null);
-  const eyebrowBRef = useRef(null);
+  const sectionRef    = useRef(null);
+  const eyebrowBRef   = useRef(null);
   const scriptureBRef = useRef(null);
-  const goldRuleRef = useRef(null);
+  const rightColRef   = useRef(null);
+  const goldRuleRef   = useRef(null);
 
   useEffect(() => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) return;
 
     const ctx = gsap.context(() => {
-      // --- Eyebrow entrance ---
+      // --- Left column: eyebrow + scripture ---
       if (eyebrowBRef.current) {
         gsap.fromTo(eyebrowBRef.current,
           { y: 20, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.8, ease: "power2.out",
             scrollTrigger: { trigger: eyebrowBRef.current, start: "top 85%", toggleActions: "play none none reverse" } });
       }
-
-      // --- Scripture block: +200ms stagger after eyebrow trigger ---
       if (scriptureBRef.current) {
         gsap.fromTo(scriptureBRef.current,
           { y: 20, opacity: 0 },
@@ -1541,7 +1529,15 @@ function ArmorIntroSection() {
             scrollTrigger: { trigger: eyebrowBRef.current, start: "top 85%", toggleActions: "play none none reverse" } });
       }
 
-      // --- Gold horizontal rule: width 0 → 100% via scaleX ---
+      // --- Right column entrance: +300ms after left ---
+      if (rightColRef.current) {
+        gsap.fromTo(rightColRef.current,
+          { y: 25, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.9, ease: "power2.out", delay: 0.3,
+            scrollTrigger: { trigger: eyebrowBRef.current, start: "top 85%", toggleActions: "play none none reverse" } });
+      }
+
+      // --- Gold rule scaleX ---
       if (goldRuleRef.current) {
         gsap.set(goldRuleRef.current, { scaleX: 0, transformOrigin: "left center" });
         gsap.to(goldRuleRef.current, {
@@ -1565,67 +1561,72 @@ function ArmorIntroSection() {
 
   return (
     <section id="scripture" ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: C.heroBg }}>
-      <div className="max-w-[740px] mx-auto">
-        <span
-          ref={eyebrowBRef}
-          className="block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
-          style={{ color: C.gold }}
-        >
-          Ephesians 6:10–18
-        </span>
+      <div className="max-w-[1100px] mx-auto">
+        <div className="grid md:grid-cols-[55fr_45fr] gap-16 md:gap-24 items-start">
 
-        <blockquote
-          ref={scriptureBRef}
-          className="mb-12"
-          style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontStyle: "italic",
-            fontSize: "clamp(16px, 2vw, 22px)",
-            lineHeight: 1.85,
-            color: `${C.ivory}cc`,
-          }}
-        >
-          <p className="mb-5">
-            Finally, be strong in the Lord and in his mighty power. Put on the full armor of God, so that you can take your stand against the devil's schemes. For our struggle is not against flesh and blood, but against the rulers, against the authorities, against the powers of this dark world and against the spiritual forces of evil in the heavenly realms.
-          </p>
-          <p className="mb-5">
-            Therefore put on the full armor of God, so that when the day of evil comes, you may be able to stand your ground, and after you have done everything, to stand. Stand firm then, with the belt of truth buckled around your waist, with the breastplate of righteousness in place, and with your feet fitted with the readiness that comes from the gospel of peace.
-          </p>
-          <p>
-            In addition to all this, take up the shield of faith, with which you can extinguish all the flaming arrows of the evil one. Take the helmet of salvation and the sword of the Spirit, which is the word of God.
-          </p>
-        </blockquote>
+          {/* LEFT: Scripture */}
+          <div>
+            <span
+              ref={eyebrowBRef}
+              className="block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
+              style={{ color: C.gold }}
+            >
+              Ephesians 6:10–18
+            </span>
+            <blockquote
+              ref={scriptureBRef}
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontSize: "clamp(17px, 1.9vw, 24px)",
+                lineHeight: 1.85,
+                color: `${C.ivory}cc`,
+              }}
+            >
+              <p className="mb-5">
+                Finally, be strong in the Lord and in his mighty power. Put on the full armor of God, so that you can take your stand against the devil's schemes. For our struggle is not against flesh and blood, but against the rulers, against the authorities, against the powers of this dark world and against the spiritual forces of evil in the heavenly realms.
+              </p>
+              <p className="mb-5">
+                Therefore put on the full armor of God, so that when the day of evil comes, you may be able to stand your ground, and after you have done everything, to stand. Stand firm then, with the belt of truth buckled around your waist, with the breastplate of righteousness in place, and with your feet fitted with the readiness that comes from the gospel of peace.
+              </p>
+              <p>
+                In addition to all this, take up the shield of faith, with which you can extinguish all the flaming arrows of the evil one. Take the helmet of salvation and the sword of the Spirit, which is the word of God.
+              </p>
+            </blockquote>
+          </div>
 
-        <div
-          ref={goldRuleRef}
-          className="h-[1px] mb-12"
-          style={{ background: `linear-gradient(to right, transparent, ${C.gold}55, transparent)` }}
-        />
+          {/* RIGHT: Pull quote + teaching */}
+          <div ref={rightColRef}>
+            <div
+              ref={goldRuleRef}
+              className="h-[1px] mb-10"
+              style={{ background: `linear-gradient(to right, ${C.gold}55, transparent)` }}
+            />
+            <p
+              className="armor-para mb-10"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontSize: "clamp(20px, 2.2vw, 28px)",
+                lineHeight: 1.55,
+                color: `${C.ivory}bb`,
+              }}
+            >
+              The armor is not something you build. It is something you receive and put on.
+            </p>
+            <div className="space-y-8">
+              <p className="armor-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}99` }}>
+                Paul is writing to people under real pressure — not offering a metaphor for self-improvement but a survival framework for people living inside a hostile formation system. Rome's empire was total: emperor worship, cultural assimilation, a comprehensive narrative about power, identity, and worth. The parallel to the modern formation environment is not metaphorical. It is structural.
+              </p>
+              <p className="armor-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}99` }}>
+                Identity in Christ is given, not constructed. The belt, the breastplate, the shield — each piece represents a dimension of God's own character that He extends to those who are in Christ. You are not assembling virtue through effort. You are stepping into what has already been provided.
+              </p>
+              <p className="armor-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}99` }}>
+                "Putting on" is a daily, deliberate act. You drift without it by default. The armor does not go on automatically — it requires intentional return, morning by morning, to the reality of who you are in Christ before the world has a chance to tell you otherwise. That is why this collection pairs every piece with a formation pathway.
+              </p>
+            </div>
+          </div>
 
-        {/* Pull quote */}
-        <p
-          className="armor-para mb-12"
-          style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontStyle: "italic",
-            fontSize: "clamp(20px, 2.8vw, 30px)",
-            lineHeight: 1.55,
-            color: `${C.ivory}bb`,
-          }}
-        >
-          The armor is not something you build. It is something you receive and put on.
-        </p>
-
-        <div className="space-y-10">
-          <p className="armor-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}99` }}>
-            Paul is writing to people under real pressure — not offering a metaphor for self-improvement but a survival framework for people living inside a hostile formation system. Rome's empire was total: emperor worship, cultural assimilation, a comprehensive narrative about power, identity, and worth. The parallel to the modern formation environment is not metaphorical. It is structural.
-          </p>
-          <p className="armor-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}99` }}>
-            Identity in Christ is given, not constructed. The belt, the breastplate, the shield — each piece represents a dimension of God's own character that He extends to those who are in Christ. You are not assembling virtue through effort. You are stepping into what has already been provided.
-          </p>
-          <p className="armor-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}99` }}>
-            "Putting on" is a daily, deliberate act. You drift without it by default. The armor does not go on automatically — it requires intentional return, morning by morning, to the reality of who you are in Christ before the world has a chance to tell you otherwise. That is why this collection pairs every piece with a formation pathway.
-          </p>
         </div>
 
         <div className="mt-20 flex justify-center pointer-events-none">
