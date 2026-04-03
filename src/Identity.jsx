@@ -1971,8 +1971,8 @@ function ArmorRingSection() {
             ref={ringRef}
             style={{
               position: "relative",
-              width: "clamp(280px, 50vw, 560px)",
-              height: "clamp(280px, 50vw, 560px)",
+              width: "clamp(280px, 52vw, 620px)",
+              height: "clamp(280px, 52vw, 620px)",
               margin: "0 auto",
             }}
           >
@@ -2050,7 +2050,7 @@ function ArmorRingSection() {
                 transform: "translate(-50%, -50%)",
                 display: "flex", flexDirection: "column",
                 alignItems: "center", justifyContent: "center",
-                textAlign: "center", width: "52%",
+                textAlign: "center", width: "55%",
                 pointerEvents: "none",
               }}
             >
@@ -2077,15 +2077,15 @@ function ArmorRingSection() {
                   <img
                     src="/Shield_white_icon.png" alt=""
                     style={{
-                      width: "clamp(28px, 5vw, 64px)", height: "auto",
-                      objectFit: "contain", opacity: 0.08, marginBottom: "0.4rem",
+                      width: "clamp(56px, 9vw, 120px)", height: "auto",
+                      objectFit: "contain", opacity: 0.12, marginBottom: "0.75rem",
                     }}
                   />
                   <span style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     fontStyle: "italic",
-                    fontSize: "clamp(8px, 1.1vw, 14px)",
-                    color: C.gold, opacity: 0.5,
+                    fontSize: "clamp(12px, 2vw, 26px)",
+                    color: C.gold, opacity: 0.6,
                   }}>
                     Armor Up.
                   </span>
@@ -2133,7 +2133,7 @@ function ArmorRingSection() {
                     src={p.icon}
                     alt={p.title}
                     style={{
-                      width: "clamp(62px, 5vw, 64px)", height: "auto",
+                      width: "clamp(62px, 7.5vw, 96px)", height: "auto",
                       objectFit: "contain",
                       opacity: isActive ? 1 : 0.7,
                       filter: isActive ? `drop-shadow(0 0 6px ${C.gold}66)` : "none",
@@ -2146,7 +2146,7 @@ function ArmorRingSection() {
                     style={{
                       marginTop: "0.35rem",
                       fontFamily: "'Michroma', sans-serif",
-                      fontSize: "clamp(9px, 0.85vw, 10px)",
+                      fontSize: "clamp(9px, 1.1vw, 14px)",
                       color: isActive ? C.gold : `${C.ivory}55`,
                       textTransform: "uppercase",
                       letterSpacing: "0.08em",
