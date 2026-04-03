@@ -2049,15 +2049,26 @@ function ArmorRingSection() {
                     {piece.title}
                   </span>
                 ) : (
-                  <span style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontStyle: "italic",
-                    fontSize: "clamp(10px, 1.8vw, 22px)",
-                    color: C.gold,
-                    opacity: 0.5,
-                  }}>
-                    Armor Up.
-                  </span>
+                  <>
+                    <img
+                      src="/shield-white.png"
+                      alt=""
+                      style={{
+                        width: "clamp(40px, 6vw, 80px)", height: "auto",
+                        objectFit: "contain", opacity: 0.55,
+                        marginBottom: "0.5rem",
+                      }}
+                    />
+                    <span style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontStyle: "italic",
+                      fontSize: "clamp(10px, 1.8vw, 22px)",
+                      color: C.gold,
+                      opacity: 0.6,
+                    }}>
+                      Armor Up.
+                    </span>
+                  </>
                 )}
               </div>
 
@@ -2099,7 +2110,7 @@ function ArmorRingSection() {
                       src={p.icon}
                       alt={p.title}
                       style={{
-                        width: "clamp(36px, 5.5vw, 72px)", height: "auto",
+                        width: "clamp(64px, 9vw, 130px)", height: "auto",
                         objectFit: "contain",
                         opacity: isActive ? 1 : 0.65,
                         filter: isActive ? `drop-shadow(0 0 8px ${C.gold}88)` : "none",
