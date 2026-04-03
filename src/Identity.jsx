@@ -1633,7 +1633,7 @@ function ArmorIntroSection() {
           <img
             src="/helmet.png"
             alt=""
-            style={{ height: "100px", filter: "brightness(0) invert(1)", opacity: 0.06 }}
+            style={{ height: "200px", filter: "brightness(0) invert(1)", opacity: 0.06 }}
           />
         </div>
       </div>
