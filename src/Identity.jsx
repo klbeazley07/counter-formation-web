@@ -1839,13 +1839,13 @@ function ArmorRingSection() {
       if (prevPieceRef.current !== null) {
         gsap.fromTo(imageRef.current,
           { opacity: 0 },
-          { opacity: 0.32, duration: 0.5, ease: "power2.out" }
+          { opacity: 0.72, duration: 0.5, ease: "power2.out" }
         );
       } else {
         // First selection: bloom in
         gsap.fromTo(imageRef.current,
           { opacity: 0 },
-          { opacity: 0.32, duration: 0.8, ease: "power2.out" }
+          { opacity: 0.72, duration: 0.8, ease: "power2.out" }
         );
       }
     }
@@ -1964,7 +1964,7 @@ function ArmorRingSection() {
             {/* Radial overlay — darkens edges, keeps center readable */}
             <div style={{
               position: "absolute", inset: 0,
-              background: `radial-gradient(ellipse at center, ${C.heroBg}88 0%, ${C.heroBg}CC 55%, ${C.heroBg}F0 100%)`,
+              background: `radial-gradient(ellipse at center, ${C.heroBg}33 0%, ${C.heroBg}88 60%, ${C.heroBg}CC 100%)`,
               pointerEvents: "none",
               zIndex: 1,
             }} />
