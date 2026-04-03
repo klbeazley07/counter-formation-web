@@ -1811,8 +1811,8 @@ function ArmorRingSection() {
       }
       iconRefs.current.forEach((icon, i) => {
         if (!icon) return;
-        if (reduced) { gsap.set(icon, { opacity: 1, scale: 1 }); return; }
-        gsap.set(icon, { opacity: 0, scale: 0.8 });
+        if (reduced) { gsap.set(icon, { xPercent: -50, yPercent: -50, opacity: 1, scale: 1 }); return; }
+        gsap.set(icon, { xPercent: -50, yPercent: -50, opacity: 0, scale: 0.8 });
         gsap.to(icon, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.4)", delay: 1.0 + i * 0.1 });
       });
     }, sectionRef);
@@ -2111,7 +2111,6 @@ function ArmorRingSection() {
                   style={{
                     position: "absolute",
                     left: `${pos.x}%`, top: `${pos.y}%`,
-                    transform: "translate(-50%, -50%)",
                     display: "flex", flexDirection: "column", alignItems: "center",
                     cursor: "pointer",
                     opacity: 0,
@@ -2225,7 +2224,7 @@ function ArmorRingSection() {
                 {/* RIGHT: Text content */}
                 <div>
                   <div className="flex items-center gap-4 mb-6">
-                    <span className="text-[9px] tracking-[0.4em] uppercase" style={{ color: `${C.gold}77` }}>
+                    <span className="text-[11px] tracking-[0.4em] uppercase" style={{ color: `${C.gold}77` }}>
                       {piece.num}
                     </span>
                     <div className="h-[1px] flex-1" style={{ background: `${C.gold}22` }} />
@@ -2233,32 +2232,32 @@ function ArmorRingSection() {
                   <h3 className="font-brand text-2xl md:text-4xl uppercase tracking-[0.1em] text-white mb-3">
                     {piece.title}
                   </h3>
-                  <p className="text-[10px] tracking-[0.35em] uppercase mb-8" style={{ color: `${C.gold}99` }}>
+                  <p className="text-[12px] tracking-[0.3em] uppercase mb-8" style={{ color: `${C.gold}99` }}>
                     <ScriptureRef reference={piece.scripture} text={piece.scriptureText} />
                   </p>
 
-                  <div className="space-y-6">
+                  <div className="space-y-7">
                     <div>
-                      <span className="text-[9px] tracking-[0.35em] uppercase block mb-2" style={{ color: `${C.ivory}44` }}>
+                      <span className="text-[11px] tracking-[0.3em] uppercase block mb-2" style={{ color: `${C.ivory}55` }}>
                         Theology
                       </span>
-                      <p className="text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+                      <p className="text-base md:text-lg leading-relaxed font-light" style={{ color: `${C.ivory}88` }}>
                         {piece.theology}
                       </p>
                     </div>
                     <div>
-                      <span className="text-[9px] tracking-[0.35em] uppercase block mb-2" style={{ color: `${C.ivory}44` }}>
+                      <span className="text-[11px] tracking-[0.3em] uppercase block mb-2" style={{ color: `${C.ivory}55` }}>
                         Modern Tension
                       </span>
-                      <p className="text-sm leading-relaxed font-light" style={{ color: `${C.ivory}55` }}>
+                      <p className="text-base md:text-lg leading-relaxed font-light" style={{ color: `${C.ivory}66` }}>
                         {piece.tension}
                       </p>
                     </div>
                     <div>
-                      <span className="text-[9px] tracking-[0.35em] uppercase block mb-2" style={{ color: `${C.ivory}44` }}>
+                      <span className="text-[11px] tracking-[0.3em] uppercase block mb-2" style={{ color: `${C.ivory}55` }}>
                         Daily Practice
                       </span>
-                      <p className="text-sm leading-relaxed font-light" style={{ color: `${C.ivory}66` }}>
+                      <p className="text-base md:text-lg leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
                         {piece.practice}
                       </p>
                     </div>
@@ -2270,8 +2269,8 @@ function ArmorRingSection() {
                       borderColor: `${C.gold}33`,
                       fontFamily: "'Cormorant Garamond', serif",
                       fontStyle: "italic",
-                      fontSize: "16px",
-                      color: `${C.ivory}88`,
+                      fontSize: "clamp(17px, 1.6vw, 22px)",
+                      color: `${C.ivory}99`,
                     }}
                   >
                     "{piece.hook}"
@@ -2280,14 +2279,14 @@ function ArmorRingSection() {
                   <div className="mt-8 flex items-center gap-5">
                     <Link
                       to={`/identity/${piece.slug}`}
-                      className="text-[10px] tracking-[0.3em] uppercase font-bold flex items-center gap-2 transition-opacity hover:opacity-100"
+                      className="text-[12px] tracking-[0.28em] uppercase font-bold flex items-center gap-2 transition-opacity hover:opacity-100"
                       style={{ color: C.gold, textDecoration: "none" }}
                     >
                       Explore this piece
-                      <ArrowRight size={12} />
+                      <ArrowRight size={14} />
                     </Link>
                     {piece.product && (
-                      <span className="text-[9px] tracking-[0.28em] uppercase" style={{ color: `${C.ivory}33` }}>
+                      <span className="text-[11px] tracking-[0.24em] uppercase" style={{ color: `${C.ivory}44` }}>
                         {piece.product}
                       </span>
                     )}
