@@ -1152,29 +1152,29 @@ export function ArmorStyles() {
       .ap-sec-label { font-size: 9px; letter-spacing: .45em; text-transform: uppercase; color: #C9A84C; margin-bottom: 1.25rem; padding-bottom: .75rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
 
       /* Stillness */
-      .ap-stillness { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(18px, 3.5vw, 20px); color: rgba(250,248,245,0.5); line-height: 1.8; margin-bottom: 2.5rem; padding-left: 1.25rem; border-left: 2px solid rgba(201,168,76,0.2); }
+      .ap-stillness { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(20px, 3.8vw, 22px); color: rgba(250,248,245,0.5); line-height: 1.8; margin-bottom: 2.5rem; padding-left: 1.25rem; border-left: 2px solid rgba(201,168,76,0.2); }
 
       /* Scripture */
       .ap-scriptures { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2.5rem; }
       .ap-scripture  { background: rgba(255,255,255,0.025); border-left: 2px solid #C9A84C; border-radius: 0 12px 12px 0; padding: 1.25rem 1.5rem; overflow-wrap: break-word; word-break: break-word; }
-      .ap-scripture p    { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(18px, 3.5vw, 20px); color: rgba(250,248,245,0.72); line-height: 1.7; margin-bottom: .5rem; overflow-wrap: break-word; word-break: break-word; }
+      .ap-scripture p    { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(20px, 3.8vw, 22px); color: rgba(250,248,245,0.72); line-height: 1.7; margin-bottom: .5rem; overflow-wrap: break-word; word-break: break-word; }
       .ap-scripture cite { font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: #C9A84C; font-style: normal; }
 
       /* Teaching */
       .ap-teaching { margin-bottom: 2.5rem; }
-      .ap-body { font-family: 'Cormorant Garamond', serif; font-size: clamp(18px, 3.8vw, 20px); line-height: 1.88; color: rgba(250,248,245,0.74); margin-bottom: 1.25rem; }
+      .ap-body { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 3.8vw, 22px); line-height: 1.88; color: rgba(250,248,245,0.74); margin-bottom: 1.25rem; }
 
       /* Practice */
       .ap-practice { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.15); border-radius: 18px; padding: 1.75rem; margin-bottom: 2.5rem; }
       .ap-practice-head { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; }
       .ap-practice-badge { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(201,168,76,0.65); border: 1px solid rgba(201,168,76,0.25); border-radius: 999px; padding: 4px 12px; }
-      .ap-practice-body { font-family: 'Cormorant Garamond', serif; font-size: clamp(18px, 3.5vw, 20px); line-height: 1.82; color: rgba(250,248,245,0.65); white-space: pre-line; }
+      .ap-practice-body { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 3.5vw, 22px); line-height: 1.82; color: rgba(250,248,245,0.65); white-space: pre-line; }
 
       /* Reflection */
-      .ap-reflection { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.12); border-radius: 14px; padding: 1.5rem; margin-bottom: 2.5rem; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(18px, 3.5vw, 20px); color: rgba(250,248,245,0.6); line-height: 1.7; }
+      .ap-reflection { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.12); border-radius: 14px; padding: 1.5rem; margin-bottom: 2.5rem; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(20px, 3.5vw, 22px); color: rgba(250,248,245,0.6); line-height: 1.7; }
 
       /* Prayer */
-      .ap-prayer { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 2rem; margin-bottom: 2.5rem; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(18px, 3.5vw, 20px); color: rgba(250,248,245,0.62); line-height: 1.9; white-space: pre-line; }
+      .ap-prayer { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 2rem; margin-bottom: 2.5rem; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(20px, 3.5vw, 22px); color: rgba(250,248,245,0.62); line-height: 1.9; white-space: pre-line; }
 
       /* Declare */
       .ap-declare { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 2rem; margin-bottom: 2.5rem; text-align: center; }
