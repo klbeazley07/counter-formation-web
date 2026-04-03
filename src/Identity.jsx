@@ -1204,11 +1204,11 @@ export function ArmorStyles() {
 
       /* Bottom nav */
       .ap-piece-nav { display: flex; gap: 12px; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.06); }
-      .ap-nav-btn { flex: 1; min-height: 60px; padding: 16px 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.03); text-decoration: none; display: flex; flex-direction: row; align-items: center; gap: 14px; transition: border-color .25s, background .25s; }
+      .ap-nav-btn { flex: 1; min-height: 80px; padding: 20px 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.03); text-decoration: none; display: flex; flex-direction: row; align-items: center; gap: 20px; transition: border-color .25s, background .25s; }
       .ap-nav-btn:hover { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.05); }
-      .ap-nav-btn-text  { display: flex; flex-direction: column; gap: 4px; }
-      .ap-nav-btn-dir   { display: block; font-size: 8px; letter-spacing: .36em; text-transform: uppercase; color: rgba(201,168,76,0.6); }
-      .ap-nav-btn-title { display: block; font-family: 'Michroma', sans-serif; font-size: clamp(11px, 1.6vw, 14px); text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; line-height: 1.2; }
+      .ap-nav-btn-text  { display: flex; flex-direction: column; gap: 6px; }
+      .ap-nav-btn-dir   { display: block; font-size: 12px; letter-spacing: .28em; text-transform: uppercase; color: rgba(201,168,76,0.7); }
+      .ap-nav-btn-title { display: block; font-family: 'Michroma', sans-serif; font-size: clamp(14px, 1.8vw, 18px); text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; line-height: 1.2; }
       .ap-nav-btn.next  { flex-direction: row-reverse; text-align: right; }
       .ap-nav-btn.next .ap-nav-btn-text { align-items: flex-end; }
 
@@ -2075,10 +2075,10 @@ function ArmorRingSection() {
               ) : (
                 <>
                   <img
-                    src="/Shield_white_icon.png" alt=""
+                    src="/shield-white.png" alt=""
                     style={{
                       width: "clamp(56px, 9vw, 120px)", height: "auto",
-                      objectFit: "contain", opacity: 0.12, marginBottom: "0.75rem",
+                      objectFit: "contain", opacity: 0.18, marginBottom: "0.75rem",
                     }}
                   />
                   <span style={{
@@ -2133,31 +2133,13 @@ function ArmorRingSection() {
                     src={p.icon}
                     alt={p.title}
                     style={{
-                      width: "clamp(62px, 7.5vw, 96px)", height: "auto",
+                      width: "clamp(62px, 8.5vw, 110px)", height: "auto",
                       objectFit: "contain",
                       opacity: isActive ? 1 : 0.7,
-                      filter: isActive ? `drop-shadow(0 0 6px ${C.gold}66)` : "none",
+                      filter: isActive ? `drop-shadow(0 0 8px ${C.gold}88)` : "none",
                       transition: "opacity 0.3s ease, filter 0.3s ease",
                     }}
                   />
-                  {/* Labels — tablet and desktop only */}
-                  <span
-                    className="hidden md:block"
-                    style={{
-                      marginTop: "0.35rem",
-                      fontFamily: "'Michroma', sans-serif",
-                      fontSize: "clamp(9px, 1.1vw, 14px)",
-                      color: isActive ? C.gold : `${C.ivory}55`,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.08em",
-                      textAlign: "center",
-                      maxWidth: "70px",
-                      lineHeight: 1.25,
-                      transition: "color 0.3s ease",
-                    }}
-                  >
-                    {p.title}
-                  </span>
                 </div>
               );
             })}
@@ -3432,7 +3414,7 @@ export function ArmorPiecePage() {
         <div className="ap-piece-nav" ref={pieceNavRef}>
           {prevData ? (
             <Link to={`/identity/${prevSlug}`} className="ap-nav-btn">
-              {prevData.icon && <img src={prevData.icon} alt="" style={{ width: "24px", height: "24px", objectFit: "contain", mixBlendMode: "screen", opacity: 0.55, flexShrink: 0 }} />}
+              {prevData.icon && <img src={prevData.icon} alt="" style={{ width: "64px", height: "64px", objectFit: "contain", mixBlendMode: "screen", opacity: 0.7, flexShrink: 0 }} />}
               <span className="ap-nav-btn-text">
                 <span className="ap-nav-btn-dir">← Piece {prevData.num}</span>
                 <span className="ap-nav-btn-title">{prevData.title}</span>
@@ -3445,7 +3427,7 @@ export function ArmorPiecePage() {
                 <span className="ap-nav-btn-dir">Piece {nextData.num} →</span>
                 <span className="ap-nav-btn-title">{nextData.title}</span>
               </span>
-              {nextData.icon && <img src={nextData.icon} alt="" style={{ width: "24px", height: "24px", objectFit: "contain", mixBlendMode: "screen", opacity: 0.55, flexShrink: 0 }} />}
+              {nextData.icon && <img src={nextData.icon} alt="" style={{ width: "64px", height: "64px", objectFit: "contain", mixBlendMode: "screen", opacity: 0.7, flexShrink: 0 }} />}
             </Link>
           ) : <div />}
         </div>
