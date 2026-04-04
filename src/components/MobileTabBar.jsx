@@ -46,7 +46,8 @@ export function MobileTabBar() {
   const navigate = useNavigate();
   const [moreOpen, setMoreOpen] = useState(false);
   const [visible, setVisible] = useState(false);
-  const activeTab = getActiveTab(location.pathname, location.hash);
+  const [forcedActive, setForcedActive] = useState(null);
+  const activeTab = forcedActive ?? getActiveTab(location.pathname, location.hash);
 
   // Drag-to-close state
   const touchStartY = useRef(0);
@@ -60,8 +61,8 @@ export function MobileTabBar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close "More" sheet on route change
-  useEffect(() => { setMoreOpen(false); }, [location.pathname]);
+  // Close "More" sheet on route change; clear any forced active state
+  useEffect(() => { setMoreOpen(false); setForcedActive(null); }, [location.pathname]);
 
   // Always show on sub-pages (not homepage)
   useEffect(() => {
@@ -99,6 +100,7 @@ export function MobileTabBar() {
 
     // Absolute external URL
     if (tab.path.startsWith("http")) {
+      setForcedActive(tab.key);
       window.location.href = tab.path;
       return;
     }
