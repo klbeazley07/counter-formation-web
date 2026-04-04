@@ -25,6 +25,7 @@ import {
 import { IdentityLanding, ArmorPiecePage, ArmorStyles } from "./Identity";
 import { SiteNav } from "./components/SiteNav";
 import { SiteFooter } from "./components/SiteFooter";
+import { MobileTabBar } from "./components/MobileTabBar";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1511,62 +1512,12 @@ function ChallengeModal({ open, onClose }) {
   );
 }
 
-/* ─── MOBILE BOTTOM NAV ──────────────────────────────────────────── */
-
-function MobileBottomNav({ onOpenChallenge }) {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => {
-      setVisible(window.scrollY > window.innerHeight * 0.8);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  return (
-    <nav className={`fixed bottom-0 left-0 right-0 z-[90] md:hidden transition-transform duration-300 ${visible ? 'translate-y-0' : 'translate-y-full'}`}
-      style={{ backgroundColor: 'rgba(14,12,10,0.95)', backdropFilter: 'blur(20px)', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-      <div className="flex items-center justify-around h-14 px-2">
-        <a href="#shop" onClick={(e) => {
-            e.preventDefault();
-            const el = document.getElementById("shop");
-            if (!el) return;
-            const top = el.getBoundingClientRect().top + window.scrollY - 60;
-            window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
-          }} className="flex flex-col items-center gap-1 text-white/50 hover:text-[#C9A84C] transition-colors">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
-          </svg>
-          <span className="text-[11px] tracking-wider uppercase">Shop</span>
-        </a>
-        <a href="#architecture" className="flex flex-col items-center gap-1 text-white/50 hover:text-[#C9A84C] transition-colors">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
-          </svg>
-          <span className="text-[11px] tracking-wider uppercase">Formation</span>
-        </a>
-        <button onClick={onOpenChallenge} className="flex flex-col items-center gap-1 text-[#C9A84C]/70 hover:text-[#C9A84C] transition-colors">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
-          </svg>
-          <span className="text-[11px] tracking-wider uppercase">Challenge</span>
-        </button>
-      </div>
-    </nav>
-  );
-}
-
 /* ─── MAIN SITE ───────────────────────────────────────────────────── */
 
 function MainSite() {
   const mainRef = useRef(null);
   const [isChallengeOpen, setIsChallengeOpen] = useState(false);
   useBodyScrollLock(isChallengeOpen);
-
-  const openChallenge = useCallback(() => {
-    setIsChallengeOpen(true);
-  }, []);
 
   const closeChallenge = useCallback(() => {
     setIsChallengeOpen(false);
@@ -1651,7 +1602,6 @@ function MainSite() {
       <SectionDivider />
       <GearBridgeSection />
       <GearSection />
-      <MobileBottomNav onOpenChallenge={openChallenge} />
     </div>
   );
 }
@@ -1699,6 +1649,8 @@ export default function App() {
         <Route path="*" element={<MainSite />} />
       </Routes>
       <SiteFooter />
+      <MobileTabBar />
+      <div className="md:hidden" style={{ height: "calc(56px + env(safe-area-inset-bottom, 0px))" }} />
     </BrowserRouter>
   );
 }
