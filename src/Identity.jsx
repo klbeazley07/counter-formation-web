@@ -85,42 +85,6 @@ const ARMOR_PIECES = [
   },
 ];
 
-const DROP_PRODUCTS = [
-  {
-    slug: "helmet-of-salvation", num: "05", name: "Helmet of Salvation",
-    product: "Technical Hoodie",
-    hook: "What is the first thing your mind reaches for in the morning?",
-    available: true,
-  },
-  {
-    slug: "shield-of-faith", num: "04", name: "Shield of Faith",
-    product: "Premium Everyday Tee",
-    hook: "What lie keeps recurring? What would it take to simply refuse it?",
-    available: true,
-  },
-  {
-    slug: "sword-of-the-spirit", num: "06", name: "Sword of the Spirit",
-    product: "Technical Tee",
-    hook: "Could you answer with Scripture — not the gist of it, but the words themselves?",
-    available: true,
-  },
-  {
-    slug: "belt-of-truth", num: "01", name: "Belt of Truth",
-    product: "Formation content · Product coming",
-    hook: null, available: false,
-  },
-  {
-    slug: "breastplate-of-righteousness", num: "02", name: "Breastplate of Righteousness",
-    product: "Formation content · Product coming",
-    hook: null, available: false,
-  },
-  {
-    slug: "gospel-of-peace", num: "03", name: "Gospel of Peace",
-    product: "Formation content · Product coming",
-    hook: null, available: false,
-  },
-];
-
 /* ─── ARMOR TRACKS DATA ──────────────────────────────────────────── */
 
 const ARMOR_TRACKS = {
@@ -2315,34 +2279,18 @@ function BrandSection() {
   );
 }
 
-function CollectionSection() {
+function GearBridgeBlock() {
   const sectionRef = useRef(null);
 
   useEffect(() => {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) return;
-
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const ctx = gsap.context(() => {
-      // --- Background transition: dark → Gear Warm ---
-      gsap.fromTo(sectionRef.current,
-        { backgroundColor: C.ruleBg },
-        { backgroundColor: "#F5F2EC", ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1,
-          },
+      gsap.utils.toArray(".gb-fade").forEach(el => {
+        gsap.set(el, { opacity: 0, y: 15 });
+        gsap.to(el, {
+          opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" },
         });
-
-      // --- Product cards: batch stagger ---
-      gsap.set(".drop-card", { opacity: 0 });
-      ScrollTrigger.batch(".drop-card", {
-        start: "top 88%",
-        onEnter: batch => gsap.fromTo(batch,
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power2.out", overwrite: "auto" }),
-        onLeaveBack: batch => gsap.to(batch, { opacity: 0, y: 20, duration: 0.4, overwrite: "auto" }),
       });
     }, sectionRef);
     return () => ctx.revert();
@@ -2353,122 +2301,66 @@ function CollectionSection() {
       id="collection"
       ref={sectionRef}
       className="py-24 md:py-40 px-5"
-      style={{ backgroundColor: C.ruleBg }}
+      style={{ backgroundColor: C.heroBg }}
     >
-      <div className="max-w-[1100px] mx-auto">
-        <div className="mb-16 md:mb-24 flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
-          <div>
-            <span
-              className="block text-[10px] tracking-[0.5em] uppercase font-bold mb-4"
-              style={{ color: C.gold }}
-            >
-              Drop 002 · The Armor of God
-            </span>
-            <h2 className="font-brand text-3xl md:text-6xl uppercase tracking-[0.1em] text-white leading-none">
-              The Collection
-            </h2>
-          </div>
-          <p
-            className="max-w-sm text-xs md:text-sm leading-relaxed font-light md:text-right"
-            style={{ color: `${C.ivory}44` }}
+      <div className="max-w-[740px] mx-auto text-center">
+        <p className="gb-fade" style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontStyle: "italic",
+          fontSize: "clamp(28px, 5vw, 48px)",
+          color: C.gold,
+          lineHeight: 1.2,
+          marginBottom: "2rem",
+        }}>
+          Armor Up.
+        </p>
+
+        <p className="gb-fade" style={{
+          fontSize: "clamp(13px, 2vw, 16px)",
+          color: "rgba(250,248,245,0.4)",
+          lineHeight: 1.8,
+          maxWidth: "520px",
+          margin: "0 auto 2.5rem",
+          letterSpacing: "0.02em",
+        }}>
+          Three hero pieces. Six formation tracks. Every garment connects to a devotional pathway through the QR code on the back.
+        </p>
+
+        <div className="gb-fade flex flex-col sm:flex-row items-center justify-center gap-3">
+          <a
+            href="/#shop"
+            className="inline-flex items-center justify-center gap-3 px-8 py-3 rounded-full font-bold text-[10px] tracking-[0.28em] uppercase transition-all hover:scale-105 w-full sm:w-auto"
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              backgroundColor: C.gold,
+              color: "#0A0A0A",
+              boxShadow: `0 4px 24px ${C.gold}44`,
+              textDecoration: "none",
+            }}
           >
-            Three hero pieces. Six formation pathways. One armor.
-          </p>
+            Shop the Collection
+          </a>
+          <Link
+            to="/identity/belt-of-truth"
+            className="inline-flex items-center justify-center gap-3 px-8 py-3 rounded-full font-bold text-[10px] tracking-[0.28em] uppercase transition-all hover:bg-white/5 w-full sm:w-auto"
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              color: C.gold,
+              border: `1px solid ${C.gold}44`,
+              textDecoration: "none",
+            }}
+          >
+            Begin Formation
+          </Link>
         </div>
 
-        <div
-          className="gap-6"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-          }}
-        >
-          {DROP_PRODUCTS.map(p => (
-            <Link
-              key={p.slug}
-              to={`/identity/${p.slug}`}
-              className="drop-card group relative rounded-2xl overflow-hidden flex flex-col"
-              style={{
-                textDecoration: "none",
-                minHeight: p.available ? "320px" : "clamp(160px, 40vw, 320px)",
-                background: `${C.ivory}05`,
-                border: `1px solid ${C.ivory}${p.available ? "0F" : "07"}`,
-              }}
-            >
-              <div
-                className="absolute top-0 left-0 right-0 h-[1px]"
-                style={{
-                  background: `linear-gradient(to right, transparent, ${C.gold}${p.available ? "55" : "22"}, transparent)`,
-                }}
-              />
-              <div className="p-6 md:p-8 flex flex-col flex-1">
-                <div className="flex justify-center mb-6">
-                  <img
-                    src={ARMOR_PIECES.find(ap => ap.slug === p.slug)?.icon || ""}
-                    alt=""
-                    style={{
-                      width: p.available ? "44px" : "36px",
-                      height: "auto",
-                      objectFit: "contain",
-                                            opacity: p.available ? 0.5 : 0.12,
-                    }}
-                  />
-                </div>
-                <div className="flex items-center justify-between mb-6">
-                  <span
-                    className="text-[9px] tracking-[0.4em] uppercase"
-                    style={{ color: `${C.gold}${p.available ? "99" : "44"}` }}
-                  >
-                    {p.num}
-                  </span>
-                  {p.available && (
-                    <span
-                      className="text-[8px] tracking-[0.3em] uppercase px-2 py-1 rounded-full"
-                      style={{ color: C.gold, border: `1px solid ${C.gold}33` }}
-                    >
-                      Drop 002
-                    </span>
-                  )}
-                </div>
-                <h3
-                  className="font-brand text-base uppercase tracking-[0.1em] mb-2"
-                  style={{ color: p.available ? C.ivory : `${C.ivory}44` }}
-                >
-                  {p.name}
-                </h3>
-                <p
-                  className="text-[11px] tracking-[0.2em] uppercase mb-6"
-                  style={{ color: p.available ? `${C.ivory}55` : `${C.ivory}22` }}
-                >
-                  {p.product}
-                </p>
-                {p.hook && (
-                  <p
-                    className={`text-[13px] leading-relaxed mt-auto ${!p.available ? "hidden md:block" : ""}`}
-                    style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontStyle: "italic",
-                      color: `${C.ivory}66`,
-                    }}
-                  >
-                    "{p.hook}"
-                  </p>
-                )}
-                {p.available && (
-                  <a
-                    href="https://shop.counterformed.com/collections/armor-of-god-collection"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={e => e.stopPropagation()}
-                    className="text-[9px] tracking-[0.3em] uppercase font-bold mt-4 inline-flex items-center gap-2 hover:opacity-100 transition-opacity"
-                    style={{ color: "#C9A84C", opacity: 0.6, textDecoration: "none" }}
-                  >
-                    Shop this piece →
-                  </a>
-                )}
-              </div>
-            </Link>
-          ))}
+        <div className="gb-fade mt-16 flex justify-center pointer-events-none">
+          <img
+            src="/shield-white.png"
+            alt=""
+            style={{ height: "48px", filter: "brightness(0) invert(1)", opacity: 0.06 }}
+            onError={e => { e.target.style.display = "none"; }}
+          />
         </div>
       </div>
     </section>
@@ -2863,7 +2755,7 @@ export function IdentityLanding() {
       <GodsArmorSection />
       <ArmorRingSection />
       <BrandSection />
-      <CollectionSection />
+      <GearBridgeBlock />
       <CTASection />
     </div>
   );
