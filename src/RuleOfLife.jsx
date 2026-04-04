@@ -703,10 +703,6 @@ export function RuleStyles() {
       .rl-wrap * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
       .rl-wrap   { font-family: 'Barlow Condensed',sans-serif; background: #0E0C0A; color: #FAF8F5; min-height: 100svh; overflow-x: hidden; }
 
-      .rl-corner-nav { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 200; display: flex; align-items: center; gap: 10px; padding: 10px 20px 10px 14px; border-radius: 999px; background: rgba(14,12,10,0.88); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); text-decoration: none; transition: border-color .25s; }
-      .rl-corner-nav:hover { border-color: rgba(201,168,76,0.35); }
-      .rl-corner-nav img  { width: 28px; height: 28px; object-fit: contain; filter: brightness(0) invert(1); }
-      .rl-corner-nav span { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: rgba(250,248,245,0.55); font-weight: 600; white-space: nowrap; }
       .rl-shield-mark { position: fixed; top: 1.25rem; left: 1.5rem; z-index: 200; width: 192px; height: 192px; opacity: 0.32; pointer-events: none; }
       @media (max-width: 640px) { .rl-shield-mark { width: 100px; height: 100px; top: 0.5rem; left: 0.5rem; } }
 
@@ -770,9 +766,6 @@ export function RuleStyles() {
       .rl-nav-btn-title { font-size: clamp(14px,2vw,18px); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #FAF8F5; line-height: 1; }
       .rl-nav-btn.next  { text-align: right; align-items: flex-end; }
 
-      .rl-footer     { background: #06050A; border-top: 1px solid rgba(255,255,255,0.05); padding: 28px 1.5rem; text-align: center; }
-      .rl-footer img { width: 24px; height: 24px; opacity: .2; filter: invert(1); display: block; margin: 0 auto .75rem; }
-      .rl-footer p   { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
 
       .rl-float-trigger { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 190; display: flex; align-items: center; gap: 8px; }
       .rl-float-btn { display: flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; background: #C9A84C; color: #0A0A0A; font-family: 'Barlow Condensed',sans-serif; font-size: 10px; letter-spacing: .22em; text-transform: uppercase; font-weight: 700; text-decoration: none; white-space: nowrap; box-shadow: 0 4px 32px rgba(201,168,76,0.35); transition: background .25s, transform .25s; }
@@ -841,10 +834,6 @@ function CornerNav() {
         onError={e => { e.target.style.display = "none"; }}
         alt=""
       />
-      <Link to="/" className="rl-corner-nav">
-        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="Counter Formation" style={{ filter: "brightness(0) invert(1)" }} />
-        <span>Counter Formation</span>
-      </Link>
     </>
   );
 }
@@ -1081,10 +1070,6 @@ export function RhythmPage() {
         </div>
       </div>
 
-      <footer className="rl-footer">
-        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
-        <p>Counter Formation · Rule of Life · Ephesians 6:10–18 · © 2026</p>
-      </footer>
 
       <FloatingChallengeTrigger />
     </div>

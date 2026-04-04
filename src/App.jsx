@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState, useCallback } from
 import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowRight, Menu, X, ChevronRight } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 
 import {
   FieldGuideStyles,
@@ -23,6 +23,8 @@ import {
   CommunityPage,
 } from "./Architecture";
 import { IdentityLanding, ArmorPiecePage, ArmorStyles } from "./Identity";
+import { SiteNav } from "./components/SiteNav";
+import { SiteFooter } from "./components/SiteFooter";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -36,7 +38,6 @@ function ScrollToTop() {
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
 
-const SHOPIFY_URL = "https://shop.counterformed.com/collections/the-gear";
 const FG_BASE     = "/field-guide/scripture-before-scroll";
 
 const C = {
@@ -69,8 +70,6 @@ function useEscape(handler, enabled = true) {
     return () => window.removeEventListener("keydown", fn);
   }, [handler, enabled]);
 }
-
-function cx(...cls) { return cls.filter(Boolean).join(" "); }
 
 /* ─── SHARED COMPONENTS ───────────────────────────────────────────── */
 
@@ -1329,124 +1328,6 @@ function GearSection() {
   );
 }
 
-/* ─── FOOTER ──────────────────────────────────────────────────────── */
-
-function Footer({ onOpenChallenge }) {
-  const [email, setEmail]         = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading]     = useState(false);
-  const [error, setError]         = useState(null);
-
-  const handleSubmit = async () => {
-    if (!email) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/subscribe`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, source: "join_formation" }),
-      });
-      if (!res.ok) throw new Error();
-      setSubmitted(true);
-    } catch {
-      setError("Something went wrong. Try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <footer style={{ backgroundColor: C.darkBg }} className="border-t border-white/[0.06]">
-      <div className="footer-reveal max-w-5xl mx-auto pt-24 md:pt-40 pb-16 md:pb-24 px-6 text-center border-b border-white/[0.05]">
-        <p className="text-[11px] md:text-[10px] uppercase tracking-[0.5em] text-[#C9A84C]/60 mb-8 font-bold">The Mission</p>
-        <h3 className="font-brand text-4xl md:text-6xl lg:text-7xl uppercase tracking-[0.12em] md:tracking-[0.16em] leading-none text-white mb-3">
-          Formed in Christ.
-        </h3>
-        <h3 className="font-brand text-xl md:text-3xl lg:text-4xl uppercase tracking-[0.12em] leading-none text-white/20 mb-10">
-          Not drifting.
-        </h3>
-        <p className="text-[11px] md:text-xs opacity-35 tracking-[0.25em] uppercase max-w-sm mx-auto leading-loose">
-          Intentional formation in a world designed for drift.
-        </p>
-      </div>
-
-      <div className="footer-reveal max-w-2xl mx-auto py-16 px-6 text-center border-b border-white/[0.05]">
-        <span className="text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-[#C9A84C]/60 font-bold mb-3 block">Stay in the Formation</span>
-        <h4 className="font-brand text-xl md:text-2xl uppercase tracking-[0.15em] text-white mb-8">Connect with the Community</h4>
-        {!submitted ? (
-          <div className="max-w-md mx-auto">
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="email" value={email}
-                onChange={e => setEmail(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && handleSubmit()}
-                placeholder="your@email.com"
-                disabled={loading}
-                className="flex-1 px-5 py-4 rounded-full text-[11px] text-white placeholder-white/25 focus:outline-none tracking-widest uppercase disabled:opacity-50"
-                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)" }}
-                onFocus={e => e.currentTarget.style.borderColor = "rgba(201,168,76,0.40)"}
-                onBlur={e  => e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)"}
-              />
-              <button onClick={handleSubmit} disabled={loading}
-                className="px-8 py-4 rounded-full text-[12px] uppercase tracking-widest font-bold transition-all whitespace-nowrap border hover:bg-[#C9A84C] hover:text-black hover:border-[#C9A84C] disabled:opacity-50"
-                style={{ background: "rgba(255,255,255,0.06)", borderColor: "rgba(255,255,255,0.12)", color: C.ivory }}>
-                {loading ? "..." : "Join"}
-              </button>
-            </div>
-            {error && (
-              <p className="mt-3 text-[12px] uppercase tracking-[0.2em] text-red-400">{error}</p>
-            )}
-          </div>
-        ) : (
-          <p className="text-[12px] uppercase tracking-[0.35em] text-[#C9A84C]">You're in. Weekly field notes incoming.</p>
-        )}
-        <p className="mt-4 text-[11px] uppercase tracking-[0.3em] text-white/20">Weekly field notes. No noise.</p>
-      </div>
-
-      <div className="footer-reveal max-w-7xl mx-auto py-14 px-6 grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-20">
-        <div>
-          <span className="text-[11px] tracking-[0.4em] text-[#C9A84C]/50 uppercase font-bold mb-4 block">The Gear</span>
-          <a href="#shop" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Shop All</a>
-          <a href={SHOPIFY_URL} className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Men's</a>
-          <a href={SHOPIFY_URL} className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Women's</a>
-        </div>
-        <div>
-          <span className="text-[11px] tracking-[0.4em] text-[#C9A84C]/50 uppercase font-bold mb-4 block">The Formation</span>
-          <a href="#architecture" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Architecture</a>
-          <a href="#rule" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Rule of Life</a>
-          <button type="button" onClick={onOpenChallenge}
-            className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1 border-0 bg-transparent p-0 text-left cursor-pointer">
-            7-Day Challenge
-          </button>
-        </div>
-        <div>
-          <span className="text-[11px] tracking-[0.4em] text-[#C9A84C]/50 uppercase font-bold mb-4 block">Field Guide</span>
-          <Link to="/field-guide/scripture-before-scroll" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Scripture Before Scroll</Link>
-          <Link to="/field-guide/devotion-guide" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Devotion Guide</Link>
-        </div>
-        <div>
-          <span className="text-[11px] tracking-[0.4em] text-[#C9A84C]/50 uppercase font-bold mb-4 block">Connect</span>
-          <a href="https://instagram.com/counterformed" target="_blank" rel="noopener noreferrer" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Instagram</a>
-          <a href="#" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Contact</a>
-          <a href="#" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">About</a>
-        </div>
-      </div>
-
-      <div className="footer-reveal border-t border-white/[0.04] pt-6 pb-16 md:pb-8 px-6 flex flex-col items-center gap-3 max-w-7xl mx-auto">
-        <p className="text-[9px] uppercase tracking-[0.2em] text-white/30 text-center">Premium men&apos;s and women&apos;s athletic lifestyle apparel for those committed to being formed by Christ, not by the world.</p>
-        <div className="flex flex-col md:flex-row items-center justify-between w-full gap-3 mt-2">
-          <p className="text-[8px] uppercase tracking-[0.3em] opacity-20">&copy; 2026 Counter Formation</p>
-          <p className="text-[8px] uppercase tracking-[0.3em] opacity-15">Discipline · Presence · Formation</p>
-          <p className="text-[8px] uppercase tracking-[0.3em] opacity-15">Ephesians 6:10–18</p>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-/* ─── FLOATING CHALLENGE TRIGGER ─────────────────────────────────── */
-
 function ChallengeModal({ open, onClose }) {
   const [email, setEmail]         = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -1630,54 +1511,6 @@ function ChallengeModal({ open, onClose }) {
   );
 }
 
-function FloatingChallengeTrigger({ onOpenChallenge }) {
-  const [visible,   setVisible]   = useState(false);
-  const [dismissed, setDismissed] = useState(false);
-  const [gearInView, setGearInView] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight);
-      if (pct > 0.35 && !dismissed) setVisible(true);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [dismissed]);
-
-  useEffect(() => {
-    const shopEl = document.getElementById("shop");
-    if (!shopEl) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setGearInView(entry.isIntersecting),
-      { threshold: 0.1 }
-    );
-    observer.observe(shopEl);
-    return () => observer.disconnect();
-  }, []);
-
-  if (!visible || dismissed || gearInView) return null;
-
-  return (
-    <div className="fixed bottom-6 right-6 z-[90] flex items-center gap-2"
-      style={{ animation: "fadeUp 0.4s ease forwards" }}>
-      <button
-        type="button"
-        onClick={onOpenChallenge}
-        className="flex items-center gap-3 rounded-full border-0 px-5 py-3 text-[12px] font-bold uppercase tracking-[0.22em] text-black transition-all hover:scale-105"
-        style={{ backgroundColor: C.gold, boxShadow: "0 4px 32px rgba(201,168,76,0.35)" }}>
-        Begin the 7-Day Challenge <ChevronRight size={13} />
-      </button>
-      <button
-        onClick={() => setDismissed(true)}
-        className="w-7 h-7 rounded-full flex items-center justify-center text-white/40 hover:text-white/70 transition-colors"
-        style={{ background: "rgba(255,255,255,0.10)" }}
-        aria-label="Dismiss">
-        <X size={12} />
-      </button>
-    </div>
-  );
-}
-
 /* ─── MOBILE BOTTOM NAV ──────────────────────────────────────────── */
 
 function MobileBottomNav({ onOpenChallenge }) {
@@ -1728,13 +1561,10 @@ function MobileBottomNav({ onOpenChallenge }) {
 
 function MainSite() {
   const mainRef = useRef(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isChallengeOpen, setIsChallengeOpen] = useState(false);
-  useBodyScrollLock(isMenuOpen || isChallengeOpen);
-  useEscape(() => setIsMenuOpen(false), isMenuOpen);
+  useBodyScrollLock(isChallengeOpen);
 
   const openChallenge = useCallback(() => {
-    setIsMenuOpen(false);
     setIsChallengeOpen(true);
   }, []);
 
@@ -1742,25 +1572,8 @@ function MainSite() {
     setIsChallengeOpen(false);
   }, []);
 
-  const navLinks = [
-    { label: "Formation",    href: "#architecture" },
-    { label: "Rule of Life", href: "#rule" },
-  ];
-
-  const scrollToShop = (e) => {
-    e.preventDefault();
-    const el = document.getElementById("shop");
-    if (!el) return;
-    // Mobile: section has no padding, land just below fixed nav (~60px).
-    // Desktop: skip past the section header/padding to the product area.
-    const offset = window.innerWidth < 768 ? -60 : 160;
-    const top = el.getBoundingClientRect().top + window.scrollY + offset;
-    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
-  };
-
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".nav-fade", { opacity: 0, y: -10, duration: 0.9, ease: "power2.out", delay: 0.3 });
       gsap.utils.toArray(".pillar-reveal").forEach(el => {
         gsap.from(el, { y: 40, opacity: 0, duration: 0.9, ease: "power3.out",
           scrollTrigger: { trigger: el, start: "top 90%", toggleActions: "play none none reverse" } });
@@ -1828,60 +1641,6 @@ function MainSite() {
       style={{ backgroundColor: C.darkBg }}>
       <ChallengeModal open={isChallengeOpen} onClose={closeChallenge} />
 
-      <nav className="nav-fade fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[100] w-[94%] max-w-5xl px-4 py-3 md:px-5 md:py-4 backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center justify-between"
-        style={{ backgroundColor: `${C.darkBg}cc` }}>
-        <a href="#top" className="flex items-center gap-2 md:gap-3">
-          <SafeImg src="/helmet.png" className="w-8 h-8 md:w-10 md:h-10 object-contain flex-shrink-0" alt="Counter Formation" />
-          <span className="font-brand text-[11px] md:text-sm tracking-[0.2em] md:tracking-[0.28em] uppercase whitespace-nowrap">
-            Counter Formation
-          </span>
-        </a>
-        <div className="flex items-center gap-4">
-          <div className="hidden md:flex gap-8 mr-4 text-[10px] uppercase tracking-widest font-brand font-bold">
-            {navLinks.map(l => (
-              <a key={l.label} href={l.href}
-                className={cx("hover:text-[#C9A84C] transition-colors py-2", l.gold && "text-[#C9A84C]")}
-                style={{ minHeight: "44px", display: "inline-flex", alignItems: "center" }}>
-                {l.label}
-              </a>
-            ))}
-          </div>
-          <a href="#shop" onClick={scrollToShop}
-            className="px-5 py-2 rounded-full border border-[#C9A84C]/40 text-[#C9A84C] hover:bg-[#C9A84C] hover:text-black transition-all text-[9px] md:text-[10px] hidden md:block uppercase tracking-widest font-bold">
-            Shop the Gear
-          </a>
-          <button onClick={() => setIsMenuOpen(v => !v)} className="md:hidden p-1" aria-label="Toggle menu">
-            <Menu size={20} />
-          </button>
-        </div>
-      </nav>
-
-      <div className={cx("fixed inset-0 z-[120] flex flex-col items-center justify-center transition-transform duration-500",
-        isMenuOpen ? "translate-y-0" : "-translate-y-full")}
-        style={{ backgroundColor: C.darkBg }}>
-        <button onClick={() => setIsMenuOpen(false)} className="absolute top-8 right-8">
-          <X size={28} />
-        </button>
-
-        {/* THE GEAR */}
-        <p className="text-[11px] tracking-[0.5em] text-[#C9A84C]/60 uppercase font-bold mb-6">The Gear</p>
-        <a href="#shop" onClick={(e) => { setIsMenuOpen(false); scrollToShop(e); }}
-          className="text-xl font-brand uppercase tracking-wider text-white mb-2">Shop All</a>
-
-        <div className="h-[1px] w-16 bg-white/10 mx-auto my-6" />
-
-        {/* THE FORMATION */}
-        <p className="text-[11px] tracking-[0.5em] text-[#C9A84C]/60 uppercase font-bold mb-6">The Formation</p>
-        <a href="#architecture" onClick={() => setIsMenuOpen(false)}
-          className="text-xl font-brand uppercase tracking-wider text-white mb-2">Architecture</a>
-        <a href="#rule" onClick={() => setIsMenuOpen(false)}
-          className="text-xl font-brand uppercase tracking-wider text-white mb-2">Rule of Life</a>
-        <Link to="/field-guide/scripture-before-scroll" onClick={() => setIsMenuOpen(false)}
-          className="text-xl font-brand uppercase tracking-wider text-white mb-2">Field Guide</Link>
-        <button onClick={openChallenge}
-          className="text-xl font-brand uppercase tracking-wider text-white mt-2">7-Day Challenge</button>
-      </div>
-
       <CinematicHero />
       <SectionDivider />
       <ArchitectureSlider />
@@ -1892,8 +1651,6 @@ function MainSite() {
       <SectionDivider />
       <GearBridgeSection />
       <GearSection />
-      <Footer onOpenChallenge={openChallenge} />
-      <FloatingChallengeTrigger onOpenChallenge={openChallenge} />
       <MobileBottomNav onOpenChallenge={openChallenge} />
     </div>
   );
@@ -1910,6 +1667,7 @@ export default function App() {
       <RuleStyles />
       <ArchitectureStyles />
       <ArmorStyles />
+      <SiteNav />
       <Routes>
         {/* Main site */}
         <Route path="/" element={<MainSite />} />
@@ -1940,6 +1698,7 @@ export default function App() {
         {/* Fallback */}
         <Route path="*" element={<MainSite />} />
       </Routes>
+      <SiteFooter />
     </BrowserRouter>
   );
 }

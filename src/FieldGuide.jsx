@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import React, { useEffect, useRef } from "react";
+import { useParams, Link } from "react-router-dom";
 import { ScriptureRef } from "./ScriptureRef";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
 
-const SHOPIFY_URL = "https://shop.counterformed.com/collections/the-gear";
-const MAIN_URL = "https://counterformed.com";
 const BASE = "/field-guide/scripture-before-scroll";
 
 const C = {
@@ -238,20 +236,6 @@ const FG_CSS = `
   }
   .fg-btn-ghost:hover { color: rgba(250,248,245,0.72); }
 
-  .fg-nav-link {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    letter-spacing: .35em;
-    text-transform: uppercase;
-    color: rgba(250,248,245,0.35);
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: color .2s;
-    padding: 0;
-    text-decoration: none;
-  }
-  .fg-nav-link:hover { color: #C9A84C; }
 
   .fg-brand-btn {
     display: inline-flex;
@@ -428,18 +412,6 @@ function GoldDivider({ mt = 32, mb = 32 }) {
   return <div className="fg-gold-line" style={{ margin: `${mt}px 0 ${mb}px` }} />;
 }
 
-function BrandLockup() {
-  return (
-    <a href={MAIN_URL} target="_blank" rel="noopener noreferrer" className="fg-brand-btn">
-      <img src="/helmet.png" alt="Counter Formation" style={{ width: 24, height: 24, objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.9 }} />
-      <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
-        <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 15, fontWeight: 800, letterSpacing: "0.18em", textTransform: "uppercase", color: C.ivory }}>Counter</span>
-        <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, fontWeight: 500, letterSpacing: "0.32em", textTransform: "uppercase", color: C.gold }}>Formation</span>
-      </div>
-      <span style={{ fontSize: 10, color: C.dim }}>↗</span>
-    </a>
-  );
-}
 
 function PageShell({ children }) {
   return (
@@ -450,70 +422,6 @@ function PageShell({ children }) {
   );
 }
 
-function FGNav({ showBack }) {
-  const navigate = useNavigate();
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  return (
-    <nav
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 100,
-        backgroundColor: scrolled ? "rgba(6,5,10,0.92)" : "transparent",
-        backdropFilter: scrolled ? "blur(16px)" : "none",
-        borderBottom: scrolled ? `1px solid ${C.border}` : "1px solid transparent",
-        boxShadow: scrolled ? "0 12px 30px rgba(0,0,0,0.28)" : "none",
-        padding: "14px 24px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        transition: "all 0.35s ease",
-      }}
-    >
-      <button onClick={() => navigate(BASE)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
-        <BrandLockup />
-      </button>
-      <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-        {showBack && (
-          <button onClick={() => navigate(-1)} className="fg-nav-link">← Back</button>
-        )}
-        <a href={MAIN_URL} target="_blank" rel="noopener noreferrer" className="fg-nav-link">
-          Main Site ↗
-        </a>
-      </div>
-    </nav>
-  );
-}
-
-function SiteFooter() {
-  return (
-    <div style={{ marginTop: 64, borderTop: `1px solid ${C.border}`, paddingTop: 40, paddingBottom: 48, textAlign: "center" }}>
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
-        <BrandLockup />
-      </div>
-      <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.7, maxWidth: 300, margin: "0 auto 24px" }}>
-        This rhythm is one part of a larger mission. Wear the reminder. Return to the practice.
-      </p>
-      <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 320, margin: "0 auto" }}>
-        <a href={SHOPIFY_URL} target="_blank" rel="noopener noreferrer" className="fg-btn-sec">
-          Shop the Gear
-        </a>
-      </div>
-      <div style={{ marginTop: 32 }}>
-        <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.38em", textTransform: "uppercase", color: "rgba(250,248,245,0.15)" }}>
-          Ephesians 6:10–18
-        </span>
-      </div>
-    </div>
-  );
-}
 
 function SectionIntro({ label, title, body, children }) {
   return (
@@ -539,7 +447,6 @@ export function FGLanding() {
 
   return (
     <PageShell>
-      <FGNav showBack={false} />
       <div className="fg-wrap">
         <div className="fg-hero-panel" style={{ marginTop: 36 }}>
           <div className="fg-hero-grid">
@@ -596,7 +503,6 @@ export function FGLanding() {
           </div>
         </div>
 
-        <SiteFooter />
       </div>
     </PageShell>
   );
@@ -618,7 +524,6 @@ export function FGOffice() {
 
   return (
     <PageShell>
-      <FGNav showBack />
       <div className="fg-wrap" ref={ref}>
         <SectionIntro
           label={`Scripture Before Scroll · Day ${office.day}`}
@@ -699,7 +604,6 @@ export function FGOffice() {
           </div>
         </div>
 
-        <SiteFooter />
       </div>
     </PageShell>
   );
@@ -715,7 +619,6 @@ export function FGPath() {
 
   return (
     <PageShell>
-      <FGNav showBack />
       <div className="fg-wrap" ref={ref}>
         <SectionIntro
           label="Scripture Before Scroll"
@@ -763,7 +666,6 @@ export function FGPath() {
           <Link className="fg-btn-prim" to={`${BASE}/today`}>Begin Today&apos;s Office →</Link>
         </div>
 
-        <SiteFooter />
       </div>
     </PageShell>
   );
@@ -778,7 +680,6 @@ export function FGWhy() {
 
   return (
     <PageShell>
-      <FGNav showBack />
       <div className="fg-wrap" ref={ref}>
         <SectionIntro
           label="The Foundation"
@@ -805,7 +706,6 @@ export function FGWhy() {
           <Link className="fg-btn-sec" to={`${BASE}/path`}>View 7-Day Path</Link>
         </div>
 
-        <SiteFooter />
       </div>
     </PageShell>
   );
@@ -820,7 +720,6 @@ export function FGNewHere() {
 
   return (
     <PageShell>
-      <FGNav showBack />
       <div className="fg-wrap" ref={ref}>
         <SectionIntro
           label="Orientation"
@@ -853,7 +752,6 @@ export function FGNewHere() {
           </div>
         </div>
 
-        <SiteFooter />
       </div>
     </PageShell>
   );

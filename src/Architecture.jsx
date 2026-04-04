@@ -440,17 +440,6 @@ export function ArchitectureStyles() {
         font-family: 'Barlow Condensed', sans-serif;
         overflow-x: hidden;
       }
-      .camp-nav {
-        position: fixed; top: 1rem; left: 50%; transform: translateX(-50%);
-        z-index: 200; display: flex; align-items: center; gap: 10px;
-        padding: 10px 20px 10px 14px; border-radius: 999px;
-        background: rgba(6,5,10,0.88); backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.08); text-decoration: none;
-        transition: border-color .25s;
-      }
-      .camp-nav:hover { border-color: rgba(201,168,76,0.35); }
-      .camp-nav img  { width: 28px; height: 28px; object-fit: contain; filter: brightness(0) invert(1); }
-      .camp-nav span { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: rgba(250,248,245,0.6); font-weight: 600; }
 
       .camp-hero {
         position: relative; height: 100svh; overflow: hidden;
@@ -582,9 +571,6 @@ export function ArchitectureStyles() {
       .camp-other-body { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.25rem; z-index: 2; }
       .camp-other-num { font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: #C9A84C; margin-bottom: .3rem; }
       .camp-other-title { font-family: 'Michroma', sans-serif; font-size: clamp(15px,2.2vw,22px); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; }
-      .camp-footer { background: #06050A; border-top: 1px solid rgba(255,255,255,0.05); padding: 28px 1.5rem; text-align: center; }
-      .camp-footer img { width: 24px; height: 24px; opacity: .2; filter: invert(1); display: block; margin: 0 auto .75rem; }
-      .camp-footer p { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
     `}</style>
   );
 }
@@ -904,11 +890,6 @@ function CampaignPage({ pillar }) {
 
   return (
     <div className="camp-wrap">
-      <Link to="/" className="camp-nav">
-        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="Counter Formation" />
-        <span>Counter Formation</span>
-      </Link>
-
       <div className="camp-hero">
         <div className="camp-hero-bg" style={{ backgroundImage: `url('${pillar.img}')` }} />
         <div className="camp-hero-ov" />
@@ -982,10 +963,6 @@ function CampaignPage({ pillar }) {
         </div>
       </div>
 
-      <footer className="camp-footer">
-        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
-        <p>Counter Formation · Architecture of the Soul · Ephesians 6:10–18 · © 2026</p>
-      </footer>
     </div>
   );
 }

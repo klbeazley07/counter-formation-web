@@ -1177,11 +1177,6 @@ export function ArmorStyles() {
       .ap-nav-btn.next  { flex-direction: row-reverse; text-align: right; }
       .ap-nav-btn.next .ap-nav-btn-text { align-items: flex-end; }
 
-      /* Footer */
-      .ap-footer { background: #06050A; border-top: 1px solid rgba(255,255,255,0.05); padding: 28px 1.5rem; text-align: center; }
-      .ap-footer img { width: 24px; height: 24px; opacity: .2; filter: invert(1); display: block; margin: 0 auto .75rem; }
-      .ap-footer p   { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
-
       /* Mobile */
       @media (max-width: 639px) {
         .ap-piece-nav { flex-direction: column; }
@@ -2489,95 +2484,6 @@ const ARMOR_PIECE_TITLES = {
   "sword-of-the-spirit": "Sword of the Spirit",
 };
 
-function SiteNav() {
-  const [menuOpen, setMenuOpen] = React.useState(false);
-  const location = useLocation();
-  const isIdentity = location.pathname.startsWith('/identity');
-
-  const navLinks = isIdentity
-    ? [
-        { label: "Identity Home", href: "/identity" },
-        { label: "Formation",     href: "/#architecture" },
-        { label: "Rule of Life",  href: "/#rule" },
-      ]
-    : [
-        { label: "Formation",    href: "/#architecture" },
-        { label: "Rule of Life", href: "/#rule" },
-      ];
-
-  return (
-    <>
-      <nav className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[100] w-[94%] max-w-5xl px-4 py-3 md:px-5 md:py-4 backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center justify-between"
-        style={{ backgroundColor: `${C.heroBg}cc` }}>
-        <a href="/" className="flex items-center gap-2 md:gap-3">
-          <img src="/helmet.png" className="w-8 h-8 md:w-10 md:h-10 object-contain flex-shrink-0" alt="Counter Formation" />
-          <span className="font-brand text-[11px] md:text-sm tracking-[0.2em] md:tracking-[0.28em] uppercase whitespace-nowrap text-[#FAF8F5]">
-            Counter Formation
-          </span>
-        </a>
-        <div className="flex items-center gap-4">
-          <div className="hidden md:flex gap-8 mr-4 text-[10px] uppercase tracking-widest font-brand font-bold">
-            {navLinks.map(l => (
-              <a key={l.label} href={l.href}
-                className="text-[#FAF8F5] hover:text-[#C9A84C] transition-colors"
-                style={{ paddingTop: "10px", paddingBottom: "10px", display: "inline-flex", alignItems: "center" }}>
-                {l.label}
-              </a>
-            ))}
-          </div>
-          <a href="/#shop"
-            className="px-5 py-2 rounded-full border border-[#C9A84C]/40 text-[#C9A84C] hover:bg-[#C9A84C] hover:text-black transition-all text-[9px] md:text-[10px] hidden md:block uppercase tracking-widest font-bold">
-            Shop the Gear
-          </a>
-          <button onClick={() => setMenuOpen(v => !v)} className="md:hidden p-1 text-[#FAF8F5]" aria-label="Toggle menu">
-            <Menu size={20} />
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile menu */}
-      <div className={`fixed inset-0 z-[120] flex flex-col items-center justify-center overflow-y-auto transition-transform duration-500 md:hidden ${menuOpen ? "translate-y-0" : "-translate-y-full"}`}
-        style={{ backgroundColor: C.heroBg }}>
-        <button onClick={() => setMenuOpen(false)} className="absolute top-6 right-6 text-[#FAF8F5]" aria-label="Close menu">
-          ✕
-        </button>
-        <div className="flex flex-col items-center gap-10 py-16">
-          {navLinks.map(l => (
-            <a key={l.label} href={l.href} onClick={() => setMenuOpen(false)}
-              className="font-brand text-2xl uppercase tracking-widest text-[#FAF8F5] hover:text-[#C9A84C] transition-colors">
-              {l.label}
-            </a>
-          ))}
-          <a href="/#shop" onClick={() => setMenuOpen(false)}
-            className="mt-4 px-8 py-3 rounded-full border border-[#C9A84C]/40 text-[#C9A84C] uppercase tracking-widest font-bold text-sm">
-            Shop the Gear
-          </a>
-          {isIdentity && (
-            <div className="flex flex-col items-center gap-4 mt-6 pt-6" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-              <span className="text-[9px] tracking-[0.4em] uppercase" style={{ color: "rgba(201,168,76,0.4)" }}>
-                The Six Pieces
-              </span>
-              {Object.entries(ARMOR_PIECE_TITLES).map(([slug, title]) => (
-                <Link
-                  key={slug}
-                  to={`/identity/${slug}`}
-                  onClick={() => setMenuOpen(false)}
-                  className="text-sm uppercase tracking-widest transition-colors"
-                  style={{
-                    color: location.pathname === `/identity/${slug}` ? "#C9A84C" : "rgba(250,248,245,0.4)",
-                    textDecoration: "none",
-                  }}
-                >
-                  {title}
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </>
-  );
-}
 
 const LANDING_SECTIONS = [
   { id: "hero",       label: "The Identity Pillar" },
@@ -2749,7 +2655,6 @@ export function IdentityLanding() {
   return (
     <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: C.heroBg }}>
       <SectionProgressNav />
-      <SiteNav />
       <HeroSection />
       <ArmorIntroSection />
       <GodsArmorSection />
@@ -3376,10 +3281,6 @@ export function ArmorPiecePage() {
 
       </div>
 
-      <footer className="ap-footer">
-        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
-        <p>Counter Formation · Armor of God · Ephesians 6:10–18 · © 2026</p>
-      </footer>
     </div>
     </>
   );

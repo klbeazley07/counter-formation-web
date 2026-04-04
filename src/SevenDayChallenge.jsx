@@ -302,20 +302,8 @@ export function ChallengeStyles() {
       .cf7-wrap * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
       .cf7-wrap { font-family: 'Barlow Condensed', sans-serif; background: #06050A; color: #FAF8F5; min-height: 100svh; overflow-x: hidden; }
 
-      /* Corner nav */
-      .cf7-corner-nav {
-        position: fixed; top: 1rem; left: 50%; transform: translateX(-50%);
-        z-index: 200; display: flex; align-items: center; gap: 10px;
-        padding: 10px 20px 10px 14px; border-radius: 999px;
-        background: rgba(14,12,10,0.85); backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.08);
-        text-decoration: none; transition: border-color .25s;
-      }
-      .cf7-corner-nav:hover { border-color: rgba(201,168,76,0.35); }
       .cf7-shield-mark { position: fixed; top: 1.25rem; left: 1.5rem; z-index: 200; width: 192px; height: 192px; opacity: 0.32; pointer-events: none; }
       @media (max-width: 640px) { .cf7-shield-mark { width: 100px; height: 100px; top: 0.5rem; left: 0.5rem; } }
-      .cf7-corner-nav img  { width: 28px; height: 28px; object-fit: contain; filter: invert(1) brightness(1.1); }
-      .cf7-corner-nav span { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: rgba(250,248,245,0.55); font-weight: 600; white-space: nowrap; }
 
       /* Progress bar */
       .cf7-prog-bar  { position: sticky; top: 0; z-index: 190; height: 2px; background: rgba(255,255,255,0.05); }
@@ -583,10 +571,6 @@ export function ChallengeStyles() {
       .cf7-next-step-cta { display: inline-flex; margin-top: 1rem; align-items: center; gap: 8px; text-decoration: none; color: #0A0A0A; background: #C9A84C; border: 1px solid #C9A84C; border-radius: 999px; padding: 12px 18px; font-size: 9px; letter-spacing: .24em; text-transform: uppercase; font-weight: 700; }
       .cf7-next-step-cta:hover { background: #FAF8F5; border-color: #FAF8F5; }
 
-      /* Footer */
-      .cf7-footer     { background: #06050A; border-top: 1px solid rgba(255,255,255,0.05); padding: 28px 1.5rem; text-align: center; }
-      .cf7-footer img { width: 24px; height: 24px; opacity: .2; filter: invert(1); display: block; margin: 0 auto .75rem; }
-      .cf7-footer p   { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
 
       /* Reading progress bar */
       .cf7-rbar  { position: sticky; top: 0; z-index: 100; height: 2px; background: rgba(255,255,255,0.05); }
@@ -617,15 +601,6 @@ function CornerNav() {
         onError={e => { e.target.style.display = "none"; }}
         alt=""
       />
-      <Link to="/" className="cf7-corner-nav">
-        <img
-          src="/helmet.png"
-          onError={e => { e.target.style.display = "none"; }}
-          alt="Counter Formation"
-          style={{ filter: "brightness(0) invert(1)" }}
-        />
-        <span>Counter Formation</span>
-      </Link>
     </>
   );
 }
@@ -865,10 +840,6 @@ export function CFLanding() {
         </div>
       </section>
 
-      <footer className="cf7-footer">
-        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
-        <p>Counter Formation · Formed in Christ · Ephesians 6:10–18 · © 2026</p>
-      </footer>
     </div>
   );
 }
@@ -1128,10 +1099,6 @@ export function CFDevotion() {
         </div>
       </div>
 
-      <footer className="cf7-footer">
-        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
-        <p>Counter Formation · Formed in Christ · Ephesians 6:10–18 · © 2026</p>
-      </footer>
     </div>
   );
 }
