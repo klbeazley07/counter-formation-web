@@ -1918,6 +1918,15 @@ function ArmorRingSection() {
           from { transform: translate(0.5px, -0.8px); }
           to   { transform: translate(-0.5px, 0.8px); }
         }
+        @media (max-width: 767px) {
+          .armor-ring-tile {
+            width: 100vw !important;
+            min-height: 80svh !important;
+            border-radius: 0 !important;
+            margin-left: -20px !important;
+            align-self: stretch !important;
+          }
+        }
       `}</style>
 
       <div className="max-w-[1200px] mx-auto">
@@ -1937,7 +1946,7 @@ function ArmorRingSection() {
 
           {/* LEFT: Ring column with atmospheric image */}
           <div
-            className="relative flex-shrink-0 flex items-center justify-center"
+            className="armor-ring-tile relative flex-shrink-0 flex items-center justify-center"
             style={{
               width: "clamp(280px, 42vw, 520px)",
               minHeight: "clamp(280px, 42vw, 520px)",
@@ -1974,8 +1983,8 @@ function ArmorRingSection() {
               ref={ringRef}
               style={{
                 position: "relative",
-                width: "clamp(240px, 36vw, 460px)",
-                height: "clamp(240px, 36vw, 460px)",
+                width: "clamp(300px, 70vw, 460px)",
+                height: "clamp(300px, 70vw, 460px)",
                 zIndex: 2,
               }}
             >
@@ -2040,7 +2049,7 @@ function ArmorRingSection() {
                 {piece ? (
                   <span style={{
                     fontFamily: "'Michroma', sans-serif",
-                    fontSize: "clamp(9px, 1.6vw, 20px)",
+                    fontSize: "clamp(16px, 1.6vw, 20px)",
                     color: C.gold,
                     textTransform: "uppercase",
                     letterSpacing: "0.08em",
@@ -2054,7 +2063,7 @@ function ArmorRingSection() {
                       src="/shield-white.png"
                       alt=""
                       style={{
-                        width: "clamp(40px, 6vw, 80px)", height: "auto",
+                        width: "clamp(72px, 6vw, 80px)", height: "auto",
                         objectFit: "contain", opacity: 0.55,
                         marginBottom: "0.5rem",
                       }}
@@ -2062,7 +2071,7 @@ function ArmorRingSection() {
                     <span style={{
                       fontFamily: "'Cormorant Garamond', serif",
                       fontStyle: "italic",
-                      fontSize: "clamp(10px, 1.8vw, 22px)",
+                      fontSize: "clamp(18px, 1.8vw, 22px)",
                       color: C.gold,
                       opacity: 0.6,
                     }}>
@@ -2110,7 +2119,7 @@ function ArmorRingSection() {
                       src={p.icon}
                       alt={p.title}
                       style={{
-                        width: "clamp(64px, 9vw, 130px)", height: "auto",
+                        width: "clamp(88px, 9vw, 130px)", height: "auto",
                         objectFit: "contain",
                         opacity: isActive ? 1 : 0.65,
                         filter: isActive ? `drop-shadow(0 0 8px ${C.gold}88)` : "none",
