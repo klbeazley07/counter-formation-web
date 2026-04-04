@@ -319,9 +319,9 @@ function CinematicHero() {
         </div>
       </div>
 
-      {/* Shop ticker — anchored to hero bottom */}
-      <a href="#shop" className="absolute bottom-0 left-0 right-0 z-20 overflow-hidden"
-        style={{ borderTop: "1px solid rgba(201,168,76,0.12)" }}
+      {/* Shop ticker — anchored to hero bottom, above iPhone browser chrome */}
+      <a href="#shop" className="absolute left-0 right-0 z-20 overflow-hidden"
+        style={{ borderTop: "1px solid rgba(201,168,76,0.12)", bottom: "env(safe-area-inset-bottom, 0px)" }}
         aria-label="Shop the Gear">
         <div className="hero-ticker-track py-[10px]">
           {Array.from({ length: 8 }).map((_, i) => (
