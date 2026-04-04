@@ -333,17 +333,6 @@ function CinematicHero() {
 
 /* ─── RULE OF LIFE ────────────────────────────────────────────────── */
 
-function CarouselDots({ count, activeIndex }) {
-  return (
-    <div className="flex justify-center gap-2 mt-6 md:hidden">
-      {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="w-1.5 h-1.5 rounded-full transition-all duration-300"
-          style={{ backgroundColor: i === activeIndex ? '#C9A84C' : 'rgba(255,255,255,0.2)' }} />
-      ))}
-    </div>
-  );
-}
-
 function RuleOfLifeSection() {
   const rhythms = [
     { title: "Presence",  desc: "Attention before God",    slug: "presence",  bg: "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=600", summary: "Learning to abide in Christ so deeply that His presence overflows from your life into everything you touch." },
@@ -353,34 +342,14 @@ function RuleOfLifeSection() {
     { title: "Community", desc: "Formation together",       slug: "community", bg: "/Community_8k.png",                                                         summary: "You cannot be formed alone. The practices that change your life require people who will hold you to them." },
   ];
 
-  const [activeRhythm, setActiveRhythm] = useState(0);
   const carouselRef = useRef(null);
 
-  useEffect(() => {
-    if (window.innerWidth >= 768) return;
-    const cards = carouselRef.current?.children;
-    if (!cards) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const idx = Array.from(cards).indexOf(entry.target);
-            if (idx >= 0) setActiveRhythm(idx);
-          }
-        });
-      },
-      { root: carouselRef.current, threshold: 0.6 }
-    );
-    Array.from(cards).forEach(card => observer.observe(card));
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section id="rule" className="py-24 md:py-48 px-4 md:px-6 relative overflow-hidden"
+    <section id="rule" className="md:py-48 md:px-6 relative overflow-hidden"
       style={{ backgroundColor: C.ruleBg }}>
       <div className="section-bg-parallax section-glow absolute inset-0 pointer-events-none" />
-      <div className="max-w-7xl mx-auto relative z-10 lg:px-4 xl:px-8">
-        <div className="mb-16 md:mb-32 flex flex-col md:flex-row items-start md:items-end justify-between gap-8 md:gap-12">
+      <div className="hidden md:block max-w-7xl mx-auto relative z-10 lg:px-4 xl:px-8">
+        <div className="mb-32 flex flex-col md:flex-row items-start md:items-end justify-between gap-8 md:gap-12">
           <div className="space-y-4 md:space-y-6">
             <span className="text-[11px] md:text-[10px] text-[#C9A84C] tracking-[0.4em] md:tracking-[0.5em] uppercase font-bold">The Pattern</span>
             <h2 className="font-brand text-3xl md:text-7xl uppercase tracking-[0.1em] md:tracking-[0.12em] text-white leading-none">
@@ -391,43 +360,50 @@ function RuleOfLifeSection() {
             A set of practices and relational commitments that help us be with Jesus, become like Jesus, and do what Jesus did.
           </p>
         </div>
-
-        <div ref={carouselRef} className="rhythm-carousel">
-          {rhythms.map((r, i) => (
-            <Link key={r.title}
-              to={`/rule-of-life/${r.slug}`}
-              className="manifesto-item rhythm-card group relative overflow-hidden rounded-2xl md:rounded-none cursor-pointer"
-              style={{ minHeight: "320px", textDecoration: "none", display: "flex", flexDirection: "column" }}>
-              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C9A84C]/50 to-transparent z-10" />
-              <div className="rhythm-img-wrap absolute inset-0 z-0 opacity-35 group-hover:opacity-60 transition-opacity duration-700">
-                <SafeImg src={r.bg} alt=""
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+      </div>
+      {/* NOTE: GSAP ScrollTrigger animations targeting .rhythm-img-wrap use window scroll
+          and won't fire inside this snap container on mobile. Acceptable tradeoff. */}
+      <div ref={carouselRef} className="rhythm-carousel">
+        {rhythms.map((r, i) => (
+          <Link key={r.title}
+            to={`/rule-of-life/${r.slug}`}
+            className="manifesto-item rhythm-card group relative overflow-hidden rounded-2xl md:rounded-none cursor-pointer"
+            style={{ minHeight: "320px", textDecoration: "none", display: "flex", flexDirection: "column" }}>
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C9A84C]/50 to-transparent z-10" />
+            <div className="rhythm-img-wrap absolute inset-0 z-0 opacity-35 group-hover:opacity-60 transition-opacity duration-700">
+              <SafeImg src={r.bg} alt=""
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+            </div>
+            <div className="absolute inset-0 z-0"
+              style={{ background: `linear-gradient(to top,${C.ruleBg},${C.ruleBg}88 55%,${C.ruleBg}26)` }} />
+            <div className="rhythm-card-content relative z-10 p-6 md:p-8 flex flex-col" style={{ flex: 1 }}>
+              <div className="space-y-3">
+                <span className="block font-mono text-[11px] text-[#C9A84C]/70 tracking-[0.3em] group-hover:text-[#C9A84C] transition-colors">
+                  RHYTHM 0{i + 1}
+                </span>
+                <h3 className="font-brand uppercase tracking-[0.1em] text-white">{r.title}</h3>
               </div>
-              <div className="absolute inset-0 z-0"
-                style={{ background: `linear-gradient(to top,${C.ruleBg},${C.ruleBg}88 55%,${C.ruleBg}26)` }} />
-              <div className="relative z-10 p-6 md:p-8 flex flex-col" style={{ flex: 1 }}>
-                <div className="space-y-3">
-                  <span className="block font-mono text-[11px] text-[#C9A84C]/70 tracking-[0.3em] group-hover:text-[#C9A84C] transition-colors">
-                    RHYTHM 0{i + 1}
-                  </span>
-                  <h3 className="font-brand text-base md:text-xl uppercase tracking-[0.1em] text-white">{r.title}</h3>
-                </div>
-                <div className="mt-auto relative">
-                  <p className="text-[12px] md:text-xs opacity-60 tracking-wide leading-[1.65] font-light">{r.desc}</p>
-                  <p className="text-[12px] md:text-[13px] leading-[1.65] px-0 mt-2
-                    font-['Cormorant_Garamond'] italic text-[#FAF8F5]
-                    md:absolute md:top-full md:left-0 md:right-0
-                    md:opacity-0 md:translate-y-2 md:group-hover:opacity-85 md:group-hover:translate-y-0
-                    opacity-45 translate-y-0
-                    transition-all duration-300 ease-out">
-                    {r.summary}
-                  </p>
-                </div>
+              <div className="mt-auto relative">
+                <p className="hidden md:block text-[12px] md:text-xs opacity-60 tracking-wide leading-[1.65] font-light">{r.desc}</p>
+                <p className="text-[12px] md:text-[13px] leading-[1.65] px-0 mt-2
+                  font-['Cormorant_Garamond'] italic text-[#FAF8F5]
+                  md:absolute md:top-full md:left-0 md:right-0
+                  md:opacity-0 md:translate-y-2 md:group-hover:opacity-85 md:group-hover:translate-y-0
+                  opacity-75 translate-y-0
+                  transition-all duration-300 ease-out">
+                  {r.summary}
+                </p>
               </div>
-            </Link>
-          ))}
-        </div>
-        <CarouselDots count={5} activeIndex={activeRhythm} />
+            </div>
+            {i < rhythms.length - 1 && (
+              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 md:hidden opacity-40 animate-bounce z-20">
+                <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
+                  <path d="M1 1L10 10L19 1" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              </div>
+            )}
+          </Link>
+        ))}
       </div>
     </section>
   );
