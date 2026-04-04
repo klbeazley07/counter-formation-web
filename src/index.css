@@ -512,7 +512,8 @@ input[type="email"] {
     gap: 12px;
   }
   .rhythm-card h3 {
-    font-size: clamp(36px, 10vw, 52px);
+    font-size: clamp(28px, 8vw, 44px);
+    word-break: break-word;
   }
   .rhythm-card.manifesto-item {
     opacity: 1 !important;
