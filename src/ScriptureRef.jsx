@@ -31,7 +31,12 @@ const BOOK_ABBR = {
 
 // Handles: "Ephesians 6:14", "1 John 3:1", "Psalm 139:23-24"
 function parseReference(reference) {
-  const match = reference.match(/^(\d\s+)?([A-Za-z ]+?)\s+(\d+):(\d+(?:-\d+)?)$/);
+  // Matches "Book Chapter:Verse" and "Book Chapter:Verse-Verse"
+  const withVerse = reference.match(/^(\d\s+)?([A-Za-z ]+?)\s+(\d+):\d+(?:[–\-]\d+)?$/);
+  // Matches "Book Chapter" (no verse)
+  const chapterOnly = reference.match(/^(\d\s+)?([A-Za-z ]+?)\s+(\d+)$/);
+
+  const match = withVerse || chapterOnly;
   if (!match) return null;
 
   const prefix   = match[1] ? match[1].trim() : "";
