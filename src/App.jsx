@@ -346,7 +346,7 @@ function RuleOfLifeSection() {
   const carouselRef = useRef(null);
 
   return (
-    <section id="rule" className="md:py-48 md:px-6 relative md:overflow-hidden"
+    <section id="rule" className="md:py-48 md:px-6 relative md:overflow-hidden overflow-hidden"
       style={{ backgroundColor: C.ruleBg }}>
       <div className="section-bg-parallax section-glow absolute inset-0 pointer-events-none" />
       <div className="hidden md:block max-w-7xl mx-auto relative z-10 lg:px-4 xl:px-8">
@@ -366,6 +366,71 @@ function RuleOfLifeSection() {
     use window scroll and won't fire inside this snap container on mobile.
     The mobile CSS below ensures cards are visible by default (opacity/transform reset). */}
       <div ref={carouselRef} className="rhythm-carousel">
+
+        {/* Mobile-only intro slide — slide 0 */}
+        <div className="rhythm-intro-slide md:hidden">
+          <div className="absolute inset-0 z-0"
+            style={{ background: `linear-gradient(to top,${C.ruleBg} 40%,${C.ruleBg}99 70%,${C.ruleBg}55)` }} />
+          <div className="relative z-10">
+            <span style={{
+              display: "block",
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: "11px",
+              fontWeight: 700,
+              letterSpacing: "0.5em",
+              textTransform: "uppercase",
+              color: C.gold,
+              marginBottom: "16px",
+            }}>The Pattern</span>
+            <h2 style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: "clamp(52px, 14vw, 80px)",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              color: "#FAF8F5",
+              lineHeight: 1,
+              marginBottom: "20px",
+            }}>Rule of Life</h2>
+            <p style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontStyle: "italic",
+              fontSize: "16px",
+              lineHeight: 1.65,
+              color: "rgba(250,248,245,0.65)",
+              marginBottom: "32px",
+              maxWidth: "300px",
+            }}>
+              A set of practices and relational commitments that help us be with Jesus, become like Jesus, and do what Jesus did.
+            </p>
+            <div style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "10px 20px",
+              border: `1px solid ${C.gold}55`,
+              borderRadius: "999px",
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: "11px",
+              fontWeight: 700,
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: C.gold,
+            }}>
+              Swipe to Explore
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                <path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          {/* Swipe indicator */}
+          <div className="absolute bottom-10 right-8 md:hidden opacity-40 animate-bounce">
+            <svg width="12" height="20" viewBox="0 0 12 20" fill="none">
+              <path d="M1 1L10 10L1 19" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </div>
+        </div>
+
         {rhythms.map((r, i) => (
           <Link key={r.title}
             to={`/rule-of-life/${r.slug}`}
@@ -377,10 +442,10 @@ function RuleOfLifeSection() {
                 className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
             </div>
             <div className="absolute inset-0 z-0"
-              style={{ background: `linear-gradient(to top,${C.ruleBg},${C.ruleBg}88 55%,${C.ruleBg}26)` }} />
+              style={{ background: `linear-gradient(to top,${C.ruleBg} 35%,${C.ruleBg}77 60%,transparent)` }} />
             <div className="rhythm-card-content relative z-10 p-6 md:p-8 flex flex-col" style={{ flex: 1 }}>
               <div className="space-y-3">
-                <span className="block font-mono text-[11px] text-[#C9A84C]/70 tracking-[0.3em] group-hover:text-[#C9A84C] transition-colors">
+                <span className="block font-mono text-[13px] md:text-[11px] text-[#C9A84C]/70 tracking-[0.3em] group-hover:text-[#C9A84C] transition-colors">
                   RHYTHM 0{i + 1}
                 </span>
                 <h3 className="font-brand uppercase tracking-[0.1em] text-white">{r.title}</h3>
@@ -395,12 +460,31 @@ function RuleOfLifeSection() {
                   transition-all duration-300 ease-out">
                   {r.summary}
                 </p>
+                {/* Mobile tap CTA */}
+                <div className="md:hidden mt-4 inline-flex items-center gap-2"
+                  style={{
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontSize: "11px",
+                    fontWeight: 700,
+                    letterSpacing: "0.22em",
+                    textTransform: "uppercase",
+                    color: C.gold,
+                    padding: "8px 16px",
+                    border: `1px solid ${C.gold}44`,
+                    borderRadius: "999px",
+                  }}>
+                  Explore
+                  <svg width="12" height="9" viewBox="0 0 12 9" fill="none">
+                    <path d="M1 4.5h10M6.5 1l4 3.5-4 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
               </div>
             </div>
+            {/* Right-pointing swipe indicator */}
             {i < rhythms.length - 1 && (
-              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 md:hidden opacity-40 animate-bounce z-20">
-                <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
-                  <path d="M1 1L10 10L19 1" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" />
+              <div className="absolute bottom-10 right-8 md:hidden opacity-40 animate-bounce z-20">
+                <svg width="12" height="20" viewBox="0 0 12 20" fill="none">
+                  <path d="M1 1L10 10L1 19" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
               </div>
             )}

@@ -457,13 +457,14 @@ input[type="email"] {
   .fg-meta-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* Rhythm cards — mobile: full-viewport vertical snap */
+/* Rhythm cards — mobile: full-viewport horizontal snap */
 .rhythm-carousel {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   height: 100svh;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
@@ -500,14 +501,15 @@ input[type="email"] {
     min-height: unset;
   }
   .rhythm-img-wrap {
-    opacity: 0.55 !important;
+    opacity: 0.70 !important;
   }
   .rhythm-card-content {
     justify-content: flex-end !important;
-    padding: 0 28px 56px !important;
+    padding: 0 28px 96px !important;
     height: 100%;
     display: flex;
     flex-direction: column;
+    gap: 12px;
   }
   .rhythm-card h3 {
     font-size: clamp(36px, 10vw, 52px);
@@ -516,10 +518,26 @@ input[type="email"] {
     opacity: 1 !important;
     transform: none !important;
   }
+  /* Intro slide */
+  .rhythm-intro-slide {
+    flex: none;
+    width: 100vw;
+    height: 100svh;
+    scroll-snap-align: start;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 28px 96px;
+  }
 }
 @media (min-width: 768px) {
   .rhythm-card h3 {
     font-size: 1.25rem;
+  }
+  .rhythm-intro-slide {
+    display: none;
   }
 }
 
