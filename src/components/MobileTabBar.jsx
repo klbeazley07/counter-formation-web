@@ -5,7 +5,7 @@ const C = { gold: "#C9A84C", ivory: "#FAF8F5" };
 
 const TABS = [
   { key: "home",      label: "Home",       path: "/",          icon: "home" },
-  { key: "formation", label: "Formation",   path: "/identity",  icon: "formation" },
+  { key: "formation", label: "Formation",   path: "https://counterformed.com/#architecture", icon: "formation" },
   { key: "identity",  label: "Rule of Life", path: "/#rule",    icon: "identity" },
   { key: "gear",      label: "Gear",        path: "/#shop",     icon: "gear" },
   { key: "more",      label: "More",        path: null,         icon: "more" },
@@ -31,10 +31,10 @@ function TabIcon({ name, active }) {
 }
 
 function getActiveTab(pathname, hash) {
-  if (pathname.startsWith("/identity")) return "formation";
   if (pathname === "/" && hash === "#shop") return "gear";
   if (pathname === "/" && hash === "#rule") return "identity";
   if (pathname === "/") return "home";
+  if (pathname.startsWith("/identity")) return "identity";
   if (pathname.startsWith("/rule-of-life")) return "identity";
   if (pathname.startsWith("/7-day-challenge")) return "more";
   if (pathname.startsWith("/field-guide")) return "more";
@@ -94,6 +94,12 @@ export function MobileTabBar() {
     if (tab.key === "home") {
       navigate("/");
       window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    // Absolute external URL
+    if (tab.path.startsWith("http")) {
+      window.location.href = tab.path;
       return;
     }
 
