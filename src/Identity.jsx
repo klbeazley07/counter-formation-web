@@ -2364,8 +2364,6 @@ function GearBridgeBlock() {
 
 function CTASection() {
   const sectionRef = useRef(null);
-  const primaryBtnRef = useRef(null);
-  const secondaryBtnRef = useRef(null);
   const scriptureRef = useRef(null);
 
   useEffect(() => {
@@ -2373,28 +2371,11 @@ function CTASection() {
     if (prefersReduced) return;
 
     const ctx = gsap.context(() => {
-      // --- Primary button entrance ---
-      if (primaryBtnRef.current) {
-        gsap.fromTo(primaryBtnRef.current,
-          { y: 15, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8, ease: "power2.out",
-            scrollTrigger: { trigger: primaryBtnRef.current, start: "top 85%", toggleActions: "play none none reverse" } });
-      }
-
-      // --- Secondary button: +150ms delay ---
-      if (secondaryBtnRef.current) {
-        gsap.fromTo(secondaryBtnRef.current,
-          { y: 15, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8, ease: "power2.out", delay: 0.15,
-            scrollTrigger: { trigger: primaryBtnRef.current, start: "top 85%", toggleActions: "play none none reverse" } });
-      }
-
-      // --- Closing scripture: +300ms after secondary ---
       if (scriptureRef.current) {
         gsap.fromTo(scriptureRef.current,
           { y: 15, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8, ease: "power2.out", delay: 0.3,
-            scrollTrigger: { trigger: primaryBtnRef.current, start: "top 85%", toggleActions: "play none none reverse" } });
+          { y: 0, opacity: 1, duration: 0.8, ease: "power2.out",
+            scrollTrigger: { trigger: scriptureRef.current, start: "top 85%", toggleActions: "play none none reverse" } });
       }
     }, sectionRef);
     return () => ctx.revert();
@@ -2410,35 +2391,7 @@ function CTASection() {
       <div className="max-w-2xl mx-auto">
 
         <div className="flex flex-col items-center gap-4 mb-20 w-full">
-          <Link
-            ref={primaryBtnRef}
-            to="/identity/belt-of-truth"
-            className="inline-flex items-center justify-center gap-3 px-10 rounded-full font-bold text-[11px] tracking-[0.28em] uppercase transition-all hover:scale-105 w-full sm:w-auto"
-            style={{
-              backgroundColor: C.gold,
-              color: "#0A0A0A",
-              boxShadow: `0 4px 32px ${C.gold}44`,
-              textDecoration: "none",
-              minHeight: "48px",
-            }}
-          >
-            Begin Formation
-            <ArrowRight size={14} />
-          </Link>
-          <a
-            ref={secondaryBtnRef}
-            href={SHOPIFY_URL}
-            className="inline-flex items-center justify-center gap-3 px-10 rounded-full font-bold text-[11px] tracking-[0.28em] uppercase transition-all hover:bg-white/5 w-full sm:w-auto"
-            style={{
-              color: C.gold,
-              border: `1px solid ${C.gold}44`,
-              textDecoration: "none",
-              minHeight: "48px",
-            }}
-          >
-            Explore the Collection
-          </a>
-          <Link to="/7-day-challenge" style={{ color: "rgba(245,242,236,0.5)", fontSize: "0.85rem", textDecoration: "none", display: "block", marginTop: "1.5rem" }}>
+          <Link to="/7-day-challenge" style={{ color: C.gold, fontSize: "0.85rem", textDecoration: "underline", textDecorationColor: `${C.gold}55`, textUnderlineOffset: "4px", display: "block", marginTop: "1.5rem" }}>
             New to Counter Formation? Start with the 7-Day Challenge →
           </Link>
         </div>
