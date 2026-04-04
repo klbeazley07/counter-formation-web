@@ -319,8 +319,31 @@ function CinematicHero() {
         </div>
       </div>
 
+      {/* Shop ticker — anchored to hero bottom */}
+      <a href="#shop" className="absolute bottom-0 left-0 right-0 z-20 overflow-hidden"
+        style={{ borderTop: "1px solid rgba(201,168,76,0.12)" }}
+        aria-label="Shop the Gear">
+        <div className="hero-ticker-track py-[10px]">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span key={i} style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: "10px",
+              fontWeight: 700,
+              letterSpacing: "0.38em",
+              textTransform: "uppercase",
+              color: "rgba(201,168,76,0.55)",
+              paddingRight: "3rem",
+              whiteSpace: "nowrap",
+              flexShrink: 0,
+            }}>
+              Shop the Drop &nbsp;·&nbsp; Limited Release &nbsp;·&nbsp; Formed in Christ
+            </span>
+          ))}
+        </div>
+      </a>
+
       <div ref={scrollIndicatorRef}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0 pointer-events-none z-20">
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0 pointer-events-none z-20">
         <span className="text-[10px] uppercase tracking-[0.35em] text-white/40">Scroll</span>
         <svg width="16" height="10" viewBox="0 0 16 10" fill="none" className="text-white/35">
           <path d="M1 1L8 8L15 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
