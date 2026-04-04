@@ -444,35 +444,60 @@ function RuleOfLifeSection() {
             <div className="absolute inset-0 z-0"
               style={{ background: `linear-gradient(to top,${C.ruleBg} 35%,${C.ruleBg}77 60%,transparent)` }} />
             <div className="rhythm-card-content relative z-10 p-6 md:p-8 flex flex-col" style={{ flex: 1 }}>
-              <div className="space-y-3">
-                <span className="block font-mono text-[13px] md:text-[11px] text-[#C9A84C]/70 tracking-[0.3em] group-hover:text-[#C9A84C] transition-colors">
+              {/* Desktop: eyebrow + title at top */}
+              <div className="space-y-3 md:block hidden">
+                <span className="block font-mono text-[11px] text-[#C9A84C]/70 tracking-[0.3em] group-hover:text-[#C9A84C] transition-colors">
                   RHYTHM 0{i + 1}
                 </span>
                 <h3 className="font-brand uppercase tracking-[0.1em] text-white">{r.title}</h3>
               </div>
-              <div className="mt-auto relative">
-                <p className="hidden md:block text-[12px] md:text-xs opacity-60 tracking-wide leading-[1.65] font-light">{r.desc}</p>
-                <p className="text-[12px] md:text-[13px] leading-[1.65] px-0 mt-2
+
+              {/* Desktop: desc + summary at bottom */}
+              <div className="mt-auto relative hidden md:block">
+                <p className="text-[12px] md:text-xs opacity-60 tracking-wide leading-[1.65] font-light">{r.desc}</p>
+                <p className="text-[13px] leading-[1.65] px-0 mt-2
                   font-['Cormorant_Garamond'] italic text-[#FAF8F5]
                   md:absolute md:top-full md:left-0 md:right-0
                   md:opacity-0 md:translate-y-2 md:group-hover:opacity-85 md:group-hover:translate-y-0
-                  opacity-75 translate-y-0
                   transition-all duration-300 ease-out">
                   {r.summary}
                 </p>
-                {/* Mobile tap CTA */}
-                <div className="md:hidden mt-4 inline-flex items-center gap-2"
-                  style={{
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontSize: "11px",
-                    fontWeight: 700,
-                    letterSpacing: "0.22em",
-                    textTransform: "uppercase",
-                    color: C.gold,
-                    padding: "8px 16px",
-                    border: `1px solid ${C.gold}44`,
-                    borderRadius: "999px",
-                  }}>
+              </div>
+
+              {/* Mobile: everything in one bottom-anchored group */}
+              <div className="mt-auto md:hidden flex flex-col gap-3">
+                <span style={{
+                  fontFamily: "'Barlow Condensed', sans-serif",
+                  fontSize: "13px",
+                  fontWeight: 700,
+                  letterSpacing: "0.3em",
+                  textTransform: "uppercase",
+                  color: "rgba(201,168,76,0.8)",
+                }}>RHYTHM 0{i + 1}</span>
+                <h3 className="font-brand uppercase tracking-[0.1em] text-white">{r.title}</h3>
+                <p style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontStyle: "italic",
+                  fontSize: "clamp(17px, 4.5vw, 22px)",
+                  lineHeight: 1.55,
+                  color: "rgba(250,248,245,0.80)",
+                }}>{r.summary}</p>
+                <div style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "9px 18px",
+                  border: `1px solid ${C.gold}44`,
+                  borderRadius: "999px",
+                  fontFamily: "'Barlow Condensed', sans-serif",
+                  fontSize: "11px",
+                  fontWeight: 700,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  color: C.gold,
+                  alignSelf: "flex-start",
+                  marginTop: "4px",
+                }}>
                   Explore
                   <svg width="12" height="9" viewBox="0 0 12 9" fill="none">
                     <path d="M1 4.5h10M6.5 1l4 3.5-4 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
