@@ -2023,7 +2023,7 @@ function ArmorRingSection() {
                       src="/shield-white.png"
                       alt=""
                       style={{
-                        width: "clamp(52px, 5vw, 68px)", height: "auto",
+                        width: "clamp(156px, 15vw, 204px)", height: "auto",
                         objectFit: "contain", opacity: 0.55,
                         display: "block", margin: "0 auto 0.75rem",
                       }}
