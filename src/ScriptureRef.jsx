@@ -152,16 +152,18 @@ function ScripturePopover({ reference, text, translation, triggerRef, onClose, o
       </div>
 
       {/* Verse text */}
-      <p style={{
-        fontFamily:  "'Cormorant Garamond', Georgia, serif",
-        fontStyle:   "italic",
-        fontSize:    18,
-        lineHeight:  1.75,
-        color:       "#FAF8F5",
-        margin:      "0 0 16px 0",
-      }}>
-        {text}
-      </p>
+      {text && (
+        <p style={{
+          fontFamily:  "'Cormorant Garamond', Georgia, serif",
+          fontStyle:   "italic",
+          fontSize:    18,
+          lineHeight:  1.75,
+          color:       "#FAF8F5",
+          margin:      "0 0 16px 0",
+        }}>
+          {text}
+        </p>
+      )}
 
       {/* Divider */}
       <div style={{

@@ -1,5 +1,6 @@
 import React from "react";
 import { ScriptureRef } from "../ScriptureRef";
+import { lookupVerse } from "./verseIndex";
 
 // Matches scripture references like:
 //   "John 1:14", "1 Thessalonians 5:17", "Psalm 139:23–24", "Genesis 2", "1 Corinthians 12"
@@ -27,7 +28,7 @@ export function parseScriptureRefs(text) {
       parts.push(text.slice(lastIndex, start));
     }
 
-    parts.push(<ScriptureRef key={`sr-${start}`} reference={ref} text="" />);
+    parts.push(<ScriptureRef key={`sr-${start}`} reference={ref} text={lookupVerse(ref)} />);
     lastIndex = start + match[0].length;
   }
 
