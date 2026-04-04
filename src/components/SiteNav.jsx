@@ -73,8 +73,8 @@ export function SiteNav() {
 
   return (
     <nav
-      className="hidden md:flex fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-[94%] max-w-5xl px-5 py-4 backdrop-blur-2xl border border-white/10 rounded-2xl items-center justify-between"
-      style={{ backgroundColor: C.bg }}
+      className="hidden md:flex fixed left-1/2 -translate-x-1/2 z-[100] w-[94%] max-w-5xl px-5 py-4 backdrop-blur-2xl border border-white/10 rounded-2xl items-center justify-between"
+      style={{ backgroundColor: C.bg, top: "calc(1.5rem + var(--banner-height, 0px))" }}
     >
         <Link to="/" className="flex items-center gap-2 md:gap-3" style={{ textDecoration: "none" }}>
           <img
