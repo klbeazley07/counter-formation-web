@@ -622,9 +622,6 @@ function FieldGuideSection() {
               Each release opens a deeper layer of scripture, discipline, and daily rhythm designed to shape a different kind of life.
             </p>
           </div>
-          <Link to={FG_BASE} className="self-start md:self-auto text-[11px] md:text-[10px] text-[#C9A84C] border border-white/10 px-6 md:px-8 py-3 hover:bg-white/5 transition-all whitespace-nowrap rounded-full uppercase tracking-[0.22em] font-bold">
-            Explore Archive
-          </Link>
         </div>
 
         <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-10 md:mb-14" />
@@ -696,7 +693,13 @@ function FieldGuideSection() {
           </div>
         </div>
 
-        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/8 to-transparent mb-10 md:mb-14" />
+
+        <div className="flex justify-center">
+          <Link to={FG_BASE} className="text-[11px] md:text-[10px] text-[#C9A84C] border border-white/10 px-8 py-3 hover:bg-white/5 transition-all whitespace-nowrap rounded-full uppercase tracking-[0.22em] font-bold">
+            Explore Archive
+          </Link>
+        </div>
       </div>
     </section>
   );
