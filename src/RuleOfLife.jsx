@@ -767,12 +767,6 @@ export function RuleStyles() {
       .rl-nav-btn.next  { text-align: right; align-items: flex-end; }
 
 
-      .rl-float-trigger { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 190; display: flex; align-items: center; gap: 8px; }
-      .rl-float-btn { display: flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; background: #C9A84C; color: #0A0A0A; font-family: 'Barlow Condensed',sans-serif; font-size: 10px; letter-spacing: .22em; text-transform: uppercase; font-weight: 700; text-decoration: none; white-space: nowrap; box-shadow: 0 4px 32px rgba(201,168,76,0.35); transition: background .25s, transform .25s; }
-      .rl-float-btn:hover { background: #FAF8F5; transform: scale(1.03); }
-      .rl-float-dismiss { width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .2s; }
-      .rl-float-dismiss:hover { background: rgba(255,255,255,0.18); }
-
       @media (min-width: 1024px) {
         .rl-hero-band { min-height: clamp(600px, 78vw, 900px); }
         .rl-hero-in   { max-width: 1100px; padding: 2.5rem 48px 3rem; }
@@ -844,24 +838,6 @@ function CornerNav() {
         alt=""
       />
     </>
-  );
-}
-
-/* ─── FLOATING CHALLENGE TRIGGER ─────────────────────────────────── */
-
-function FloatingChallengeTrigger() {
-  const [dismissed, setDismissed] = useState(false);
-  if (dismissed) return null;
-  return (
-    <div className="rl-float-trigger">
-      <Link to="/7-day-challenge" className="rl-float-btn">
-        Begin the 7-Day Challenge
-        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7 2.5l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
-      </Link>
-      <button className="rl-float-dismiss" onClick={() => setDismissed(true)} aria-label="Dismiss">
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
-      </button>
-    </div>
   );
 }
 
@@ -1080,7 +1056,6 @@ export function RhythmPage() {
       </div>
 
 
-      <FloatingChallengeTrigger />
     </div>
   );
 }
