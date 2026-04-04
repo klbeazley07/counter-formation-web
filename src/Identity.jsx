@@ -2204,127 +2204,155 @@ function ArmorRingSection() {
   );
 }
 
-function BrandSection() {
+function ClosingSection() {
   const sectionRef = useRef(null);
-  const brandLineERef = useRef(null);
+  const pivotRef = useRef(null);
+  const armorUpRef = useRef(null);
+  const ctaRef = useRef(null);
+  const scriptureRef = useRef(null);
 
   useEffect(() => {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const ctx = gsap.context(() => {
-      // --- Prose paragraphs: batch stagger ---
-      gsap.set(".brand-para", { opacity: 0 });
-      ScrollTrigger.batch(".brand-para", {
+      // Prose paragraphs — batch stagger
+      gsap.set(".closing-para", { opacity: 0 });
+      ScrollTrigger.batch(".closing-para", {
         start: "top 88%",
         onEnter: batch => gsap.fromTo(batch,
           { opacity: 0, y: 15 },
           { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power2.out", overwrite: "auto" }),
-        onLeaveBack: batch => gsap.to(batch, { opacity: 0, y: 15, duration: 0.4, overwrite: "auto" }),
+        onLeaveBack: batch => gsap.to(batch,
+          { opacity: 0, y: 15, duration: 0.4, overwrite: "auto" }),
       });
 
-      // --- Brand closing line with gold glow dissipation ---
-      if (brandLineERef.current) {
-        gsap.fromTo(brandLineERef.current,
+      // Gold pivot line — entrance + glow dissipation
+      if (pivotRef.current) {
+        gsap.fromTo(pivotRef.current,
           { opacity: 0, y: 20 },
           { opacity: 1, y: 0, duration: 0.9, ease: "power2.out",
-            scrollTrigger: { trigger: brandLineERef.current, start: "top 88%", toggleActions: "play none none reverse" },
+            scrollTrigger: { trigger: pivotRef.current, start: "top 88%", toggleActions: "play none none reverse" },
             onComplete: () => {
-              gsap.fromTo(brandLineERef.current,
+              gsap.fromTo(pivotRef.current,
                 { textShadow: "0 0 20px rgba(201,168,76,0.4)" },
                 { textShadow: "0 0 0px rgba(201,168,76,0)", duration: 2.0, ease: "power2.out" });
             },
           });
+      }
+
+      // "Armor Up." — scale entrance
+      if (armorUpRef.current) {
+        gsap.fromTo(armorUpRef.current,
+          { opacity: 0, scale: 0.95 },
+          { opacity: 1, scale: 1, duration: 0.9, ease: "power2.out",
+            scrollTrigger: { trigger: armorUpRef.current, start: "top 85%", toggleActions: "play none none reverse" } });
+      }
+
+      // CTAs — stagger
+      if (ctaRef.current) {
+        const buttons = ctaRef.current.querySelectorAll("a, button");
+        gsap.set(buttons, { opacity: 0, y: 12 });
+        gsap.to(buttons, {
+          opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: "power2.out",
+          scrollTrigger: { trigger: ctaRef.current, start: "top 85%", toggleActions: "play none none reverse" },
+        });
+      }
+
+      // Closing scripture + mark
+      if (scriptureRef.current) {
+        gsap.fromTo(scriptureRef.current,
+          { opacity: 0, y: 12 },
+          { opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
+            scrollTrigger: { trigger: scriptureRef.current, start: "top 90%", toggleActions: "play none none reverse" } });
       }
     }, sectionRef);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section id="why" ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: C.ruleBg }}>
-      <div className="max-w-[740px] mx-auto">
+    <section
+      id="why"
+      ref={sectionRef}
+      className="px-5"
+      style={{ backgroundColor: C.ruleBg }}
+    >
+      {/* ── Part 1: Why the Armor (prose) ── */}
+      <div className="max-w-[740px] mx-auto pt-24 md:pt-40">
         <span
-          className="brand-para block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
+          className="closing-para block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
           style={{ color: C.gold }}
         >
           Why the Armor
         </span>
         <div className="space-y-8">
-          <p className="brand-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+          <p className="closing-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
             The armor is not a costume. It is what God has provided for people who are being formed in a system that is actively working against them. Every culture in history has had a comprehensive formation project — a set of values, narratives, and practices designed to shape people into its image. The digital age is no different, except that its reach is total and its pace is unprecedented.
           </p>
-          <p className="brand-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+          <p className="closing-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
             The gear is not the armor. It is a marker — a daily reminder that you belong to a different formation project. The QR code connects to the formation content: the theology, the practice, the community. The garment anchors the identity. The content forms it.
           </p>
-          <p className="brand-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+          <p className="closing-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
             The gear is the entry point. The content is the formation. The practice is the armor. These three move together, or they don't move at all.
           </p>
         </div>
-        <div className="mt-16">
-          <p
-            ref={brandLineERef}
-            className="text-lg md:text-2xl tracking-[0.14em] uppercase font-bold leading-tight"
-            style={{ fontFamily: "'Michroma', sans-serif", color: C.gold }}
-          >
-            "The gear is not the mission. It's a marker of it."
-          </p>
-        </div>
+
+        {/* Gold pivot line */}
+        <p
+          ref={pivotRef}
+          className="mt-16 text-lg md:text-2xl tracking-[0.14em] uppercase font-bold leading-tight"
+          style={{ fontFamily: "'Michroma', sans-serif", color: C.gold }}
+        >
+          "The gear is not the mission. It's a marker of it."
+        </p>
       </div>
-    </section>
-  );
-}
 
-function GearBridgeBlock() {
-  const sectionRef = useRef(null);
+      {/* ── Part 2: Armor Up declaration + CTAs ── */}
+      <div id="collection" className="max-w-[740px] mx-auto text-center pt-20 md:pt-28">
+        {/* Thin gold rule — visual bridge between prose and declaration */}
+        <div
+          className="mx-auto mb-16 md:mb-20"
+          style={{
+            width: "48px",
+            height: "1px",
+            background: `linear-gradient(to right, transparent, ${C.gold}55, transparent)`,
+          }}
+        />
 
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const ctx = gsap.context(() => {
-      gsap.utils.toArray(".gb-fade").forEach(el => {
-        gsap.set(el, { opacity: 0, y: 15 });
-        gsap.to(el, {
-          opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" },
-        });
-      });
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <section
-      id="collection"
-      ref={sectionRef}
-      className="py-24 md:py-40 px-5"
-      style={{ backgroundColor: C.heroBg }}
-    >
-      <div className="max-w-[740px] mx-auto text-center">
-        <p className="gb-fade" style={{
-          fontFamily: "'Cormorant Garamond', serif",
-          fontStyle: "italic",
-          fontSize: "clamp(28px, 5vw, 48px)",
-          color: C.gold,
-          lineHeight: 1.2,
-          marginBottom: "2rem",
-        }}>
+        {/* "Armor Up." campaign mark */}
+        <p
+          ref={armorUpRef}
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontStyle: "italic",
+            fontSize: "clamp(32px, 6vw, 56px)",
+            color: C.gold,
+            lineHeight: 1.2,
+            marginBottom: "1.5rem",
+          }}
+        >
           Armor Up.
         </p>
 
-        <p className="gb-fade" style={{
-          fontSize: "clamp(13px, 2vw, 16px)",
-          color: "rgba(250,248,245,0.4)",
-          lineHeight: 1.8,
-          maxWidth: "520px",
-          margin: "0 auto 2.5rem",
-          letterSpacing: "0.02em",
-        }}>
+        {/* Bridge copy */}
+        <p
+          className="closing-para"
+          style={{
+            fontSize: "clamp(13px, 2vw, 16px)",
+            color: "rgba(250,248,245,0.35)",
+            lineHeight: 1.8,
+            maxWidth: "480px",
+            margin: "0 auto 2.5rem",
+            letterSpacing: "0.02em",
+          }}
+        >
           Three hero pieces. Six formation tracks. Every garment connects to a devotional pathway through the QR code on the back.
         </p>
 
-        <div className="gb-fade flex flex-col sm:flex-row items-center justify-center gap-3">
+        {/* Dual CTAs */}
+        <div ref={ctaRef} className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
           <a
             href="/#shop"
-            className="inline-flex items-center justify-center gap-3 px-8 py-3 rounded-full font-bold text-[10px] tracking-[0.28em] uppercase transition-all hover:scale-105 w-full sm:w-auto"
+            className="inline-flex items-center justify-center gap-3 px-9 py-3 rounded-full font-bold text-[10px] tracking-[0.28em] uppercase transition-all hover:scale-105 w-full sm:w-auto"
             style={{
               fontFamily: "'Barlow Condensed', sans-serif",
               backgroundColor: C.gold,
@@ -2337,7 +2365,7 @@ function GearBridgeBlock() {
           </a>
           <Link
             to="/identity/belt-of-truth"
-            className="inline-flex items-center justify-center gap-3 px-8 py-3 rounded-full font-bold text-[10px] tracking-[0.28em] uppercase transition-all hover:bg-white/5 w-full sm:w-auto"
+            className="inline-flex items-center justify-center gap-3 px-9 py-3 rounded-full font-bold text-[10px] tracking-[0.28em] uppercase transition-all hover:bg-white/5 w-full sm:w-auto"
             style={{
               fontFamily: "'Barlow Condensed', sans-serif",
               color: C.gold,
@@ -2349,80 +2377,70 @@ function GearBridgeBlock() {
           </Link>
         </div>
 
-        <div className="gb-fade mt-16 flex justify-center pointer-events-none">
-          <img
-            src="/shield-white.png"
-            alt=""
-            style={{ height: "48px", filter: "brightness(0) invert(1)", opacity: 0.06 }}
-            onError={e => { e.target.style.display = "none"; }}
-          />
-        </div>
+        {/* 7-Day Challenge soft link */}
+        <Link
+          to="/7-day-challenge"
+          className="closing-para"
+          style={{
+            fontSize: "13px",
+            color: "rgba(250,248,245,0.3)",
+            textDecoration: "none",
+            display: "inline-block",
+            marginBottom: "3rem",
+            transition: "color 0.2s",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.color = "rgba(250,248,245,0.6)"; }}
+          onMouseLeave={e => { e.currentTarget.style.color = "rgba(250,248,245,0.3)"; }}
+        >
+          New to Counter Formation? Start with the 7-Day Challenge →
+        </Link>
       </div>
-    </section>
-  );
-}
 
-function CTASection() {
-  const sectionRef = useRef(null);
-  const scriptureRef = useRef(null);
+      {/* ── Part 3: Closing scripture + brand mark ── */}
+      <div
+        id="begin"
+        ref={scriptureRef}
+        className="max-w-[740px] mx-auto text-center pb-24 md:pb-40"
+      >
+        {/* Thin rule */}
+        <div
+          className="mx-auto mb-12"
+          style={{
+            width: "32px",
+            height: "1px",
+            background: `${C.gold}22`,
+          }}
+        />
 
-  useEffect(() => {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) return;
+        <p
+          className="text-base md:text-lg leading-relaxed mb-3"
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontStyle: "italic",
+            color: `${C.ivory}44`,
+          }}
+        >
+          "Be strong in the Lord and in his mighty power. Put on the full armor of God."
+        </p>
+        <p
+          className="text-[9px] tracking-[0.4em] uppercase mb-12"
+          style={{ color: `${C.ivory}25` }}
+        >
+          Ephesians 6:10–11
+        </p>
 
-    const ctx = gsap.context(() => {
-      if (scriptureRef.current) {
-        gsap.fromTo(scriptureRef.current,
-          { y: 15, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8, ease: "power2.out",
-            scrollTrigger: { trigger: scriptureRef.current, start: "top 85%", toggleActions: "play none none reverse" } });
-      }
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <section
-      id="begin"
-      ref={sectionRef}
-      className="py-24 md:py-48 px-5 text-center"
-      style={{ backgroundColor: C.heroBg }}
-    >
-      <div className="max-w-2xl mx-auto">
-
-        <div className="flex flex-col items-center gap-4 mb-20 w-full">
-          <Link to="/7-day-challenge" style={{ color: C.gold, fontSize: "0.85rem", textDecoration: "underline", textDecorationColor: `${C.gold}55`, textUnderlineOffset: "4px", display: "block", marginTop: "1.5rem" }}>
-            New to Counter Formation? Start with the 7-Day Challenge →
-          </Link>
-        </div>
-
-        <div ref={scriptureRef}>
-          <p
-            className="text-base md:text-xl leading-relaxed mb-3"
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontStyle: "italic",
-              color: `${C.ivory}55`,
-            }}
-          >
-            "Be strong in the Lord and in his mighty power. Put on the full armor of God."
-          </p>
-          <p className="text-[10px] tracking-[0.4em] uppercase" style={{ color: `${C.ivory}33` }}>
-            Ephesians 6:10–11
-          </p>
-        </div>
-
-        <div className="mt-16 flex flex-col items-center gap-4">
-          <img
-            src="/helmet.png"
-            alt=""
-            style={{ height: "44px", filter: "brightness(0) invert(1)", opacity: 0.08 }}
-          />
-          <p className="text-[9px] tracking-[0.4em] uppercase" style={{ color: `${C.ivory}22` }}>
-            Discipline · Presence · Formation
-          </p>
-        </div>
-
+        <img
+          src="/helmet.png"
+          alt=""
+          style={{ height: "36px", filter: "brightness(0) invert(1)", opacity: 0.06, margin: "0 auto 12px", display: "block" }}
+          onError={e => { e.target.style.display = "none"; }}
+        />
+        <p
+          className="text-[8px] tracking-[0.4em] uppercase"
+          style={{ color: `${C.ivory}18` }}
+        >
+          Discipline · Presence · Formation
+        </p>
       </div>
     </section>
   );
@@ -2443,9 +2461,7 @@ const LANDING_SECTIONS = [
   { id: "scripture",  label: "Ephesians 6" },
   { id: "revelation", label: "God's Own Armor" },
   { id: "six-pieces", label: "The Six Pieces" },
-  { id: "why",        label: "Why the Armor" },
-  { id: "collection", label: "The Collection" },
-  { id: "begin",      label: "Begin" },
+  { id: "why",        label: "The Closing" },
 ];
 
 function SectionProgressNav() {
@@ -2612,9 +2628,7 @@ export function IdentityLanding() {
       <ArmorIntroSection />
       <GodsArmorSection />
       <ArmorRingSection />
-      <BrandSection />
-      <GearBridgeBlock />
-      <CTASection />
+      <ClosingSection />
     </div>
   );
 }
