@@ -17,15 +17,15 @@ function TabIcon({ name, active }) {
   const sw = 1.5;
   switch (name) {
     case "home":
-      return (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>);
+      return (<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>);
     case "formation":
-      return (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88"/></svg>);
+      return (<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88"/></svg>);
     case "identity":
-      return (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>);
+      return (<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>);
     case "gear":
-      return (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>);
+      return (<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>);
     case "more":
-      return (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>);
+      return (<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>);
     default: return null;
   }
 }
@@ -172,7 +172,7 @@ export function MobileTabBar() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-around",
-          height: "56px",
+          height: "64px",
         }}>
           {TABS.map(tab => {
             const isActive = tab.key === activeTab || (tab.key === "more" && moreOpen);
@@ -184,12 +184,14 @@ export function MobileTabBar() {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  gap: "3px",
+                  justifyContent: "center",
+                  gap: "4px",
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  padding: "6px 12px",
-                  minWidth: "56px",
+                  padding: "0",
+                  flex: "1",
+                  height: "64px",
                   transition: "all 0.2s",
                 }}
                 aria-label={tab.label}
@@ -197,10 +199,10 @@ export function MobileTabBar() {
                 <TabIcon name={tab.icon} active={isActive} />
                 <span style={{
                   fontFamily: "'Barlow Condensed', sans-serif",
-                  fontSize: "9px",
-                  letterSpacing: "0.12em",
+                  fontSize: "11px",
+                  letterSpacing: "0.18em",
                   textTransform: "uppercase",
-                  color: isActive ? C.gold : "rgba(250,248,245,0.3)",
+                  color: isActive ? C.gold : "rgba(250,248,245,0.38)",
                   fontWeight: isActive ? 700 : 400,
                   transition: "color 0.2s",
                 }}>
@@ -235,7 +237,7 @@ export function MobileTabBar() {
             onTouchEnd={handleSheetTouchEnd}
             style={{
               position: "fixed",
-              bottom: "calc(56px + env(safe-area-inset-bottom, 0px))",
+              bottom: "calc(64px + env(safe-area-inset-bottom, 0px))",
               left: 0,
               right: 0,
               zIndex: 89,

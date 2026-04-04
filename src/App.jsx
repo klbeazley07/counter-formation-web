@@ -992,7 +992,7 @@ function GearSection() {
           .gear-desktop-only { display: none !important; }
           .gear-lookbook { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-left: 0; margin-right: 0; }
           .gear-lookbook::-webkit-scrollbar { display: none; }
-          .gear-slide { flex: 0 0 100vw; width: 100vw; scroll-snap-align: start; scroll-snap-stop: always; position: relative; overflow: hidden; height: calc(100vh - 60px - 56px); height: calc(100svh - 60px - 56px); }
+          .gear-slide { flex: 0 0 100vw; width: 100vw; scroll-snap-align: start; scroll-snap-stop: always; position: relative; overflow: hidden; height: calc(100vh - 60px - 64px); height: calc(100svh - 60px - 64px); }
           .gear-grid-desktop { display: none !important; }
         }
         .gear-pill-enter { animation: gearPillDropIn 0.3s ease forwards; }
@@ -1650,7 +1650,7 @@ export default function App() {
       </Routes>
       <SiteFooter />
       <MobileTabBar />
-      <div className="md:hidden" style={{ height: "calc(56px + env(safe-area-inset-bottom, 0px))" }} />
+      <div className="md:hidden" style={{ height: "calc(64px + env(safe-area-inset-bottom, 0px))" }} />
     </BrowserRouter>
   );
 }
