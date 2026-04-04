@@ -239,7 +239,7 @@ export function FormationShareable({ trackName, dayNumber, scriptureRef, isLastD
       <canvas ref={canvasRef} style={{ display: "none" }} />
 
       {/* ── Label ── */}
-      <p style={{ ...barlow, fontSize: "9px", letterSpacing: ".44em", textTransform: "uppercase", color: "rgba(201,168,76,0.55)", marginBottom: "1.1rem" }}>
+      <p style={{ ...barlow, fontSize: window.innerWidth < 768 ? "11px" : "9px", letterSpacing: ".44em", textTransform: "uppercase", color: "rgba(201,168,76,0.55)", marginBottom: "1.1rem" }}>
         Declare
       </p>
 

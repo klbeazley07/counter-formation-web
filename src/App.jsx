@@ -272,18 +272,18 @@ function CinematicHero() {
           Living Counter to Culture.
         </p>
         <div ref={microcopyRef} className="mt-5 md:mt-6 max-w-sm md:max-w-2xl mx-auto px-1 opacity-0">
-          <p className="text-[11px] md:text-[9px] tracking-[0.28em] uppercase leading-loose font-light text-white/36">
+          <p className="text-[12px] md:text-[9px] tracking-[0.28em] uppercase leading-loose font-light text-white/36">
             Limited drops. Purposeful design. Disciplined faith.
           </p>
         </div>
         {/* Mobile: two compact buttons */}
         <div ref={ctaRef} className="mt-10 md:hidden flex gap-3 justify-center px-6 opacity-0">
           <a ref={pathCard1Ref} href="#architecture"
-            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-white/[0.06] border border-white/[0.12] rounded-xl text-[10px] uppercase tracking-[0.18em] text-white font-bold transition-all duration-300 hover:border-[#C9A84C]/40">
+            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-white/[0.06] border border-white/[0.12] rounded-xl text-[12px] uppercase tracking-[0.18em] text-white font-bold transition-all duration-300 hover:border-[#C9A84C]/40">
             Enter the Formation <ArrowRight size={12} className="opacity-50 shrink-0" />
           </a>
           <a ref={pathCard2Ref} href="#shop"
-            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-white/[0.06] border border-white/[0.12] rounded-xl text-[10px] uppercase tracking-[0.18em] text-white font-bold transition-all duration-300 hover:border-[#C9A84C]/40">
+            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-white/[0.06] border border-white/[0.12] rounded-xl text-[12px] uppercase tracking-[0.18em] text-white font-bold transition-all duration-300 hover:border-[#C9A84C]/40">
             Shop the Gear <ArrowRight size={12} className="opacity-50 shrink-0" />
           </a>
         </div>
@@ -313,7 +313,7 @@ function CinematicHero() {
           </a>
         </div>
         <div ref={scriptureRef}
-          className="mt-8 md:mt-10 text-[0.62rem] uppercase tracking-[0.35em] text-white/25 opacity-0">
+          className="mt-8 md:mt-10 text-[10px] uppercase tracking-[0.35em] text-white/25 opacity-0">
           Ephesians 6:10–18
         </div>
       </div>
@@ -387,7 +387,7 @@ function RuleOfLifeSection() {
               Rule of Life
             </h2>
           </div>
-          <p className="max-w-md text-xs md:text-base opacity-50 leading-relaxed font-light text-left md:text-right">
+          <p className="max-w-md text-xs md:text-base opacity-70 md:opacity-50 leading-relaxed font-light text-left md:text-right">
             A set of practices and relational commitments that help us be with Jesus, become like Jesus, and do what Jesus did.
           </p>
         </div>
@@ -413,8 +413,8 @@ function RuleOfLifeSection() {
                   <h3 className="font-brand text-base md:text-xl uppercase tracking-[0.1em] text-white">{r.title}</h3>
                 </div>
                 <div className="mt-auto relative">
-                  <p className="text-[12px] md:text-xs opacity-60 tracking-wide leading-relaxed font-light">{r.desc}</p>
-                  <p className="text-[12px] md:text-[13px] leading-relaxed px-0 mt-2
+                  <p className="text-[12px] md:text-xs opacity-60 tracking-wide leading-[1.65] font-light">{r.desc}</p>
+                  <p className="text-[12px] md:text-[13px] leading-[1.65] px-0 mt-2
                     font-['Cormorant_Garamond'] italic text-[#FAF8F5]
                     md:absolute md:top-full md:left-0 md:right-0
                     md:opacity-0 md:translate-y-2 md:group-hover:opacity-85 md:group-hover:translate-y-0

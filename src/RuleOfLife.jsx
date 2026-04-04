@@ -385,7 +385,7 @@ function ExamenWalkthrough() {
       </div>
       <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
         {STEPS.map((s, i) => (
-          <button key={i} onClick={() => setStep(i)} style={{ flex: 1, padding: "12px 4px", border: "none", background: step === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: step === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", ...base, fontSize: "8px", letterSpacing: ".18em", textTransform: "uppercase", color: i <= step ? (step === i ? "#C9A84C" : "rgba(201,168,76,0.5)") : "rgba(250,248,245,0.2)", transition: "all .2s" }}>
+          <button key={i} onClick={() => setStep(i)} className="rl-examen-tab" style={{ flex: 1, padding: "12px 4px", border: "none", background: step === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: step === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", ...base, fontSize: "8px", letterSpacing: ".18em", textTransform: "uppercase", color: i <= step ? (step === i ? "#C9A84C" : "rgba(201,168,76,0.5)") : "rgba(250,248,245,0.2)", transition: "all .2s" }}>
             {s.title}
           </button>
         ))}
@@ -818,6 +818,15 @@ export function RuleStyles() {
         .rl-hero-in { max-width: 1320px; padding: 3rem 64px 3.5rem; }
         .rl-content { max-width: 1320px; grid-template-columns: 1fr 380px; column-gap: 80px; padding: 72px 64px 160px; }
         .rl-sidebar { padding-left: 52px; }
+      }
+
+      @media (max-width: 767px) {
+        .rl-sec-label { font-size: 10px; letter-spacing: .3em; }
+        .rl-book-title { font-size: 15px; }
+        .rl-book-author { font-size: 11px; }
+        .rl-book-cta { font-size: 10px; }
+        .rl-nav-btn-dir { font-size: 10px; }
+        .rl-examen-tab { font-size: 10px !important; }
       }
     `}</style>
   );
