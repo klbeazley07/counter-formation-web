@@ -369,8 +369,10 @@ function RuleOfLifeSection() {
 
         {/* Mobile-only intro slide — slide 0 */}
         <div className="rhythm-intro-slide md:hidden">
-          <div className="absolute inset-0 z-0"
-            style={{ background: `linear-gradient(to top,${C.ruleBg} 40%,${C.ruleBg}99 70%,${C.ruleBg}55)` }} />
+          <div className="absolute inset-0 z-0">
+            <img src="/Rule of Life_Hero.png" alt="" className="w-full h-full object-cover" />
+            <div className="absolute inset-0" style={{ background: `linear-gradient(to top,${C.ruleBg} 30%,${C.ruleBg}88 60%,${C.ruleBg}33)` }} />
+          </div>
           <div className="relative z-10">
             <span style={{
               display: "block",
