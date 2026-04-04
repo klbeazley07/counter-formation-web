@@ -1668,8 +1668,16 @@ function MainSite() {
     const id = hash.replace("#", "");
     const el = document.getElementById(id);
     if (el) {
-      const top = el.getBoundingClientRect().top + window.scrollY + 160;
-      window.scrollTo({ top, behavior: "instant" });
+      // For the Rule of Life section, snap flush to the top and reset the carousel
+      if (id === "rule") {
+        el.scrollIntoView({ behavior: "instant", block: "start" });
+        const carousel = el.querySelector(".rhythm-carousel");
+        if (carousel) carousel.scrollTo({ left: 0, behavior: "instant" });
+        return;
+      }
+      const navOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--banner-height") || "0") + 80;
+      const top = el.getBoundingClientRect().top + window.scrollY - navOffset;
+      window.scrollTo({ top: Math.max(0, top), behavior: "instant" });
     }
   }, []);
 

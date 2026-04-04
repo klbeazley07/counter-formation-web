@@ -107,15 +107,19 @@ export function MobileTabBar() {
 
     if (tab.path.includes("#")) {
       const id = tab.path.split("#")[1];
-      // Navigate to update the URL hash (so active state works)
       navigate(tab.path);
-      // Then scroll to the element
       const doScroll = () => {
         const el = document.getElementById(id);
-        if (el) {
-          const top = el.getBoundingClientRect().top + window.scrollY - 80;
-          window.scrollTo({ top, behavior: "smooth" });
+        if (!el) return;
+        // Rule of Life is a full-screen snap section — flush to top, reset carousel to slide 0
+        if (id === "rule") {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          const carousel = el.querySelector(".rhythm-carousel");
+          if (carousel) carousel.scrollTo({ left: 0, behavior: "instant" });
+          return;
         }
+        const top = el.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: "smooth" });
       };
       if (location.pathname !== "/") {
         setTimeout(doScroll, 150);
