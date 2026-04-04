@@ -465,6 +465,7 @@ input[type="email"] {
   overflow-x: scroll;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
@@ -497,6 +498,7 @@ input[type="email"] {
     width: 100vw;
     height: 100svh;
     scroll-snap-align: start;
+    scroll-snap-stop: always;
     border-radius: 0 !important;
     min-height: unset;
   }
@@ -525,6 +527,7 @@ input[type="email"] {
     width: 100vw;
     height: 100svh;
     scroll-snap-align: start;
+    scroll-snap-stop: always;
     position: relative;
     overflow: hidden;
     display: flex;
