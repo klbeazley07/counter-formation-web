@@ -11,6 +11,7 @@ import { ArrowLogWidget }     from "./widgets/ArrowLogWidget";
 import { FirstFifteenWidget } from "./widgets/FirstFifteenWidget";
 import { VerseTrackerWidget } from "./widgets/VerseTrackerWidget";
 import { FormationShareable } from "./FormationShareable";
+import { parseScriptureRefs } from "./utils/parseScriptureRefs";
 
 const SHOPIFY_URL = "https://shop.counterformed.com/collections/armor-of-god-collection";
 
@@ -3269,7 +3270,7 @@ export function ArmorPiecePage() {
           <div className="ap-teaching">
             <p className="ap-sec-label">Teaching</p>
             {curDay.teaching.map((para, i) => (
-              <p key={i} className="ap-body">{para}</p>
+              <p key={i} className="ap-body">{parseScriptureRefs(para)}</p>
             ))}
           </div>
 

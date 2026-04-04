@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { ScriptureRef } from "./ScriptureRef";
+import { renderHtmlWithScriptureRefs } from "./utils/parseScriptureRefs";
 
 export const RULE_BASE = "/rule-of-life";
 
@@ -1032,7 +1033,7 @@ export function RhythmPage() {
         </div>
 
         <div className="rl-theology rl-section">
-          {data.theology.map((p, i) => (<p key={i} className="rl-body" dangerouslySetInnerHTML={{ __html: p }} />))}
+          {data.theology.map((p, i) => (<p key={i} className="rl-body">{renderHtmlWithScriptureRefs(p)}</p>))}
         </div>
 
         <div className="rl-rule" />

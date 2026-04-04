@@ -746,7 +746,9 @@ export function FGPath() {
                 <div style={{ flex: 1 }}>
                   <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 15, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.ivory, marginBottom: 4 }}>{o.title}</div>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase", color: C.dim }}>{o.ref}</div>
+                    <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase", color: C.dim }}>
+                      <ScriptureRef reference={o.ref} text={o.scripture} />
+                    </div>
                     {o.day === 1 && <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: C.gold }}>Start here</span>}
                     {complete && <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(201,168,76,0.75)" }}>Complete</span>}
                   </div>
