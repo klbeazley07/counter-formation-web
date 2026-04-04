@@ -345,7 +345,7 @@ function RuleOfLifeSection() {
   const carouselRef = useRef(null);
 
   return (
-    <section id="rule" className="md:py-48 md:px-6 relative overflow-hidden"
+    <section id="rule" className="md:py-48 md:px-6 relative md:overflow-hidden"
       style={{ backgroundColor: C.ruleBg }}>
       <div className="section-bg-parallax section-glow absolute inset-0 pointer-events-none" />
       <div className="hidden md:block max-w-7xl mx-auto relative z-10 lg:px-4 xl:px-8">
@@ -361,8 +361,9 @@ function RuleOfLifeSection() {
           </p>
         </div>
       </div>
-      {/* NOTE: GSAP ScrollTrigger animations targeting .rhythm-img-wrap use window scroll
-          and won't fire inside this snap container on mobile. Acceptable tradeoff. */}
+      {/* NOTE: GSAP ScrollTrigger animations targeting .rhythm-img-wrap and .manifesto-item
+    use window scroll and won't fire inside this snap container on mobile.
+    The mobile CSS below ensures cards are visible by default (opacity/transform reset). */}
       <div ref={carouselRef} className="rhythm-carousel">
         {rhythms.map((r, i) => (
           <Link key={r.title}

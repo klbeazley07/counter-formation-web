@@ -465,7 +465,6 @@ input[type="email"] {
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
   scrollbar-width: none;
 }
 .rhythm-carousel::-webkit-scrollbar { display: none; }
@@ -512,6 +511,10 @@ input[type="email"] {
   }
   .rhythm-card h3 {
     font-size: clamp(36px, 10vw, 52px);
+  }
+  .rhythm-card.manifesto-item {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 @media (min-width: 768px) {
