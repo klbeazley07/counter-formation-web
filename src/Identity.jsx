@@ -2023,17 +2023,17 @@ function ArmorRingSection() {
                       src="/shield-white.png"
                       alt=""
                       style={{
-                        width: "clamp(72px, 6vw, 80px)", height: "auto",
+                        width: "clamp(52px, 5vw, 68px)", height: "auto",
                         objectFit: "contain", opacity: 0.55,
-                        marginBottom: "0.5rem",
+                        display: "block", margin: "0 auto 0.75rem",
                       }}
                     />
                     <span style={{
                       fontFamily: "'Cormorant Garamond', serif",
                       fontStyle: "italic",
-                      fontSize: "clamp(18px, 1.8vw, 22px)",
+                      fontSize: "clamp(26px, 2.8vw, 36px)",
                       color: C.gold,
-                      opacity: 0.6,
+                      opacity: 0.9,
                     }}>
                       Armor Up.
                     </span>
@@ -2079,7 +2079,7 @@ function ArmorRingSection() {
                       src={p.icon}
                       alt={p.title}
                       style={{
-                        width: "clamp(88px, 9vw, 130px)", height: "auto",
+                        width: "clamp(52px, 5.5vw, 76px)", height: "clamp(52px, 5.5vw, 76px)",
                         objectFit: "contain",
                         opacity: isActive ? 1 : 0.65,
                         filter: isActive ? `drop-shadow(0 0 8px ${C.gold}88)` : "none",
