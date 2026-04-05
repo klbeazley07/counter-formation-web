@@ -261,7 +261,7 @@ function CinematicHero() {
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(circle at center,transparent 36%,rgba(0,0,0,0.40) 70%,rgba(0,0,0,0.70) 100%)" }} />
 
-      <div className="relative z-10 flex flex-col items-center w-full px-6 pt-20 pb-10 text-center md:justify-center" style={{ minHeight: "100svh" }}>
+      <div className="relative z-10 flex flex-col items-center w-full px-6 pt-20 pb-10 text-center md:justify-center" style={{ minHeight: "inherit" }}>
         <div ref={logoGroupRef} className="mb-6 md:mb-8 opacity-0">
           <SafeImg src="/shield-white.png"
             className="w-[260px] md:w-[500px] mx-auto drop-shadow-[0_20px_60px_rgba(0,0,0,0.9)] max-h-[42vh] object-contain"
