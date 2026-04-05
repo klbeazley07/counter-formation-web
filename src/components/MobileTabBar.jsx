@@ -53,21 +53,22 @@ export function MobileTabBar() {
   const touchStartY = useRef(0);
   const [dragY, setDragY] = useState(0);
 
-  // Show tab bar after initial scroll
+  const isHomepage = location.pathname === "/";
+
+  // On sub-pages always show; on homepage show after scrolling 30% down
   useEffect(() => {
+    if (!isHomepage) {
+      setVisible(true);
+      return;
+    }
     const onScroll = () => setVisible(window.scrollY > window.innerHeight * 0.3);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [isHomepage]);
 
   // Close "More" sheet on route change; clear any forced active state
   useEffect(() => { setMoreOpen(false); setForcedActive(null); }, [location.pathname]);
-
-  // Always show on sub-pages (not homepage)
-  useEffect(() => {
-    if (location.pathname !== "/") setVisible(true);
-  }, [location.pathname]);
 
   // Lock body scroll when sheet is open
   useEffect(() => {
