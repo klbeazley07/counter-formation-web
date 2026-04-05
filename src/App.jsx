@@ -196,7 +196,7 @@ function CinematicHero() {
         .to(microcopyRef.current, { opacity: 0.8, y: 0, filter: "blur(0px)", duration: 0.8 }, "-=0.45")
         .to(pathCard1Ref.current, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.85 }, "-=0.4")
         .to(pathCard2Ref.current, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.85 }, "-=0.7")
-        .to(scriptureRef.current, { opacity: 0.25, y: 0, filter: "blur(0px)", duration: 0.8 }, "-=0.35")
+        .to(scriptureRef.current, { opacity: 0.55, y: 0, filter: "blur(0px)", duration: 0.8 }, "-=0.35")
         .to(scrollIndicatorRef.current ?? {}, { opacity: 1, duration: 0.7 }, "-=0.3")
         .to([vBeamRef.current, hBeamRef.current, bloomRef.current],
           { opacity: 0, duration: 2.5, ease: "power2.inOut" }, "+=2.5");
@@ -319,7 +319,7 @@ function CinematicHero() {
           </a>
         </div>
         <div ref={scriptureRef}
-          className="mt-8 md:mt-10 text-[10px] uppercase tracking-[0.35em] text-white/25 opacity-0">
+          className="mt-8 md:mt-10 text-[10px] uppercase tracking-[0.35em] text-white/50 opacity-0">
           Ephesians 6:10–18
         </div>
 
