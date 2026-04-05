@@ -337,7 +337,7 @@ function CinematicHero() {
                 whiteSpace: "nowrap",
                 flexShrink: 0,
               }}>
-                Shop the Drop &nbsp;·&nbsp; Limited Release &nbsp;·&nbsp; Formed in Christ
+                Counter Formation Gear Now Live &nbsp;·&nbsp; Limited Release &nbsp;·&nbsp; Formed in Christ
               </span>
             ))}
           </div>
