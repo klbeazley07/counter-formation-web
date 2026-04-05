@@ -172,7 +172,8 @@ function CinematicHero() {
       gsap.set([bgGlowRef.current, vBeamRef.current, hBeamRef.current,
         bloomRef.current, logoGroupRef.current, headingRef.current,
         sublineRef.current, microcopyRef.current, pathCard1Ref.current,
-        pathCard2Ref.current, scriptureRef.current, scrollIndicatorRef.current], { opacity: 0 });
+        pathCard2Ref.current, scriptureRef.current,
+        ...(scrollIndicatorRef.current ? [scrollIndicatorRef.current] : [])], { opacity: 0 });
       gsap.set(vBeamRef.current,     { height: "0vh", xPercent: -50 });
       gsap.set(hBeamRef.current,     { width: "0vw",  xPercent: -50 });
       gsap.set(bloomRef.current,     { scale: 0.7 });
@@ -196,13 +197,15 @@ function CinematicHero() {
         .to(pathCard1Ref.current, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.85 }, "-=0.4")
         .to(pathCard2Ref.current, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.85 }, "-=0.7")
         .to(scriptureRef.current, { opacity: 0.25, y: 0, filter: "blur(0px)", duration: 0.8 }, "-=0.35")
-        .to(scrollIndicatorRef.current, { opacity: 1, duration: 0.7 }, "-=0.3")
+        .to(scrollIndicatorRef.current ?? {}, { opacity: 1, duration: 0.7 }, "-=0.3")
         .to([vBeamRef.current, hBeamRef.current, bloomRef.current],
           { opacity: 0, duration: 2.5, ease: "power2.inOut" }, "+=2.5");
 
       gsap.to(bgGlowRef.current,    { x: 12, y: -10, duration: 9,  repeat: -1, yoyo: true, ease: "sine.inOut", delay: 4.5 });
       gsap.to(particlesRef.current, { y: -14,         duration: 11, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 4.5 });
-      gsap.to(scrollIndicatorRef.current, { y: 8, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 5.2 });
+      if (scrollIndicatorRef.current) {
+        gsap.to(scrollIndicatorRef.current, { y: 8, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 5.2 });
+      }
 
       const hero = heroRef.current;
       const onMouseMove = (e) => {
