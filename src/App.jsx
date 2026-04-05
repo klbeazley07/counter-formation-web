@@ -278,7 +278,7 @@ function CinematicHero() {
           </p>
         </div>
         {/* Mobile: SAVD-style full-width button pair */}
-        <div ref={ctaRef} className="mt-10 md:hidden flex gap-3 justify-center px-6 opacity-0 w-full">
+        <div ref={ctaRef} className="mt-10 md:hidden flex gap-3 justify-center px-6 w-full">
           <a ref={pathCard1Ref} href="#shop"
             className="flex-1 flex items-center justify-center gap-2 py-[14px] px-4 rounded-full text-[12px] uppercase tracking-[0.18em] font-bold transition-all duration-300 active:scale-95"
             style={{ background: "#FAF8F5", color: "#0A0A0A" }}>
