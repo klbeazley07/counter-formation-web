@@ -281,14 +281,14 @@ function CinematicHero() {
           </p>
         </div>
         {/* Mobile: SAVD-style full-width button pair */}
-        <div ref={ctaRef} className="mt-10 md:hidden flex gap-3 justify-center px-6 w-full">
+        <div ref={ctaRef} className="mt-10 md:hidden flex gap-3 justify-center px-6">
           <a ref={pathCard1Ref} href="#shop"
-            className="flex-1 flex items-center justify-center gap-2 py-[14px] px-4 rounded-full text-[12px] uppercase tracking-[0.18em] font-bold transition-all duration-300 active:scale-95"
+            className="flex items-center justify-center gap-2 py-[9px] px-5 rounded-full text-[11px] uppercase tracking-[0.18em] font-bold transition-all duration-300 active:scale-95 whitespace-nowrap"
             style={{ background: "#FAF8F5", color: "#0A0A0A" }}>
             Shop the Gear
           </a>
           <a ref={pathCard2Ref} href="#architecture"
-            className="flex-1 flex items-center justify-center gap-2 py-[14px] px-4 rounded-full text-[12px] uppercase tracking-[0.18em] font-bold transition-all duration-300 active:scale-95"
+            className="flex items-center justify-center gap-2 py-[9px] px-5 rounded-full text-[11px] uppercase tracking-[0.18em] font-bold transition-all duration-300 active:scale-95 whitespace-nowrap"
             style={{ background: "transparent", border: "1.5px solid rgba(250,248,245,0.55)", color: "#FAF8F5" }}>
             Explore Formation
           </a>
