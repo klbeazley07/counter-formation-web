@@ -258,7 +258,7 @@ function CinematicHero() {
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(circle at center,transparent 36%,rgba(0,0,0,0.40) 70%,rgba(0,0,0,0.70) 100%)" }} />
 
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 pt-20 pb-10 text-center">
+      <div className="relative z-10 flex flex-col items-center min-h-screen w-full px-6 pt-20 pb-10 text-center md:justify-center">
         <div ref={logoGroupRef} className="mb-6 md:mb-8 opacity-0">
           <SafeImg src="/shield-white.png"
             className="w-[260px] md:w-[500px] mx-auto drop-shadow-[0_20px_60px_rgba(0,0,0,0.9)] max-h-[42vh] object-contain"
@@ -277,15 +277,17 @@ function CinematicHero() {
             Limited drops. Purposeful design. Disciplined faith.
           </p>
         </div>
-        {/* Mobile: two compact buttons */}
-        <div ref={ctaRef} className="mt-10 md:hidden flex gap-3 justify-center px-6 opacity-0">
-          <a ref={pathCard1Ref} href="#architecture"
-            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-white/[0.06] border border-white/[0.12] rounded-xl text-[12px] uppercase tracking-[0.18em] text-white font-bold transition-all duration-300 hover:border-[#C9A84C]/40">
-            Enter the Formation <ArrowRight size={12} className="opacity-50 shrink-0" />
+        {/* Mobile: SAVD-style full-width button pair */}
+        <div ref={ctaRef} className="mt-10 md:hidden flex gap-3 justify-center px-6 opacity-0 w-full">
+          <a ref={pathCard1Ref} href="#shop"
+            className="flex-1 flex items-center justify-center gap-2 py-[14px] px-4 rounded-full text-[12px] uppercase tracking-[0.18em] font-bold transition-all duration-300 active:scale-95"
+            style={{ background: "#FAF8F5", color: "#0A0A0A" }}>
+            Shop the Gear
           </a>
-          <a ref={pathCard2Ref} href="#shop"
-            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-white/[0.06] border border-white/[0.12] rounded-xl text-[12px] uppercase tracking-[0.18em] text-white font-bold transition-all duration-300 hover:border-[#C9A84C]/40">
-            Shop the Gear <ArrowRight size={12} className="opacity-50 shrink-0" />
+          <a ref={pathCard2Ref} href="#architecture"
+            className="flex-1 flex items-center justify-center gap-2 py-[14px] px-4 rounded-full text-[12px] uppercase tracking-[0.18em] font-bold transition-all duration-300 active:scale-95"
+            style={{ background: "transparent", border: "1.5px solid rgba(250,248,245,0.55)", color: "#FAF8F5" }}>
+            Explore Formation
           </a>
         </div>
         {/* Desktop: full cards */}
@@ -317,33 +319,33 @@ function CinematicHero() {
           className="mt-8 md:mt-10 text-[10px] uppercase tracking-[0.35em] text-white/25 opacity-0">
           Ephesians 6:10–18
         </div>
+
+        {/* Ticker — in flow so it clears iPhone browser bar naturally */}
+        <a href="#shop" className="md:hidden mt-auto w-full overflow-hidden pt-10"
+          style={{ borderTop: "1px solid rgba(201,168,76,0.12)", marginTop: "auto" }}
+          aria-label="Shop the Gear">
+          <div className="hero-ticker-track py-[10px]">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <span key={i} style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontSize: "10px",
+                fontWeight: 700,
+                letterSpacing: "0.38em",
+                textTransform: "uppercase",
+                color: "rgba(201,168,76,0.55)",
+                paddingRight: "3rem",
+                whiteSpace: "nowrap",
+                flexShrink: 0,
+              }}>
+                Shop the Drop &nbsp;·&nbsp; Limited Release &nbsp;·&nbsp; Formed in Christ
+              </span>
+            ))}
+          </div>
+        </a>
       </div>
 
-      {/* Shop ticker — anchored to hero bottom, above iPhone browser chrome */}
-      <a href="#shop" className="absolute left-0 right-0 z-20 overflow-hidden"
-        style={{ borderTop: "1px solid rgba(201,168,76,0.12)", bottom: "env(safe-area-inset-bottom, 0px)" }}
-        aria-label="Shop the Gear">
-        <div className="hero-ticker-track py-[10px]">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <span key={i} style={{
-              fontFamily: "'Barlow Condensed', sans-serif",
-              fontSize: "10px",
-              fontWeight: 700,
-              letterSpacing: "0.38em",
-              textTransform: "uppercase",
-              color: "rgba(201,168,76,0.55)",
-              paddingRight: "3rem",
-              whiteSpace: "nowrap",
-              flexShrink: 0,
-            }}>
-              Shop the Drop &nbsp;·&nbsp; Limited Release &nbsp;·&nbsp; Formed in Christ
-            </span>
-          ))}
-        </div>
-      </a>
-
       <div ref={scrollIndicatorRef}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0 pointer-events-none z-20">
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 md:flex flex-col items-center gap-2 opacity-0 pointer-events-none z-20 hidden">
         <span className="text-[10px] uppercase tracking-[0.35em] text-white/40">Scroll</span>
         <svg width="16" height="10" viewBox="0 0 16 10" fill="none" className="text-white/35">
           <path d="M1 1L8 8L15 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
