@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -373,6 +373,50 @@ export function AboutStyles() {
         color: rgba(255,255,255,0.18);
       }
 
+      /* ── Expand / collapse ── */
+      .about-full-story {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity 0.6s ease;
+        opacity: 0;
+      }
+      .about-full-story.is-open {
+        max-height: 4000px;
+        opacity: 1;
+      }
+      .about-expand-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: ${C.gold};
+        background: none;
+        border: 1px solid rgba(201,168,76,0.25);
+        padding: 12px 24px;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 2rem;
+        transition: border-color 0.3s, background 0.3s;
+      }
+      .about-expand-btn:hover {
+        border-color: ${C.gold};
+        background: rgba(201,168,76,0.06);
+      }
+      .about-expand-arrow {
+        display: inline-block;
+        transition: transform 0.4s ease;
+        font-size: 14px;
+        line-height: 1;
+      }
+      .about-expand-arrow.is-open {
+        transform: rotate(180deg);
+      }
+
       /* ── Reveal animations ── */
       .about-reveal {
         opacity: 0;
@@ -402,6 +446,7 @@ function Divider() {
 
 export default function AboutPage() {
   const pageRef = useRef(null);
+  const [storyOpen, setStoryOpen] = useState(false);
 
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
@@ -700,130 +745,160 @@ export default function AboutPage() {
         <div className="about-reading">
           <p className="about-section-eyebrow about-reveal">The Founder</p>
           <h2 id="about-founder" className="about-section-headline about-reveal">
-            Why I built this.
+            Why we built this.
           </h2>
+
+          {/* ── Lead: the conviction (always visible) ── */}
           <div className="about-prose about-reveal">
             <p>
-              I spent fifteen years as a management consultant, traveling
-              to client sites every week, rising through the ranks, and
-              building what I told myself was the ideal life for my wife
-              and our kids. The metrics I chased at work became the metrics
-              I used to measure my own worth. The pace I maintained
-              professionally became the pace I maintained spiritually,
-              which is to say I maintained no spiritual pace at all. I was
-              producing, performing, and drifting -- and calling it
-              faithfulness because I still showed up on Sundays.
-            </p>
-            <p>
-              I grew up in a family with deep roots in the faith. My
-              great-grandfather planted a church in San Antonio in the
-              early 1900s. My father went to seminary and pastored for the
-              first eight years of my life. I accepted Christ at seven. I
-              knew the theology. What I did not have was a structure for
-              becoming the kind of person that theology described. I had
-              information without formation. Conviction without rhythm.
-              And for over a decade, I did not realize the gap existed
-              because the world's formation system was running on me so
-              effectively that I mistook its output for my own choices.
-            </p>
-            <p>
-              The cost of that gap showed up in the places that mattered
-              most. My wife was home raising three kids while I was on
-              the road. I barely made it home for our youngest daughter's
-              birth, catching a delayed flight out of LA that got me to
-              the hospital thirty minutes before she arrived. When our
-              son had a breathing emergency, my wife rushed him to the ER
-              alone because I was in another state working. My mother's
-              years-long fight with cancer and her passing sent me into a
-              numbness I carried for years. We were a weekend family
-              running on fumes, and we both knew it was not what God had
-              called us to.
-            </p>
-            <p>
-              The breaking point came quietly, not dramatically. My wife
-              and I were near the end of ourselves, praying fiercely for
-              direction, when God moved in a way we could not ignore. A
-              completely remote role opened up through a colleague's call
-              I almost dismissed. The offer came back as an exact lateral
-              match, removing every excuse I had constructed to stay on
-              the path I was on. My wife had received a promise in prayer
-              that God would make the coming season a year of restoration
-              -- in our marriage, in our family, in our lives -- if we
-              would walk through the chaos in faith. So I walked away from
-              the partnership track I had spent my entire career building
-              toward. Within months, the practice I left was gutted and
-              reorganized beyond recognition. God's hand was not subtle.
-            </p>
-            <p>
-              That restoration changed everything. I started reading
-              Dallas Willard and John Mark Comer and the Desert Fathers,
-              and I began to understand that the Christian life I had been
-              living was almost entirely informational. My wife and I
-              became small group leaders, then college and young adult
-              ministry leaders at our church. We saw the same gap
-              everywhere: people who believed the right things but had no
-              daily rhythms to form them into the people those beliefs
-              described. We watched college students and young adults
-              drifting, not because they lacked faith, but because nobody
-              had given them a structure to live it out in the ordinary
-              hours of a Tuesday.
-            </p>
-            <p>
-              Those same conversations started happening around our own
-              dinner table. Our son and two daughters were growing up
-              inside the same formation pressure we were learning to name:
-              screens competing for first attention, content shaping
-              desire, a culture that measures worth by visibility and
-              output. I wanted to build something with them, not just for
-              them. They are not just the reason Counter Formation exists;
-              they are helping to build it. They are learning the tools:
-              design, marketing, social media, product development, the
-              mechanics of running a business with purpose. The work
-              itself is formative. When your kids learn to create content
-              grounded in Scripture, or think through how a product should
-              represent something true, or wrestle with how to communicate
-              conviction without performing it, that process shapes them.
-              Counter Formation is as much an apprenticeship for our
-              family as it is a brand for the world. The intent from the
-              beginning has been that this experience molds them, teaches
-              them, and gives them ownership of something that reflects
-              the kind of parallel life God has called us to live --
-              present in the world, but formed by something other than
-              the world's systems.
-            </p>
-            <p>
-              I looked for a resource that brought it all together: deep
-              theology, daily practices, and a physical reminder I could
-              carry into the ordinary moments where formation actually
-              happens. I could not find it. The content brands had no
-              physical expression. The apparel brands had no theological
-              depth. Nobody was connecting the two in a way that treated
-              people as adults capable of handling real substance.
-            </p>
-            <p>
-              So we built Counter Formation. Not as a product launch, but
-              as a family discipline. The gear is real and we are proud of
-              it, but it was never the point. The point is the life you
-              build around it: scripture before the screen names your
-              morning, sabbath before productivity claims your identity,
-              community before isolation becomes your default. The freedom
-              that comes from intentional formation is something my wife
-              and I had to fight to find, and once we found it, we could
-              not keep it to ourselves.
+              So we built Counter Formation. Not as a Christian apparel
+              company, but as a family discipline. The gear is real and we
+              are proud of it, but it was never the point. The point is the
+              life you build around it: scripture before the screen,
+              discipline around sabbath to help claim your identity,
+              community to combat isolation. The freedom that comes from
+              intentional formation is something my wife and I had to fight
+              to find, and once we found it, we could not keep it to
+              ourselves.
             </p>
             <p>
               I am building this for the person who is tired of shallow
               faith content and knows they are being formed by something
-              they did not choose. For the parent trying to give their
-              kids a foundation deeper than what the culture offers. For
-              the couple in survival mode who senses there has to be more
-              than this. For anyone who wants to go deeper than a Sunday
-              service but does not know where to start.
+              they did not choose. For the parent trying to give their kids
+              a foundation deeper than what the culture offers. For the
+              couple in survival mode who senses there has to be more than
+              this. For anyone who wants to go deeper than a Sunday service
+              but does not know where to start.
             </p>
             <p>
               That person is who I was. Counter Formation is what I wish
               someone had handed me.
             </p>
+          </div>
+
+          {/* ── Expand trigger ── */}
+          <div className="about-reveal">
+            <button
+              className="about-expand-btn"
+              onClick={() => setStoryOpen(prev => !prev)}
+              aria-expanded={storyOpen}
+              aria-controls="founder-full-story"
+            >
+              {storyOpen ? "Close the story" : "Read the full story"}
+              <span className={`about-expand-arrow${storyOpen ? " is-open" : ""}`}>&#9662;</span>
+            </button>
+          </div>
+
+          {/* ── Full backstory (expandable) ── */}
+          <div
+            id="founder-full-story"
+            className={`about-full-story${storyOpen ? " is-open" : ""}`}
+          >
+            <div className="about-prose" style={{ paddingTop: "2.5rem" }}>
+              <p>
+                I spent over fifteen years as a management consultant in the
+                first part of my career, traveling to client sites every week,
+                rising through the promotion cycles, and building what I told
+                myself was the ideal life for my wife and our kids. The metrics
+                I chased at work became the metrics I used to measure my own
+                worth. The pace I maintained professionally began to dwarf the
+                focus and emphasis I put on my own spiritual growth. I was
+                producing, performing, and drifting -- while calling it
+                faithfulness because I still showed up on Sundays.
+              </p>
+              <p>
+                I grew up in a family with deep roots in faith. My
+                great-grandfather planted a church in San Antonio in the early
+                1900s. My father went to seminary and was a pastor for the
+                first eight years of my life. I accepted Christ at seven. I
+                knew the theology. What I did not have was a structure for
+                becoming the kind of person that theology described. I had
+                information without formation. I had the conviction and
+                re-orientation that can come from staying somewhat plugged
+                into a church body, but I was not acting as an apprentice to
+                him. And for over a decade, I did not realize the gap existed
+                because the world's formation system was running on me so
+                effectively that I mistook its output for my own choices.
+              </p>
+              <p>
+                The cost of that gap showed up in the places that mattered
+                most. My wife was home raising three kids while I was on the
+                road. I barely made it home for our youngest daughter's birth,
+                catching a delayed flight out of LA that got me to the
+                hospital thirty minutes before she arrived. When our son had
+                a breathing emergency from asthma, my wife rushed him to the
+                ER alone because I was in another state working. My mother's
+                years-long fight with cancer and her passing sent me into a
+                numbness I carried for years. We were a weekend family running
+                on fumes, and we both knew it was not what God had called us to.
+              </p>
+              <p>
+                The breaking point came quietly, not dramatically. My wife and
+                I were near the end of our relationship and were struggling to
+                find a path forward. We began praying fiercely for direction,
+                and then God moved in a way we could not ignore. A new remote
+                role opened up through a colleague that I almost dismissed.
+                The offer came back as a simple lateral move in my career,
+                removing every excuse I had constructed to stay on the path I
+                was on. At the same time, my wife had received a promise in
+                prayer that God would make the coming season a year of
+                restoration -- in our marriage, in our family, in our lives
+                -- if we would walk through the chaos in faith. In obedience,
+                I chose to walk away from the path to partnership I had spent
+                my entire career building toward. Unknown to me ... within
+                months, the practice I left was gutted and reorganized beyond
+                recognition. God's hand was not subtle.
+              </p>
+              <p>
+                That restoration changed everything. We started reading
+                everything we could get our hands on around restoration and
+                formation (Dallas Willard, John Mark Comer, NT Wright, Tyler
+                Staton, and others), and we began to understand that the
+                Christian life we had been living was almost entirely
+                informational. Over the years that followed, I was invited and
+                called to be an elder in my church, my wife was invited into
+                leadership at Bible Study Fellowship, we became adult small
+                group leaders, and college and young adult ministry leaders at
+                our church. Through all of this we saw the same gap
+                everywhere: people who believed the right things, had most of
+                the right head knowledge, but lacked "heart knowledge" and had
+                little to no daily rhythms to form them into the people those
+                beliefs described. We watched college students and young adults
+                drifting, not because they lacked faith, but because nobody
+                had given them a structure to live it out or challenged them
+                to change their heart posture.
+              </p>
+              <p>
+                Those same conversations started happening around our own
+                dinner table. Our son and two daughters were growing up inside
+                the same formation pressure we were learning to name: screens
+                competing for first attention, content shaping desire, a
+                culture that measures worth by visibility and output. I wanted
+                to build something with them, not just for them. They are not
+                just the reason Counter Formation exists; they are helping to
+                build it. They are learning the tools: design, marketing,
+                social media, product development, the mechanics of running a
+                business with purpose. The work itself is formative. When your
+                kids learn to create content grounded in Scripture, or think
+                through how a product should represent something true, or
+                wrestle with how to communicate conviction without performing
+                it, that process shapes them. Counter Formation is as much an
+                apprenticeship for our family as it is a brand for the world.
+                The intent from the beginning has been that this experience
+                molds them, teaches them, and gives them ownership of
+                something that reflects the kind of parallel life God has
+                called us to live -- present in the world, but formed by
+                something other than the world and culture.
+              </p>
+              <p>
+                When we looked across the market of Christian resources and
+                apparel, we noticed that the content and resource brands had
+                no real apparel or physical expression. The apparel brands had
+                no theological depth. We saw an opportunity in connecting the
+                two in a way that was meaningful and inspired a movement and
+                community centered on formation.
+              </p>
+            </div>
           </div>
 
           <div className="about-gold-rule about-reveal" />
