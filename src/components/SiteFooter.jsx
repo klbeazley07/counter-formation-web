@@ -109,7 +109,7 @@ function FullFooter() {
           <span className="text-[11px] tracking-[0.4em] text-[#C9A84C]/50 uppercase font-bold mb-4 block">Connect</span>
           <a href="https://instagram.com/counterformed" target="_blank" rel="noopener noreferrer" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Instagram</a>
           <a href="#" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">Contact</a>
-          <a href="#" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">About</a>
+          <Link to="/about" className="text-[12px] text-white/40 hover:text-white/70 transition-colors block py-1">About</Link>
         </div>
       </div>
 

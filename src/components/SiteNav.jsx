@@ -66,7 +66,6 @@ function getNavConfig(pathname) {
   return {
     context: "home",
     links: [
-      { label: "About", href: "/about" },
       { label: "Formation", href: "/#architecture" },
       { label: "Rule of Life", href: "/#rule" },
     ],

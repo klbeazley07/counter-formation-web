@@ -308,29 +308,6 @@ export function MobileTabBar() {
                 </div>
               </Link>
 
-              <Link
-                to="/about"
-                onClick={() => setMoreOpen(false)}
-                style={{
-                  display: "flex", alignItems: "center", gap: "14px",
-                  padding: "14px 16px", borderRadius: "12px",
-                  background: location.pathname.startsWith("/about") ? `${C.gold}12` : "transparent",
-                  border: `1px solid ${location.pathname.startsWith("/about") ? C.gold + "33" : "rgba(255,255,255,0.05)"}`,
-                  textDecoration: "none",
-                }}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={location.pathname.startsWith("/about") ? C.gold : "rgba(250,248,245,0.4)"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-                </svg>
-                <div>
-                  <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: location.pathname.startsWith("/about") ? C.ivory : "rgba(250,248,245,0.5)", margin: 0 }}>
-                    About
-                  </p>
-                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "12px", color: "rgba(250,248,245,0.25)", margin: "2px 0 0" }}>
-                    The mission behind the gear
-                  </p>
-                </div>
-              </Link>
             </div>
           </div>
         </>
