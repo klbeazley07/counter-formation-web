@@ -45,6 +45,15 @@ function getNavConfig(pathname) {
       ],
     };
   }
+  if (pathname.startsWith("/about")) {
+    return {
+      context: "about",
+      links: [
+        { label: "About", href: "/about" },
+        { label: "Formation", href: "/#architecture" },
+      ],
+    };
+  }
   if (pathname.startsWith("/practice") || pathname.startsWith("/community")) {
     return {
       context: "pillar",
@@ -57,6 +66,7 @@ function getNavConfig(pathname) {
   return {
     context: "home",
     links: [
+      { label: "About", href: "/about" },
       { label: "Formation", href: "/#architecture" },
       { label: "Rule of Life", href: "/#rule" },
     ],

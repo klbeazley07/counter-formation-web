@@ -23,6 +23,7 @@ import {
   CommunityPage,
 } from "./Architecture";
 import { IdentityLanding, ArmorPiecePage, ArmorStyles } from "./Identity";
+import AboutPage from "./About";
 import { SiteNav } from "./components/SiteNav";
 import { SiteFooter } from "./components/SiteFooter";
 import { MobileTabBar } from "./components/MobileTabBar";
@@ -1769,6 +1770,7 @@ export default function App() {
         <Route path="/rule-of-life/:rhythm/book/:bookIndex" element={<BookPage />} />
 
         {/* Architecture routes */}
+        <Route path="/about"      element={<AboutPage />} />
         <Route path="/identity"  element={<IdentityLanding />} />
         <Route path="/identity/:piece" element={<ArmorPiecePage />} />
         <Route path="/practice"   element={<PracticePage />} />
