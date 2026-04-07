@@ -201,19 +201,22 @@ export default function DevotionGuide() {
   const [copied, setCopied]     = useState(false);
   const [error, setError]       = useState(null);
   const [scrolled, setScrolled] = useState(false);
-  const [autoGenInputs, setAutoGenInputs] = useState(null);
   const resultRef = useRef(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const p = params.get("passage") || "";
-    const t = params.get("theme")   || "";
-    const b = params.get("idea")    || "";
-    if (p || t || b) {
-      if (p) setPassage(p);
-      if (t) setTheme(t);
-      if (b) setBigIdea(b);
-      setAutoGenInputs({ passage: p, theme: t, bigIdea: b });
+    const id = params.get("id");
+    if (id) {
+      setLoading(true);
+      fetch(`/api/share?id=${encodeURIComponent(id)}`)
+        .then(res => res.json())
+        .then(({ text, error: apiErr }) => {
+          if (apiErr) throw new Error(apiErr);
+          setDevotional(text);
+          setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+        })
+        .catch(err => setError(err.message || "This devotional link has expired or could not be found."))
+        .finally(() => setLoading(false));
       return;
     }
     window.scrollTo(0, 0);
@@ -224,29 +227,6 @@ export default function DevotionGuide() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  // Auto-generate when opened via shared link
-  useEffect(() => {
-    if (!autoGenInputs) return;
-    const { passage: p, theme: t, bigIdea: b } = autoGenInputs;
-    if (!p && !t && !b) return;
-    setLoading(true);
-    setDevotional(null);
-    setError(null);
-    fetch("/api/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ passage: p, theme: t, bigIdea: b }),
-    })
-      .then(res => { if (!res.ok) throw new Error("Generation failed"); return res.json(); })
-      .then(({ text, error: apiErr }) => {
-        if (apiErr) throw new Error(apiErr);
-        setDevotional(text);
-        setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
-      })
-      .catch(err => setError(err.message || "Something went wrong. Please try again."))
-      .finally(() => setLoading(false));
-  }, [autoGenInputs]);
 
   const canGenerate = passage.trim() || theme.trim() || bigIdea.trim();
 
@@ -307,11 +287,15 @@ export default function DevotionGuide() {
     if (!devotional || loading) return;
     setCopied("sharing");
     try {
-      const params = new URLSearchParams();
-      if (passage.trim()) params.set("passage", passage.trim());
-      if (theme.trim())   params.set("theme",   theme.trim());
-      if (bigIdea.trim()) params.set("idea",     bigIdea.trim());
-      const url = `${window.location.origin}/field-guide/devotion-guide?${params.toString()}`;
+      const res = await fetch("/api/share", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ text: devotional }),
+      });
+      const { id, error: saveErr } = await res.json();
+      if (saveErr || !id) throw new Error(saveErr || "Failed to save");
+
+      const url = `${window.location.origin}/field-guide/devotion-guide?id=${id}`;
       if (navigator.share) {
         await navigator.share({ title: "Counter Formation — Daily Devotion", url });
       } else {
@@ -575,7 +559,7 @@ export default function DevotionGuide() {
                     transition:    "all 0.2s",
                   }}
                 >
-                  {copied === "sharing" ? "Building link…" : copied === "shared" ? "Link copied ✓" : "Share"}
+                  {copied === "sharing" ? "Saving…" : copied === "shared" ? "Shared ✓" : "Share"}
                 </button>
                 <button
                   onClick={download}
