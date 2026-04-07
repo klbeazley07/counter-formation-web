@@ -882,6 +882,7 @@ const COLLECTIONS = [
       { name: "Technical Tee", img: "/DriFit_Black.png", copy: "Performance tech for training.", tier: "available", slug: "technical-tee", shopUrl: "https://shop.counterformed.com/products/counter-formation-spartan-logo-polyester-t-shirt" },
       { name: "Everyday Tee", img: "/Tshirt_Studio.png", copy: "Premium soft-wash cotton.", tier: "available", slug: "everyday-tee", shopUrl: "https://shop.counterformed.com/products/everyday-tee" },
       { name: "Technical Hoodie", img: "/Hoodie_white.png", copy: "Heavyweight Performance Tech.", tier: "available", slug: "technical-hoodie", shopUrl: "https://shop.counterformed.com/products/counter-formation-technical-hoodie" },
+      { name: "Trucker Hat", img: "/Trucker Hat_full.png", copy: "Structured front. Mesh back. Built to last.", tier: "available", slug: "trucker-hat", shopUrl: "https://shop.counterformed.com/products/counter-formation-trucker-hat" },
     ],
   },
   {
