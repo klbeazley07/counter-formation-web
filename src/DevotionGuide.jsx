@@ -203,7 +203,27 @@ export default function DevotionGuide() {
   const [scrolled, setScrolled] = useState(false);
   const resultRef = useRef(null);
 
-  useEffect(() => { window.scrollTo(0, 0); }, []);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const encoded = params.get("d");
+    if (encoded) {
+      try {
+        const raw = decodeURIComponent(atob(encoded));
+        const { devotional: d, passage: p, theme: t, bigIdea: b } = JSON.parse(raw);
+        if (d) {
+          setDevotional(d);
+          if (p) setPassage(p);
+          if (t) setTheme(t);
+          if (b) setBigIdea(b);
+          setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth" }), 150);
+        }
+      } catch {
+        // malformed param — ignore, show normal form
+      }
+      return; // don't scroll to top when loading a shared link
+    }
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -270,18 +290,13 @@ export default function DevotionGuide() {
     if (!devotional || loading) return;
     setCopied("sharing");
     try {
-      const canvas = await captureImage();
-      if (!canvas) return;
-      const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
-      const file = new File([blob], "counter-formation-devotion.png", { type: "image/png" });
-      if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: "Counter Formation — Daily Devotion" });
+      const payload = JSON.stringify({ devotional, passage, theme, bigIdea });
+      const encoded = btoa(encodeURIComponent(payload));
+      const url = `${window.location.origin}/field-guide/devotion-guide?d=${encoded}`;
+      if (navigator.share) {
+        await navigator.share({ title: "Counter Formation — Daily Devotion", url });
       } else {
-        // Fallback: download if share not supported
-        const link = document.createElement("a");
-        link.download = "counter-formation-devotion.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
+        await navigator.clipboard.writeText(url);
       }
       setCopied("shared");
       setTimeout(() => setCopied(false), 2000);
@@ -541,7 +556,7 @@ export default function DevotionGuide() {
                     transition:    "all 0.2s",
                   }}
                 >
-                  {copied === "sharing" ? "Preparing…" : copied === "shared" ? "Shared ✓" : "Share"}
+                  {copied === "sharing" ? "Building link…" : copied === "shared" ? "Link copied ✓" : "Share"}
                 </button>
                 <button
                   onClick={download}
