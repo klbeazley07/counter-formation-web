@@ -32,9 +32,9 @@ const C = {
 const EX = {
   panelBg:       "#1E1A14",        /* warm dark, lifted from obsidian  */
   headerBg:      "#0E0C0A",        /* obsidian bar — frames the space  */
-  inputBg:       "#FFFFFF",        /* white journal page               */
-  inputText:     "#17140F",        /* espresso text in white box       */
-  inputBorder:   "rgba(255,255,255,0.1)",
+  inputBg:       "#EEE7DA",        /* warm parchment journal page      */
+  inputText:     "#17140F",        /* espresso text                    */
+  inputBorder:   "rgba(23,20,15,0.12)",
   inputFocus:    "#C9A84C",
   scriptureCard: "#17140F",        /* slightly deeper — truth from dark */
   scriptureText: "#FAF8F5",        /* bright ivory on dark card        */
@@ -144,6 +144,8 @@ const SHARED_CSS = `
   }
 
   /* ── Verse pill (on dark scripture card) ── */
+  .al-exp-textarea::placeholder { color: rgba(23,20,15,0.32); font-style: italic; }
+
   .al-verse-pill-dark:hover {
     background: rgba(201,168,76,0.2) !important;
     border-color: rgba(201,168,76,0.4) !important;
@@ -426,6 +428,7 @@ function ExpandedView({ lie, setLie, isGenerating, currentTruth, logs, activePop
 
               <textarea
                 ref={textareaRef}
+                className="al-exp-textarea"
                 value={lie}
                 onChange={e => setLie(e.target.value)}
                 onKeyDown={onKeyDown}
