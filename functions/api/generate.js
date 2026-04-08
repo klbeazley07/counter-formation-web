@@ -67,8 +67,8 @@ Use Markdown for formatting. Use ## for section headers.
 
     if (!geminiRes.ok) {
       const detail = await geminiRes.text();
-      console.error("Gemini error:", detail);
-      return json({ error: "Generation failed. Please try again." }, 502);
+      console.error("Gemini error:", geminiRes.status, detail);
+      return json({ error: `Generation failed (${geminiRes.status}). Please try again.` }, 502);
     }
 
     const data  = await geminiRes.json();
