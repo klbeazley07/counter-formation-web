@@ -6,8 +6,30 @@
  * Set it in Cloudflare Pages → Settings → Environment Variables (Production).
  */
 
-const GEMINI_MODEL = "gemini-2.5-flash";
-const GEMINI_URL   = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+const GEMINI_PRIMARY  = "gemini-2.5-flash";
+const GEMINI_FALLBACK = "gemini-1.5-flash";
+const GEMINI_BASE     = "https://generativelanguage.googleapis.com/v1beta/models";
+
+async function callGemini(apiKey, model, body) {
+  return fetch(`${GEMINI_BASE}/${model}:generateContent?key=${apiKey}`, {
+    method:  "POST",
+    headers: { "Content-Type": "application/json" },
+    body:    JSON.stringify(body),
+  });
+}
+
+async function callGeminiWithFallback(apiKey, body) {
+  let res = await callGemini(apiKey, GEMINI_PRIMARY, body);
+  if (!res.ok) {
+    const status = res.status;
+    // Retry on overload or server errors; surface client errors immediately
+    if (status === 503 || status === 429 || status >= 500) {
+      console.warn(`${GEMINI_PRIMARY} returned ${status}, falling back to ${GEMINI_FALLBACK}`);
+      res = await callGemini(apiKey, GEMINI_FALLBACK, body);
+    }
+  }
+  return res;
+}
 
 export async function onRequestPost(context) {
   try {
@@ -56,19 +78,17 @@ Always include these sections in this EXACT order:
 Use Markdown for formatting. Use ## for section headers.
     `.trim();
 
-    const geminiRes = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
-      method:  "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.85, maxOutputTokens: 8192 },
-      }),
+    const geminiRes = await callGeminiWithFallback(apiKey, {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.85, maxOutputTokens: 8192 },
     });
 
     if (!geminiRes.ok) {
       const detail = await geminiRes.text();
       console.error("Gemini error:", geminiRes.status, detail);
-      return json({ error: `Generation failed (${geminiRes.status}). Please try again.` }, 502);
+      let reason = "";
+      try { reason = JSON.parse(detail)?.error?.message ?? ""; } catch {}
+      return json({ error: `Generation failed (${geminiRes.status}${reason ? `: ${reason}` : ""}). Please try again.` }, 502);
     }
 
     const data  = await geminiRes.json();

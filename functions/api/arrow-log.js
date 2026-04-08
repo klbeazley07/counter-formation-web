@@ -6,8 +6,29 @@
  * Set it in Cloudflare Pages → Settings → Environment Variables (Production).
  */
 
-const GEMINI_MODEL = "gemini-2.5-flash";
-const GEMINI_URL   = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+const GEMINI_PRIMARY  = "gemini-2.5-flash";
+const GEMINI_FALLBACK = "gemini-1.5-flash";
+const GEMINI_BASE     = "https://generativelanguage.googleapis.com/v1beta/models";
+
+async function callGemini(apiKey, model, body) {
+  return fetch(`${GEMINI_BASE}/${model}:generateContent?key=${apiKey}`, {
+    method:  "POST",
+    headers: { "Content-Type": "application/json" },
+    body:    JSON.stringify(body),
+  });
+}
+
+async function callGeminiWithFallback(apiKey, body) {
+  let res = await callGemini(apiKey, GEMINI_PRIMARY, body);
+  if (!res.ok) {
+    const status = res.status;
+    if (status === 503 || status === 429 || status >= 500) {
+      console.warn(`${GEMINI_PRIMARY} returned ${status}, falling back to ${GEMINI_FALLBACK}`);
+      res = await callGemini(apiKey, GEMINI_FALLBACK, body);
+    }
+  }
+  return res;
+}
 
 export async function onRequestPost(context) {
   try {
@@ -52,13 +73,9 @@ Return ONLY a valid JSON object with no markdown formatting, no code fences, no 
   ]
 }`;
 
-    const geminiRes = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
-      method:  "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
-      }),
+    const geminiRes = await callGeminiWithFallback(apiKey, {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
     });
 
     if (!geminiRes.ok) {
