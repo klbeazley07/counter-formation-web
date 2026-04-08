@@ -9,17 +9,6 @@
 const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_URL   = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
-const SYSTEM_INSTRUCTION = `You are a biblical counselor and spiritual director. When a user shares a lie they believe about themselves or the world, respond with a gentle, pastoral biblical truth that counters it directly.
-
-Requirements:
-1. Respond in a warm, affirming, and pastoral tone — like a trusted spiritual director writing to a friend.
-2. The "truth" field should be 1–3 sentences of biblical truth that directly counters the lie. Write it as a statement the person can receive and hold onto.
-3. Provide 2 specific scripture references that support the truth.
-4. Use the English Standard Version (ESV) for all verse text.
-5. Do not fabricate or paraphrase verses. Quote them accurately and word-for-word from the ESV.
-6. For each verse, provide a direct link to the chapter on Bible.com (e.g., https://www.bible.com/bible/59/PSA.23.ESV).
-7. Return the response in the exact JSON format specified.`;
-
 export async function onRequestPost(context) {
   try {
     const apiKey = context.env.GEMINI_API_KEY;
@@ -33,45 +22,42 @@ export async function onRequestPost(context) {
       return json({ error: "lie is required." }, 400);
     }
 
+    const prompt = `You are a biblical counselor and spiritual director for Counter Formation — a community of people pursuing intentional formation in Christ.
+
+The user believes this lie: "${lie.trim()}"
+
+Respond with a gentle, pastoral biblical truth that directly counters it. Requirements:
+- The "truth" should be 1–3 warm, affirming sentences the person can hold onto. Write it as a statement they can receive, not an instruction.
+- Provide exactly 2 scripture references from the English Standard Version (ESV).
+- Quote verses accurately and word-for-word. Do not fabricate or paraphrase.
+- For Bible.com URLs use this format: https://www.bible.com/bible/59/[BOOK].[CHAPTER].ESV
+  Examples: Romans 8 → https://www.bible.com/bible/59/ROM.8.ESV, Psalm 23 → https://www.bible.com/bible/59/PSA.23.ESV
+
+Return ONLY a valid JSON object with no markdown formatting, no code fences, no extra text. Use this exact structure:
+{
+  "truth": "biblical truth here",
+  "verses": [
+    {
+      "reference": "Book Chapter:Verse",
+      "text": "word-for-word ESV verse text",
+      "translation": "ESV",
+      "bibleUrl": "https://www.bible.com/bible/59/..."
+    },
+    {
+      "reference": "Book Chapter:Verse",
+      "text": "word-for-word ESV verse text",
+      "translation": "ESV",
+      "bibleUrl": "https://www.bible.com/bible/59/..."
+    }
+  ]
+}`;
+
     const geminiRes = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
       method:  "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: SYSTEM_INSTRUCTION }],
-        },
-        contents: [{
-          parts: [{ text: `The user is believing this lie: "${lie.trim()}"\n\nCounter this with a specific biblical truth and 2 supporting ESV scripture verses.` }],
-        }],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 1024,
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: "OBJECT",
-            properties: {
-              truth: {
-                type: "STRING",
-                description: "1–3 sentences of biblical truth that directly and gently counters the lie.",
-              },
-              verses: {
-                type: "ARRAY",
-                description: "2 ESV scripture verses that support the truth.",
-                items: {
-                  type: "OBJECT",
-                  properties: {
-                    reference: { type: "STRING", description: "e.g. Romans 8:38-39" },
-                    text:      { type: "STRING", description: "Word-for-word ESV verse text." },
-                    translation: { type: "STRING", description: "Always 'ESV'." },
-                    bibleUrl:  { type: "STRING", description: "Direct Bible.com chapter link." },
-                  },
-                  required: ["reference", "text", "translation", "bibleUrl"],
-                },
-              },
-            },
-            required: ["truth", "verses"],
-          },
-        },
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
       }),
     });
 
@@ -82,17 +68,19 @@ export async function onRequestPost(context) {
     }
 
     const data = await geminiRes.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+    let text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
 
     if (!text) {
       return json({ error: "Empty response from Gemini." }, 502);
     }
 
+    // Strip markdown code fences if the model wraps the JSON anyway
+    text = text.replace(/^```json\s*/i, "").replace(/^```\s*/i, "").replace(/\s*```$/i, "").trim();
+
     try {
-      const parsed = JSON.parse(text);
-      return json(parsed);
+      return json(JSON.parse(text));
     } catch {
-      console.error("Failed to parse Gemini JSON response:", text);
+      console.error("Failed to parse Gemini response as JSON:", text);
       return json({
         truth: "God loves you unconditionally and nothing can separate you from that love.",
         verses: [{
