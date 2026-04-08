@@ -27,25 +27,25 @@ const C = {
 };
 
 /* ─── EXPANDED PALETTE ────────────────────────────────────────────── */
-/* Light, editorial — the panel opens into clarity                      */
+/* Warm elevated dark — same world, more light on                       */
 
 const EX = {
-  panelBg:       "#F2EDE4",        /* warm cream body                  */
+  panelBg:       "#1E1A14",        /* warm dark, lifted from obsidian  */
   headerBg:      "#0E0C0A",        /* obsidian bar — frames the space  */
   inputBg:       "#FFFFFF",        /* white journal page               */
-  inputText:     "#17140F",        /* espresso text                    */
-  inputBorder:   "rgba(23,20,15,0.14)",
+  inputText:     "#17140F",        /* espresso text in white box       */
+  inputBorder:   "rgba(255,255,255,0.1)",
   inputFocus:    "#C9A84C",
-  scriptureCard: "#17140F",        /* dark card where truth lives      */
+  scriptureCard: "#17140F",        /* slightly deeper — truth from dark */
   scriptureText: "#FAF8F5",        /* bright ivory on dark card        */
   gold:          "#C9A84C",
-  goldDark:      "#A0813E",        /* deeper gold readable on cream    */
-  divider:       "rgba(23,20,15,0.1)",
-  muted:         "rgba(23,20,15,0.42)",
-  dim:           "rgba(23,20,15,0.65)",
-  full:          "#17140F",
-  logLie:        "rgba(23,20,15,0.4)",
-  histScrollbar: "rgba(23,20,15,0.15)",
+  goldDark:      "#C9A84C",        /* same gold reads fine on dark     */
+  divider:       "rgba(255,255,255,0.07)",
+  muted:         "rgba(250,248,245,0.4)",
+  dim:           "rgba(250,248,245,0.62)",
+  full:          "#FAF8F5",
+  logLie:        "rgba(250,248,245,0.32)",
+  histScrollbar: "rgba(201,168,76,0.2)",
 };
 
 const barlow   = { fontFamily: "'Barlow Condensed', sans-serif" };
@@ -94,11 +94,11 @@ const SHARED_CSS = `
   .al-scrollable::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 2px; }
   .al-scrollable { scrollbar-width: thin; scrollbar-color: rgba(201,168,76,0.2) transparent; }
 
-  /* ── Expanded scrollable (light) ── */
+  /* ── Expanded scrollable ── */
   .al-exp-scroll::-webkit-scrollbar       { width: 4px; }
   .al-exp-scroll::-webkit-scrollbar-track { background: transparent; }
-  .al-exp-scroll::-webkit-scrollbar-thumb { background: rgba(23,20,15,0.15); border-radius: 2px; }
-  .al-exp-scroll { scrollbar-width: thin; scrollbar-color: rgba(23,20,15,0.15) transparent; }
+  .al-exp-scroll::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 2px; }
+  .al-exp-scroll { scrollbar-width: thin; scrollbar-color: rgba(201,168,76,0.2) transparent; }
 
   /* ── Sidebar buttons ── */
   .al-btn-seek:hover:not(:disabled) { background: rgba(201,168,76,0.22) !important; }
@@ -112,9 +112,9 @@ const SHARED_CSS = `
     border-color: #C9A84C !important;
   }
   .al-exp-save:hover   { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,168,76,0.35) !important; }
-  .al-exp-close:hover  { background: rgba(23,20,15,0.08) !important; }
+  .al-exp-close:hover  { background: rgba(255,255,255,0.08) !important; }
   .al-exp-hist:hover   { color: #C9A84C !important; }
-  .al-exp-discard:hover { color: rgba(23,20,15,0.8) !important; }
+  .al-exp-discard:hover { color: rgba(250,248,245,0.75) !important; }
 
   /* ── Expanded two-column main ── */
   .al-exp-main {
@@ -124,7 +124,7 @@ const SHARED_CSS = `
   @media (min-width: 700px) {
     .al-exp-main { grid-template-columns: 1fr 1fr; }
     .al-exp-col-right {
-      border-left: 1px solid rgba(23,20,15,0.1) !important;
+      border-left: 1px solid rgba(255,255,255,0.07) !important;
       border-top:  none !important;
     }
   }
@@ -286,7 +286,7 @@ function ExpandedEntryRow({ entry, onDelete, last }) {
 
       {/* Arrow */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop: "28px" }}>
-        <ArrowRight size={15} style={{ color: "rgba(23,20,15,0.2)" }} />
+        <ArrowRight size={15} style={{ color: "rgba(250,248,245,0.15)" }} />
       </div>
 
       {/* Truth + verses */}
@@ -445,7 +445,7 @@ function ExpandedView({ lie, setLie, isGenerating, currentTruth, logs, activePop
                 }}
                 onFocus={e => {
                   e.target.style.borderColor = EX.inputFocus;
-                  e.target.style.boxShadow = "0 0 0 3px rgba(201,168,76,0.12), 0 2px 12px rgba(23,20,15,0.08)";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(201,168,76,0.15)";
                 }}
                 onBlur={e => {
                   e.target.style.borderColor = EX.inputBorder;
@@ -502,7 +502,7 @@ function ExpandedView({ lie, setLie, isGenerating, currentTruth, logs, activePop
               {/* Empty */}
               {!hasTruthContent && (
                 <div style={{ display: "flex", alignItems: "center", gap: "14px", padding: "20px 0" }}>
-                  <Quote size={32} style={{ color: "rgba(23,20,15,0.1)", flexShrink: 0 }} />
+                  <Quote size={32} style={{ color: "rgba(250,248,245,0.07)", flexShrink: 0 }} />
                   <p style={{ ...garamond, fontStyle: "italic", fontSize: "19px", color: EX.muted, lineHeight: 1.6, margin: 0 }}>
                     The truth will be revealed here...
                   </p>
@@ -513,7 +513,7 @@ function ExpandedView({ lie, setLie, isGenerating, currentTruth, logs, activePop
               {isGenerating && (
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "14px", padding: "40px 0" }}>
                   <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Loader2 size={40} style={{ color: "rgba(23,20,15,0.1)" }} className="al-spin" />
+                    <Loader2 size={40} style={{ color: "rgba(250,248,245,0.1)" }} className="al-spin" />
                     <Sparkles size={18} style={{ position: "absolute", color: EX.gold }} />
                   </div>
                   <p className="al-pulse" style={{ ...barlow, fontSize: "10px", letterSpacing: ".36em", textTransform: "uppercase", color: EX.muted, margin: 0 }}>
