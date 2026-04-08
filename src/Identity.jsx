@@ -2643,7 +2643,7 @@ const WIDGET_META = {
   "belt-of-truth":               { name: "Daily Examen",               desc: "Five guided examination questions with journaling fields. A nightly review of the day through the lens of consolation and desolation." },
   "breastplate-of-righteousness":{ name: "Declaration Builder",        desc: "Build a morning declaration card from your own identity statements. Formatted, printable, and shareable." },
   "gospel-of-peace":             { name: "Peace Pause Timer",          desc: "A three-checkpoint timer for morning, midday, and evening anchoring moments throughout the day." },
-  "shield-of-faith":             { name: "Arrow Log",                  desc: "A two-column journal: lies you're hearing on the left, what God has said on the right. Patterns emerge over time." },
+  "shield-of-faith":             { name: "Arrow Log",                  desc: "Name a lie you are believing. The tool returns a biblical truth and supporting scripture. Save entries to build a personal record over time." },
   "helmet-of-salvation":         { name: "First Fifteen Designer",     desc: "Design your morning first-fifteen-minute practice: Scripture, silence, prayer, declaration — in the order that forms you." },
   "sword-of-the-spirit":         { name: "Verse Memorization Tracker", desc: "Input your weekly verse, mark daily review completions, and build a growing library of memorized Scripture." },
 };
