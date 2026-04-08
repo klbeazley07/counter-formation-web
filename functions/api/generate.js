@@ -23,7 +23,7 @@ async function callGeminiWithFallback(apiKey, body) {
   if (!res.ok) {
     const status = res.status;
     // Retry on overload or server errors; surface client errors immediately
-    if (status === 503 || status === 429 || status >= 500) {
+    if (status !== 400 && status !== 401) {
       console.warn(`${GEMINI_PRIMARY} returned ${status}, falling back to ${GEMINI_FALLBACK}`);
       res = await callGemini(apiKey, GEMINI_FALLBACK, body);
     }
