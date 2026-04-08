@@ -6,7 +6,7 @@
  * Set it in Cloudflare Pages → Settings → Environment Variables (Production).
  */
 
-const GEMINI_MODEL = "gemini-2.5-flash";
+const GEMINI_MODEL = "gemini-2.0-flash";
 const GEMINI_URL   = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 export async function onRequestPost(context) {
@@ -64,7 +64,10 @@ Return ONLY a valid JSON object with no markdown formatting, no code fences, no 
     if (!geminiRes.ok) {
       const detail = await geminiRes.text();
       console.error("Gemini error:", geminiRes.status, detail);
-      return json({ error: `Generation failed (${geminiRes.status}). Please try again.` }, 502);
+      // Parse detail for a cleaner message if available
+      let reason = "";
+      try { reason = JSON.parse(detail)?.error?.message ?? ""; } catch {}
+      return json({ error: `Gemini ${geminiRes.status}${reason ? `: ${reason}` : ""}. Please try again.` }, 502);
     }
 
     const data = await geminiRes.json();
