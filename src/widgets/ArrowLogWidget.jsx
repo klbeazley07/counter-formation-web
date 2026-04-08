@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
-import { Sparkles, History, Trash2, Quote, Loader2, Plus, ExternalLink, X, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Sparkles, History, Trash2, Quote, Loader2, Plus,
+  ExternalLink, X, ChevronDown, ChevronUp, Maximize2, ArrowRight,
+} from "lucide-react";
 
 /* ─── BRAND CONSTANTS ─────────────────────────────────────────────── */
 
@@ -12,11 +16,14 @@ const C = {
   goldDiv:     "rgba(201,168,76,0.1)",
   goldMuted:   "rgba(201,168,76,0.5)",
   inputBg:     "#17140F",
+  panelBg:     "#0E0C0A",
+  cardBg:      "#141210",
   ivory:       "#FAF8F5",
   ivoryMuted:  "rgba(250,248,245,0.55)",
   ivoryDim:    "rgba(250,248,245,0.35)",
   ivoryFaint:  "rgba(250,248,245,0.18)",
   redFaint:    "rgba(220,60,60,0.45)",
+  greenFaint:  "rgba(100,200,120,0.45)",
   white06:     "rgba(255,255,255,0.06)",
   white10:     "rgba(255,255,255,0.1)",
 };
@@ -26,25 +33,93 @@ const garamond = { fontFamily: "'Cormorant Garamond', serif" };
 
 const STORAGE_KEY = "cf-arrow-log";
 
+/* ─── SHARED CSS ──────────────────────────────────────────────────── */
+
+const SHARED_CSS = `
+  @keyframes al-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @keyframes al-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes al-pulse {
+    0%, 100% { opacity: 0.3; }
+    50%      { opacity: 0.8; }
+  }
+  @keyframes al-overlay-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes al-panel-in {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .al-spin        { animation: al-spin 1.2s linear infinite; }
+  .al-fade-in     { animation: al-fade-in .3s ease forwards; }
+  .al-pulse       { animation: al-pulse 1.8s ease infinite; }
+  .al-overlay-in  { animation: al-overlay-in .2s ease forwards; }
+  .al-panel-in    { animation: al-panel-in .25s cubic-bezier(0.22,0.61,0.36,1) forwards; }
+
+  .al-scrollable::-webkit-scrollbar { width: 3px; }
+  .al-scrollable::-webkit-scrollbar-track { background: transparent; }
+  .al-scrollable::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 2px; }
+  .al-scrollable { scrollbar-width: thin; scrollbar-color: rgba(201,168,76,0.2) transparent; }
+
+  .al-btn-seek:hover:not(:disabled) { background: rgba(201,168,76,0.22) !important; }
+  .al-btn-save:hover  { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(201,168,76,0.2) !important; }
+  .al-icon-btn:hover  { color: rgba(250,248,245,0.75) !important; }
+  .al-max-btn:hover   { background: rgba(201,168,76,0.12) !important; color: #C9A84C !important; }
+  .al-close-btn:hover { background: rgba(255,255,255,0.08) !important; }
+
+  /* Expanded view responsive grid */
+  .al-exp-main {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-bottom: 1px solid rgba(201,168,76,0.08);
+  }
+  @media (min-width: 700px) {
+    .al-exp-main {
+      grid-template-columns: 1fr 1fr;
+    }
+    .al-exp-col-right {
+      border-left: 1px solid rgba(255,255,255,0.06) !important;
+      border-top: none !important;
+    }
+  }
+
+  /* Side-by-side log rows in expanded view */
+  .al-exp-log-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 20px 0;
+  }
+  @media (min-width: 700px) {
+    .al-exp-log-row {
+      grid-template-columns: 1fr 24px 1fr 28px;
+      align-items: start;
+    }
+  }
+`;
+
 /* ─── SCRIPTURE POPOUT ────────────────────────────────────────────── */
 
 function ScripturePopout({ verse, onClose }) {
   return (
-    <div
-      className="al-popout"
-      style={{
-        position:     "absolute",
-        zIndex:       100,
-        bottom:       "calc(100% + 8px)",
-        left:         0,
-        width:        "min(300px, calc(100vw - 48px))",
-        background:   "#1A1612",
-        border:       `1px solid ${C.goldBorder}`,
-        borderRadius: "16px",
-        padding:      "20px",
-        boxShadow:    "0 16px 40px rgba(0,0,0,0.5)",
-      }}
-    >
+    <div style={{
+      position:     "absolute",
+      zIndex:       200,
+      bottom:       "calc(100% + 8px)",
+      left:         0,
+      width:        "min(320px, calc(100vw - 48px))",
+      background:   "#1A1612",
+      border:       `1px solid ${C.goldBorder}`,
+      borderRadius: "16px",
+      padding:      "20px",
+      boxShadow:    "0 20px 48px rgba(0,0,0,0.6)",
+    }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
         <div>
           <span style={{ ...barlow, fontSize: "10px", letterSpacing: ".2em", textTransform: "uppercase", color: C.gold, fontWeight: 700 }}>
@@ -57,13 +132,13 @@ function ScripturePopout({ verse, onClose }) {
         <button
           onClick={onClose}
           aria-label="Close"
-          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: C.ivoryFaint, lineHeight: 1, marginLeft: "8px" }}
+          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: C.ivoryFaint, lineHeight: 1, marginLeft: "8px", flexShrink: 0 }}
         >
           <X size={14} />
         </button>
       </div>
 
-      <p style={{ ...garamond, fontStyle: "italic", fontSize: "15px", color: C.ivory, lineHeight: 1.7, margin: "0 0 16px" }}>
+      <p style={{ ...garamond, fontStyle: "italic", fontSize: "15px", color: C.ivory, lineHeight: 1.75, margin: "0 0 16px" }}>
         "{verse.text}"
       </p>
 
@@ -85,7 +160,6 @@ function ScripturePopout({ verse, onClose }) {
 
 function VersePill({ verse, popoutKey, activePopout, setActivePopout }) {
   const isOpen = activePopout === popoutKey;
-
   return (
     <div style={{ position: "relative" }}>
       <button
@@ -111,54 +185,109 @@ function VersePill({ verse, popoutKey, activePopout, setActivePopout }) {
         {verse.reference}
         <ExternalLink size={9} style={{ opacity: 0.6 }} />
       </button>
-
       {isOpen && <ScripturePopout verse={verse} onClose={() => setActivePopout(null)} />}
     </div>
   );
 }
 
-/* ─── ENTRY ROW ───────────────────────────────────────────────────── */
+/* ─── TRUTH PANEL (shared between both views) ─────────────────────── */
 
-function EntryRow({ entry, onDelete, last }) {
+function TruthPanel({ isGenerating, currentTruth, activePopout, setActivePopout, onDiscard, onSave, large }) {
+  const textSize  = large ? "22px" : "16px";
+  const padTop    = large ? "0" : "0";
+
+  if (!isGenerating && !currentTruth) {
+    return (
+      <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: large ? "0" : "0" }}>
+        <Quote size={large ? 28 : 16} style={{ color: "rgba(201,168,76,0.12)", flexShrink: 0 }} />
+        <p style={{ ...garamond, fontStyle: "italic", fontSize: large ? "18px" : "14px", color: C.ivoryFaint, lineHeight: 1.6, margin: 0 }}>
+          The truth will be revealed here...
+        </p>
+      </div>
+    );
+  }
+
+  if (isGenerating) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", padding: large ? "32px 0" : "16px 0" }}>
+        <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Loader2 size={large ? 36 : 28} style={{ color: "rgba(201,168,76,0.18)" }} className="al-spin" />
+          <Sparkles size={large ? 16 : 12} style={{ position: "absolute", color: C.gold }} />
+        </div>
+        <p className="al-pulse" style={{ ...barlow, fontSize: "9px", letterSpacing: ".35em", textTransform: "uppercase", color: C.goldMuted, margin: 0 }}>
+          Consulting Scripture
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="al-fade-in" style={{ paddingTop: padTop }}>
+      <p style={{ ...garamond, fontSize: textSize, color: C.ivory, lineHeight: 1.75, fontStyle: "italic", marginBottom: large ? "20px" : "14px" }}>
+        {currentTruth.truth}
+      </p>
+
+      {currentTruth.verses && currentTruth.verses.length > 0 && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: large ? "24px" : "16px" }}>
+          {currentTruth.verses.map((v, i) => (
+            <VersePill
+              key={i}
+              verse={v}
+              popoutKey={`current-${i}`}
+              activePopout={activePopout}
+              setActivePopout={setActivePopout}
+            />
+          ))}
+        </div>
+      )}
+
+      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "12px", paddingTop: "12px", borderTop: `1px solid ${C.white06}` }}>
+        <button
+          onClick={onDiscard}
+          style={{ ...barlow, background: "none", border: "none", cursor: "pointer", fontSize: "9px", letterSpacing: ".18em", textTransform: "uppercase", color: C.ivoryDim, padding: 0 }}
+        >
+          Discard
+        </button>
+        <button
+          className="al-btn-save"
+          onClick={onSave}
+          style={{
+            ...barlow,
+            display: "flex", alignItems: "center", gap: "6px",
+            padding: "7px 16px", borderRadius: "999px",
+            background: C.gold, color: "#0A0A0A", border: "none",
+            fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase",
+            fontWeight: 700, cursor: "pointer",
+            transition: "transform .15s, box-shadow .15s",
+          }}
+        >
+          <Plus size={11} /> Add to Log
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ─── COMPACT ENTRY ROW (sidebar) ─────────────────────────────────── */
+
+function CompactEntryRow({ entry, onDelete, last }) {
   const [hovered, setHovered] = useState(false);
-
   return (
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      style={{
-        padding:      "12px 0",
-        borderBottom: last ? "none" : `1px solid ${C.goldDiv}`,
-        position:     "relative",
-      }}
+      style={{ padding: "12px 0", borderBottom: last ? "none" : `1px solid ${C.goldDiv}`, position: "relative" }}
     >
       <div style={{ display: "grid", gridTemplateColumns: "1fr 20px", gap: "8px", alignItems: "start" }}>
         <div>
-          {/* Lie */}
-          <p style={{ ...barlow, fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.35)", marginBottom: "3px" }}>
-            The Lie
-          </p>
-          <p style={{ ...garamond, fontSize: "14px", color: C.ivoryDim, lineHeight: 1.55, fontStyle: "italic", margin: "0 0 10px" }}>
-            {entry.lie}
-          </p>
-
-          {/* Truth */}
-          <p style={{ ...barlow, fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.35)", marginBottom: "3px" }}>
-            What God Has Said
-          </p>
-          <p style={{ ...garamond, fontSize: "14px", color: "rgba(250,248,245,0.85)", lineHeight: 1.55, margin: "0 0 8px" }}>
-            {entry.truth}
-          </p>
-
-          {/* Verse references — plain links to avoid absolute positioning inside scroll container */}
+          <p style={{ ...barlow, fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.35)", marginBottom: "3px" }}>The Lie</p>
+          <p style={{ ...garamond, fontSize: "14px", color: C.ivoryDim, lineHeight: 1.55, fontStyle: "italic", margin: "0 0 10px" }}>{entry.lie}</p>
+          <p style={{ ...barlow, fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.35)", marginBottom: "3px" }}>What God Has Said</p>
+          <p style={{ ...garamond, fontSize: "14px", color: "rgba(250,248,245,0.85)", lineHeight: 1.55, margin: "0 0 8px" }}>{entry.truth}</p>
           {entry.verses && entry.verses.length > 0 && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
               {entry.verses.map((v, i) => (
-                <a
-                  key={i}
-                  href={v.bibleUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <a key={i} href={v.bibleUrl} target="_blank" rel="noopener noreferrer"
                   style={{ ...barlow, fontSize: "9px", letterSpacing: ".18em", textTransform: "uppercase", color: C.goldMuted, textDecoration: "none", borderBottom: `1px solid ${C.goldDiv}`, paddingBottom: "1px" }}
                   onMouseEnter={e => { e.currentTarget.style.color = C.gold; }}
                   onMouseLeave={e => { e.currentTarget.style.color = C.goldMuted; }}
@@ -169,27 +298,305 @@ function EntryRow({ entry, onDelete, last }) {
             </div>
           )}
         </div>
-
-        {/* Delete */}
         <button
           onClick={() => onDelete(entry.id)}
           aria-label="Remove entry"
-          style={{
-            background: "none",
-            border:     "none",
-            padding:    0,
-            cursor:     "pointer",
-            color:      C.ivoryFaint,
-            opacity:    hovered ? 1 : 0,
-            transition: "opacity .15s, color .15s",
-            lineHeight: 1,
-            marginTop:  "2px",
-          }}
+          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: C.ivoryFaint, opacity: hovered ? 1 : 0, transition: "opacity .15s, color .15s", lineHeight: 1, marginTop: "2px" }}
           onMouseEnter={e => { e.currentTarget.style.color = "rgba(220,80,80,0.8)"; }}
           onMouseLeave={e => { e.currentTarget.style.color = C.ivoryFaint; }}
         >
           <Trash2 size={14} />
         </button>
+      </div>
+    </div>
+  );
+}
+
+/* ─── EXPANDED ENTRY ROW (side-by-side) ───────────────────────────── */
+
+function ExpandedEntryRow({ entry, onDelete, last }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      className="al-exp-log-row"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{ borderBottom: last ? "none" : `1px solid ${C.goldDiv}` }}
+    >
+      {/* Lie */}
+      <div>
+        <p style={{ ...barlow, fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.35)", marginBottom: "6px" }}>The Lie</p>
+        <p style={{ ...garamond, fontSize: "16px", color: C.ivoryDim, lineHeight: 1.65, fontStyle: "italic", margin: 0 }}>{entry.lie}</p>
+      </div>
+
+      {/* Arrow (desktop only, hidden on mobile via CSS) */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop: "26px" }}>
+        <ArrowRight size={16} style={{ color: "rgba(201,168,76,0.25)" }} />
+      </div>
+
+      {/* Truth + verses */}
+      <div>
+        <p style={{ ...barlow, fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.35)", marginBottom: "6px" }}>What God Has Said</p>
+        <p style={{ ...garamond, fontSize: "16px", color: "rgba(250,248,245,0.9)", lineHeight: 1.65, margin: "0 0 10px" }}>{entry.truth}</p>
+        {entry.verses && entry.verses.length > 0 && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            {entry.verses.map((v, i) => (
+              <a key={i} href={v.bibleUrl} target="_blank" rel="noopener noreferrer"
+                style={{ ...barlow, fontSize: "9px", letterSpacing: ".18em", textTransform: "uppercase", color: C.goldMuted, textDecoration: "none", borderBottom: `1px solid ${C.goldDiv}`, paddingBottom: "1px" }}
+                onMouseEnter={e => { e.currentTarget.style.color = C.gold; }}
+                onMouseLeave={e => { e.currentTarget.style.color = C.goldMuted; }}
+              >
+                {v.reference}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Delete */}
+      <div style={{ display: "flex", alignItems: "flex-start", paddingTop: "24px" }}>
+        <button
+          onClick={() => onDelete(entry.id)}
+          aria-label="Remove entry"
+          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: C.ivoryFaint, opacity: hovered ? 1 : 0, transition: "opacity .15s, color .15s", lineHeight: 1 }}
+          onMouseEnter={e => { e.currentTarget.style.color = "rgba(220,80,80,0.8)"; }}
+          onMouseLeave={e => { e.currentTarget.style.color = C.ivoryFaint; }}
+        >
+          <Trash2 size={15} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ─── EXPANDED OVERLAY ────────────────────────────────────────────── */
+
+function ExpandedView({ lie, setLie, isGenerating, currentTruth, logs, activePopout, setActivePopout, error, showHistory, setShowHistory, handleGenerate, saveLog, deleteLog, onClose }) {
+  const textareaRef = useRef(null);
+
+  /* Lock body scroll */
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = prev; };
+  }, []);
+
+  /* Focus textarea on open */
+  useEffect(() => {
+    setTimeout(() => textareaRef.current?.focus(), 100);
+  }, []);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape") onClose();
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) handleGenerate();
+  };
+
+  return (
+    <div
+      className="al-overlay-in"
+      onClick={onClose}
+      style={{
+        position:        "fixed",
+        inset:           0,
+        zIndex:          1000,
+        background:      "rgba(6,5,10,0.88)",
+        backdropFilter:  "blur(12px)",
+        display:         "flex",
+        alignItems:      "flex-start",
+        justifyContent:  "center",
+        padding:         "clamp(16px, 3vw, 40px)",
+        overflowY:       "auto",
+      }}
+    >
+      <div
+        className="al-panel-in"
+        onClick={e => e.stopPropagation()}
+        style={{
+          width:        "100%",
+          maxWidth:     "1080px",
+          background:   C.panelBg,
+          border:       `1px solid ${C.goldBorder}`,
+          borderRadius: "24px",
+          overflow:     "hidden",
+          boxShadow:    "0 32px 80px rgba(0,0,0,0.5)",
+          flexShrink:   0,
+        }}
+      >
+        {/* ── Panel header ── */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1.5rem 2rem", borderBottom: `1px solid ${C.goldDiv}` }}>
+          <div>
+            <p style={{ ...barlow, fontSize: "9px", letterSpacing: ".44em", textTransform: "uppercase", color: C.gold, marginBottom: "3px" }}>
+              Arrow Log
+            </p>
+            <p style={{ ...garamond, fontStyle: "italic", fontSize: "17px", color: C.ivoryMuted, lineHeight: 1.4, margin: 0 }}>
+              Catch the lie. Answer with truth.
+            </p>
+          </div>
+          <button
+            className="al-close-btn"
+            onClick={onClose}
+            aria-label="Close"
+            style={{ background: "none", border: `1px solid ${C.white10}`, borderRadius: "999px", padding: "6px 14px", cursor: "pointer", color: C.ivoryDim, display: "flex", alignItems: "center", gap: "6px", transition: "background .15s" }}
+          >
+            <X size={14} />
+            <span style={{ ...barlow, fontSize: "9px", letterSpacing: ".18em", textTransform: "uppercase" }}>Close</span>
+          </button>
+        </div>
+
+        {/* ── Two-column input area ── */}
+        <div className="al-exp-main">
+          {/* Left: lie input */}
+          <div style={{ padding: "2rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px" }}>
+              <div style={{ width: "7px", height: "7px", borderRadius: "50%", background: C.redFaint, flexShrink: 0 }} />
+              <label style={{ ...barlow, fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.45)" }}>
+                The Lie I'm Believing
+              </label>
+            </div>
+
+            <textarea
+              ref={textareaRef}
+              value={lie}
+              onChange={e => setLie(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="I am not enough..."
+              style={{
+                ...garamond,
+                width: "100%", background: C.inputBg,
+                border: `1px solid ${C.goldFaint}`, borderRadius: "12px",
+                padding: "14px 16px", color: C.ivory,
+                fontSize: "22px", lineHeight: 1.6, fontStyle: "italic",
+                outline: "none", resize: "vertical",
+                minHeight: "160px", boxSizing: "border-box",
+                transition: "border-color .2s",
+              }}
+              onFocus={e  => { e.target.style.borderColor = "rgba(201,168,76,0.45)"; }}
+              onBlur={e   => { e.target.style.borderColor = C.goldFaint; }}
+            />
+
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "16px" }}>
+              <p style={{ ...barlow, fontSize: "9px", color: C.ivoryFaint, letterSpacing: ".1em", margin: 0 }}>
+                {lie.length > 0 ? `${lie.length} characters` : "Ctrl+Enter to seek"}
+              </p>
+              <button
+                className="al-btn-seek"
+                onClick={handleGenerate}
+                disabled={isGenerating || !lie.trim()}
+                style={{
+                  ...barlow,
+                  display: "flex", alignItems: "center", gap: "8px",
+                  padding: "10px 24px", borderRadius: "999px",
+                  background: "rgba(201,168,76,0.1)", border: `1px solid ${C.goldBorder}`,
+                  color: C.gold, fontSize: "10px", letterSpacing: ".24em",
+                  textTransform: "uppercase", fontWeight: 700,
+                  cursor: (isGenerating || !lie.trim()) ? "not-allowed" : "pointer",
+                  opacity: (isGenerating || !lie.trim()) ? 0.5 : 1,
+                  transition: "background .2s, opacity .2s",
+                }}
+              >
+                {isGenerating ? <Loader2 size={14} className="al-spin" /> : <Sparkles size={14} />}
+                {isGenerating ? "Reflecting" : "Seek Truth"}
+              </button>
+            </div>
+
+            {error && (
+              <p style={{ ...barlow, fontSize: "10px", letterSpacing: ".12em", color: "rgba(220,80,80,0.75)", marginTop: "12px", marginBottom: 0 }}>
+                {error}
+              </p>
+            )}
+          </div>
+
+          {/* Right: truth output */}
+          <div
+            className="al-exp-col-right"
+            style={{ padding: "2rem", borderTop: `1px solid ${C.white06}` }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
+              <div style={{ width: "7px", height: "7px", borderRadius: "50%", background: C.greenFaint, flexShrink: 0 }} />
+              <label style={{ ...barlow, fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.45)" }}>
+                What God Has Said
+              </label>
+            </div>
+
+            <TruthPanel
+              isGenerating={isGenerating}
+              currentTruth={currentTruth}
+              activePopout={activePopout}
+              setActivePopout={setActivePopout}
+              onDiscard={() => { setLie(""); setActivePopout(null); }}
+              onSave={saveLog}
+              large
+            />
+          </div>
+        </div>
+
+        {/* ── History section ── */}
+        <div style={{ borderTop: `1px solid ${C.goldDiv}` }}>
+          <button
+            onClick={() => setShowHistory(h => !h)}
+            style={{
+              ...barlow,
+              display: "flex", alignItems: "center", gap: "8px",
+              width: "100%", padding: "16px 2rem",
+              background: "none", border: "none", cursor: "pointer",
+              fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase",
+              color: C.goldMuted, transition: "color .15s",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.color = C.gold; }}
+            onMouseLeave={e => { e.currentTarget.style.color = C.goldMuted; }}
+          >
+            <History size={14} />
+            {showHistory ? "Hide Arrow Log" : `View Arrow Log${logs.length > 0 ? ` (${logs.length})` : ""}`}
+            {showHistory ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+          </button>
+
+          {showHistory && (
+            <div>
+              <div style={{ height: "1px", background: C.goldDiv, margin: "0 2rem" }} />
+
+              {/* Column headers */}
+              {logs.length > 0 && (
+                <div className="al-exp-log-row" style={{ padding: "10px 2rem 6px", borderBottom: `1px solid ${C.goldDiv}` }}>
+                  <p style={{ ...barlow, fontSize: "8px", letterSpacing: ".32em", textTransform: "uppercase", color: "rgba(201,168,76,0.35)", margin: 0 }}>The Lie</p>
+                  <div />
+                  <p style={{ ...barlow, fontSize: "8px", letterSpacing: ".32em", textTransform: "uppercase", color: "rgba(201,168,76,0.35)", margin: 0 }}>What God Has Said</p>
+                  <div />
+                </div>
+              )}
+
+              <div
+                className="al-scrollable"
+                style={{ maxHeight: "400px", overflowY: "auto", padding: logs.length === 0 ? "3rem 2rem" : "0 2rem 1.5rem" }}
+              >
+                {logs.length === 0 ? (
+                  <p style={{ ...garamond, fontStyle: "italic", fontSize: "16px", color: C.ivoryFaint, lineHeight: 1.7, textAlign: "center", margin: 0 }}>
+                    No arrows logged yet. Start by identifying a lie you have been believing.
+                  </p>
+                ) : (
+                  logs.map((entry, i) => (
+                    <ExpandedEntryRow
+                      key={entry.id}
+                      entry={entry}
+                      onDelete={deleteLog}
+                      last={i === logs.length - 1}
+                    />
+                  ))
+                )}
+              </div>
+
+              {/* Footer cross-link */}
+              <div style={{ padding: "12px 2rem 1.5rem", textAlign: "center", borderTop: `1px solid ${C.goldDiv}` }}>
+                <Link
+                  to="/rule-of-life/community"
+                  onClick={onClose}
+                  style={{ ...barlow, fontSize: "9px", letterSpacing: ".32em", textTransform: "uppercase", color: C.gold, opacity: 0.5, textDecoration: "none" }}
+                >
+                  Part of the Community rhythm →
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -205,6 +612,7 @@ export function ArrowLogWidget() {
   const [showHistory, setShowHistory]   = useState(false);
   const [activePopout, setActivePopout] = useState(null);
   const [error, setError]               = useState(null);
+  const [isMaximized, setIsMaximized]   = useState(false);
   const textareaRef                     = useRef(null);
 
   /* Load from localStorage */
@@ -245,7 +653,6 @@ export function ArrowLogWidget() {
       });
 
       if (!res.ok) throw new Error(`Request failed (${res.status})`);
-
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       setCurrentTruth(data);
@@ -258,14 +665,13 @@ export function ArrowLogWidget() {
 
   const saveLog = () => {
     if (!currentTruth || !lie.trim()) return;
-    const newLog = {
+    setLogs(prev => [{
       id:        crypto.randomUUID(),
       lie:       lie.trim(),
       truth:     currentTruth.truth,
       verses:    currentTruth.verses ?? [],
       timestamp: Date.now(),
-    };
-    setLogs(prev => [newLog, ...prev]);
+    }, ...prev]);
     setLie("");
     setCurrentTruth(null);
     setActivePopout(null);
@@ -281,293 +687,210 @@ export function ArrowLogWidget() {
     if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) handleGenerate();
   };
 
+  /* Shared props passed to both views */
+  const shared = {
+    lie, setLie, isGenerating, currentTruth, logs,
+    activePopout, setActivePopout, error,
+    showHistory, setShowHistory,
+    handleGenerate, saveLog, deleteLog,
+  };
+
   return (
-    <div style={{
-      background:   C.goldGlow,
-      border:       `1px solid ${C.goldBorder}`,
-      borderRadius: "20px",
-      overflow:     "visible",
-      position:     "relative",
-    }}>
-      <style>{`
-        @keyframes al-spin {
-          from { transform: rotate(0deg); }
-          to   { transform: rotate(360deg); }
-        }
-        @keyframes al-fade-in {
-          from { opacity: 0; transform: translateY(8px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes al-pulse {
-          0%, 100% { opacity: 0.3; }
-          50%      { opacity: 0.8; }
-        }
-        .al-spin    { animation: al-spin 1.2s linear infinite; }
-        .al-fade-in { animation: al-fade-in .3s ease forwards; }
-        .al-pulse   { animation: al-pulse 1.8s ease infinite; }
-        .al-scrollable::-webkit-scrollbar { width: 3px; }
-        .al-scrollable::-webkit-scrollbar-track { background: transparent; }
-        .al-scrollable::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 2px; }
-        .al-scrollable { scrollbar-width: thin; scrollbar-color: rgba(201,168,76,0.2) transparent; }
-        .al-btn-seek:hover:not(:disabled) { background: rgba(201,168,76,0.22) !important; }
-        .al-btn-save:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(201,168,76,0.2) !important; }
-      `}</style>
+    <>
+      <style>{SHARED_CSS}</style>
 
-      {/* ── Header ── */}
-      <div style={{ padding: "1.5rem 1.5rem 1rem" }}>
-        <p style={{ ...barlow, fontSize: "9px", letterSpacing: ".44em", textTransform: "uppercase", color: C.gold, marginBottom: "4px" }}>
-          Arrow Log
-        </p>
-        <p style={{ ...garamond, fontStyle: "italic", fontSize: "14px", color: C.ivoryMuted, lineHeight: 1.5, margin: 0 }}>
-          Catch the lie. Answer with truth.
-        </p>
-      </div>
+      {/* ── Sidebar widget ── */}
+      <div style={{ background: C.goldGlow, border: `1px solid ${C.goldBorder}`, borderRadius: "20px", overflow: "visible", position: "relative" }}>
 
-      {/* ── Divider ── */}
-      <div style={{ height: "1px", background: C.goldDiv, margin: "0 1.5rem" }} />
-
-      {/* ── Input area ── */}
-      <div style={{ padding: "1.25rem 1.5rem 1rem" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
-          <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: C.redFaint, flexShrink: 0 }} />
-          <label style={{ ...barlow, fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.45)" }}>
-            The Lie I'm Believing
-          </label>
-        </div>
-
-        <textarea
-          ref={textareaRef}
-          value={lie}
-          onChange={e => setLie(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="I am not enough..."
-          rows={3}
-          style={{
-            ...garamond,
-            width:        "100%",
-            background:   C.inputBg,
-            border:       `1px solid ${C.goldFaint}`,
-            borderRadius: "10px",
-            padding:      "10px 12px",
-            color:        C.ivory,
-            fontSize:     "15px",
-            lineHeight:   1.6,
-            fontStyle:    "italic",
-            outline:      "none",
-            resize:       "vertical",
-            minHeight:    "70px",
-            boxSizing:    "border-box",
-            transition:   "border-color .2s",
-          }}
-          onFocus={e  => { e.target.style.borderColor = "rgba(201,168,76,0.45)"; }}
-          onBlur={e   => { e.target.style.borderColor = C.goldFaint; }}
-        />
-
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "10px" }}>
-          <p style={{ ...barlow, fontSize: "9px", color: C.ivoryFaint, letterSpacing: ".1em", margin: 0 }}>
-            {lie.length > 0 ? `${lie.length} chars` : "Ctrl+Enter to seek"}
-          </p>
+        {/* Header */}
+        <div style={{ padding: "1.5rem 1.5rem 1rem", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          <div>
+            <p style={{ ...barlow, fontSize: "9px", letterSpacing: ".44em", textTransform: "uppercase", color: C.gold, marginBottom: "4px" }}>
+              Arrow Log
+            </p>
+            <p style={{ ...garamond, fontStyle: "italic", fontSize: "14px", color: C.ivoryMuted, lineHeight: 1.5, margin: 0 }}>
+              Catch the lie. Answer with truth.
+            </p>
+          </div>
           <button
-            className="al-btn-seek"
-            onClick={handleGenerate}
-            disabled={isGenerating || !lie.trim()}
+            className="al-max-btn"
+            onClick={() => setIsMaximized(true)}
+            aria-label="Maximize"
+            title="Expand"
             style={{
-              ...barlow,
-              display:       "flex",
-              alignItems:    "center",
-              gap:           "7px",
-              padding:       "8px 16px",
-              borderRadius:  "999px",
-              background:    "rgba(201,168,76,0.1)",
-              border:        `1px solid ${C.goldBorder}`,
-              color:         C.gold,
-              fontSize:      "9px",
-              letterSpacing: ".22em",
-              textTransform: "uppercase",
-              fontWeight:    700,
-              cursor:        (isGenerating || !lie.trim()) ? "not-allowed" : "pointer",
-              opacity:       (isGenerating || !lie.trim()) ? 0.5 : 1,
-              transition:    "background .2s, opacity .2s",
+              background:   "rgba(201,168,76,0.06)",
+              border:       `1px solid ${C.goldDiv}`,
+              borderRadius: "8px",
+              padding:      "6px",
+              cursor:       "pointer",
+              color:        C.goldMuted,
+              lineHeight:   1,
+              flexShrink:   0,
+              marginLeft:   "12px",
+              marginTop:    "2px",
+              transition:   "background .15s, color .15s",
             }}
           >
-            {isGenerating
-              ? <Loader2 size={12} className="al-spin" />
-              : <Sparkles size={12} />
-            }
-            {isGenerating ? "Reflecting" : "Seek Truth"}
+            <Maximize2 size={13} />
           </button>
         </div>
-      </div>
 
-      {/* ── Error ── */}
-      {error && (
-        <div style={{ padding: "0 1.5rem 1rem" }}>
-          <p style={{ ...barlow, fontSize: "10px", letterSpacing: ".12em", color: "rgba(220,80,80,0.75)", margin: 0 }}>
-            {error}
-          </p>
-        </div>
-      )}
+        {/* Divider */}
+        <div style={{ height: "1px", background: C.goldDiv, margin: "0 1.5rem" }} />
 
-      {/* ── Truth output ── */}
-      {(isGenerating || currentTruth) && (
-        <div style={{ padding: "0 1.5rem 1.25rem" }}>
-          <div style={{ height: "1px", background: C.goldDiv, marginBottom: "1.25rem" }} />
-
-          <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "12px" }}>
-            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "rgba(100,200,120,0.45)", flexShrink: 0 }} />
+        {/* Input area */}
+        <div style={{ padding: "1.25rem 1.5rem 1rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
+            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: C.redFaint, flexShrink: 0 }} />
             <label style={{ ...barlow, fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.45)" }}>
-              What God Has Said
+              The Lie I'm Believing
             </label>
           </div>
 
-          {isGenerating ? (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", padding: "16px 0" }}>
-              <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Loader2 size={28} style={{ color: "rgba(201,168,76,0.2)" }} className="al-spin" />
-                <Sparkles size={12} style={{ position: "absolute", color: C.gold }} />
-              </div>
-              <p style={{ ...barlow, fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: C.goldMuted, margin: 0 }} className="al-pulse">
-                Consulting Scripture
-              </p>
-            </div>
-          ) : currentTruth ? (
-            <div className="al-fade-in">
-              <p style={{ ...garamond, fontSize: "16px", color: C.ivory, lineHeight: 1.7, fontStyle: "italic", marginBottom: "14px" }}>
-                {currentTruth.truth}
-              </p>
-
-              {/* Verse pills */}
-              {currentTruth.verses && currentTruth.verses.length > 0 && (
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "16px" }}>
-                  {currentTruth.verses.map((v, i) => (
-                    <VersePill
-                      key={i}
-                      verse={v}
-                      popoutKey={`current-${i}`}
-                      activePopout={activePopout}
-                      setActivePopout={setActivePopout}
-                    />
-                  ))}
-                </div>
-              )}
-
-              {/* Actions */}
-              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "12px", paddingTop: "12px", borderTop: `1px solid ${C.white06}` }}>
-                <button
-                  onClick={() => { setCurrentTruth(null); setActivePopout(null); }}
-                  style={{ ...barlow, background: "none", border: "none", cursor: "pointer", fontSize: "9px", letterSpacing: ".18em", textTransform: "uppercase", color: C.ivoryDim, padding: 0 }}
-                >
-                  Discard
-                </button>
-                <button
-                  className="al-btn-save"
-                  onClick={saveLog}
-                  style={{
-                    ...barlow,
-                    display:       "flex",
-                    alignItems:    "center",
-                    gap:           "6px",
-                    padding:       "7px 14px",
-                    borderRadius:  "999px",
-                    background:    C.gold,
-                    color:         "#0A0A0A",
-                    border:        "none",
-                    fontSize:      "9px",
-                    letterSpacing: ".2em",
-                    textTransform: "uppercase",
-                    fontWeight:    700,
-                    cursor:        "pointer",
-                    transition:    "transform .15s, box-shadow .15s",
-                  }}
-                >
-                  <Plus size={11} /> Add to Log
-                </button>
-              </div>
-            </div>
-          ) : null}
-        </div>
-      )}
-
-      {/* ── Empty state (first load) ── */}
-      {!isGenerating && !currentTruth && !error && (
-        <div style={{ padding: "0 1.5rem 1.25rem", display: "flex", alignItems: "center", gap: "10px" }}>
-          <Quote size={16} style={{ color: "rgba(201,168,76,0.15)", flexShrink: 0 }} />
-          <p style={{ ...garamond, fontStyle: "italic", fontSize: "14px", color: C.ivoryFaint, lineHeight: 1.5, margin: 0 }}>
-            The truth will be revealed here...
-          </p>
-        </div>
-      )}
-
-      {/* ── Cross-link ── */}
-      <div style={{ padding: "0 1.5rem 1rem", textAlign: "center" }}>
-        <Link
-          to="/rule-of-life/community"
-          style={{ ...barlow, fontSize: "9px", letterSpacing: ".32em", textTransform: "uppercase", color: C.gold, opacity: 0.5, textDecoration: "none" }}
-        >
-          Part of the Community rhythm →
-        </Link>
-      </div>
-
-      {/* ── Divider ── */}
-      <div style={{ height: "1px", background: C.goldDiv, margin: "0 1.5rem" }} />
-
-      {/* ── History toggle ── */}
-      <button
-        onClick={() => setShowHistory(h => !h)}
-        style={{
-          ...barlow,
-          display:        "flex",
-          alignItems:     "center",
-          gap:            "7px",
-          width:          "100%",
-          padding:        "12px 1.5rem",
-          background:     "none",
-          border:         "none",
-          cursor:         "pointer",
-          fontSize:       "9px",
-          letterSpacing:  ".3em",
-          textTransform:  "uppercase",
-          color:          C.goldMuted,
-          transition:     "color .15s",
-          justifyContent: "center",
-        }}
-        onMouseEnter={e => { e.currentTarget.style.color = C.gold; }}
-        onMouseLeave={e => { e.currentTarget.style.color = C.goldMuted; }}
-      >
-        <History size={13} />
-        {showHistory ? "Hide Arrow Log" : `View Arrow Log${logs.length > 0 ? ` (${logs.length})` : ""}`}
-        {showHistory ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
-      </button>
-
-      {/* ── History list ── */}
-      {showHistory && (
-        <div>
-          <div style={{ height: "1px", background: C.goldDiv, margin: "0 1.5rem" }} />
-          <div
-            className="al-scrollable"
+          <textarea
+            ref={textareaRef}
+            value={lie}
+            onChange={e => setLie(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="I am not enough..."
+            rows={3}
             style={{
-              maxHeight:  "380px",
-              overflowY:  "auto",
-              padding:    logs.length === 0 ? "2rem 1.5rem" : "0 1.5rem 1.5rem",
+              ...garamond,
+              width: "100%", background: C.inputBg,
+              border: `1px solid ${C.goldFaint}`, borderRadius: "10px",
+              padding: "10px 12px", color: C.ivory,
+              fontSize: "15px", lineHeight: 1.6, fontStyle: "italic",
+              outline: "none", resize: "vertical", minHeight: "70px",
+              boxSizing: "border-box", transition: "border-color .2s",
             }}
-          >
-            {logs.length === 0 ? (
-              <p style={{ ...garamond, fontStyle: "italic", fontSize: "14px", color: C.ivoryFaint, lineHeight: 1.7, textAlign: "center", margin: 0 }}>
-                No arrows logged yet. Start by identifying a lie you have been believing.
-              </p>
-            ) : (
-              logs.map((entry, i) => (
-                <EntryRow
-                  key={entry.id}
-                  entry={entry}
-                  onDelete={deleteLog}
-                  last={i === logs.length - 1}
-                />
-              ))
-            )}
+            onFocus={e => { e.target.style.borderColor = "rgba(201,168,76,0.45)"; }}
+            onBlur={e  => { e.target.style.borderColor = C.goldFaint; }}
+          />
+
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "10px" }}>
+            <p style={{ ...barlow, fontSize: "9px", color: C.ivoryFaint, letterSpacing: ".1em", margin: 0 }}>
+              {lie.length > 0 ? `${lie.length} chars` : "Ctrl+Enter to seek"}
+            </p>
+            <button
+              className="al-btn-seek"
+              onClick={handleGenerate}
+              disabled={isGenerating || !lie.trim()}
+              style={{
+                ...barlow,
+                display: "flex", alignItems: "center", gap: "7px",
+                padding: "8px 16px", borderRadius: "999px",
+                background: "rgba(201,168,76,0.1)", border: `1px solid ${C.goldBorder}`,
+                color: C.gold, fontSize: "9px", letterSpacing: ".22em",
+                textTransform: "uppercase", fontWeight: 700,
+                cursor: (isGenerating || !lie.trim()) ? "not-allowed" : "pointer",
+                opacity: (isGenerating || !lie.trim()) ? 0.5 : 1,
+                transition: "background .2s, opacity .2s",
+              }}
+            >
+              {isGenerating ? <Loader2 size={12} className="al-spin" /> : <Sparkles size={12} />}
+              {isGenerating ? "Reflecting" : "Seek Truth"}
+            </button>
           </div>
         </div>
+
+        {/* Error */}
+        {error && (
+          <div style={{ padding: "0 1.5rem 1rem" }}>
+            <p style={{ ...barlow, fontSize: "10px", letterSpacing: ".12em", color: "rgba(220,80,80,0.75)", margin: 0 }}>{error}</p>
+          </div>
+        )}
+
+        {/* Truth output */}
+        {(isGenerating || currentTruth) && (
+          <div style={{ padding: "0 1.5rem 1.25rem" }}>
+            <div style={{ height: "1px", background: C.goldDiv, marginBottom: "1.25rem" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "12px" }}>
+              <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: C.greenFaint, flexShrink: 0 }} />
+              <label style={{ ...barlow, fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.45)" }}>
+                What God Has Said
+              </label>
+            </div>
+            <TruthPanel
+              isGenerating={isGenerating}
+              currentTruth={currentTruth}
+              activePopout={activePopout}
+              setActivePopout={setActivePopout}
+              onDiscard={() => { setCurrentTruth(null); setActivePopout(null); }}
+              onSave={saveLog}
+              large={false}
+            />
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!isGenerating && !currentTruth && !error && (
+          <div style={{ padding: "0 1.5rem 1.25rem", display: "flex", alignItems: "center", gap: "10px" }}>
+            <Quote size={16} style={{ color: "rgba(201,168,76,0.12)", flexShrink: 0 }} />
+            <p style={{ ...garamond, fontStyle: "italic", fontSize: "14px", color: C.ivoryFaint, lineHeight: 1.5, margin: 0 }}>
+              The truth will be revealed here...
+            </p>
+          </div>
+        )}
+
+        {/* Cross-link */}
+        <div style={{ padding: "0 1.5rem 1rem", textAlign: "center" }}>
+          <Link
+            to="/rule-of-life/community"
+            style={{ ...barlow, fontSize: "9px", letterSpacing: ".32em", textTransform: "uppercase", color: C.gold, opacity: 0.5, textDecoration: "none" }}
+          >
+            Part of the Community rhythm →
+          </Link>
+        </div>
+
+        {/* Divider */}
+        <div style={{ height: "1px", background: C.goldDiv, margin: "0 1.5rem" }} />
+
+        {/* History toggle */}
+        <button
+          onClick={() => setShowHistory(h => !h)}
+          style={{
+            ...barlow,
+            display: "flex", alignItems: "center", gap: "7px",
+            width: "100%", padding: "12px 1.5rem",
+            background: "none", border: "none", cursor: "pointer",
+            fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase",
+            color: C.goldMuted, transition: "color .15s", justifyContent: "center",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.color = C.gold; }}
+          onMouseLeave={e => { e.currentTarget.style.color = C.goldMuted; }}
+        >
+          <History size={13} />
+          {showHistory ? "Hide Arrow Log" : `View Arrow Log${logs.length > 0 ? ` (${logs.length})` : ""}`}
+          {showHistory ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
+        </button>
+
+        {/* History list */}
+        {showHistory && (
+          <div>
+            <div style={{ height: "1px", background: C.goldDiv, margin: "0 1.5rem" }} />
+            <div
+              className="al-scrollable"
+              style={{ maxHeight: "380px", overflowY: "auto", padding: logs.length === 0 ? "2rem 1.5rem" : "0 1.5rem 1.5rem" }}
+            >
+              {logs.length === 0 ? (
+                <p style={{ ...garamond, fontStyle: "italic", fontSize: "14px", color: C.ivoryFaint, lineHeight: 1.7, textAlign: "center", margin: 0 }}>
+                  No arrows logged yet. Start by identifying a lie you have been believing.
+                </p>
+              ) : (
+                logs.map((entry, i) => (
+                  <CompactEntryRow key={entry.id} entry={entry} onDelete={deleteLog} last={i === logs.length - 1} />
+                ))
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ── Maximized overlay ── */}
+      {isMaximized && createPortal(
+        <ExpandedView {...shared} onClose={() => setIsMaximized(false)} />,
+        document.body
       )}
-    </div>
+    </>
   );
 }
