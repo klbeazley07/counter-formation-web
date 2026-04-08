@@ -410,6 +410,7 @@ export function ChallengeStyles() {
         opacity: .55; pointer-events: none;
       }
       .cf7-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(148px,42vw), 1fr)); gap: 12px; max-width: 1100px; margin: 0 auto; }
+      @media (min-width: 900px) { .cf7-grid { grid-template-columns: repeat(7, 1fr); } }
       .cf7-card {
         position: relative; overflow: hidden; border-radius: 16px; cursor: pointer;
         border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04);

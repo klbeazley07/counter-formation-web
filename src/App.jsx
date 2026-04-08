@@ -1636,6 +1636,93 @@ function ChallengeModal({ open, onClose }) {
 
 /* ─── MAIN SITE ───────────────────────────────────────────────────── */
 
+function ChallengeSlideBar() {
+  const [visible, setVisible] = useState(false);
+  const [dismissed, setDismissed] = useState(
+    () => localStorage.getItem("cf_slidebar_dismissed") === "1"
+  );
+
+  useEffect(() => {
+    if (dismissed) return;
+    const onScroll = () => {
+      if (window.scrollY > window.innerHeight * 0.6) setVisible(true);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [dismissed]);
+
+  const dismiss = () => {
+    setDismissed(true);
+    setVisible(false);
+    localStorage.setItem("cf_slidebar_dismissed", "1");
+  };
+
+  if (dismissed) return null;
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        bottom: "80px",
+        left: "50%",
+        transform: `translateX(-50%) translateY(${visible ? "0" : "120px"})`,
+        transition: "transform 0.45s cubic-bezier(0.22,1,0.36,1)",
+        zIndex: 120,
+        width: "min(680px, calc(100vw - 2rem))",
+      }}
+    >
+      <div style={{
+        background: "#12100D",
+        borderLeft: "3px solid #C9A84C",
+        borderRadius: "14px",
+        border: "1px solid rgba(255,255,255,0.08)",
+        borderLeftWidth: "3px",
+        borderLeftColor: "#C9A84C",
+        boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+        padding: "16px 20px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "16px",
+      }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: "10px", letterSpacing: "0.2em", textTransform: "uppercase", color: "#C9A84C", fontWeight: 700, marginBottom: "3px" }}>
+            7-Day Formation Challenge
+          </div>
+          <div style={{ fontSize: "13px", color: "rgba(250,248,245,0.6)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+            Seven days. One practice each morning.
+          </div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
+          <Link
+            to="/7-day-challenge"
+            onClick={dismiss}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: "6px",
+              background: "#C9A84C", color: "#0E0C0A",
+              fontSize: "11px", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase",
+              padding: "9px 18px", borderRadius: "999px", textDecoration: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Begin <ArrowRight size={12} />
+          </Link>
+          <button
+            onClick={dismiss}
+            aria-label="Dismiss"
+            style={{
+              background: "transparent", border: "none", cursor: "pointer",
+              color: "rgba(255,255,255,0.3)", padding: "4px", display: "flex",
+            }}
+          >
+            <X size={14} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function MainSite() {
   const mainRef = useRef(null);
   const [isChallengeOpen, setIsChallengeOpen] = useState(false);
@@ -1721,6 +1808,7 @@ function MainSite() {
       className="text-[#FAF8F5] selection:bg-[#C9A84C] selection:text-black min-h-screen overflow-x-hidden font-sans"
       style={{ backgroundColor: C.darkBg }}>
       <ChallengeModal open={isChallengeOpen} onClose={closeChallenge} />
+      <ChallengeSlideBar />
 
       <CinematicHero />
       <SectionDivider />
