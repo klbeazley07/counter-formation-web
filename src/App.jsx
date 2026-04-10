@@ -324,28 +324,6 @@ function CinematicHero() {
           Ephesians 6:10–18
         </div>
 
-        {/* Ticker — in flow so it clears iPhone browser bar naturally */}
-        <a href="#shop" className="md:hidden mt-auto w-full overflow-hidden pt-10"
-          style={{ borderTop: "1px solid rgba(201,168,76,0.12)", marginTop: "auto" }}
-          aria-label="Shop the Gear">
-          <div className="hero-ticker-track py-[10px]">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <span key={i} style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontSize: "10px",
-                fontWeight: 700,
-                letterSpacing: "0.38em",
-                textTransform: "uppercase",
-                color: "rgba(201,168,76,0.55)",
-                paddingRight: "3rem",
-                whiteSpace: "nowrap",
-                flexShrink: 0,
-              }}>
-                Counter Formation Gear Now Live &nbsp;·&nbsp; Limited Release &nbsp;·&nbsp; Formed in Christ
-              </span>
-            ))}
-          </div>
-        </a>
       </div>
 
       <div ref={scrollIndicatorRef}
