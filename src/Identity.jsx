@@ -1310,21 +1310,21 @@ function HeroSection() {
 
       // --- Hero entrance timeline (page load, not scroll) ---
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      tl.to(watermarkRef.current,  { opacity: 0.10, duration: 2.0 })
-        .to(eyebrowRef.current,    { opacity: 1,    y: 0, duration: 0.8 }, "-=1.5")
+      tl.to(watermarkRef.current,  { opacity: 0.10, duration: 1.0 })
+        .to(eyebrowRef.current,    { opacity: 1,    y: 0, duration: 0.5 }, "-=0.7")
         .fromTo(headlineRef.current,
           { opacity: 0, y: 20, scale: 0.97 },
-          { opacity: 1, y: 0, scale: 1.0, duration: 1.2, ease: "power3.out" }, "-=0.55")
-        .to(sublineRef.current,    { opacity: 0.55, y: 0, duration: 0.8 }, "+=0.4")
-        .to(chevronRef.current,    { opacity: 0.6,  y: 0, duration: 0.7 }, "-=0.5");
+          { opacity: 1, y: 0, scale: 1.0, duration: 0.7, ease: "power3.out" }, "-=0.3")
+        .to(sublineRef.current,    { opacity: 0.55, y: 0, duration: 0.6 }, "+=0.1")
+        .to(chevronRef.current,    { opacity: 0.6,  y: 0, duration: 0.5 }, "-=0.3");
 
       // --- Scroll indicator pulse: opacity 0.4 → 1.0 ---
       gsap.fromTo(chevronRef.current,
         { opacity: 0.4 },
-        { opacity: 1.0, duration: 1.4, ease: "sine.inOut", repeat: -1, yoyo: true, delay: 2.5 }
+        { opacity: 1.0, duration: 1.4, ease: "sine.inOut", repeat: -1, yoyo: true, delay: 1.8 }
       );
       gsap.to(chevronRef.current, {
-        y: 8, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2.5,
+        y: 8, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.8,
       });
 
       // --- Watermark parallax (scrub) ---
@@ -1471,7 +1471,9 @@ function ArmorIntroSection() {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) return;
 
-    const ctx = gsap.context(() => {
+    let ctx;
+    const raf = requestAnimationFrame(() => {
+    ctx = gsap.context(() => {
       // --- Left column: eyebrow + scripture ---
       if (eyebrowBRef.current) {
         gsap.fromTo(eyebrowBRef.current,
@@ -1513,7 +1515,8 @@ function ArmorIntroSection() {
         onLeaveBack: batch => gsap.to(batch, { opacity: 0, y: 15, duration: 0.4, overwrite: "auto" }),
       });
     }, sectionRef);
-    return () => ctx.revert();
+    }); // end requestAnimationFrame
+    return () => { cancelAnimationFrame(raf); ctx?.revert(); };
   }, []);
 
   return (
@@ -1608,7 +1611,9 @@ function GodsArmorSection() {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) return;
 
-    const ctx = gsap.context(() => {
+    let ctx;
+    const raf = requestAnimationFrame(() => {
+    ctx = gsap.context(() => {
       // --- Left column entrance ---
       if (leftColRef.current) {
         gsap.fromTo(leftColRef.current,
@@ -1651,7 +1656,8 @@ function GodsArmorSection() {
           },
         });
     }, sectionRef);
-    return () => ctx.revert();
+    }); // end requestAnimationFrame
+    return () => { cancelAnimationFrame(raf); ctx?.revert(); };
   }, []);
 
   return (
@@ -2211,7 +2217,9 @@ function ClosingSection() {
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const ctx = gsap.context(() => {
+    let ctx;
+    const raf = requestAnimationFrame(() => {
+    ctx = gsap.context(() => {
       // Prose paragraphs — batch stagger
       gsap.set(".closing-para", { opacity: 0 });
       ScrollTrigger.batch(".closing-para", {
@@ -2263,7 +2271,8 @@ function ClosingSection() {
             scrollTrigger: { trigger: scriptureRef.current, start: "top 90%", toggleActions: "play none none reverse" } });
       }
     }, sectionRef);
-    return () => ctx.revert();
+    }); // end requestAnimationFrame
+    return () => { cancelAnimationFrame(raf); ctx?.revert(); };
   }, []);
 
   return (
