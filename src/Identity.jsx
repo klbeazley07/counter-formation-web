@@ -1359,12 +1359,14 @@ function HeroSection() {
     <section
       id="hero"
       ref={sectionRef}
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-16 md:pt-0"
+      className="relative min-h-screen flex flex-col items-center justify-center pt-16 md:pt-0"
       style={{ backgroundColor: C.heroBg }}
     >
+      {/* Clipping wrapper for background layers — keeps overflow-hidden off the section itself to avoid iOS scroll trap */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
       {/* Hero image — very low opacity atmospheric */}
       <div
-        className="absolute inset-0 z-0"
+        className="absolute inset-0"
         style={{
           backgroundImage: "url('/Identity_wide.png')",
           backgroundSize: "cover",
@@ -1374,7 +1376,7 @@ function HeroSection() {
       />
       {/* Bottom-heavy gradient overlay */}
       <div
-        className="absolute inset-0 z-0"
+        className="absolute inset-0"
         style={{
           background: `linear-gradient(to top, ${C.heroBg} 0%, ${C.heroBg}ee 30%, ${C.heroBg}88 60%, ${C.heroBg}22 100%)`,
         }}
@@ -1383,7 +1385,7 @@ function HeroSection() {
       {/* Shield watermark — off-center atmospheric, parallax */}
       <div
         ref={watermarkRef}
-        className="absolute inset-0 z-0 flex items-center pointer-events-none opacity-0"
+        className="absolute inset-0 flex items-center opacity-0"
         style={{ justifyContent: "flex-end", paddingRight: "8%" }}
       >
         <img
@@ -1400,7 +1402,7 @@ function HeroSection() {
       {/* Particle field — CSS radial-gradient dots */}
       <div
         ref={particleRef}
-        className="absolute inset-0 pointer-events-none z-0"
+        className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: [
             "radial-gradient(circle at 22% 40%, rgba(255,255,255,0.12) 0.7px, transparent 1px)",
@@ -1414,6 +1416,7 @@ function HeroSection() {
           opacity: 0.6,
         }}
       />
+      </div>{/* end background clipping wrapper */}
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-4xl mx-auto">
