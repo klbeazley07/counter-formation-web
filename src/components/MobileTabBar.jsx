@@ -33,8 +33,11 @@ function TabIcon({ name, active }) {
 function getActiveTab(pathname, hash) {
   if (pathname === "/" && hash === "#shop") return "gear";
   if (pathname === "/" && hash === "#rule") return "identity";
+  if (pathname === "/" && hash === "#architecture") return "formation";
   if (pathname === "/") return "home";
-  if (pathname.startsWith("/identity")) return "identity";
+  if (pathname.startsWith("/identity")) return "formation";
+  if (pathname.startsWith("/practice")) return "formation";
+  if (pathname.startsWith("/community")) return "formation";
   if (pathname.startsWith("/rule-of-life")) return "identity";
   if (pathname.startsWith("/7-day-challenge")) return "more";
   if (pathname.startsWith("/field-guide")) return "more";
