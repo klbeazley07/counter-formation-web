@@ -809,7 +809,7 @@ function QRAnimation() {
 
 function GearBridgeSection() {
   return (
-    <section className="relative py-24 md:py-40 px-6 overflow-hidden"
+    <section id="gear-bridge" className="relative py-24 md:py-40 px-6 overflow-hidden"
       style={{ backgroundColor: C.darkBg }}>
       <div className="section-bg-parallax absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 50%,rgba(201,168,76,0.05) 0%,transparent 58%)" }} />

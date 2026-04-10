@@ -17,6 +17,7 @@ const HOME_SECTION_TABS = {
   "architecture": "formation",
   "rule":         "identity",
   "field-guide":  "identity",
+  "gear-bridge":  "gear",
   "shop":         "gear",
 };
 
