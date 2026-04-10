@@ -11,7 +11,27 @@ const TABS = [
   { key: "more",      label: "More",        path: null,         icon: "more" },
 ];
 
-// Simple inline SVG icons — 20x20, stroke-based, matching the brand
+// Homepage section ID → tab key mapping (for scroll detection)
+const HOME_SECTION_TABS = {
+  "top":          "home",
+  "architecture": "formation",
+  "rule":         "identity",
+  "field-guide":  "identity",
+  "shop":         "gear",
+};
+
+// Sub-page route prefix → tab key mapping
+function getRouteTab(pathname) {
+  if (pathname.startsWith("/identity"))        return "formation";
+  if (pathname.startsWith("/practice"))        return "formation";
+  if (pathname.startsWith("/community"))       return "formation";
+  if (pathname.startsWith("/rule-of-life"))    return "identity";
+  if (pathname.startsWith("/field-guide"))     return "identity";
+  if (pathname.startsWith("/7-day-challenge")) return "more";
+  if (pathname.startsWith("/about"))           return "more";
+  return null;
+}
+
 function TabIcon({ name, active }) {
   const color = active ? C.gold : "rgba(250,248,245,0.35)";
   const sw = 1.5;
@@ -30,36 +50,28 @@ function TabIcon({ name, active }) {
   }
 }
 
-function getActiveTab(pathname, hash) {
-  if (pathname === "/" && hash === "#shop") return "gear";
-  if (pathname === "/" && hash === "#rule") return "identity";
-  if (pathname === "/" && hash === "#architecture") return "formation";
-  if (pathname === "/") return "home";
-  if (pathname.startsWith("/identity")) return "formation";
-  if (pathname.startsWith("/practice")) return "formation";
-  if (pathname.startsWith("/community")) return "formation";
-  if (pathname.startsWith("/rule-of-life")) return "identity";
-  if (pathname.startsWith("/7-day-challenge")) return "more";
-  if (pathname.startsWith("/field-guide")) return "more";
-  if (pathname.startsWith("/about")) return "more";
-  return "home";
-}
-
 export function MobileTabBar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [moreOpen, setMoreOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const [forcedActive, setForcedActive] = useState(null);
-  const activeTab = forcedActive ?? getActiveTab(location.pathname, location.hash);
+  const [scrollTab, setScrollTab] = useState("home");
+
+  const isHomepage = location.pathname === "/";
 
   // Drag-to-close state
   const touchStartY = useRef(0);
   const [dragY, setDragY] = useState(0);
 
-  const isHomepage = location.pathname === "/";
+  // Active tab resolution:
+  // 1. forcedActive (set briefly when tapping external links)
+  // 2. sub-page route mapping
+  // 3. homepage scroll detection
+  const routeTab = getRouteTab(location.pathname);
+  const activeTab = forcedActive ?? routeTab ?? (isHomepage ? scrollTab : "home");
 
-  // On sub-pages always show; on homepage show after scrolling 30% down
+  // Tab bar visibility — hidden on homepage until past the hero
   useEffect(() => {
     if (!isHomepage) {
       setVisible(true);
@@ -71,23 +83,36 @@ export function MobileTabBar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [isHomepage]);
 
-  // Close "More" sheet on route change; clear any forced active state
+  // Close "More" sheet and clear forced state on route change
   useEffect(() => { setMoreOpen(false); setForcedActive(null); }, [location.pathname]);
 
-  // Lock body scroll when sheet is open
+  // Homepage scroll detection — watch all main sections and highlight the most-visible tab
   useEffect(() => {
-    if (moreOpen) {
-      document.body.style.overflow = "hidden";
-      document.body.style.touchAction = "none";
-    } else {
-      document.body.style.overflow = "";
-      document.body.style.touchAction = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-      document.body.style.touchAction = "";
-    };
-  }, [moreOpen]);
+    if (!isHomepage) return;
+
+    const ratios = {};
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(e => { ratios[e.target.id] = e.intersectionRatio; });
+        let bestTab = "home", bestRatio = -1;
+        Object.entries(HOME_SECTION_TABS).forEach(([id, tab]) => {
+          if ((ratios[id] ?? 0) > bestRatio) {
+            bestRatio = ratios[id] ?? 0;
+            bestTab = tab;
+          }
+        });
+        setScrollTab(bestTab);
+      },
+      { threshold: [0, 0.05, 0.1, 0.25, 0.5, 0.75, 1.0] }
+    );
+
+    Object.keys(HOME_SECTION_TABS).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) obs.observe(el);
+    });
+
+    return () => obs.disconnect();
+  }, [isHomepage]);
 
   const handleTabTap = (tab) => {
     if (tab.key === "more") {
@@ -103,7 +128,7 @@ export function MobileTabBar() {
       return;
     }
 
-    // Absolute external URL
+    // External URL (Formation)
     if (tab.path.startsWith("http")) {
       setForcedActive(tab.key);
       window.location.href = tab.path;
@@ -116,7 +141,6 @@ export function MobileTabBar() {
       const doScroll = () => {
         const el = document.getElementById(id);
         if (!el) return;
-        // Rule of Life is a full-screen snap section — flush to top, reset carousel to slide 0
         if (id === "rule") {
           el.scrollIntoView({ behavior: "smooth", block: "start" });
           const carousel = el.querySelector(".rhythm-carousel");
@@ -156,6 +180,21 @@ export function MobileTabBar() {
     }
     setDragY(0);
   };
+
+  // Lock body scroll when More sheet is open
+  useEffect(() => {
+    if (moreOpen) {
+      document.body.style.overflow = "hidden";
+      document.body.style.touchAction = "none";
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.touchAction = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.touchAction = "";
+    };
+  }, [moreOpen]);
 
   return (
     <>
