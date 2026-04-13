@@ -6,7 +6,7 @@
  * Set it in Cloudflare Pages → Settings → Environment Variables (Production).
  */
 
-const GEMINI_PRIMARY  = "gemini-2.0-flash";
+const GEMINI_PRIMARY  = "gemini-2.5-flash";
 const GEMINI_FALLBACK = "gemini-1.5-flash";
 const GEMINI_BASE     = "https://generativelanguage.googleapis.com/v1beta/models";
 
@@ -24,7 +24,7 @@ async function callGeminiWithRetry(apiKey, model, body, maxAttempts = 3) {
     lastRes = await callGemini(apiKey, model, body);
     if (lastRes.ok || lastRes.status === 400 || lastRes.status === 401) break;
     if (attempt < maxAttempts) {
-      await new Promise(r => setTimeout(r, attempt * 500));
+      await new Promise(r => setTimeout(r, attempt * 1500));
     }
   }
   return lastRes;
