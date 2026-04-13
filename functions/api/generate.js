@@ -6,7 +6,7 @@
  * Set it in Cloudflare Pages → Settings → Environment Variables (Production).
  */
 
-const GEMINI_PRIMARY  = "gemini-2.5-flash";
+const GEMINI_PRIMARY  = "gemini-2.0-flash";
 const GEMINI_FALLBACK = "gemini-1.5-flash";
 const GEMINI_BASE     = "https://generativelanguage.googleapis.com/v1beta/models";
 
@@ -18,14 +18,27 @@ async function callGemini(apiKey, model, body) {
   });
 }
 
+async function callGeminiWithRetry(apiKey, model, body, maxAttempts = 3) {
+  let lastRes;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    lastRes = await callGemini(apiKey, model, body);
+    if (lastRes.ok || lastRes.status === 400 || lastRes.status === 401) break;
+    if (attempt < maxAttempts) {
+      // Brief pause before retry — 503s are usually transient overloads
+      await new Promise(r => setTimeout(r, attempt * 500));
+    }
+  }
+  return lastRes;
+}
+
 async function callGeminiWithFallback(apiKey, body) {
-  let res = await callGemini(apiKey, GEMINI_PRIMARY, body);
+  let res = await callGeminiWithRetry(apiKey, GEMINI_PRIMARY, body);
   if (!res.ok) {
     const status = res.status;
-    // Retry on overload or server errors; surface client errors immediately
+    // Surface client errors immediately; retry fallback on server errors
     if (status !== 400 && status !== 401) {
       console.warn(`${GEMINI_PRIMARY} returned ${status}, falling back to ${GEMINI_FALLBACK}`);
-      res = await callGemini(apiKey, GEMINI_FALLBACK, body);
+      res = await callGeminiWithRetry(apiKey, GEMINI_FALLBACK, body);
     }
   }
   return res;
