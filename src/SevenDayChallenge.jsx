@@ -515,10 +515,11 @@ export function ChallengeStyles() {
       }
 
       .cf7-dev-sec     { margin-bottom: 2.75rem; }
-      .cf7-dev-sec-lbl { font-size: 9px; letter-spacing: .42em; text-transform: uppercase; color: #C9A84C; margin-bottom: 1.2rem; padding-bottom: .7rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
-      .cf7-dev-body    { font-family: 'Cormorant Garamond', serif; font-size: clamp(17px,4vw,20px); line-height: 1.84; color: rgba(250,248,245,0.78); }
-      .cf7-dev-body p  { margin-bottom: 1.2rem; }
+      .cf7-dev-sec-lbl { font-size: 9px; letter-spacing: .42em; text-transform: uppercase; color: #C9A84C; margin-top: 2.5rem; margin-bottom: 1.25rem; padding-bottom: .7rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .cf7-dev-body    { font-family: 'Cormorant Garamond', serif; font-size: clamp(18px,4vw,20px); line-height: 1.85; color: rgba(250,248,245,0.78); max-width: 620px; }
+      .cf7-dev-body p  { margin-bottom: 2rem; }
       .cf7-dev-body em { font-style: italic; color: rgba(250,248,245,0.96); }
+      .cf7-dev-opening .cf7-dev-body > p:first-child { font-size: 20px; }
 
       .cf7-scripture-block { background: rgba(255,255,255,0.03); border-left: 2px solid #C9A84C; border-radius: 0 12px 12px 0; padding: 1.4rem 1.5rem; margin: 1.5rem 0; }
       .cf7-scripture-block p    { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(16px,4vw,19px); color: rgba(250,248,245,0.75); line-height: 1.7; margin-bottom: .7rem; }
