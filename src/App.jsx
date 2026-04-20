@@ -28,6 +28,7 @@ import { SiteNav } from "./components/SiteNav";
 import { SiteFooter } from "./components/SiteFooter";
 import { MobileTabBar } from "./components/MobileTabBar";
 import { CampaignBanner } from "./components/CampaignBanner";
+import FruitAssessment, { FAStyles } from "./FruitAssessment";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1809,6 +1810,7 @@ export default function App() {
     <BrowserRouter>
       <ScrollToTop />
       <FieldGuideStyles />
+      <FAStyles />
       <ChallengeStyles />
       <RuleStyles />
       <ArchitectureStyles />
@@ -1827,6 +1829,7 @@ export default function App() {
         <Route path={`${FG_BASE}/why`}      element={<FGWhy />} />
         <Route path={`${FG_BASE}/new`}      element={<FGNewHere />} />
         <Route path="/field-guide/devotion-guide" element={<DevotionGuide />} />
+        <Route path="/field-guide/fruit-assessment" element={<FruitAssessment />} />
 
         {/* 7-Day Challenge routes */}
         <Route path="/7-day-challenge" element={<CFLanding />} />
