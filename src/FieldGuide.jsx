@@ -488,6 +488,37 @@ export function FGLanding() {
 
         <GoldDivider mt={34} mb={34} />
 
+        {/* Fruit of the Spirit Assessment tile — visible on landing */}
+        <div className="fg-reveal" style={{ marginBottom: 28 }}>
+          <div style={{ background: C.bgCard, border: `1px solid ${C.goldDim}`, padding: "36px 40px", display: "flex", flexDirection: "column", gap: 0, position: "relative", overflow: "hidden" }}>
+            {/* Subtle top gold line (matching fg-panel::before) */}
+            <div style={{ position: "absolute", top: 0, left: "10%", right: "10%", height: 1, background: "linear-gradient(90deg, transparent, rgba(201,168,76,0.48), transparent)" }} />
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.34em", textTransform: "uppercase", color: C.gold }}>
+                Also in the Field Guide
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 24 }}>
+                <div>
+                  <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 26, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.ivory, lineHeight: 1.15, marginBottom: 12 }}>
+                    Fruit of the Spirit<br />Assessment
+                  </div>
+                  <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.8, margin: 0, maxWidth: 480 }}>
+                    A 27-question diagnostic that reveals where the Spirit has the most room to work in you right now. Built for honest self-report, not self-idealization.
+                  </p>
+                  <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginTop: 14 }}>
+                    9 Fruits &middot; 27 Questions &middot; ~6 Min
+                  </div>
+                </div>
+                <Link className="fg-btn-sec" to="/field-guide/fruit-assessment" style={{ flexShrink: 0, minWidth: 200 }}>
+                  Begin Assessment &rarr;
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <GoldDivider mt={28} mb={28} />
+
         <div className="fg-meta-grid">
           <div className="fg-card fg-reveal">
             <div className="fg-section-kicker" style={{ marginBottom: 12 }}>How it works</div>
@@ -500,47 +531,6 @@ export function FGLanding() {
             <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.8, margin: 0 }}>
               Save this page to your home screen, rescan from the garment, or carry the rhythm forward through the 7-day path.
             </p>
-          </div>
-        </div>
-
-        <GoldDivider mt={52} mb={52} />
-
-        {/* Field Guide Tools */}
-        <div className="fg-meta-grid fg-reveal">
-          <div style={{ background: C.bgCard, border: `1px solid ${C.goldDim}`, padding: 48, display: "flex", flexDirection: "column" }}>
-            <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase", color: C.gold, marginBottom: 16 }}>
-              Field Guide
-            </div>
-            <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 22, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.ivory, marginBottom: 16, lineHeight: 1.2 }}>
-              Scripture Before Scroll
-            </div>
-            <p style={{ fontSize: 15, color: C.muted, lineHeight: 1.7, marginBottom: 16, flex: 1, margin: "0 0 16px" }}>
-              A 7-day formation sequence for reordering your first attention -- before the algorithm gets it.
-            </p>
-            <div style={{ fontSize: 13, color: C.dim, marginBottom: 24, fontFamily: "'Barlow Condensed',sans-serif", letterSpacing: "0.2em", textTransform: "uppercase" }}>
-              7 Days &middot; ~5 Min Daily
-            </div>
-            <Link to={`${BASE}/today`} style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 12, letterSpacing: "0.28em", textTransform: "uppercase", color: C.gold, textDecoration: "none" }}>
-              Begin Today&apos;s Office &rarr;
-            </Link>
-          </div>
-
-          <div style={{ background: C.bgCard, border: `1px solid ${C.goldDim}`, padding: 48, display: "flex", flexDirection: "column" }}>
-            <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase", color: C.gold, marginBottom: 16 }}>
-              Field Guide
-            </div>
-            <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 22, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.ivory, marginBottom: 16, lineHeight: 1.2 }}>
-              Fruit of the Spirit Assessment
-            </div>
-            <p style={{ fontSize: 15, color: C.muted, lineHeight: 1.7, flex: 1, margin: "0 0 16px" }}>
-              A 27-question diagnostic that reveals where the Spirit has the most room to work in you right now. Built for honest self-report, not self-idealization.
-            </p>
-            <div style={{ fontSize: 13, color: C.dim, marginBottom: 24, fontFamily: "'Barlow Condensed',sans-serif", letterSpacing: "0.2em", textTransform: "uppercase" }}>
-              9 Fruits &middot; 27 Questions &middot; ~6 Min
-            </div>
-            <Link to="/field-guide/fruit-assessment" style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 12, letterSpacing: "0.28em", textTransform: "uppercase", color: C.gold, textDecoration: "none" }}>
-              Begin Assessment &rarr;
-            </Link>
           </div>
         </div>
 
