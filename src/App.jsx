@@ -555,6 +555,16 @@ function FieldGuideSection() {
       desc: "Generate a customized daily devotion for any passage, theme, question, or challenge — AI-powered formation on demand.",
       href: "/field-guide/devotion-guide",
       isLink: true,
+      cta: "Open Guide",
+    },
+    {
+      type: "Assessment", rhythm: "Formation", date: "April 2026",
+      title: "Fruit of the Spirit",
+      img: "https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?q=80&w=1200",
+      desc: "A 27-question diagnostic that reveals where the Spirit has the most room to work in you right now.",
+      href: "/field-guide/fruit-assessment",
+      isLink: true,
+      cta: "Begin Assessment",
     },
     {
       type: "Devotion", rhythm: "Scripture", date: "March 2026",
@@ -562,6 +572,8 @@ function FieldGuideSection() {
       img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1200",
       desc: "Reclaim the architecture of your first hour through scripture before the algorithm.",
       href: FG_BASE,
+      isLink: true,
+      cta: "Enter the Rhythm",
     },
     {
       type: "Practice", rhythm: "Sabbath", date: "February 2026",
@@ -569,6 +581,7 @@ function FieldGuideSection() {
       img: "https://images.unsplash.com/photo-1472396961693-142e6e269027?q=80&w=1200",
       desc: "A weekly rhythm of trust, delight, and resistance to production without end.",
       href: "#field-guide",
+      cta: "Coming Next",
     },
   ];
 
@@ -636,7 +649,7 @@ function FieldGuideSection() {
                 {featured.desc}
               </p>
               <div className="mt-8 inline-flex items-center gap-3 text-[12px] uppercase tracking-[0.22em] font-bold text-[#C9A84C]">
-                {featured.isLink ? "Open Guide" : "Enter the Rhythm"} <ArrowRight size={14} />
+                {featured.cta || "Open Guide"} <ArrowRight size={14} />
               </div>
             </div>
           </Link>
@@ -668,7 +681,7 @@ function FieldGuideSection() {
                         </p>
                       </div>
                       <div className="pt-5 flex items-center gap-2 text-[11px] text-[#C9A84C] uppercase tracking-[0.22em] font-bold">
-                        {art.isLink ? "Open Guide" : "Coming Next"} <ArrowRight size={12} />
+                        {art.cta || "Coming Next"} <ArrowRight size={12} />
                       </div>
                     </div>
                   </div>
