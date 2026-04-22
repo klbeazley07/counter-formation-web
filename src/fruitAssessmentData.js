@@ -55,6 +55,8 @@ export const FRUITS = {
     label: "Love",
     greek: "Agape",
     formationStatement: "Love in the biblical sense is not a feeling. It is a decision made repeatedly in the direction of another person's good, often at personal cost. The places where love is difficult for you are the most honest map of where self-protection is still operating. The Spirit's invitation here is not to feel more warmly toward difficult people. It is to act rightly toward them before the feeling follows.",
+    recognitionStatement: "Love, as the Spirit is producing it in you, is visible in the way you stay engaged when self-protection would be easier. The capacity to act rightly toward difficult people, to give where you cannot be repaid, this is not self-generated. It is evidence that you have been abiding, and abiding is shaping you into someone who loves the way Christ loved.",
+    secondaryFormationStatement: "Love scored close to your primary formation fruit in this season. The difficulty of loving well often rises from the same root as other areas where surrender is being asked for. As the Spirit deepens the primary work in you, the capacity to love sacrificially tends to move with it. These fruits rise together.",
     scripture: {
       text: "And walk in love, as Christ loved us and gave himself up for us.",
       reference: "Ephesians 5:2",
@@ -67,6 +69,8 @@ export const FRUITS = {
     label: "Joy",
     greek: "Chara",
     formationStatement: "The joy the Spirit produces is not an emotion dependent on circumstances. It is a settled conviction that God is good and sovereign, which holds even when nothing around you confirms it. If your joy rises and falls with what is happening to you, you are drawing from the wrong well. The Spirit's work here is not to make you feel better. It is to root you in something that cannot be taken.",
+    recognitionStatement: "The settled gladness that persists when nothing around you confirms it, this is the joy the Spirit produces. You are drawing from a well deeper than your circumstances. The people who know you well have probably noticed this in you even when you have not noticed it in yourself. It is one of the quieter fruits, and one of the clearest signs of a life rooted in something larger than the moment.",
+    secondaryFormationStatement: "Joy is close behind your primary formation fruit, and the two likely share a common root. Circumstances-dependent gladness is often a symptom of a deeper attachment to outcomes. As the Spirit works the primary fruit in you, joy tends to settle with it, becoming less reactive and more rooted.",
     scripture: {
       text: "Rejoice in the Lord always; again I will say, rejoice.",
       reference: "Philippians 4:4",
@@ -79,6 +83,8 @@ export const FRUITS = {
     label: "Peace",
     greek: "Eirene",
     formationStatement: "The peace God offers is not the absence of difficulty. It is an interior settledness that coexists with difficulty. Anxiety is almost always a form of attempted sovereignty: the mind rehearsing outcomes it cannot control in hopes of managing them in advance. The Spirit's invitation here is not to stop thinking carefully. It is to release what was never yours to carry.",
+    recognitionStatement: "Peace as the Spirit produces it is not the absence of difficulty. It is an interior settledness that coexists with it. The calm you bring into tense rooms, the way anxiety does not govern your decisions the way it governs most, this is evidence that surrender has been doing its work in you. You have been learning, in practice, to release what was never yours to carry.",
+    secondaryFormationStatement: "Peace is what emerges when the mind stops rehearsing outcomes it cannot control. It is close behind your primary formation fruit because both require the same surrender, the release of what was never yours to carry. As the Spirit works the primary fruit in you, notice how often anxiety is what was actually driving the pattern.",
     scripture: {
       text: "And the peace of God, which surpasses all understanding, will guard your hearts and your minds in Christ Jesus.",
       reference: "Philippians 4:7",
@@ -91,6 +97,8 @@ export const FRUITS = {
     label: "Patience",
     greek: "Makrothumia",
     formationStatement: "Patience is not passive endurance. It is active trust. The places in your life where frustration surfaces most quickly are not character flaws to manage; they are invitations to a deeper surrender. The Spirit's work here is not to make you slow. It is to make you unshakeable.",
+    recognitionStatement: "Patience, as the Spirit is producing it in you, is not slowness. It is active trust. The steadiness you bring to slow processes and difficult people, the way you can wait without resentment, this is the fruit of a heart that is not trying to control outcomes it was never given authority over. This is what abiding looks like when circumstances test it.",
+    secondaryFormationStatement: "Patience is close behind your primary formation fruit, and these two likely share a surrender root. Both are what emerges when the interior life is ordered enough to trust outcomes that are out of your control. As the Spirit deepens the primary work in you, patience typically moves with it. These fruits rise together.",
     scripture: {
       text: "Be completely humble and gentle; be patient, bearing with one another in love.",
       reference: "Ephesians 4:2",
@@ -103,6 +111,8 @@ export const FRUITS = {
     label: "Kindness",
     greek: "Chrestotes",
     formationStatement: "Kindness as the Spirit produces it is not a temperament. It is an attentiveness to the people in front of you that refuses to be crowded out by your own preoccupations. The world forms us toward efficiency and self-focus; kindness is a structural act of resistance against both. The invitation here is not to be nicer. It is to actually see the people you are moving past.",
+    recognitionStatement: "Kindness as the Spirit produces it is not a temperament. It is attentiveness to the people in front of you, and the Spirit has been teaching you to see. The consideration you extend without being asked, the quiet acts of noticing that the recipient often does not even register, these are the Spirit's work becoming visible through you. This is what attentive love looks like in the ordinary moments.",
+    secondaryFormationStatement: "Kindness is close behind your primary formation fruit. Both are forms of attentiveness, the refusal to let self-focus crowd out the people and moments in front of you. As the Spirit shapes the primary work in you, kindness tends to become more natural, less a deliberate effort and more a visible overflow of a life that is actually paying attention.",
     scripture: {
       text: "Be kind to one another, tenderhearted, forgiving one another, as God in Christ forgave you.",
       reference: "Ephesians 4:32",
@@ -115,6 +125,8 @@ export const FRUITS = {
     label: "Goodness",
     greek: "Agathosune",
     formationStatement: "Goodness in the biblical sense is not rule-following. It is moral integrity expressed in action, consistent whether or not anyone is watching. The gap between who you are in public and who you are in private is the most accurate measure of where this fruit is still forming. The Spirit's work here is not to improve your performance. It is to close the gap between the two.",
+    recognitionStatement: "Goodness is the alignment of your private behavior with what you profess publicly, and the Spirit has been closing that gap in you. The integrity the people around you sense, the consistency between who you are alone and who you are in the room, this is not something you have manufactured. It is evidence that you have been abiding long enough for the fruit to start showing.",
+    secondaryFormationStatement: "Goodness is close behind your primary formation fruit. The gap between private and public behavior often narrows as deeper surrender does its work. As the Spirit shapes the primary fruit in you, the integrity between who you are alone and who you are in the room tends to close with it. These fruits rise together.",
     scripture: {
       text: "For we are his workmanship, created in Christ Jesus for good works, which God prepared beforehand, that we should walk in them.",
       reference: "Ephesians 2:10",
@@ -127,6 +139,8 @@ export const FRUITS = {
     label: "Faithfulness",
     greek: "Pistis",
     formationStatement: "Faithfulness is what love looks like over time. It is not a burst of commitment followed by drift. It is the quiet, unglamorous decision to follow through when motivation is gone, when no one is watching, and when the return is not immediately visible. This is where most formation actually happens: not in the inspired moments but in the ordinary ones that never get noticed.",
+    recognitionStatement: "Faithfulness is what love looks like over time, and the Spirit has been producing it in you through the ordinary, unglamorous decisions no one sees. The commitments you keep when motivation is gone, the rhythms you sustain when no one is watching, this is how abiding becomes visible in a life. Most of the Spirit's work in a faithful person happens in the moments that never get noticed.",
+    secondaryFormationStatement: "Faithfulness is close behind your primary formation fruit. Consistency over time is usually not a willpower problem, it is a foundation problem. As the Spirit deepens the primary work in you, faithfulness tends to follow, because the rhythms hold better when they are anchored in something more stable than motivation.",
     scripture: {
       text: "His master said to him, 'Well done, good and faithful servant.'",
       reference: "Matthew 25:21",
@@ -139,6 +153,8 @@ export const FRUITS = {
     label: "Gentleness",
     greek: "Prautes",
     formationStatement: "Gentleness is not weakness. It is strength that has learned restraint. The Greek word carried the image of a wild horse brought under the control of its rider: all the power remains; what changes is who is directing it. The question this fruit raises is not whether you are strong. It is whether your strength is submitted to something larger than yourself.",
+    recognitionStatement: "Gentleness is not weakness. It is strength under control, and the Spirit has been shaping yours. The way you correct without diminishing, the way your conviction expresses itself with restraint rather than force, this is what happens when power is submitted to something larger than itself. The people on the receiving end of your strength often feel honored by it rather than overpowered.",
+    secondaryFormationStatement: "Gentleness is close behind your primary formation fruit. Strength expressed with sharpness is often a sign that surrender has not yet reached the places where power lives. As the Spirit shapes the primary work in you, gentleness tends to follow, because your strength begins to feel less like something you need to assert and more like something you can hold carefully.",
     scripture: {
       text: "But the meek shall inherit the earth and delight themselves in abundant peace.",
       reference: "Psalm 37:11",
@@ -151,6 +167,8 @@ export const FRUITS = {
     label: "Self-Control",
     greek: "Egkrateia",
     formationStatement: "Self-control as the Spirit produces it is not white-knuckle willpower. It is a life so ordered around what is true and good that the appetites lose their command over you. The rhythms you build or fail to build are not incidental; they are the architecture of whether you are governed by your desires or by your convictions. Formation here is not about suppression. It is about building a life where you are not ruled.",
+    recognitionStatement: "Self-control, as the Spirit produces it in you, is not white-knuckle willpower. It is a life so ordered around what is true that the appetites lose their command. The rhythms you have built, the boundaries you hold when you do not feel like holding them, this is evidence of an interior life that has been genuinely surrendered. You are not ruled by what you want in the moment.",
+    secondaryFormationStatement: "Self-control is close behind your primary formation fruit, and the two likely share a root. Both are what happens when the interior life is ordered enough that the appetites lose their command. As the Spirit deepens the primary work in you, self-control typically moves with it. These fruits rise together.",
     scripture: {
       text: "But I discipline my body and keep it under control, lest after preaching to others I myself should be disqualified.",
       reference: "1 Corinthians 9:27",
