@@ -87,42 +87,33 @@ Return ONLY a valid JSON object with no markdown formatting, no code fences, no 
 
     const geminiRes = await callGeminiWithFallback(apiKey, {
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 1024,
+        responseMimeType: "application/json",
+      },
     });
 
     if (!geminiRes.ok) {
       const detail = await geminiRes.text();
       console.error("Gemini error:", geminiRes.status, detail);
-      // Parse detail for a cleaner message if available
       let reason = "";
       try { reason = JSON.parse(detail)?.error?.message ?? ""; } catch {}
       return json({ error: `Gemini ${geminiRes.status}${reason ? `: ${reason}` : ""}. Please try again.` }, 502);
     }
 
     const data = await geminiRes.json();
-    let text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
 
     if (!text) {
       return json({ error: "Empty response from Gemini." }, 502);
     }
 
-    // Extract JSON object from response — model may wrap it in prose or code fences
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (jsonMatch) text = jsonMatch[0];
-
     try {
       return json(JSON.parse(text));
     } catch {
       console.error("Failed to parse Gemini response as JSON:", text);
-      return json({
-        truth: "God loves you unconditionally and nothing can separate you from that love.",
-        verses: [{
-          reference: "Romans 8:38-39",
-          text: "For I am sure that neither death nor life, nor angels nor rulers, nor things present nor things to come, nor powers, nor height nor depth, nor anything else in all creation, will be able to separate us from the love of God in Christ Jesus our Lord.",
-          translation: "ESV",
-          bibleUrl: "https://www.bible.com/bible/59/ROM.8.ESV",
-        }],
-      });
+      return json({ error: "Malformed response from Gemini. Please try again." }, 502);
     }
   } catch (err) {
     console.error("arrow-log function error:", err);
