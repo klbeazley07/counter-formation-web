@@ -13,7 +13,7 @@
 | 2 | Connection Tissue | COMPLETE | Session 2 (2026-05-15) |
 | 3 | Discipleship Agent Foundation | COMPLETE | Session 3 (2026-05-15) |
 | 4 | Design System | COMPLETE | Session 4 (2026-05-15) |
-| 5 | Content Layer | READY (independent) | — |
+| 5 | Content Layer | COMPLETE | Session 5 (2026-05-15) |
 
 ---
 
@@ -94,6 +94,25 @@
 - ArrowLogWidget `ExpandedView` internals — kept the warm cream journal palette, swapped only sidebar buttons + outer chrome. The ExpandedView is a deliberately distinct visual surface and its inline `EX.*` palette stays in place.
 - Section pages (App.jsx, Identity.jsx, RuleOfLife.jsx, etc.) — per scope, only widget files were token-migrated. Section pages still declare their own `C` constants. A subsequent pass can migrate them once the new primitives are stable.
 - Visual smoke test in browser. Build is green but the agent cannot drive a browser. Recommend manual click-through across all six widgets (especially PeacePauseWidget edit panel and ArrowLogWidget expanded portal) before considering Phase 4 fully landed.
+
+---
+
+## Phase 5 Scope
+
+**To build:**
+- [x] `src/content/armor.json` — 6 pieces × 6 days = 36 days of devotional content verbatim
+- [x] `src/content/rule-of-life.json` — 5 rhythms verbatim
+- [x] `src/content/field-guide.json` — 7 days verbatim
+- [x] `src/content/fruits.json` — 9 fruits verbatim
+- [x] `src/content/loader.js` — 8 exported functions with dev-error / prod-silent behavior + count assertions
+- [x] `src/Identity.jsx` — ARMOR_TRACKS (980 lines) removed; replaced with `getArmorPiece()` calls
+- [x] `src/RuleOfLife.jsx` — RHYTHMS inline array (248 lines) removed; replaced with loader; `export const RHYTHMS` alias preserved
+- [x] `src/FieldGuide.jsx` — OFFICES inline array (65 lines) removed; replaced with `getFieldGuidePath()` / `getFieldGuideDay()`
+
+**Deferred (Phase 5):**
+- `ARMOR_PIECES` overview array in Identity.jsx stays inline. It is a separate data structure from ARMOR_TRACKS (slug/num/title/icon for the gallery ring) — not part of the track devotional content. A future pass can migrate it if needed.
+- `DevotionOnboarding.jsx` has its own local `RHYTHMS` constant. The `export const RHYTHMS = getAllRhythms()` in RuleOfLife.jsx is a dead export. Harmless; no behavior change.
+- Visual smoke test — build passes but browser click-through is recommended: armor track pages, rhythm pages, Field Guide 7-day path.
 
 ---
 

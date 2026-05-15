@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { ScriptureRef } from "./ScriptureRef";
 import { renderHtmlWithScriptureRefs } from "./utils/parseScriptureRefs";
+import { getAllRhythms, getRhythm } from "./content/loader";
 
 export const RULE_BASE = "/rule-of-life";
 
@@ -38,254 +39,7 @@ const AUTHORS = {
 
 /* ─── RHYTHM DATA ─────────────────────────────────────────────────── */
 
-export const RHYTHMS = [
-  {
-    slug: "presence", title: "Presence", sub: "Attention before God", rhythm: "RHYTHM 01",
-    img:      "/Presence_wide.png",
-    imgThumb: "/Presence_wide.png",
-    quote: "Be still, and know that I am God.", quoteRef: "Psalm 46:10",
-    interactiveLabel: "The Daily Examen", challengeDay: 1, challengeTitle: "You Are Being Formed",
-    why: [
-      "We live in the age of perpetual elsewhere. Even when our bodies are present, our attention is somewhere else — in the feed, in the inbox, in the anxious rehearsal of tomorrow.",
-      "Presence is the practice of returning. Returning to the body, to the moment, to the reality that God is here — not somewhere down the road, not in some future state of spiritual achievement, but now, in this room, in this breath.",
-      "The contemplative tradition has always understood that the primary spiritual problem is not immorality — it's inattention. We are absent from our own lives. And an absent person cannot love well, cannot hear God, cannot be genuinely with anyone.",
-      "Brother Lawrence, a 17th-century monk who spent his life in a monastery kitchen, wrote that the practice of the presence of God was the foundation of all spiritual growth. Not grand mystical experiences, not theological mastery — just the steady, repeated act of turning the attention toward God in the middle of ordinary life.",
-      "This is the first rhythm because it is the ground of all the others. Without presence, scripture becomes information rather than encounter. Prayer becomes performance rather than conversation. Sabbath becomes laziness rather than trust. Community becomes social obligation rather than genuine belonging.",
-      "Presence is the soil. Everything else grows from it.",
-    ],
-    theology: [
-      "The Hebrew concept of <em>shakan</em> — God's indwelling, the shekinah — speaks of a God who takes up residence. Not a distant deity who occasionally visits, but one who pitches his tent among his people (John 1:14). The incarnation is the ultimate act of presence — God becoming flesh, locating himself in a specific body, in a specific place, at a specific time.",
-      "When Jesus is asked for the greatest commandment, his answer is not a set of behaviors but a quality of attention: <em>\"Love the Lord your God with all your heart and with all your soul and with all your mind.\"</em> All of it. The entire person oriented toward God — which is another way of describing total presence.",
-      "Paul's instruction to \"pray without ceasing\" (1 Thessalonians 5:17) has confused people for centuries. The contemplatives answer: it is not about words, but about orientation. A life perpetually turned toward God, moment by moment, is a life of unceasing prayer. The practice of presence is simply the training that makes that orientation possible.",
-    ],
-    scriptures: [
-      { t: "Be still, and know that I am God.", r: "Psalm 46:10" },
-      { t: "Where can I go from your Spirit? Where can I flee from your presence?", r: "Psalm 139:7" },
-      { t: "The Lord is near to all who call on him, to all who call on him in truth.", r: "Psalm 145:18" },
-    ],
-    practice: {
-      intro: "The practice of presence is not a technique — it is a posture. But postures require training. Here are three concrete entry points:",
-      steps: [
-        { num: "01", title: "Breath Prayer", body: "Choose a short phrase — a name of God, a line of scripture, a simple prayer. Inhale slowly and silently speak the first half. Exhale and speak the second. \"Lord Jesus\" (inhale) / \"have mercy\" (exhale). Do this for five minutes. When your attention wanders — and it will — simply return. The returning is not failure. The returning is the practice." },
-        { num: "02", title: "The Daily Examen", body: "At the end of each day, take ten minutes to review it in God's presence. Not to evaluate your performance, but to notice where God was present and where you were absent. Ask: Where did I feel most alive? Where did I feel most disconnected? What do I want to bring to God from today?" },
-        { num: "03", title: "Threshold Prayers", body: "Choose two or three thresholds in your day — waking, entering the workplace, sitting down to eat, closing the laptop. At each threshold, pause for thirty seconds. Acknowledge that God is present. This is not a long prayer. It is a brief, repeated act of reorientation that, over months, begins to change the default posture of your inner life." },
-      ],
-    },
-    reflection: [
-      "When in your day do you feel most absent — most somewhere else even while your body is present?",
-      "What would it mean to practice the presence of God in the most mundane parts of your week?",
-      "Where have you experienced God's presence unexpectedly? What were the conditions that made you available to notice it?",
-    ],
-    further: [
-      { title: "The Practice of the Presence of God", author: "Brother Lawrence", desc: "The foundational classic on moment-by-moment awareness of God. Brother Lawrence discovered that washing dishes in a monastery kitchen could be as sacred as kneeling at the altar — and that the presence of God was available in every moment, not just the devoted ones.", amazon: "https://www.amazon.com/Practice-Presence-God-Complete-Illustrations/dp/B0DL378TGY", cover: "https://m.media-amazon.com/images/I/71yHItaB0wL._SY522_.jpg" },
-      { title: "The Ruthless Elimination of Hurry", author: "John Mark Comer", desc: "Comer's argument that hurry is the enemy of the spiritual life — and that the path to presence runs through the deliberate, sustained elimination of pace that has colonized modern life. Practical, theologically rich, and urgently needed.", amazon: "https://www.amazon.com/Ruthless-Elimination-Hurry-Emotionally-Spiritually/dp/0525653090", cover: "https://images-na.ssl-images-amazon.com/images/P/0525653090.jpg" },
-      { title: "Contemplative Prayer", author: "Thomas Merton", desc: "Merton's deep guide to the interior life — what it means to be still, to listen, and to allow the noise of the self to quiet enough to hear what God is saying. Dense and rewarding for anyone serious about the practice of presence.", amazon: "https://www.amazon.com/Contemplative-Prayer-Classic-Thomas-Merton-ebook/dp/B002VD6NJ6", cover: "https://m.media-amazon.com/images/I/41XPp0B27YL.jpg" },
-      { title: "The Way of the Heart", author: "Henri Nouwen", desc: "A slender but profound meditation on solitude, silence, and prayer drawn from the Desert Fathers. Nouwen argues that the heart must be formed in the desert before it can serve in the world. One of the most important short books on the interior life.", amazon: "https://www.amazon.com/Way-Heart-Connecting-Through-Silence/dp/0345463358", cover: "https://m.media-amazon.com/images/I/8138YXp4WfL._SY522_.jpg" },
-    ],
-    media: [
-      { title: "How to Practice the Presence of God", source: "Practicing the Way", type: "Video", thumb: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=400", url: "https://www.practicingtheway.org" },
-      { title: "The Ruthless Elimination of Hurry", source: "John Mark Comer Teachings · Podcast", type: "Podcast", thumb: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=400", url: "https://www.practicingtheway.org/resources" },
-      { title: "Presence — Rule of Life Series", source: "Practicing the Way · YouTube", type: "Video", thumb: "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=400", url: "https://www.practicingtheway.org" },
-    ],
-  },
-  {
-    slug: "scripture", title: "Scripture", sub: "Truth before noise", rhythm: "RHYTHM 02",
-    img:      "/Scripture_wide.png",
-    imgThumb: "/Scripture_wide.png",
-    quote: "Your word is a lamp to my feet and a light to my path.", quoteRef: "Psalm 119:105",
-    interactiveLabel: "Lectio Divina Guide", challengeDay: 2, challengeTitle: "Scripture Before the Algorithm",
-    why: [
-      "Every culture has a story it tells about who we are, what we're for, and what matters. The algorithm tells one story. The news tells another. The market tells a third. These stories form us — not through argument, but through repetition, image, and the subtle pressure of what gets attention.",
-      "Scripture tells a different story. And the practice of reading it regularly is not primarily about information acquisition — it is about narrative formation. We are being re-storied. Our imaginations are being reoriented around a different account of reality.",
-      "The early church understood this. The Psalms were sung daily. The Torah was read aloud in community. Paul's letters were circulated and read repeatedly. The assumption was not that one hearing would suffice, but that sustained, repeated immersion in the story of God would, over time, produce people whose desires, instincts, and reflexes were shaped by that story.",
-      "The problem for most modern Christians is not that they have rejected scripture — it is that scripture has become one input among many rather than the primary narrative frame. We read a verse in the morning and then spend fourteen hours in a different story.",
-      "Scripture before screen is not a rule. It is a recognition that what we give our first attention to has disproportionate power over the architecture of our day.",
-    ],
-    theology: [
-      "The Hebrew word for scripture — <em>torah</em> — is often translated \"law\" but its root meaning is closer to \"instruction\" or \"direction.\" Torah is not primarily a legal code but a way of life given by a loving God to a people he is forming.",
-      "Jesus' relationship to scripture is striking. He quotes it when tempted, interprets it in the sermon on the mount, fulfills it in his life and death. And yet he also says, <em>\"You search the Scriptures because you think that in them you have eternal life; and it is they that bear witness about me.\"</em> (John 5:39) Scripture's purpose is not itself — it is to lead to Christ.",
-      "The Reformers spoke of <em>sola scriptura</em> — scripture alone as the ultimate authority. The contemplatives balanced this with <em>lectio divina</em> — sacred reading, in which the text is not analyzed but listened to, waited on, allowed to speak. Both instincts are correct. The word of God is authoritative and it is alive.",
-    ],
-    scriptures: [
-      { t: "Your word is a lamp to my feet and a light to my path.", r: "Psalm 119:105" },
-      { t: "All Scripture is breathed out by God and profitable for teaching, for reproof, for correction, and for training in righteousness.", r: "2 Timothy 3:16" },
-      { t: "The word of God is living and active, sharper than any two-edged sword.", r: "Hebrews 4:12" },
-    ],
-    practice: {
-      intro: "There is a significant difference between reading scripture for information and reading it for formation. Here is a simple framework for the latter:",
-      steps: [
-        { num: "01", title: "Lectio Divina", body: "Read a short passage slowly — four or five verses. Read it again. On the third reading, pay attention to any word or phrase that seems to catch your attention. Sit with that word in silence for several minutes. Don't analyze it. Ask: what is God saying to me through this? This is not a technique for extracting meaning. It is a posture of receptivity." },
-        { num: "02", title: "Scripture Before Screen", body: "The first thirty minutes of your morning belong to God, not to the algorithm. Before the phone. Before the news. Before email. Open scripture. Even five verses, read slowly and prayerfully, create a different orientation for everything that follows." },
-        { num: "03", title: "Memorization and Meditation", body: "The Psalms were memorized. The Torah was rehearsed. This is not about showing off — it is about internalizing the narrative so it becomes available to you in the moments when you need it most. Choose one verse per month. Write it on a card. Repeat it throughout the day." },
-        { num: "04", title: "Communal Reading", body: "Scripture was never meant to be read in isolation. Read it with someone. Ask them what they notice. Let their reading illuminate yours. The body of Christ is a hermeneutical community — we interpret the text together, and we need each other to see what we cannot see alone." },
-      ],
-    },
-    reflection: [
-      "What story are you currently living inside of? What narrative most shapes your sense of what matters, what to fear, what to hope for?",
-      "When you read scripture, do you approach it as a text to be mastered or a voice to be heard?",
-      "Is there a passage of scripture that has genuinely changed you — not just informed you but formed you?",
-    ],
-    further: [
-      { title: "Eat This Book", author: "Eugene Peterson", desc: "Peterson's case for reading scripture as a spiritual practice, not a scholarly exercise. He introduces lectio divina to a modern audience and argues that the goal of Bible reading is not information but transformation — letting the text read us as much as we read it.", amazon: "https://www.amazon.com/Eat-This-Book-Conversation-Spiritual/dp/0802864902", cover: "https://m.media-amazon.com/images/I/81puBsD3mkL._SY522_.jpg" },
-      { title: "Sacred Reading", author: "Michael Casey", desc: "A modern guide to the ancient practice of lectio divina from a Cistercian monk. Casey unpacks the four movements of sacred reading with theological depth and practical clarity. Essential for anyone serious about letting scripture form rather than merely inform.", amazon: "https://www.amazon.com/s?k=Sacred+Reading+Michael+Casey&i=stripbooks", cover: "https://m.media-amazon.com/images/I/71r61KVcI8L._SY522_.jpg" },
-      { title: "God Has a Name", author: "John Mark Comer", desc: "A deep dive into Exodus 34 and the self-revelation of God's character. Comer shows what it looks like to encounter scripture as a revelation of who God actually is — and how that encounter reshapes everything about how we live.", amazon: "https://www.amazon.com/God-Has-Name-Believe-Become/dp/1400249589", cover: "https://m.media-amazon.com/images/I/31aWLJhjXHL._SY445_SX342_FMwebp_.jpg" },
-      { title: "The Blue Parakeet", author: "Scot McKnight", desc: "McKnight helps readers understand how to read the Bible wisely — not just literally or allegorically, but in a way that honors both its authority and its humanity. A practical guide to reading the whole story well.", amazon: "https://www.amazon.com/Blue-Parakeet-2nd-Rethinking-Bible/dp/0310538920", cover: "https://m.media-amazon.com/images/I/71y6jOmuMhL._SY522_.jpg" },
-    ],
-    media: [
-      { title: "Scripture Before Scroll — Field Guide", source: "Counter Formation", type: "Article", thumb: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=400", url: "/field-guide/scripture-before-scroll" },
-      { title: "How to Read the Bible", source: "BibleProject · YouTube", type: "Video", thumb: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=400", url: "https://bibleproject.com" },
-      { title: "Lectio Divina — Ancient Practice for Today", source: "Practicing the Way · Podcast", type: "Podcast", thumb: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=400", url: "https://www.practicingtheway.org/resources" },
-    ],
-  },
-  {
-    slug: "prayer", title: "Prayer", sub: "Dependence before action", rhythm: "RHYTHM 03",
-    img:      "/Prayer_wide.png",
-    imgThumb: "/Prayer_wide.png",
-    quote: "Very early in the morning, while it was still dark, Jesus got up, left the house and went off to a solitary place, where he prayed.", quoteRef: "Mark 1:35",
-    interactiveLabel: "Prayer Postures", challengeDay: 4, challengeTitle: "What You Hold Onto",
-    why: [
-      "Prayer is the most countercultural thing a person can do in a productivity-obsessed culture. It is an act of deliberate uselessness — stopping what you are doing in order to speak to and listen to a God you cannot see, whose response you cannot control, whose timing is not yours.",
-      "And yet Jesus prayed. Constantly. Habitually. Before decisions (Luke 6:12). After ministry (Mark 1:35). In grief (Matthew 26:36). In dependence (John 17). The disciples — watching a man who clearly had access to divine power — did not ask him to teach them to heal or to preach. They asked him to teach them to pray.",
-      "Prayer is the practice of dependence. It is the repeated, embodied acknowledgment that we are not self-sufficient — that we need God not just in crisis but in the ordinary hours of ordinary days.",
-      "Most people who say they struggle with prayer are not struggling with the mechanics of prayer. They are struggling with the underlying posture — the acknowledgment that they are not in charge, that outcomes are not in their hands, that asking is not weakness but wisdom.",
-      "Prayer does not change God. But it changes us. It repositions us in relation to reality — from the center of our own story to the posture of a creature before a Creator who is good.",
-    ],
-    theology: [
-      "The Lord's Prayer (Matthew 6:9–13) is not a formula but a grammar — a structure that teaches us how to orient ourselves before God. It begins with the Father's name and kingdom before it comes to our needs. We do not come to God leading with our agenda. We come acknowledging his.",
-      "Paul's instruction to \"pray without ceasing\" (1 Thessalonians 5:17) places prayer not as an activity that interrupts life but as the posture that undergirds it. The Desert Fathers spoke of making the entire day a prayer — not by reciting words constantly but by maintaining an interior orientation of dependence and openness toward God.",
-      "James 5:16 speaks of \"the prayer of a righteous person\" having great power. The context is striking — it is the prayer of people praying for one another, interceding in community. Much of the prayer tradition in scripture is communal. Personal prayer is essential. But it was never meant to exist in isolation from the praying community.",
-    ],
-    scriptures: [
-      { t: "Do not be anxious about anything, but in everything by prayer and supplication with thanksgiving let your requests be made known to God.", r: "Philippians 4:6" },
-      { t: "The Spirit helps us in our weakness. For we do not know what to pray for as we ought, but the Spirit himself intercedes for us.", r: "Romans 8:26" },
-      { t: "Ask, and it will be given to you; seek, and you will find; knock, and it will be opened to you.", r: "Matthew 7:7" },
-    ],
-    practice: {
-      intro: "Prayer is less a skill to be acquired and more a relationship to be cultivated. These are invitations into different dimensions of that relationship:",
-      steps: [
-        { num: "01", title: "The Daily Office", body: "Fixed-hour prayer is one of the oldest disciplines in the Christian tradition — the monastic practice of stopping at set times each day to pray. Morning, midday, evening, night. Choose two fixed times each day and protect them. The phone goes down. You stop. You pray. Not because you feel like it, but because you have decided that this is what your life is organized around." },
-        { num: "02", title: "The ACTS Structure", body: "Adoration — begin by acknowledging who God is, not what you want. Confession — be honest about where you have fallen short or drifted. Thanksgiving — name three specific things from the last 24 hours. Supplication — bring your requests. This structure prevents prayer from becoming exclusively a wish list." },
-        { num: "03", title: "Contemplative Prayer", body: "Choose a short phrase — \"Here I am,\" \"Come, Lord Jesus,\" \"Into your hands.\" Sit in silence. When your mind wanders — and it will — return to the phrase. Not as a mantra to achieve altered states, but as a gentle return to intention. This trains the capacity to be still and to listen." },
-        { num: "04", title: "Intercessory Prayer", body: "Keep a written list of people you are praying for — five to ten names. Pray through it slowly. As you name each person, hold them in God's presence. Ask for their flourishing. Intercession is one of the most concrete ways we can love people who are not in the room." },
-      ],
-    },
-    reflection: [
-      "What is your actual current relationship with prayer — not what you think it should be, but what it honestly is?",
-      "Where do you feel most resistant to prayer? What does that resistance tell you about what you are holding onto?",
-      "If prayer genuinely changes the one who prays, what would a person who prays regularly look like?",
-    ],
-    further: [
-      { title: "Prayer", author: "Philip Yancey", desc: "Yancey's most personal and probing book — an honest investigation into why prayer feels difficult, what the Bible actually promises, and how to develop a sustainable, honest practice. Particularly helpful for people who feel their prayers bounce off the ceiling.", amazon: "https://www.amazon.com/Prayer-Does-Make-Any-Difference/dp/031034509X", cover: "https://m.media-amazon.com/images/I/41dcO27RPZL._SY445_SX342_FMwebp_.jpg" },
-      { title: "A Praying Life", author: "Paul Miller", desc: "Miller dismantles the idea that prayer requires a special spiritual state and shows instead how honest, child-like asking is at the heart of what Jesus modeled. One of the most practically transformative books on prayer available.", amazon: "https://www.amazon.com/Praying-Life-Connecting-Distracting-World/dp/1631466836", cover: "https://m.media-amazon.com/images/I/511XbuckwdL._SY445_SX342_FMwebp_.jpg" },
-      { title: "Too Busy Not to Pray", author: "Bill Hybels", desc: "A short, accessible classic that addresses the most common barrier to prayer — the feeling that there is no time. Hybels argues persuasively that the busier life becomes, the more essential prayer is, not less.", amazon: "https://www.amazon.com/Too-Busy-Pray-Bill-Hybels/dp/0830834753", cover: "https://m.media-amazon.com/images/I/81APUZaKT4L._SY522_.jpg" },
-      { title: "Open Mind, Open Heart", author: "Thomas Keating", desc: "Keating's introduction to centering prayer — the contemplative practice of resting in God's presence beyond words and images. For those who want to go deeper than petition into the silent receptivity at the heart of Christian prayer.", amazon: "https://www.amazon.com/Open-Mind-Heart-20th-Anniversary/dp/1472972090", cover: "https://m.media-amazon.com/images/I/917HBcbg7-L._SY522_.jpg" },
-      { title: "Praying Like Monks, Living Like Fools", author: "Tyler Staton", desc: "Staton dismantles the barriers that keep modern people from prayer and rebuilds a vision of it as the most honest, subversive, and transformative act available to us. Practical, theologically grounded, and deeply readable.", amazon: "https://www.amazon.com/Praying-Like-Monks-Living-Fools/dp/031036535X", cover: "https://m.media-amazon.com/images/I/81s-q8hkVWL._SY522_.jpg" },
-    ],
-    media: [
-      { title: "Why We Pray — John Mark Comer", source: "Practicing the Way · YouTube", type: "Video", thumb: "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?q=80&w=400&crop=top", url: "https://www.practicingtheway.org/resources" },
-      { title: "John Mark Comer Teachings — Prayer Series", source: "Practicing the Way · Podcast", type: "Podcast", thumb: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=400", url: "https://www.practicingtheway.org/resources" },
-      { title: "The Lord's Prayer — BibleProject", source: "BibleProject · YouTube", type: "Video", thumb: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=400", url: "https://bibleproject.com" },
-    ],
-  },
-  {
-    slug: "sabbath", title: "Sabbath", sub: "Rest before production", rhythm: "RHYTHM 04",
-    img:      "/Sabbath_wide.png",
-    imgThumb: "/Sabbath_wide.png",
-    quote: "Remember the Sabbath day by keeping it holy. Six days you shall labor and do all your work, but the seventh day is a sabbath to the Lord your God.", quoteRef: "Exodus 20:8–10",
-    interactiveLabel: "Sabbath Ideas", challengeDay: 7, challengeTitle: "Build a Life That Forms You",
-    why: [
-      "Sabbath is perhaps the most countercultural practice in this guide. In a culture that equates productivity with virtue and busyness with importance, stopping for an entire day is a radical act.",
-      "But that is precisely the point. Sabbath is not primarily a wellness practice or a productivity strategy — it is a theological declaration. By stopping, you are saying with your body what you may believe with your mind but struggle to live: God is in charge. The world does not depend on me. I am a creature, not a creator. I can rest because he does not.",
-      "The Sabbath commandment is embedded in the story of creation (Genesis 2:1–3) and the story of liberation (Deuteronomy 5:15). God rested after creation — not because he was tired, but as a pattern for his creatures to follow. And the Israelites were commanded to rest as a reminder that they were no longer slaves.",
-      "Walter Brueggemann has written that Sabbath is \"the practical gospel alternative to the anxiety of the market.\" The market never stops. The notifications never stop. The economy of more, faster, better never rests. Sabbath is the practiced refusal of that economy for one day a week.",
-      "Most people who try to practice Sabbath discover, within a few weeks, that they cannot easily stop. The anxiety of unfinished tasks, the fear of falling behind, the discomfort of being unproductive — these surface quickly. That anxiety is worth sitting with, because it reveals what has actually been forming us.",
-    ],
-    theology: [
-      "The Hebrew word <em>shabbat</em> means to stop, to cease, to rest. God's rest in Genesis 2 is not passive inactivity — it is the enjoyment and blessing of what has been made. Sabbath is the day set apart for delight, for worship, for unhurried presence with God and with people.",
-      "Jesus said, <em>\"The Sabbath was made for man, not man for the Sabbath.\"</em> (Mark 2:27) This is not permission to ignore Sabbath — it is a correction of legalism. The Sabbath is a gift, not a burden. The question is not \"What am I not allowed to do?\" but \"What does it look like to genuinely rest, delight, and trust?\"",
-      "John Mark Comer distills Sabbath into four movements: Stop. Rest. Delight. Worship. All four are necessary. Stop means actually ceasing from work — not mentally checking out while still producing. Rest means sleep, stillness, the recovery of the body. Delight means enjoying what God has made. Worship means orienting the day toward God in gathered community.",
-    ],
-    scriptures: [
-      { t: "Remember the Sabbath day by keeping it holy.", r: "Exodus 20:8" },
-      { t: "The Sabbath was made for man, not man for the Sabbath.", r: "Mark 2:27" },
-      { t: "Come to me, all who labor and are heavy laden, and I will give you rest.", r: "Matthew 11:28" },
-    ],
-    practice: {
-      intro: "Sabbath is not a single practice but a whole-day posture. Here is a framework for beginning:",
-      steps: [
-        { num: "01", title: "Choose a Day and Protect It", body: "Sabbath requires a decision made in advance and protected with intention. Choose your day. Put it in the calendar. The battle for Sabbath is won or lost before the day arrives — in the decisions you make about what to finish on the day before and what you are willing to leave undone." },
-        { num: "02", title: "Begin and End with Ritual", body: "Much of the Sabbath is about rhythms and rituals that set the day apart as holy. Light candles. Pour a glass of wine. Gather around a table. Pray to begin. These rituals signal to your body and soul that you have crossed a threshold — that this time belongs to God, not to production." },
-        { num: "03", title: "Stop Work Completely", body: "This means more than not going to the office. Not checking email. Not returning to the project in your head. The test is simple: are you producing anything? If yes, it is not Sabbath. The anxiety that surfaces when you stop is not a sign that you need to keep working — it is a sign of how much formation work still needs to be done." },
-        { num: "04", title: "Delight Intentionally", body: "Abraham Joshua Heschel called Sabbath \"a palace in time.\" Ask yourself: what do I genuinely enjoy that I never have time for? What makes me feel most alive? Do that. John Mark Comer offers a simple test for every Sabbath activity: is it restful or worshipful? If not, it can wait until Monday." },
-      ],
-    },
-    reflection: [
-      "What happens inside you when you try to stop working? What does that reaction reveal about what is forming you?",
-      "What would genuine delight look like for you on a Sabbath? When did you last spend a full day doing what you love, without guilt?",
-      "What would you have to believe about God — really believe, not just intellectually affirm — in order to rest fully?",
-    ],
-    further: [
-      { title: "The Sabbath", author: "Abraham Joshua Heschel", desc: "The most beautiful book ever written about Sabbath. Heschel, a Jewish theologian, describes Sabbath not as a day of restriction but as a cathedral built in time — the most sacred architecture in Jewish life. His phrase \"a palace in time\" alone is worth the read.", amazon: "https://www.amazon.com/Sabbath-Classics-Abraham-Joshua-Heschel/dp/0374529752", cover: "https://m.media-amazon.com/images/I/811QpvHSIhL._SY522_.jpg" },
-      { title: "The Sabbath Practice", author: "John Mark Comer", desc: "Comer's practical companion guide from Practicing the Way — the four-session course that walks individuals and communities through Stop, Rest, Delight, and Worship. The most accessible entry point into a real Sabbath practice for modern people.", amazon: "https://www.amazon.com/Sabbath-Practice-Four-Session-Companion-Delight/dp/0593603257", cover: "https://m.media-amazon.com/images/I/61IdPrpDlgL._SY522_.jpg" },
-      { title: "Garden City", author: "John Mark Comer", desc: "Comer's theology of work and rest — why we work, what work is for, and how Sabbath fits into the larger story of what it means to be human. Essential reading for anyone who struggles to separate their identity from their productivity.", amazon: "https://www.amazon.com/Garden-City-Work-Being-Human/dp/1400257220", cover: "https://m.media-amazon.com/images/I/61OfN8H-H8L._SY522_.jpg" },
-      { title: "Subversive Sabbath", author: "A.J. Swoboda", desc: "Swoboda makes the case that Sabbath is not a personal preference but a political act — a weekly declaration that humans are not machines, that the economy does not have the last word, that rest is resistance. Prophetic and practical.", amazon: "https://www.amazon.com/Subversive-Sabbath-Surprising-Power-Nonstop/dp/1587434059", cover: "https://m.media-amazon.com/images/I/41WcHzkzToL._SY445_SX342_FMwebp_.jpg" },
-    ],
-    media: [
-      { title: "Sabbath — Stop, Rest, Delight, Worship", source: "Practicing the Way · YouTube", type: "Video", thumb: "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=400", url: "https://www.practicingtheway.org/resources" },
-      { title: "The Sabbath Practice Course", source: "Practicing the Way · Course", type: "Course", thumb: "https://images.unsplash.com/photo-1472396961693-142e6e269027?q=80&w=400", url: "https://www.practicingtheway.org" },
-      { title: "Why Sabbath is Resistance", source: "John Mark Comer Teachings · Podcast", type: "Podcast", thumb: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=400", url: "https://www.practicingtheway.org/resources" },
-    ],
-  },
-  {
-    slug: "community", title: "Community", sub: "Formation together", rhythm: "RHYTHM 05",
-    img:      "/Community_wide.png",
-    imgThumb: "/Community_wide.png",
-    quote: "They devoted themselves to the apostles' teaching and to fellowship, to the breaking of bread and to prayer.", quoteRef: "Acts 2:42",
-    interactiveLabel: "Depths of Community", challengeDay: 6, challengeTitle: "You Cannot Do This Alone",
-    why: [
-      "We live in an era of unprecedented connection and epidemic loneliness. We have more ways to communicate with more people than any generation in history — and research consistently shows that people are more isolated, more unknown, and more alone than ever before.",
-      "The church was never meant to be a broadcast medium. It was meant to be a body — an organism in which people are genuinely known, genuinely accountable, and genuinely in one another's lives. Not as a social preference, but as a theological necessity.",
-      "The doctrine of the Trinity — Father, Son, and Spirit in eternal, mutual self-giving love — suggests that community is not a human invention but a reflection of God's own inner life. We were made in the image of a God who is inherently relational. Isolation is not neutral — it is a kind of theological malformation.",
-      "You cannot become like Jesus alone. This is not a motivational claim — it is an observation about how transformation actually works. Jesus did not mail letters to the twelve. He lived with them. Proximity — genuine, sustained, unhurried proximity — is the environment in which formation happens.",
-      "The question is not whether you have community. Everyone has some kind of community. The question is whether your community is oriented around formation.",
-    ],
-    theology: [
-      "The New Testament's vision of the church is captured in its use of the word <em>ekklesia</em> — the assembled people called out and called together. The letter to the Hebrews warns against \"giving up meeting together\" (10:25) not because gathering is a rule to follow but because it is a necessity of life. A body part that has separated from the body dies.",
-      "Paul's metaphor of the body (1 Corinthians 12) makes the interdependence explicit: \"The eye cannot say to the hand, 'I don't need you!'\" Every member is necessary. Every member is vulnerable. This is not the vision of a religious social club — it is the vision of a people so deeply committed to one another that their lives are genuinely shared.",
-      "The \"one another\" commands of the New Testament are remarkable in their scope: love one another, serve one another, bear one another's burdens, confess your sins to one another, pray for one another. These commands cannot be fulfilled at a distance. They require presence, trust, and a willingness to be known that most of us spend considerable energy avoiding.",
-    ],
-    scriptures: [
-      { t: "They devoted themselves to the apostles' teaching and to fellowship, to the breaking of bread and to prayer.", r: "Acts 2:42" },
-      { t: "Bear one another's burdens, and so fulfill the law of Christ.", r: "Galatians 6:2" },
-      { t: "And let us consider how to stir up one another to love and good works, not neglecting to meet together.", r: "Hebrews 10:24–25" },
-    ],
-    practice: {
-      intro: "Community is not found — it is built. It requires initiative, vulnerability, and sustained commitment. Here are the foundational practices:",
-      steps: [
-        { num: "01", title: "Find a Small Community", body: "The Sunday gathering is essential but insufficient. Find or form a group of four to eight people committed to meeting regularly — weekly or biweekly — with an explicit purpose of spiritual formation. Not a Bible study that ends in information. A community with an agreed commitment to honesty, accountability, and shared formation." },
-        { num: "02", title: "Practice Radical Honesty", body: "The deepest barrier to genuine community is not schedule or geography — it is the curated self. Most of us present a version of ourselves carefully edited for public consumption. The practice of radical honesty — sharing not the polished version but the real one — is terrifying and transformative." },
-        { num: "03", title: "Ask Better Questions", body: "\"How are you doing?\" is not a real question. Practice asking questions that require real answers: What has been hardest for you this week? Where have you felt God's presence? What are you afraid of right now? These questions create space for genuine encounter — which is the material community is made of." },
-        { num: "04", title: "Show Up Consistently", body: "Community is built over years, not weeks. The people who know you best are the people who have seen you across multiple seasons of life. This requires the most underrated virtue in community: showing up when you do not feel like it. Commitment that is contingent on how you feel is not commitment — it is preference." },
-      ],
-    },
-    reflection: [
-      "Are you currently known — actually known — by anyone? Not known about, but known?",
-      "What would you have to risk in order to move from acquaintance to genuine community?",
-      "What kind of community are you helping to create for others?",
-    ],
-    further: [
-      { title: "Life Together", author: "Dietrich Bonhoeffer", desc: "The most important book ever written about Christian community. Bonhoeffer, writing from a clandestine seminary in Nazi Germany, dismantles the fantasy of ideal community and shows what genuine, grace-based life together actually looks like. Short, dense, essential.", amazon: "https://www.amazon.com/Life-Together-Exploration-Christian-Community/dp/B0FHWWH7Y2", cover: "https://m.media-amazon.com/images/I/41VLz4wzqrL._SY445_SX342_FMwebp_.jpg" },
-      { title: "The Deeply Formed Life", author: "Rich Villodas", desc: "Villodas weaves together contemplative spirituality, racial reconciliation, and sexual wholeness into a vision of community that goes deeper than most churches dare. A compelling portrait of what formation in community can actually look like.", amazon: "https://www.amazon.com/Deeply-Formed-Life-Transformative-Values/dp/0525654402", cover: "https://m.media-amazon.com/images/I/41hmZWxVQZL._SY445_SX342_FMwebp_.jpg" },
-      { title: "Emotionally Healthy Spirituality", author: "Peter Scazzero", desc: "Scazzero's argument that most Christian community is emotionally shallow — and that genuine transformation requires the kind of honesty, grief, and self-awareness that most churches actively avoid. One of the most practically impactful books on community formation.", amazon: "https://www.amazon.com/Emotionally-Healthy-Spirituality-Impossible-Spiritually/dp/0310348498", cover: "https://m.media-amazon.com/images/I/71c9eht02hL._SY522_.jpg" },
-      { title: "The Body", author: "Chuck Colson", desc: "Colson's sweeping vision of the church as a distinct, countercultural community — called not to reflect the culture but to embody an alternative. A prophetic call to take the communal nature of Christian life seriously in a fragmenting world.", amazon: "https://www.amazon.com/Being-Body-Charles-Colson/dp/0849917522", cover: "https://m.media-amazon.com/images/I/81F1eqcBQuL._SY522_.jpg" },
-    ],
-    media: [
-      { title: "Community — Why You Can't Grow Alone", source: "Practicing the Way · YouTube", type: "Video", thumb: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=400", url: "https://www.practicingtheway.org/resources" },
-      { title: "Formation Together — Counter Formation", source: "Counter Formation · Article", type: "Article", thumb: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=400", url: "/" },
-      { title: "Emotionally Healthy Discipleship Podcast", source: "Peter Scazzero · Podcast", type: "Podcast", thumb: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=400", url: "https://www.emotionallyhealthy.org" },
-    ],
-  },
-];
+export const RHYTHMS = getAllRhythms();
 
 /* ─── STORAGE HELPERS ─────────────────────────────────────────────── */
 
@@ -605,7 +359,7 @@ function GoDeeperSection({ data, rhythm }) {
 export function BookPage() {
   const { rhythm, bookIndex } = useParams();
   const navigate = useNavigate();
-  const data   = RHYTHMS.find(r => r.slug === rhythm);
+  const data   = getRhythm(rhythm);
   const book   = data?.further[parseInt(bookIndex, 10)];
   const author = book ? AUTHORS[book.author] : null;
   const coverUrl = book?.cover || null;
@@ -847,7 +601,7 @@ export function RhythmPage() {
   const { rhythm }  = useParams();
   const navigate    = useNavigate();
   const rfillRef    = useRef(null);
-  const data        = RHYTHMS.find(r => r.slug === rhythm);
+  const data        = getRhythm(rhythm);
 
   useEffect(() => { if (!data) navigate("/", { replace: true }); }, [data, navigate]);
   useEffect(() => { window.scrollTo(0, 0); }, [rhythm]);
@@ -864,9 +618,10 @@ export function RhythmPage() {
 
   if (!data) return null;
 
-  const idx         = RHYTHMS.findIndex(r => r.slug === rhythm);
-  const prev        = RHYTHMS[idx - 1];
-  const next        = RHYTHMS[idx + 1];
+  const allRhythms  = getAllRhythms();
+  const idx         = allRhythms.findIndex(r => r.slug === rhythm);
+  const prev        = allRhythms[idx - 1];
+  const next        = allRhythms[idx + 1];
   const Interactive = INTERACTIVES[data.slug];
 
   return (

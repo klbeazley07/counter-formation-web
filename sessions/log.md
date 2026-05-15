@@ -4,6 +4,40 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 5 — Phase 5: Content Layer (2026-05-15)
+
+**Status:** Complete (visual smoke-test pending — recommend Luke click through armor track pages, rhythm pages, and Field Guide path)
+**Build:** `npm run build` passed (1961 modules, 1433 kB JS, no errors; chunk-size warning is pre-existing)
+
+**Files created:**
+- `src/content/armor.json` — 6 pieces × 6 days = 36 devotional day objects; all content verbatim from ARMOR_TRACKS in Identity.jsx
+- `src/content/rule-of-life.json` — 5 rhythm objects verbatim from RHYTHMS in RuleOfLife.jsx
+- `src/content/field-guide.json` — 7 FieldGuideDay objects verbatim from OFFICES in FieldGuide.jsx
+- `src/content/fruits.json` — 9 fruit objects keyed by slug, verbatim from FRUITS in fruitAssessmentData
+- `src/content/loader.js` — 8 exported functions (`getArmorPiece`, `getAllArmorPieces`, `getRhythm`, `getAllRhythms`, `getFieldGuideDay`, `getFieldGuidePath`, `getFruit`, `getAllFruits`); throws in dev / silent in prod; dev-only `assertCount` assertions at module load
+
+**Files modified:**
+- `src/Identity.jsx` — removed ARMOR_TRACKS (~980 lines); added `import { getArmorPiece } from './content/loader'`; replaced all 7 call sites with `getArmorPiece()`; CROSS_LINKS and ARMOR_PIECES untouched
+- `src/RuleOfLife.jsx` — removed RHYTHMS inline array (~248 lines); added `import { getAllRhythms, getRhythm }`; added `export const RHYTHMS = getAllRhythms()` for backward compat; replaced `.find()` lookups with `getRhythm()` and `getAllRhythms()` prev/next navigation
+- `src/FieldGuide.jsx` — removed OFFICES inline array (~65 lines); added `import { getFieldGuidePath, getFieldGuideDay }`; replaced all OFFICES references with loader calls; Day 7 NextStep logic stays in component
+- `sessions/contracts.md` — Phase 5 content schemas finalized (ArmorPiece, Rhythm, FieldGuideDay, Fruit, Loader API, validation strategy)
+- `sessions/state.md` — Phase 5 complete
+- `sessions/next.md` — post-all-phases prompt
+
+**Key decisions:**
+- `fruits.json` is a keyed object (not array) to match source shape and allow O(1) slug lookup. All other JSON files are arrays.
+- `armor.json` is an array with `slug` added as a field to each piece; PIECE_ORDER and FRUIT_ORDER are canonical sequences defined in loader.js, not derived from JSON ordering.
+- `CROSS_LINKS` stays in Identity.jsx — it is routing/navigation data, not formation content. Correct per contracts.
+- `DevotionOnboarding.jsx` was confirmed to never import from RuleOfLife.jsx — it has its own local RHYTHMS constant. The `export const RHYTHMS` alias in RuleOfLife.jsx is a dead export but harmless.
+- Sword of the Spirit Day 2 has 4 scriptures (Matthew 4:1, 4:4, 4:7, 4:10) — extracted verbatim as a 4-element array.
+
+**Deferred:**
+- ARMOR_PIECES overview array in Identity.jsx (slug/num/title/icon for gallery ring) stays inline — separate from track content, not in scope
+- DevotionOnboarding.jsx local RHYTHMS copy — would need to be migrated separately if content should live solely in rule-of-life.json
+- Visual smoke test (build passes; agent cannot drive a browser)
+
+---
+
 ## Session 4 — Phase 4: Design System (2026-05-15)
 
 **Status:** Complete (build passes; visual smoke-test still pending — agent cannot drive a browser)

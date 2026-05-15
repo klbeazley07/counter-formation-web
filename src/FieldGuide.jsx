@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { ScriptureRef } from "./ScriptureRef";
 import { useFormationProfile } from "./hooks/useFormationProfile";
 import NextStep from "./components/NextStep";
+import { getFieldGuidePath, getFieldGuideDay } from "./content/loader";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
 
@@ -23,73 +24,6 @@ const C = {
   shadow: "0 24px 80px rgba(0,0,0,0.34)",
 };
 
-/* ─── OFFICE DATA ─────────────────────────────────────────────────── */
-
-export const OFFICES = [
-  {
-    day: 1, title: "Awareness",
-    stillness: "Before you read, pause. Notice the pull. Your hand already wants your phone. That impulse is the data. Sit with it for thirty seconds.",
-    ref: "Psalm 5:3",
-    scripture: "In the morning, Lord, you hear my voice; in the morning I lay my requests before you and wait expectantly.",
-    reflection: "What was the first thing you reached for this morning — and what were you hoping it would give you?",
-    action: "Before you open any app today, read one chapter of scripture. Set a physical Bible beside your bed tonight so it is the first object you see tomorrow.",
-    closing: "Lord, train my first attention toward you.",
-  },
-  {
-    day: 2, title: "Resistance",
-    stillness: "You will feel resistance to this practice. That is not a sign it is failing. It is a sign it is working. The soul fights formation before it welcomes it.",
-    ref: "Romans 7:18–19",
-    scripture: "For I know that good itself does not dwell in me, that is, in my sinful nature. For I have the desire to do what is good, but I cannot carry it out.",
-    reflection: "Where do you feel the most resistance to this practice — and what does that resistance tell you about what has been forming you?",
-    action: "When you feel the pull to scroll today, name it out loud: 'That is a craving.' Do not shame it. Just name it. Do this every time.",
-    closing: "I acknowledge the war inside me. I choose, again, to yield to you.",
-  },
-  {
-    day: 3, title: "Attention",
-    stillness: "Attention is not neutral. It is a resource. Every system around you is designed to extract it. Today you practice giving it deliberately.",
-    ref: "Proverbs 4:23",
-    scripture: "Above all else, guard your heart, for everything you do flows from it.",
-    reflection: "What has been receiving most of your attention this week — and is that what you actually want to be formed by?",
-    action: "For the next 24 hours, track every time you pick up your phone unconsciously. No judgment. Just count. Write the number down tonight.",
-    closing: "What I behold, I become. Let me behold you.",
-  },
-  {
-    day: 4, title: "Discipline",
-    stillness: "Discipline is not punishment. It is the structure that makes freedom possible. An undisciplined musician cannot play freely. An undisciplined soul cannot love freely.",
-    ref: "1 Corinthians 9:27",
-    scripture: "No, I strike a blow to my body and make it my slave so that after I have preached to others, I myself will not be disqualified for the prize.",
-    reflection: "What does a disciplined morning look like for you — and what would have to be true for you to build it this week?",
-    action: "Design your morning sequence in writing. Three steps. Scripture first. Post it somewhere visible.",
-    closing: "Make me a disciplined person — not for performance, but for presence.",
-  },
-  {
-    day: 5, title: "Surrender",
-    stillness: "You cannot control your formation. You can only choose your inputs. Today is not about trying harder. It is about letting go of the inputs that are forming you away from Christ.",
-    ref: "Matthew 16:24",
-    scripture: "Whoever wants to be my disciple must deny themselves and take up their cross and follow me.",
-    reflection: "What would you have to surrender to make this practice consistent — and are you willing?",
-    action: "Delete one app from your phone today. Not permanently if that feels too large. For 48 hours. Notice what you feel.",
-    closing: "I release what I have been holding onto. Take what you want of me.",
-  },
-  {
-    day: 6, title: "Consistency",
-    stillness: "One day of practice changes nothing. One thousand days of practice changes everything. The goal is not intensity. The goal is return.",
-    ref: "Luke 9:23",
-    scripture: "Whoever wants to be my disciple must deny themselves and take up their cross daily and follow me.",
-    reflection: "What makes consistency hard for you — and what one environmental change could make it easier?",
-    action: "Tell one person what you are practicing and why. Accountability is not weakness. It is wisdom.",
-    closing: "Not a moment of fire. A life of faithfulness. Make me that.",
-  },
-  {
-    day: 7, title: "Identity",
-    stillness: "You are not trying to become someone new. You are returning to who you already are — made in the image of Christ, formed for obedience, built for presence. This is not self-improvement. This is homecoming.",
-    ref: "2 Corinthians 3:18",
-    scripture: "And we all, who with unveiled faces contemplate the Lord's glory, are being transformed into his image with ever-increasing glory, which comes from the Lord, who is the Spirit.",
-    reflection: "Who are you becoming through what you have been practicing — and who do you want to be in one year if you kept going?",
-    action: "Write a one-sentence identity statement. Begin with: 'I am a person who...' Post it where you will see it every morning.",
-    closing: "I am not who the algorithm says I am. I am who you say I am. Form me.",
-  },
-];
 
 const WHY = [
   { title: "The Problem", body: "You are being formed right now. Every notification, every feed, every algorithmically optimized scroll — they are not neutral. They are actively shaping your desires, shortening your attention, training you to reach for stimulation before silence. This is not a technology problem. It is a formation problem." },
@@ -548,10 +482,10 @@ export function FGOffice() {
   useEffect(() => { window.scrollTo(0, 0); }, [dayParam]);
 
   const dayNum = dayParam === "today" || !dayParam ? 1 : parseInt(dayParam, 10);
-  const office = OFFICES.find(o => o.day === dayNum) || OFFICES[0];
-  const next = OFFICES.find(o => o.day === dayNum + 1);
+  const office = getFieldGuideDay(dayNum) || getFieldGuideDay(1);
+  const next = getFieldGuideDay(dayNum + 1);
   const progress = useProgress(dayNum);
-  const percent = Math.max((dayNum / OFFICES.length) * 100, 14);
+  const percent = Math.max((dayNum / getFieldGuidePath().length) * 100, 14);
 
   return (
     <PageShell>
@@ -564,7 +498,7 @@ export function FGOffice() {
           <div className="fg-fade-up-3 fg-narrow" style={{ marginTop: 18 }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10, fontFamily: "'Barlow Condensed',sans-serif", fontSize: 11, letterSpacing: "0.26em", textTransform: "uppercase", color: C.dim }}>
               <span>Progress</span>
-              <span>{office.day} / {OFFICES.length}</span>
+              <span>{office.day} / {getFieldGuidePath().length}</span>
             </div>
             <div className="fg-progress"><span style={{ width: `${percent}%` }} /></div>
           </div>
@@ -672,7 +606,7 @@ export function FGPath() {
         </div>
 
         <div className="fg-reveal" style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
-          {OFFICES.map(o => {
+          {getFieldGuidePath().map(o => {
             const complete = progress.includes(o.day);
             return (
               <Link key={o.day} className="fg-day-card" to={`${BASE}/day/${o.day}`}>

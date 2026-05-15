@@ -1221,4 +1221,176 @@ Per Theme 4 spec. To be applied during widget refactors:
 
 ## Content JSON Schemas
 
-**Status: PENDING — Phase 5 Architect will define**
+**Status: FINALIZED — Phase 5 Architect (2026-05-15)**
+
+### Source audit findings
+
+| Source file | Array/object name | Shape |
+|---|---|---|
+| `src/Identity.jsx` lines 92–1069 | `ARMOR_TRACKS` (object keyed by slug) | 6 armor pieces × 6 days; each day: num, title, stillness, scriptures[], teaching[], practice{duration,body}, reflection, prayer |
+| `src/RuleOfLife.jsx` lines 41–288 | `RHYTHMS` (array) | 5 rhythms; each: slug, title, sub, rhythm, img, imgThumb, quote, quoteRef, interactiveLabel, challengeDay, challengeTitle, why[], theology[], scriptures[], practice{intro, steps[]}, reflection[], further[], media[] |
+| `src/FieldGuide.jsx` lines 28–92 | `OFFICES` (array, named OFFICES not DAYS) | 7 offices; each: day, title, stillness, ref, scripture, reflection, action, closing |
+| `src/fruitAssessmentData.js` lines 52–179 | `FRUITS` (object keyed by slug) | 9 fruits; each: key, label, greek, formationStatement, recognitionStatement, secondaryFormationStatement, scripture{text,reference}, practice, ruleOfLife{rhythm,path} |
+
+### Decision: CROSS_LINKS stays in Identity.jsx
+
+The `CROSS_LINKS` mapping (armor piece → Rule of Life path) is UI routing data already canonicalized in `ARMOR_PIECE_CROSS_LINKS` in this contracts file. It is NOT included in armor.json. The JSON carries formation content only.
+
+---
+
+### 1. ArmorPiece schema (`src/content/armor.json`)
+
+`armor.json` is an **array** of 6 ArmorPiece objects in `PIECE_ORDER` sequence (belt-of-truth → breastplate-of-righteousness → gospel-of-peace → shield-of-faith → helmet-of-salvation → sword-of-the-spirit).
+
+```ts
+type ArmorScripture = {
+  text: string;   // verse body
+  ref:  string;   // citation e.g. "Ephesians 6:14"
+};
+
+type ArmorPractice = {
+  duration: string;  // e.g. "15 Minutes" | "20 Minutes"
+  body:     string;  // practice instructions; newlines preserved as \n
+};
+
+type ArmorDay = {
+  num:        number;           // 1–6
+  title:      string;
+  stillness:  string;           // opening contemplative invitation
+  scriptures: ArmorScripture[]; // always 3 entries per day
+  teaching:   string[];         // array of prose paragraphs (varies 6–10 per day)
+  practice:   ArmorPractice;
+  reflection: string;           // single reflective question
+  prayer:     string;           // closing prayer; newlines preserved as \n
+};
+
+type ArmorPiece = {
+  slug:        string;   // e.g. "belt-of-truth"
+  num:         string;   // e.g. "01"
+  title:       string;   // e.g. "Belt of Truth"
+  icon:        string;   // asset path e.g. "/Belt_white_icon.png"
+  trackTitle:  string;   // track subtitle e.g. "Living in the Light"
+  img:         string;   // hero image path
+  cumulative:  string;   // cumulative artifact description
+  days:        ArmorDay[]; // always 6 entries
+};
+```
+
+### 2. Rhythm schema (`src/content/rule-of-life.json`)
+
+`rule-of-life.json` is an **array** of 5 Rhythm objects in source order (presence, scripture, prayer, sabbath, community).
+
+```ts
+type RhythmScripture = { t: string; r: string };   // matches existing shape in source
+type PracticeStep    = { num: string; title: string; body: string };
+type FurtherItem     = { title: string; author: string; desc: string; amazon: string; cover: string };
+type MediaItem       = { title: string; source: string; type: string; thumb: string; url: string };
+
+type Rhythm = {
+  slug:             string;
+  title:            string;
+  sub:              string;
+  rhythm:           string;   // e.g. "RHYTHM 01"
+  img:              string;
+  imgThumb:         string;
+  quote:            string;
+  quoteRef:         string;
+  interactiveLabel: string;
+  challengeDay:     number;
+  challengeTitle:   string;
+  why:              string[];   // array of prose paragraphs
+  theology:         string[];   // may contain <em> HTML for italic terms
+  scriptures:       RhythmScripture[];
+  practice:         { intro: string; steps: PracticeStep[] };
+  reflection:       string[];
+  further:          FurtherItem[];
+  media:            MediaItem[];
+};
+```
+
+### 3. FieldGuideDay schema (`src/content/field-guide.json`)
+
+`field-guide.json` is an **array** of 7 FieldGuideDay objects in day order (1–7).
+
+```ts
+type FieldGuideDay = {
+  day:        number;   // 1–7
+  title:      string;
+  stillness:  string;
+  ref:        string;   // scripture citation e.g. "Psalm 5:3"
+  scripture:  string;   // verse text
+  reflection: string;
+  action:     string;
+  closing:    string;   // brief prayer
+};
+```
+
+**Day 7 special handling**: Day 7 (`title: "Identity"`) is the completion day. The component uses `!next` (no next office) to render `<NextStep context="field-guide-complete" />` beneath the return panel. The JSON does not encode this -- it is component logic, not content data.
+
+### 4. Fruit schema (`src/content/fruits.json`)
+
+`fruits.json` is an **object** keyed by fruit slug, matching the existing `FRUITS` shape exactly. Keys in `FRUIT_ORDER` sequence: love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, self_control.
+
+```ts
+type FruitScripture = { text: string; reference: string };
+type FruitRuleOfLife = { rhythm: string; path: string };
+
+type Fruit = {
+  key:                          string;
+  label:                        string;
+  greek:                        string;
+  formationStatement:           string;
+  recognitionStatement:         string;
+  secondaryFormationStatement:  string;
+  scripture:                    FruitScripture;
+  practice:                     string;
+  ruleOfLife:                   FruitRuleOfLife;
+};
+
+type FruitsMap = Record<string, Fruit>;  // 9 entries
+```
+
+---
+
+### 5. Loader API (`src/content/loader.js`)
+
+```js
+// Armor
+export function getArmorPiece(slug)   // ArmorPiece — throws (dev) / undefined (prod) if not found
+export function getAllArmorPieces()   // ArmorPiece[] in PIECE_ORDER sequence
+
+// Rhythms
+export function getRhythm(slug)       // Rhythm — throws (dev) / undefined (prod) if not found
+export function getAllRhythms()       // Rhythm[] as stored in JSON
+
+// Field Guide
+export function getFieldGuideDay(n)   // FieldGuideDay — throws (dev) / undefined (prod) if day not found
+export function getFieldGuidePath()  // FieldGuideDay[] all 7 in day order
+
+// Fruits
+export function getFruit(slug)        // Fruit — throws (dev) / undefined (prod) if not found
+export function getAllFruits()        // Fruit[] in FRUIT_ORDER sequence
+```
+
+**Error behavior**: The loader checks at module load time whether each JSON file has the expected item count (6 armor pieces, 5 rhythms, 7 field guide days, 9 fruits). On mismatch, calls `console.error` in dev — never throws at load time. Individual getter functions throw a descriptive `Error` in dev if the slug/day is not found, return `undefined` silently in prod.
+
+**Implementation note**: `getAllArmorPieces()` returns pieces sorted by the internal `PIECE_ORDER` constant. `getAllFruits()` returns fruits sorted by `FRUIT_ORDER`. Both constants are defined inside loader.js.
+
+---
+
+### 6. Validation strategy
+
+Runtime-only, dev-only count assertion at module load. No new dependencies. A hand-rolled `function assertCount(arr, expected, name)` calls `console.error` if `arr.length !== expected`. This catches missing entries (e.g., if a JSON file was partially written) without adding Zod or a validation library to the bundle.
+
+---
+
+### Component refactor rules (Stages 3A–3C)
+
+| File | Remove | Add |
+|---|---|---|
+| `src/Identity.jsx` | `const ARMOR_TRACKS = { ... }` (lines 92–1069) | `import { getAllArmorPieces, getArmorPiece } from './content/loader'`; replace `ARMOR_TRACKS[piece]` with `getArmorPiece(piece)`, replace `PIECE_ORDER.map(slug => ARMOR_TRACKS[slug])` with `getAllArmorPieces()` where needed |
+| `src/RuleOfLife.jsx` | `export const RHYTHMS = [ ... ]` (lines 41–288) | `import { getAllRhythms, getRhythm } from './content/loader'`; replace `RHYTHMS` array references with loader calls |
+| `src/FieldGuide.jsx` | `export const OFFICES = [ ... ]` (lines 28–92) | `import { getFieldGuidePath, getFieldGuideDay } from './content/loader'`; replace `OFFICES` references with loader calls |
+| `src/fruitAssessmentData.js` | `export const FRUITS = { ... }` (lines 52–179) | `import armorData from './content/fruits.json'; export const FRUITS = armorData;` — or keep export as a re-export from JSON directly |
+
+**Preserve all render behavior.** Do not touch formation profile reads, NextStep wiring, widget integrations, or any logic outside the data access. Existing callers of `RHYTHMS` (e.g., `DevotionOnboarding.jsx`) must continue to work -- if they import from RuleOfLife.jsx, keep the export alias.
