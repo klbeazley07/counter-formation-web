@@ -1,49 +1,103 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useFormationProfile } from "../hooks/useFormationProfile";
-
-const C = {
-  gold:       "#C9A84C",
-  goldFaint:  "rgba(201,168,76,0.15)",
-  goldGlow:   "rgba(201,168,76,0.06)",
-  goldBorder: "rgba(201,168,76,0.2)",
-  goldDiv:    "rgba(201,168,76,0.1)",
-  goldFocus:  "rgba(201,168,76,0.4)",
-  goldHair:   "rgba(201,168,76,0.12)",
-  darkBg:     "#06050A",
-  inputBg:    "#17140F",
-  ivory:      "#FAF8F5",
-  ivoryCard:  "rgba(250,248,245,0.9)",
-  ivoryMuted: "rgba(250,248,245,0.55)",
-  ivoryDim:   "rgba(250,248,245,0.35)",
-  ivoryFaint: "rgba(250,248,245,0.18)",
-};
-
-const barlow   = { fontFamily: "'Barlow Condensed', sans-serif" };
-const garamond = { fontFamily: "'Cormorant Garamond', serif" };
+import WidgetFrame from "../components/WidgetFrame";
+import Button from "../components/primitives/Button";
 
 const PLACEHOLDERS = [
   "My standing before God is not based on my performance.",
   "There is no condemnation for me.",
   "I have nothing that I did not receive.",
-  "I am God\u2019s child. That is what I am.",
+  "I am God’s child. That is what I am.",
   "I live from love, not for love.",
 ];
 
 const MAX_STATEMENTS = 5;
 const MIN_STATEMENTS = 3;
 
-/* ─── DECLARATION WIDGET ──────────────────────────────────────────── */
+const DECL_CSS = `
+  .decl-input-row { position: relative; display: flex; align-items: center; }
+  .decl-input {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--cf-rule-bg);
+    border: 1px solid var(--cf-gold-faint);
+    border-radius: var(--cf-radius-input);
+    padding: 10px 14px;
+    color: var(--cf-ivory);
+    font-family: var(--cf-font-devotional);
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.5;
+    outline: none;
+    transition: border-color .2s ease;
+  }
+  .decl-input:focus { border-color: var(--cf-gold-mid); }
+  .decl-input--has-remove { padding-right: 36px; }
+  .decl-input::placeholder { color: var(--cf-ivory-35); font-style: italic; }
+
+  .decl-remove-btn {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; padding: 2px 4px; cursor: pointer;
+    color: var(--cf-ivory-35); font-size: 18px; line-height: 1;
+    display: flex; align-items: center;
+    transition: color .15s ease, opacity .15s ease;
+    opacity: 0;
+  }
+  .decl-input-row:hover .decl-remove-btn,
+  .decl-remove-btn:focus { opacity: 1; }
+  .decl-remove-btn:hover { color: var(--cf-ivory); }
+
+  .decl-card-eyebrow {
+    font-family: var(--cf-font-brand);
+    font-size: 9px;
+    letter-spacing: .44em;
+    text-transform: uppercase;
+    color: var(--cf-gold);
+    font-weight: 700;
+    margin: 0 0 1.5rem 0;
+  }
+  .decl-card-stmt {
+    font-family: var(--cf-font-devotional);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--cf-ivory-90);
+    line-height: 1.8;
+    margin: 0;
+  }
+  .decl-card-hairline {
+    height: 1px;
+    background: var(--cf-gold-hairline);
+    margin: 0 auto;
+    max-width: 80%;
+  }
+  .decl-card-armorup {
+    font-family: var(--cf-font-devotional);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--cf-gold);
+    margin: 1.5rem 0 0;
+    line-height: 1.5;
+  }
+  .decl-add-btn {
+    font-family: var(--cf-font-brand);
+    background: none; border: none;
+    padding: 10px 0 0;
+    font-size: 9px; letter-spacing: .44em; text-transform: uppercase;
+    color: var(--cf-gold); cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    font-weight: 700;
+    transition: opacity .15s ease;
+  }
+  .decl-add-btn:hover { opacity: 0.7; }
+`;
 
 export function DeclarationWidget() {
   const { profile, updateProfile, isLoaded } = useFormationProfile();
   const [statements, setStatements] = useState(["", "", ""]);
-  const [focusIdx,   setFocusIdx]   = useState(null);
-  const [hoverIdx,   setHoverIdx]   = useState(null);
   const [card,       setCard]       = useState(null);
   const [copied,     setCopied]     = useState(false);
   const debounceRef = useRef(null);
 
-  // Load from profile once it has finished hydrating
   useEffect(() => {
     if (!isLoaded) return;
     const saved = profile.widgets.declarations;
@@ -54,7 +108,6 @@ export function DeclarationWidget() {
     }
   }, [isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Debounced save on every change
   useEffect(() => {
     if (!isLoaded) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -70,7 +123,6 @@ export function DeclarationWidget() {
       next[i] = val;
       return next;
     });
-    // Invalidate card on edit
     setCard(null);
   };
 
@@ -89,7 +141,6 @@ export function DeclarationWidget() {
     const filled = statements.map(s => s.trim()).filter(Boolean);
     if (filled.length === 0) return;
     setCard(filled);
-    // Save on generate (flush debounce)
     updateProfile({ widgets: { declarations: statements } });
   };
 
@@ -101,7 +152,6 @@ export function DeclarationWidget() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }).catch(() => {
-      // Fallback for older browsers
       const ta = document.createElement("textarea");
       ta.value = text;
       ta.style.position = "fixed";
@@ -115,114 +165,34 @@ export function DeclarationWidget() {
     });
   };
 
-  const inputStyle = (focused) => ({
-    ...garamond,
-    fontStyle:    "italic",
-    width:        "100%",
-    boxSizing:    "border-box",
-    background:   C.inputBg,
-    border:       `1px solid ${focused ? C.goldFocus : C.goldFaint}`,
-    borderRadius: "10px",
-    padding:      "10px 14px",
-    color:        C.ivory,
-    fontSize:     "16px",
-    lineHeight:   1.5,
-    outline:      "none",
-    transition:   "border-color .2s",
-  });
-
   const canAddMore = statements.length < MAX_STATEMENTS;
   const hasContent = statements.some(s => s.trim());
+  const showRemove = statements.length > MIN_STATEMENTS;
 
   return (
-    <div style={{
-      background:   C.goldGlow,
-      border:       `1px solid ${C.goldBorder}`,
-      borderRadius: "20px",
-      overflow:     "hidden",
-    }}>
-      <style>{`
-        .decl-remove-btn { opacity: 0; transition: opacity .15s; }
-        .decl-input-row:hover .decl-remove-btn { opacity: 1; }
-        .decl-remove-btn:focus { opacity: 1; }
-        .decl-add-btn:hover { opacity: 0.7 !important; }
-        .decl-generate-btn:hover { background: #FAF8F5 !important; }
-        .decl-copy-btn:hover { background: rgba(201,168,76,0.08) !important; }
-      `}</style>
+    <WidgetFrame
+      title="Declaration Builder"
+      subtitle="Write the truth you will speak over yourself each morning."
+    >
+      <style>{DECL_CSS}</style>
 
-      {/* ── Header ── */}
-      <div style={{ padding: "1.75rem 1.75rem 1.25rem" }}>
-        <p style={{
-          ...barlow,
-          fontSize:      "9px",
-          letterSpacing: ".44em",
-          textTransform: "uppercase",
-          color:         C.gold,
-          margin:        "0 0 6px 0",
-        }}>
-          Declaration Builder
-        </p>
-        <p style={{
-          ...garamond,
-          fontStyle:  "italic",
-          fontSize:   "15px",
-          color:      C.ivoryMuted,
-          lineHeight: 1.5,
-          margin:     0,
-        }}>
-          Write the truth you will speak over yourself each morning.
-        </p>
-      </div>
-
-      {/* ── Divider ── */}
-      <div style={{ height: "1px", background: C.goldDiv, margin: "0 1.75rem" }} />
-
-      {/* ── Statement Inputs ── */}
       <div style={{ padding: "1.5rem 1.75rem 0" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           {statements.map((stmt, i) => (
-            <div
-              key={i}
-              className="decl-input-row"
-              style={{ position: "relative", display: "flex", alignItems: "center" }}
-            >
+            <div key={i} className="decl-input-row">
               <input
                 type="text"
+                className={`decl-input ${showRemove ? "decl-input--has-remove" : ""}`}
                 value={stmt}
                 placeholder={PLACEHOLDERS[i % PLACEHOLDERS.length]}
                 onChange={e => handleChange(i, e.target.value)}
-                onFocus={() => setFocusIdx(i)}
-                onBlur={() => setFocusIdx(null)}
-                style={{
-                  ...inputStyle(focusIdx === i),
-                  // Leave room for remove button when it can appear
-                  paddingRight: statements.length > MIN_STATEMENTS ? "36px" : "14px",
-                }}
+                aria-label={`Declaration statement ${i + 1}`}
               />
-              {/* Remove button — only available beyond initial 3 */}
-              {statements.length > MIN_STATEMENTS && (
+              {showRemove && (
                 <button
                   className="decl-remove-btn"
                   onClick={() => handleRemove(i)}
-                  aria-label="Remove statement"
-                  style={{
-                    position:   "absolute",
-                    right:      "10px",
-                    top:        "50%",
-                    transform:  "translateY(-50%)",
-                    background: "none",
-                    border:     "none",
-                    padding:    "2px 4px",
-                    cursor:     "pointer",
-                    color:      C.ivoryDim,
-                    fontSize:   "18px",
-                    lineHeight: 1,
-                    display:    "flex",
-                    alignItems: "center",
-                    transition: "color .15s",
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.color = C.ivory; }}
-                  onMouseLeave={e => { e.currentTarget.style.color = C.ivoryDim; }}
+                  aria-label={`Remove statement ${i + 1}`}
                 >
                   ×
                 </button>
@@ -231,150 +201,60 @@ export function DeclarationWidget() {
           ))}
         </div>
 
-        {/* ── Add Statement ── */}
         {canAddMore && (
-          <button
-            className="decl-add-btn"
-            onClick={handleAdd}
-            style={{
-              ...barlow,
-              background:    "none",
-              border:        "none",
-              padding:       "10px 0 0",
-              fontSize:      "9px",
-              letterSpacing: ".44em",
-              textTransform: "uppercase",
-              color:         C.gold,
-              cursor:        "pointer",
-              display:       "flex",
-              alignItems:    "center",
-              gap:           "6px",
-              transition:    "opacity .15s",
-              fontWeight:    700,
-            }}
-          >
+          <button className="decl-add-btn" onClick={handleAdd} aria-label="Add another statement">
             + Add Statement
           </button>
         )}
       </div>
 
-      {/* ── Action Buttons ── */}
       <div style={{ padding: "1.25rem 1.75rem 1.5rem", display: "flex", gap: "10px" }}>
-        {/* Generate Card */}
-        <button
-          className="decl-generate-btn"
-          onClick={handleGenerate}
+        <Button
+          variant="primary"
+          size="sm"
           disabled={!hasContent}
-          style={{
-            ...barlow,
-            flex:          1,
-            padding:       "10px 18px",
-            minHeight:     "44px",
-            background:    hasContent ? C.gold : "rgba(201,168,76,0.25)",
-            color:         hasContent ? "#0A0A0A" : "rgba(10,10,10,0.4)",
-            border:        "none",
-            borderRadius:  "999px",
-            fontSize:      "9px",
-            letterSpacing: ".28em",
-            textTransform: "uppercase",
-            cursor:        hasContent ? "pointer" : "not-allowed",
-            fontWeight:    700,
-            transition:    "background .2s",
-          }}
+          onClick={handleGenerate}
+          className="cf-btn--flex1"
         >
           Generate Card
-        </button>
-
-        {/* Copy Text */}
-        <button
-          className="decl-copy-btn"
-          onClick={handleCopy}
+        </Button>
+        <Button
+          variant="secondary"
+          size="sm"
           disabled={!hasContent}
-          style={{
-            ...barlow,
-            flex:          1,
-            padding:       "10px 18px",
-            minHeight:     "44px",
-            background:    "transparent",
-            color:         hasContent ? C.gold : "rgba(201,168,76,0.35)",
-            border:        `1px solid ${hasContent ? C.goldBorder : "rgba(201,168,76,0.1)"}`,
-            borderRadius:  "999px",
-            fontSize:      "9px",
-            letterSpacing: ".28em",
-            textTransform: "uppercase",
-            cursor:        hasContent ? "pointer" : "not-allowed",
-            fontWeight:    700,
-            transition:    "background .2s",
-          }}
+          onClick={handleCopy}
+          className="cf-btn--flex1"
         >
           {copied ? "Copied" : "Copy Text"}
-        </button>
+        </Button>
       </div>
 
-      {/* ── Declaration Card ── */}
+      <style>{`.cf-btn--flex1 { flex: 1; }`}</style>
+
       {card && (
         <div style={{ padding: "0 1.75rem 1.75rem" }}>
           <div style={{
-            background:   C.darkBg,
-            border:       `1px solid ${C.goldBorder}`,
+            background: "var(--cf-hero-bg)",
+            border: "1px solid var(--cf-gold-soft)",
             borderRadius: "16px",
-            padding:      "1.5rem",
-            textAlign:    "center",
-            width:        "100%",
-            boxSizing:    "border-box",
+            padding: "1.5rem",
+            textAlign: "center",
+            width: "100%",
+            boxSizing: "border-box",
           }}>
-            {/* Card Eyebrow */}
-            <p style={{
-              ...barlow,
-              fontSize:      "9px",
-              letterSpacing: ".44em",
-              textTransform: "uppercase",
-              color:         C.gold,
-              margin:        "0 0 1.5rem 0",
-            }}>
-              My Morning Declaration
-            </p>
-
-            {/* Statements */}
+            <p className="decl-card-eyebrow">My Morning Declaration</p>
             {card.map((stmt, i) => (
               <div key={i}>
-                <p style={{
-                  ...garamond,
-                  fontStyle:  "italic",
-                  fontSize:   "20px",
-                  color:      C.ivoryCard,
-                  lineHeight: 1.8,
-                  margin:     0,
-                  padding:    i === 0 ? "0 0 1rem" : "1rem 0",
-                }}>
+                <p className="decl-card-stmt" style={{ padding: i === 0 ? "0 0 1rem" : "1rem 0" }}>
                   {stmt}
                 </p>
-                {/* Hairline divider between statements */}
-                {i < card.length - 1 && (
-                  <div style={{
-                    height:     "1px",
-                    background: C.goldHair,
-                    margin:     "0 auto",
-                    maxWidth:   "80%",
-                  }} />
-                )}
+                {i < card.length - 1 && <div className="decl-card-hairline" />}
               </div>
             ))}
-
-            {/* Armor Up */}
-            <p style={{
-              ...garamond,
-              fontStyle:  "italic",
-              fontSize:   "15px",
-              color:      C.gold,
-              margin:     "1.5rem 0 0",
-              lineHeight: 1.5,
-            }}>
-              Armor Up.
-            </p>
+            <p className="decl-card-armorup">Armor Up.</p>
           </div>
         </div>
       )}
-    </div>
+    </WidgetFrame>
   );
 }

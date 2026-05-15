@@ -7,9 +7,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        obsidian: '#0D0D12',
-        champagne: '#C9A84C',
-        ivory: '#FAF8F5',
+        obsidian:   'var(--cf-obsidian)',
+        champagne:  'var(--cf-gold)',
+        ivory:      'var(--cf-ivory)',
+        'cf-gold':  'var(--cf-gold)',
+        'cf-ivory': 'var(--cf-ivory)',
+        'cf-rule':  'var(--cf-rule-bg)',
+        'cf-hero':  'var(--cf-hero-bg)',
+      },
+      fontFamily: {
+        display:    ['Michroma', 'sans-serif'],
+        brand:      ['Barlow Condensed', 'sans-serif'],
+        devotional: ['Cormorant Garamond', 'serif'],
+      },
+      borderRadius: {
+        'cf-card':  '20px',
+        'cf-pill':  '999px',
       },
     },
   },

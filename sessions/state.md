@@ -1,7 +1,7 @@
 # Counter Formation Build State
 
 **Last updated:** 2026-05-15
-**Current phase:** Phase 4 — Design System (READY)
+**Current phase:** Phase 5 — Content Layer (READY)
 
 ---
 
@@ -12,8 +12,8 @@
 | 1 | Formation Profile | COMPLETE | Session 1 (2026-05-15) |
 | 2 | Connection Tissue | COMPLETE | Session 2 (2026-05-15) |
 | 3 | Discipleship Agent Foundation | COMPLETE | Session 3 (2026-05-15) |
-| 4 | Design System | READY (independent) | — |
-| 5 | Content Layer | NOT STARTED (independent) | — |
+| 4 | Design System | COMPLETE | Session 4 (2026-05-15) |
+| 5 | Content Layer | READY (independent) | — |
 
 ---
 
@@ -63,6 +63,37 @@
 - No re-entry from history into a prior devotion's full text. History panel is presence-indicator only; entries store summary, not full content. If "open this devotion again" is desired, schema needs a `content` or `shareId` field on `DevotionEntry`.
 - `currentArmorDay` in the context envelope returns the most-recently-completed day, not "next day to do." The backend can decide which framing it wants; if "next day" is preferred, update `deriveCurrentArmor` to return `min(6, max(days) + 1)`.
 - Context indicator only displays `formationEdge`. It does not surface current armor piece or rhythm preference. The data is already in the request envelope; if the user-facing indicator should be richer, it can be expanded without changing the contract.
+
+---
+
+## Phase 4 Scope
+
+**To build:**
+- [x] `src/styles/tokens.css` — full CSS custom property layer (surfaces, ink, gold, radii, fonts)
+- [x] `src/components/primitives/Button.jsx` — primary/secondary/ghost; sm/md/lg; loading; disabled
+- [x] `src/components/primitives/Input.jsx` — text/email/search; reference variant for short refs
+- [x] `src/components/primitives/EyebrowLabel.jsx` — xs/sm/md sizes, gold/muted colors
+- [x] `src/components/primitives/Card.jsx` — dark/warm surface, optional gold hairline
+- [x] `src/components/primitives/ProgressBar.jsx` — 0–100, optional label, ARIA progressbar role
+- [x] `src/components/primitives/SectionHeader.jsx` — eyebrow + display title + subtitle
+- [x] `src/components/WidgetFrame.jsx` — region role, aria-labelledby, gold-glow chrome
+- [x] `tailwind.config.js` extended to reference token variables
+- [x] All 6 widgets refactored: outer container + header replaced with `<WidgetFrame>`, CTAs swapped to `<Button>`, inline inputs swapped to `<Input>` where applicable, all `C` palette references replaced with `var(--cf-*)` tokens
+
+**Accessibility additions:**
+- [x] `WidgetFrame` — `role="region"`, `aria-labelledby` from auto-generated `useId()`
+- [x] `PeacePauseWidget` — `aria-pressed` on pause toggles; `aria-label` on day-cell SVGs ("Monday: 2 of 3 pauses complete")
+- [x] `VerseTrackerWidget` — `aria-pressed` on day-review toggles; descriptive `aria-label` per day
+- [x] `FirstFifteenWidget` — keyboard nav on `PracticeSelect` (Arrow keys, Enter, Escape, Tab); `role="listbox"`, `role="option"`, `aria-selected`
+- [x] `ArrowLogWidget` — `role="dialog"` and `aria-modal="true"` on expanded portal; `aria-expanded`/`aria-controls` on history toggle
+- [x] `DeclarationWidget` — per-input `aria-label`, descriptive remove button labels
+- [x] `ExamenWidget` — per-textarea `aria-label`, `aria-expanded`/`aria-controls` on "View Previous" toggle
+
+**Deferred (Phase 4):**
+- Newsletter capture form refactors (`App.jsx:967-972`, `App.jsx:1573-1582`, `SiteFooter.jsx:63-79`, `SevenDayChallenge.jsx:818-826`). These forms have a distinct "marketing pill" visual (rounded-full, semi-transparent white fill, gold-fill hover button) intentionally different from widget-grade dark inputs. Forcing them through generic `Input`/`Button` primitives would require special variants that pollute the API, or drive visual regression. Better path: build a future `MarketingInput`/`MarketingButton` (or a single `Input variant="marketing"`) if/when there are more than these four forms to consolidate.
+- ArrowLogWidget `ExpandedView` internals — kept the warm cream journal palette, swapped only sidebar buttons + outer chrome. The ExpandedView is a deliberately distinct visual surface and its inline `EX.*` palette stays in place.
+- Section pages (App.jsx, Identity.jsx, RuleOfLife.jsx, etc.) — per scope, only widget files were token-migrated. Section pages still declare their own `C` constants. A subsequent pass can migrate them once the new primitives are stable.
+- Visual smoke test in browser. Build is green but the agent cannot drive a browser. Recommend manual click-through across all six widgets (especially PeacePauseWidget edit panel and ArrowLogWidget expanded portal) before considering Phase 4 fully landed.
 
 ---
 

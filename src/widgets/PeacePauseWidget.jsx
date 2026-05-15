@@ -1,24 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useFormationProfile } from "../hooks/useFormationProfile";
-
-const C = {
-  gold:       "#C9A84C",
-  goldFaint:  "rgba(201,168,76,0.15)",
-  goldGlow:   "rgba(201,168,76,0.06)",
-  goldBorder: "rgba(201,168,76,0.2)",
-  goldDiv:    "rgba(201,168,76,0.1)",
-  goldMuted:  "rgba(201,168,76,0.5)",
-  inputBg:    "#17140F",
-  ivory:      "#FAF8F5",
-  ivoryMuted: "rgba(250,248,245,0.55)",
-  ivoryDim:   "rgba(250,248,245,0.35)",
-  ivoryFaint: "rgba(250,248,245,0.18)",
-  ivoryPause: "rgba(250,248,245,0.4)",
-};
-
-const barlow   = { fontFamily: "'Barlow Condensed', sans-serif" };
-const garamond = { fontFamily: "'Cormorant Garamond', serif" };
+import WidgetFrame from "../components/WidgetFrame";
+import Button from "../components/primitives/Button";
 
 const DEFAULT_STATEMENTS = {
   morning: "The outcome of my story is already secured. I stand in peace.",
@@ -28,8 +12,9 @@ const DEFAULT_STATEMENTS = {
 
 const PAUSE_KEYS = ["morning", "midday", "evening"];
 const PAUSE_LABELS = { morning: "Morning", midday: "Midday", evening: "Evening" };
-
-/* ── Helpers ── */
+const DAY_FULL = { M: "Monday", T: "Tuesday", W: "Wednesday", F: "Friday", S: "Saturday" };
+// Workaround for duplicate keys (T appears twice for Tuesday/Thursday, S for Saturday/Sunday) — see WEEKDAY_NAMES below.
+const WEEKDAY_NAMES = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 
 function todayKey() {
   const d = new Date();
@@ -37,9 +22,8 @@ function todayKey() {
 }
 
 function getISOWeekDates() {
-  // Returns array of 7 Date objects for Mon–Sun of the current ISO week
   const today = new Date();
-  const dayOfWeek = today.getDay(); // 0=Sun
+  const dayOfWeek = today.getDay();
   const monday = new Date(today);
   const offset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
   monday.setDate(today.getDate() + offset);
@@ -59,7 +43,129 @@ function completionCount(dayData) {
   return PAUSE_KEYS.filter(k => dayData[k]).length;
 }
 
-/* ── Countdown ── */
+const PEACE_CSS = `
+  .pp-pause-btn {
+    font-family: var(--cf-font-brand);
+    flex: 1;
+    min-width: 80px;
+    min-height: 44px;
+    padding: 9px 6px;
+    background: transparent;
+    border: 1px solid var(--cf-gold-mid);
+    border-radius: var(--cf-radius-pill);
+    color: var(--cf-ivory-42);
+    font-size: 9px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .pp-pause-btn:hover { opacity: 0.85; }
+  .pp-pause-btn--done {
+    background: var(--cf-gold);
+    color: #0A0A0A;
+    border-color: var(--cf-gold);
+  }
+  .pp-pause-btn--active:not(.pp-pause-btn--done) {
+    outline: 2px solid var(--cf-gold-mid);
+    outline-offset: 2px;
+  }
+
+  .pp-statement-panel {
+    margin: 0 var(--cf-space-card-pad) 1.5rem;
+    background: rgba(201,168,76,0.04);
+    border: 1px solid var(--cf-gold-faint);
+    border-radius: 14px;
+    padding: 1.25rem 1.25rem 1rem;
+  }
+  .pp-statement {
+    font-family: var(--cf-font-devotional);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--cf-ivory);
+    line-height: 1.7;
+    margin: 0;
+    flex: 1;
+  }
+  .pp-edit-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--cf-gold-muted);
+    font-size: 16px; line-height: 1;
+    padding: 2px 0 0;
+    flex-shrink: 0;
+    transition: color .2s ease;
+  }
+  .pp-edit-btn:hover { color: var(--cf-gold); }
+  .pp-edit-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--cf-rule-bg);
+    border: 1px solid var(--cf-gold-mid);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--cf-ivory);
+    font-family: var(--cf-font-devotional);
+    font-size: 16px;
+    line-height: 1.6;
+    font-style: italic;
+    outline: none;
+    resize: vertical;
+    margin-bottom: 10px;
+  }
+
+  .pp-rule-link {
+    font-family: var(--cf-font-brand);
+    font-size: 9px;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    color: var(--cf-gold);
+    opacity: 0.6;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .pp-rule-link:hover { opacity: 0.85; }
+
+  .pp-week-eyebrow {
+    font-family: var(--cf-font-brand);
+    font-size: 8px;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    color: var(--cf-gold-muted);
+    margin: 0 0 12px;
+  }
+
+  .pp-day-label {
+    font-family: var(--cf-font-brand);
+    font-size: 8px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+  .pp-day-label--today { color: var(--cf-gold); }
+  .pp-day-label--default { color: var(--cf-ivory-18); }
+
+  .pp-countdown {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    letter-spacing: .06em;
+    transition: color .3s ease;
+  }
+  .pp-countdown--ready { color: var(--cf-gold); }
+  .pp-countdown--counting { color: var(--cf-ivory-35); }
+
+  .pp-dismiss-btn {
+    font-family: var(--cf-font-brand);
+    background: none; border: none;
+    color: var(--cf-ivory-18);
+    font-size: 9px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0;
+    transition: color .15s ease;
+  }
+  .pp-dismiss-btn:hover { color: var(--cf-ivory-62); }
+`;
 
 function Countdown({ onDismiss }) {
   const [seconds, setSeconds] = useState(60);
@@ -72,59 +178,35 @@ function Countdown({ onDismiss }) {
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "10px" }}>
-      <span style={{
-        fontFamily: "'Courier New', monospace",
-        fontSize: "12px",
-        color: seconds === 0 ? C.gold : C.ivoryDim,
-        letterSpacing: ".06em",
-        transition: "color .3s",
-      }}>
+      <span className={`pp-countdown ${seconds === 0 ? "pp-countdown--ready" : "pp-countdown--counting"}`}>
         {seconds > 0 ? `${String(seconds).padStart(2, "0")}s` : "Peace."}
       </span>
-      <button
-        onClick={onDismiss}
-        style={{
-          ...barlow,
-          background: "none",
-          border: "none",
-          color: C.ivoryFaint,
-          fontSize: "9px",
-          letterSpacing: ".2em",
-          textTransform: "uppercase",
-          cursor: "pointer",
-          padding: 0,
-        }}
-      >
-        dismiss
-      </button>
+      <button onClick={onDismiss} className="pp-dismiss-btn">dismiss</button>
     </div>
   );
 }
 
-/* ── DayCell ── */
-
-function DayCell({ label, count, isToday }) {
+function DayCell({ label, dayName, count, isToday }) {
   const pct = count / 3;
   const radius = 10;
   const circ = 2 * Math.PI * radius;
   const dash = pct * circ;
+  const ariaLabel = `${dayName}: ${count} of 3 pauses complete`;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
-      <svg width="24" height="24" viewBox="0 0 24 24">
-        {/* Track */}
+      <svg width="24" height="24" viewBox="0 0 24 24" role="img" aria-label={ariaLabel}>
         <circle
           cx="12" cy="12" r={radius}
           fill="none"
-          stroke={isToday ? "rgba(201,168,76,0.25)" : "rgba(201,168,76,0.12)"}
+          stroke={isToday ? "var(--cf-gold-mid)" : "var(--cf-gold-hairline)"}
           strokeWidth="2"
         />
-        {/* Fill */}
         {pct > 0 && (
           <circle
             cx="12" cy="12" r={radius}
             fill="none"
-            stroke={C.gold}
+            stroke="var(--cf-gold)"
             strokeWidth="2"
             strokeDasharray={`${dash} ${circ}`}
             strokeLinecap="round"
@@ -132,39 +214,29 @@ function DayCell({ label, count, isToday }) {
             style={{ transition: "stroke-dasharray .4s ease" }}
           />
         )}
-        {/* Today highlight dot */}
         {isToday && (
-          <circle cx="12" cy="12" r="2" fill={count === 3 ? "#0A0A0A" : C.gold} opacity="0.7" />
+          <circle cx="12" cy="12" r="2" fill={count === 3 ? "#0A0A0A" : "var(--cf-gold)"} opacity="0.7" />
         )}
       </svg>
-      <span style={{
-        ...barlow,
-        fontSize: "8px",
-        letterSpacing: ".18em",
-        textTransform: "uppercase",
-        color: isToday ? C.gold : C.ivoryFaint,
-      }}>
+      <span className={`pp-day-label ${isToday ? "pp-day-label--today" : "pp-day-label--default"}`}>
         {label}
       </span>
     </div>
   );
 }
 
-/* ── PEACE PAUSE WIDGET ── */
-
 export function PeacePauseWidget() {
   const { profile, updateProfile, isLoaded } = useFormationProfile();
 
-  const [tracker, setTracker]       = useState({});       // { "YYYY-MM-DD": { morning, midday, evening } }
+  const [tracker, setTracker]       = useState({});
   const [statements, setStatements] = useState(DEFAULT_STATEMENTS);
-  const [active, setActive]         = useState(null);     // "morning" | "midday" | "evening" | null
-  const [editing, setEditing]       = useState(null);     // same shape, which one is in edit mode
+  const [active, setActive]         = useState(null);
+  const [editing, setEditing]       = useState(null);
   const [editValue, setEditValue]   = useState("");
   const [showTimer, setShowTimer]   = useState(false);
-  const [timerKey, setTimerKey]     = useState(0);        // remount countdown on new tap
+  const [timerKey, setTimerKey]     = useState(0);
   const editRef = useRef(null);
 
-  /* Seed local state from profile once loaded */
   useEffect(() => {
     if (!isLoaded) return;
     const t = profile.widgets.peaceTracker;
@@ -173,19 +245,16 @@ export function PeacePauseWidget() {
     if (s) setStatements({ ...DEFAULT_STATEMENTS, ...s });
   }, [isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  /* Persist tracker */
   useEffect(() => {
     if (!isLoaded) return;
     updateProfile({ widgets: { peaceTracker: tracker } });
   }, [tracker]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  /* Persist statements */
   useEffect(() => {
     if (!isLoaded) return;
     updateProfile({ widgets: { peaceStatements: statements } });
   }, [statements]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  /* Focus edit textarea */
   useEffect(() => {
     if (editing && editRef.current) editRef.current.focus();
   }, [editing]);
@@ -194,12 +263,10 @@ export function PeacePauseWidget() {
   const todayData = tracker[today] || { morning: false, midday: false, evening: false };
 
   const handlePauseClick = (key) => {
-    // Mark complete
     setTracker(prev => ({
       ...prev,
       [today]: { ...(prev[today] || { morning: false, midday: false, evening: false }), [key]: true },
     }));
-    // Toggle active panel
     if (active === key) {
       setActive(null);
       setShowTimer(false);
@@ -227,71 +294,27 @@ export function PeacePauseWidget() {
   const todayDateStr = dateToKey(new Date());
 
   return (
-    <div style={{
-      background: C.goldGlow,
-      border: `1px solid ${C.goldBorder}`,
-      borderRadius: "20px",
-      overflow: "hidden",
-    }}>
-      <style>{`
-        .pp-pause-btn:hover { opacity: 0.85; }
-        .pp-edit-btn:hover { color: #C9A84C !important; }
-        .pp-save-btn:hover { background: #FAF8F5 !important; }
-        .pp-dismiss-btn:hover { color: rgba(250,248,245,0.6) !important; }
-      `}</style>
+    <WidgetFrame
+      title="Peace Pause"
+      subtitle="Three returns. Every day."
+    >
+      <style>{PEACE_CSS}</style>
 
-      {/* Header */}
-      <div style={{ padding: "1.75rem 1.75rem 1.25rem" }}>
-        <p style={{
-          ...barlow,
-          fontSize: "9px",
-          letterSpacing: ".44em",
-          textTransform: "uppercase",
-          color: C.gold,
-          marginBottom: "6px",
-        }}>
-          Peace Pause
-        </p>
-        <p style={{
-          ...garamond,
-          fontStyle: "italic",
-          fontSize: "15px",
-          color: C.ivoryMuted,
-          lineHeight: 1.5,
-        }}>
-          Three returns. Every day.
-        </p>
-      </div>
-
-      {/* Pause Buttons */}
-      <div style={{ padding: "0 1.75rem 1.5rem", display: "flex", gap: "8px", flexWrap: "wrap" }}>
+      <div style={{ padding: "1.5rem 1.75rem 1.5rem", display: "flex", gap: "8px", flexWrap: "wrap" }}>
         {PAUSE_KEYS.map(key => {
           const done = todayData[key];
           const isActive = active === key;
+          const cls = [
+            "pp-pause-btn",
+            done ? "pp-pause-btn--done" : "",
+            isActive ? "pp-pause-btn--active" : "",
+          ].filter(Boolean).join(" ");
           return (
             <button
               key={key}
-              className="pp-pause-btn"
+              className={cls}
               onClick={() => handlePauseClick(key)}
-              style={{
-                ...barlow,
-                flex: 1,
-                minWidth: "80px",
-                minHeight: "44px",
-                padding: "9px 6px",
-                background: done ? C.gold : "transparent",
-                border: `1px solid ${done ? C.gold : "rgba(201,168,76,0.3)"}`,
-                borderRadius: "999px",
-                color: done ? "#0A0A0A" : C.ivoryPause,
-                fontSize: "9px",
-                letterSpacing: ".28em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-                fontWeight: 700,
-                outline: isActive && !done ? `2px solid rgba(201,168,76,0.4)` : "none",
-                outlineOffset: "2px",
-                transition: "background .2s, color .2s, border-color .2s",
-              }}
+              aria-pressed={done}
             >
               {PAUSE_LABELS[key]}
             </button>
@@ -299,138 +322,51 @@ export function PeacePauseWidget() {
         })}
       </div>
 
-      {/* Active Statement Panel */}
       {active && (
-        <div style={{
-          margin: "0 1.75rem 1.5rem",
-          background: "rgba(201,168,76,0.04)",
-          border: `1px solid rgba(201,168,76,0.15)`,
-          borderRadius: "14px",
-          padding: "1.25rem 1.25rem 1rem",
-        }}>
+        <div className="pp-statement-panel">
           {editing === active ? (
             <>
               <textarea
                 ref={editRef}
+                className="pp-edit-textarea"
                 value={editValue}
                 onChange={e => setEditValue(e.target.value)}
                 rows={3}
-                style={{
-                  ...garamond,
-                  width: "100%",
-                  boxSizing: "border-box",
-                  background: C.inputBg,
-                  border: `1px solid rgba(201,168,76,0.4)`,
-                  borderRadius: "8px",
-                  padding: "10px 12px",
-                  color: C.ivory,
-                  fontSize: "16px",
-                  lineHeight: 1.6,
-                  fontStyle: "italic",
-                  outline: "none",
-                  resize: "vertical",
-                  marginBottom: "10px",
-                }}
+                aria-label="Edit pause statement"
               />
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <button
-                  className="pp-save-btn"
-                  onClick={handleSave}
-                  style={{
-                    ...barlow,
-                    padding: "7px 18px",
-                    minHeight: "44px",
-                    background: C.gold,
-                    color: "#0A0A0A",
-                    border: "none",
-                    borderRadius: "999px",
-                    fontSize: "9px",
-                    letterSpacing: ".28em",
-                    textTransform: "uppercase",
-                    cursor: "pointer",
-                    fontWeight: 700,
-                    transition: "background .2s",
-                  }}
-                >
-                  Save
-                </button>
+                <Button variant="primary" size="sm" onClick={handleSave}>Save</Button>
               </div>
             </>
           ) : (
             <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-              <p style={{
-                ...garamond,
-                fontStyle: "italic",
-                fontSize: "18px",
-                color: C.ivory,
-                lineHeight: 1.7,
-                margin: 0,
-                flex: 1,
-              }}>
-                {statements[active]}
-              </p>
+              <p className="pp-statement">{statements[active]}</p>
               <button
                 className="pp-edit-btn"
                 onClick={() => handleEdit(active)}
-                aria-label="Edit statement"
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: C.goldMuted,
-                  fontSize: "16px",
-                  lineHeight: 1,
-                  padding: "2px 0 0 0",
-                  flexShrink: 0,
-                  transition: "color .2s",
-                }}
+                aria-label={`Edit ${PAUSE_LABELS[active]} statement`}
               >
                 ✎
               </button>
             </div>
           )}
 
-          {/* Countdown */}
           {showTimer && editing !== active && (
             <Countdown key={timerKey} onDismiss={() => setShowTimer(false)} />
           )}
         </div>
       )}
 
-      {/* Rule of Life Cross-Link */}
       <div style={{ padding: "0 1.75rem 0.5rem", textAlign: "center" }}>
-        <Link
-          to="/rule-of-life/sabbath"
-          style={{
-            fontFamily:    "'Barlow Condensed', sans-serif",
-            fontSize:      "9px",
-            letterSpacing: ".32em",
-            textTransform: "uppercase",
-            color:         C.gold,
-            opacity:       0.6,
-            textDecoration:"none",
-            display:       "inline-block",
-          }}
-        >
+        <Link to="/rule-of-life/sabbath" className="pp-rule-link">
           Part of the Sabbath rhythm →
         </Link>
       </div>
 
-      {/* Divider */}
-      <div style={{ height: "1px", background: C.goldDiv, margin: "0 1.75rem" }} />
+      <div style={{ height: "1px", background: "var(--cf-gold-hairline)", margin: "0 1.75rem" }} />
 
-      {/* 7-Day Week Tracker */}
       <div style={{ padding: "1.25rem 1.75rem 1.5rem" }}>
-        <p style={{
-          ...barlow,
-          fontSize: "8px",
-          letterSpacing: ".32em",
-          textTransform: "uppercase",
-          color: "rgba(201,168,76,0.4)",
-          marginBottom: "12px",
-        }}>
-          This Week
-        </p>
+        <p className="pp-week-eyebrow">This Week</p>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           {weekDates.map((date, i) => {
             const key = dateToKey(date);
@@ -440,6 +376,7 @@ export function PeacePauseWidget() {
               <DayCell
                 key={key}
                 label={DAY_LABELS[i]}
+                dayName={WEEKDAY_NAMES[i]}
                 count={count}
                 isToday={isToday}
               />
@@ -447,6 +384,6 @@ export function PeacePauseWidget() {
           })}
         </div>
       </div>
-    </div>
+    </WidgetFrame>
   );
 }

@@ -919,9 +919,297 @@ Inside the input card, directly after the "Build today's guide" header block (cu
 
 ---
 
+## CSS Tokens (`src/styles/tokens.css`)
+
+**Status: FINALIZED — Phase 4 Architect**
+
+CSS custom properties declared on `:root`. Replaces per-file `C` constants across `App.jsx`, all section pages, all six widgets, and `DevotionGuide.jsx`. Existing per-file constants are kept for now (deletion is opt-in, per-file, in Wave 2 refactors); new code MUST use tokens.
+
+```css
+:root {
+  /* Surfaces */
+  --cf-obsidian:        #0E0C0A;   /* primary dark body */
+  --cf-hero-bg:         #06050A;   /* DevotionGuide, FieldGuide hero */
+  --cf-rule-bg:         #17140F;   /* RuleOfLife, input dark fills */
+  --cf-field-bg:        #111009;   /* FieldGuide */
+  --cf-card-warm:       #1A1612;   /* warm espresso card body */
+  --cf-card-warm-2:     #201C17;   /* warm card alt */
+
+  /* Ink */
+  --cf-ivory:           #FAF8F5;
+  --cf-ivory-90:        rgba(250,248,245,0.90);
+  --cf-ivory-82:        rgba(250,248,245,0.82);
+  --cf-ivory-62:        rgba(250,248,245,0.62);
+  --cf-ivory-55:        rgba(250,248,245,0.55);
+  --cf-ivory-42:        rgba(250,248,245,0.42);
+  --cf-ivory-35:        rgba(250,248,245,0.35);
+  --cf-ivory-28:        rgba(250,248,245,0.28);
+  --cf-ivory-18:        rgba(250,248,245,0.18);
+
+  /* Champagne gold */
+  --cf-gold:            #C9A84C;
+  --cf-gold-mid:        rgba(201,168,76,0.30);
+  --cf-gold-soft:       rgba(201,168,76,0.20);
+  --cf-gold-faint:      rgba(201,168,76,0.15);
+  --cf-gold-hairline:   rgba(201,168,76,0.12);
+  --cf-gold-glow:       rgba(201,168,76,0.06);
+  --cf-gold-bg:         rgba(201,168,76,0.08);
+  --cf-gold-muted:      rgba(201,168,76,0.50);
+
+  /* Neutral overlays */
+  --cf-white-5:         rgba(255,255,255,0.05);
+  --cf-white-8:         rgba(255,255,255,0.08);
+  --cf-white-10:        rgba(255,255,255,0.10);
+
+  /* Radii */
+  --cf-radius-card:     20px;
+  --cf-radius-card-lg:  24px;
+  --cf-radius-pill:     999px;
+  --cf-radius-input:    10px;
+  --cf-radius-input-lg: 14px;
+
+  /* Type */
+  --cf-font-display:    'Michroma', sans-serif;
+  --cf-font-brand:      'Barlow Condensed', sans-serif;
+  --cf-font-devotional: 'Cormorant Garamond', serif;
+  --cf-font-body:       'Inter', sans-serif;
+
+  /* Spacing scale (optional convenience) */
+  --cf-space-card-pad:  1.75rem;
+}
+```
+
+`tokens.css` is imported once at the top of `src/main.jsx`, before `./index.css`. Tailwind config extends colors/fontFamily/borderRadius to reference these custom properties so Tailwind utilities and inline `var(...)` stay in sync.
+
+---
+
 ## Primitive Component APIs
 
-**Status: PENDING — Phase 4 Architect will define**
+**Status: FINALIZED — Phase 4 Architect**
+
+All primitives live in `src/components/primitives/`. Each is a single file, default-exported, JSX. All visual values come from CSS variables — no hex literals.
+
+### Button
+
+```ts
+interface ButtonProps {
+  variant?:  "primary" | "secondary" | "ghost";  // default "primary"
+  size?:     "sm" | "md" | "lg";                 // default "md"
+  loading?:  boolean;
+  disabled?: boolean;
+  icon?:     ReactNode;     // optional leading icon (lucide-react node, etc.)
+  type?:     "button" | "submit";  // default "button"
+  className?: string;       // applied to outer button element
+  onClick?:  (e) => void;
+  children:  ReactNode;     // label
+}
+```
+
+- **primary** — solid `--cf-gold` fill, dark obsidian text, gold hover lift
+- **secondary** — transparent, gold border, gold text, hover gold-bg-tint
+- **ghost** — transparent, ivory-62 text, no border, hover ivory text + faint bg
+- **sizes** — `sm` 9px Barlow .22em / 8px padding; `md` 10px Barlow .24em / 11–14px padding (default); `lg` 12px Barlow .28em / 15px padding
+- `loading` shows a spinning indicator and disables clicks. `disabled` dims and disables clicks. Both behave the same wrt interaction.
+
+Replaces: gold-fill CTAs in widgets ("Save Examen", "Save My First Fifteen", "Set This Week's Verse", "Save Declaration"), the gold-fill CTAs in DevotionGuide and SevenDayChallenge, the ghost "Copy Text" button in DeclarationWidget, the action buttons in NextStep + DevotionOnboarding.
+
+### Input
+
+```ts
+interface InputProps {
+  type?:        "text" | "email" | "search";  // default "text"
+  value:        string;
+  onChange:     (e) => void;
+  onKeyDown?:   (e) => void;
+  placeholder?: string;
+  disabled?:    boolean;
+  ariaLabel?:   string;
+  inputMode?:   "text" | "email" | "search";
+  className?:   string;
+}
+```
+
+Renders a controlled `<input>` with dark `--cf-rule-bg` fill, gold-faint border, gold-focus border, ivory text, Cormorant Garamond italic. The newsletter capture forms (4 locations) use this with `type="email"`. Widget inputs (verse ref, lie field, etc.) use this with `type="text"`.
+
+### EyebrowLabel
+
+```ts
+interface EyebrowLabelProps {
+  size?:      "xs" | "sm" | "md";  // default "sm"
+  color?:     "gold" | "muted";    // default "gold"
+  className?: string;
+  children:   ReactNode;
+}
+```
+
+Renders a `<p>` with Barlow Condensed, uppercase, .44em (sm/md) or .32em (xs), 9px (xs/sm) or 12px (md), color `--cf-gold` or `--cf-ivory-42`. No bottom margin by default — caller controls layout.
+
+### Card
+
+```ts
+interface CardProps {
+  padded?:   boolean | "sm" | "md" | "lg";  // default "md" (1.75rem)
+  topHairline?: boolean;                     // default false; adds gold gradient hairline at top
+  surface?:  "dark" | "warm";                // default "dark" (--cf-obsidian); warm uses --cf-card-warm
+  className?: string;
+  children:  ReactNode;
+}
+```
+
+Dark container with gold-soft border, 20px radius. Used for the inner "result" boxes in DevotionGuide, the declaration card output, the verse current-display card, etc.
+
+### ProgressBar
+
+```ts
+interface ProgressBarProps {
+  value:     number;       // 0–100, clamped
+  label?:    string;       // optional eyebrow label rendered above the bar
+  ariaLabel?: string;      // required when no label is provided
+  className?: string;
+}
+```
+
+3-px high pill-rounded bar with gold-faint track and gold fill. Used in Identity piece pages, Rule of Life pacing, and any future Phase 5 content.
+
+### SectionHeader
+
+```ts
+interface SectionHeaderProps {
+  eyebrow?:    string;
+  title:       string | ReactNode;
+  subtitle?:   string;
+  align?:      "left" | "center";  // default "left"
+  className?:  string;
+}
+```
+
+Renders eyebrow (via EyebrowLabel) + Michroma display title + optional Cormorant Garamond italic subtitle. Used across homepage section starts and section pages.
+
+---
+
+## WidgetFrame API
+
+**Status: FINALIZED — Phase 4 Architect**
+
+`src/components/WidgetFrame.jsx` — shared outer container for the six formation widgets.
+
+```ts
+interface WidgetFrameProps {
+  title:      string;             // eyebrow text (e.g. "Daily Examen")
+  subtitle?:  string;             // Cormorant Garamond italic line (e.g. "Five questions for honest self-reflection.")
+  headerAction?: ReactNode;       // optional element rendered top-right in header (used by ArrowLog's expand button)
+  ariaLabel?: string;             // for the region; defaults to title
+  className?: string;
+  children:   ReactNode;          // widget body
+}
+```
+
+Rendered DOM:
+
+```html
+<section role="region" aria-label="…" class="cf-widget-frame">
+  <header class="cf-widget-header">
+    <div class="cf-widget-header-text">
+      <p class="cf-widget-eyebrow">{title}</p>
+      <p class="cf-widget-subtitle">{subtitle}</p>
+    </div>
+    {headerAction}
+  </header>
+  <div class="cf-widget-hairline" />
+  <div class="cf-widget-body">{children}</div>
+</section>
+```
+
+Style: `--cf-gold-glow` background, `--cf-gold-soft` border, `--cf-radius-card`, overflow hidden. Header padding 1.75rem 1.75rem 1.25rem. Body has no inner padding (each widget controls its own internal spacing); WidgetFrame supplies the outer chrome only.
+
+Accessibility: `role="region"`, `aria-label={ariaLabel ?? title}`, header `<p>` rendered with `id` referenced by `aria-labelledby` (auto-generated).
+
+---
+
+## Tailwind Config Extension
+
+**Status: FINALIZED — Phase 4 Architect**
+
+```js
+theme: {
+  extend: {
+    colors: {
+      obsidian:    'var(--cf-obsidian)',
+      champagne:   'var(--cf-gold)',
+      ivory:       'var(--cf-ivory)',
+      'cf-gold':   'var(--cf-gold)',
+      'cf-ivory':  'var(--cf-ivory)',
+      'cf-rule':   'var(--cf-rule-bg)',
+      'cf-hero':   'var(--cf-hero-bg)',
+    },
+    fontFamily: {
+      display:     ['Michroma', 'sans-serif'],
+      brand:       ['Barlow Condensed', 'sans-serif'],
+      devotional:  ['Cormorant Garamond', 'serif'],
+    },
+    borderRadius: {
+      'cf-card':   '20px',
+      'cf-pill':   '999px',
+    },
+  },
+},
+```
+
+Pre-existing utility usage (`bg-obsidian`, `text-champagne`, `text-ivory`) keeps working — colors are remapped to variables, values resolve identically at runtime.
+
+---
+
+## Widget Refactor Checklist
+
+**Status: FINALIZED — Phase 4 Architect**
+
+For each widget: (a) keep all logic unchanged, (b) wrap output in `<WidgetFrame title="…" subtitle="…">`, removing the per-widget outer container + header + first hairline divider, (c) replace top-level CTAs with `<Button>`, (d) replace top-level `<input>` and `<textarea>` controls with `<Input>` and `<Textarea>` where they exist as direct form fields. Sub-components (DayCell, PracticeSelect, CompactEntryRow, ExpandedView, LibraryEntry) are NOT refactored — they remain in-file with their existing inline styles, just with `C.*` references replaced by `var(--cf-*)` where convenient.
+
+| Widget | WidgetFrame title / subtitle | CTAs to swap to `<Button>` | Inputs to swap to `<Input>` | Preserve |
+|---|---|---|---|---|
+| Declaration | "Declaration Builder" / "Write the truth you will speak over yourself each morning." | Generate Card (primary), Copy Text (secondary), + Add Statement (ghost) | The 3–5 declaration statement inputs | Card output block, remove-button hover behavior |
+| Examen | "Daily Examen" / "Five questions for honest self-reflection." | Save Examen (primary), View Previous (ghost) | The 5 question textareas | Question prompt left-bar styling, prior-entry log display |
+| PeacePause | "Peace Pause" / "Three returns. Every day." | The 3 pause toggle buttons (these stay custom — they're domain widgets, not generic), Save (primary, inside edit panel) | edit textarea (Input multiline variant) | DayCell SVG (add `aria-label` per accessibility pass), Countdown |
+| FirstFifteen | "First Fifteen" / "Design your morning before the world designs it for you." | Save My First Fifteen (primary) | notes textarea | PracticeSelect dropdown (add keyboard nav), OutputCard |
+| VerseTracker | "Verse Tracker" / "One verse per week. Fifty-two per year." | Set This Week's Verse (primary), Show/Hide Library (ghost) | refInput, textInput | day-toggle buttons, LibraryEntry |
+| ArrowLog | "Arrow Log" / "Catch the lie. Answer with truth." | Seek Truth (secondary), Add to Log (primary), Discard (ghost), View Arrow Log (ghost) | lie textarea | ExpandedView entire (separate visual design with intentional warm palette), CompactEntryRow, VersePill, ScripturePopout |
+
+PeacePause's three pause toggle buttons (Morning/Midday/Evening) are domain widgets — they have a stateful "done/active/pending" visual that doesn't map cleanly to Button variants. They remain custom inline but use token variables for color.
+
+---
+
+## Newsletter Capture Locations
+
+**Status: FINALIZED — Phase 4 Architect**
+
+Four `<input type="email">` capture forms exist:
+
+| File | Line | Context | Action |
+|---|---|---|---|
+| `src/App.jsx` | 967–972 | Per-product "Notify me" inline form | Replace `<input>` with `<Input type="email">`. Keep the existing submit button as-is (it's a tiny inline-flex button matching the product card styling — not worth genericizing). |
+| `src/App.jsx` | 1573–1582 | Main newsletter signup section | Replace `<input>` with `<Input type="email">` and `<button>` with `<Button variant="primary">`. |
+| `src/components/SiteFooter.jsx` | 63–75 | Footer signup | Replace `<input>` with `<Input type="email">` and `<button>` with `<Button variant="primary">`. |
+| `src/SevenDayChallenge.jsx` | 818–826 | Challenge email signup | Skip — this form is inside the `cf7-form-row` styled with the challenge's own SCSS-like inline class system. Refactoring it would require also refactoring `cf7-email-inp` and `cf7-form-row`. Out of scope. |
+
+---
+
+## Accessibility Pass
+
+**Status: FINALIZED — Phase 4 Architect**
+
+Per Theme 4 spec. To be applied during widget refactors:
+
+| Location | Issue | Fix |
+|---|---|---|
+| `PeacePauseWidget.jsx` `DayCell` SVG (lines 106–151) | No `aria-label` on the SVG progress indicator | Add `<svg aria-label={`{day label}: {count} of 3 pauses complete`}>` |
+| `PeacePauseWidget.jsx` pause buttons (267–300) | Adequate `aria-pressed` not set on state-toggling buttons | Add `aria-pressed={done}` to each pause toggle |
+| `FirstFifteenWidget.jsx` `PracticeSelect` (37–126) | Custom dropdown is mouse-only; no keyboard navigation | Add `onKeyDown` handler on the trigger button: ArrowDown opens, ArrowUp/Down move highlight, Enter selects, Escape closes. Add `role="listbox"` to popup and `role="option"` + `aria-selected` on each option |
+| `VerseTrackerWidget.jsx` day-toggle buttons (343–363) | Existing `aria-label="Toggle {label}"` is OK; add pressed state | Add `aria-pressed={checked}` |
+| `ArrowLogWidget.jsx` & expanded overlay | Lacking `role="dialog"` and focus management on the maximized portal | Add `role="dialog"`, `aria-modal="true"`, `aria-label="Arrow Log expanded view"` to ExpandedView root |
+| `WidgetFrame` (new) | New component — must include `role="region"` and `aria-labelledby` from the start | Built into the contract above |
+| All decorative images in widgets | Already `alt=""` or `aria-hidden="true"` — audit confirms | No change |
+
+---
 
 ---
 

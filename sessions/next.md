@@ -1,25 +1,25 @@
-# Counter Formation Build — Phase 4: Design System
+# Counter Formation Build — Phase 5: Content Layer
 **Session type:** Build
-**Depends on:** Phase 1 only. Independent of Phases 2 and 3.
+**Depends on:** Phase 1 only. Independent of Phases 2, 3, 4.
 
 ---
 
 ## Context (read this first)
 
-The brand palette and type pairing are consistent across the site because every developer on this project has been the same person with the same eye. That discipline lives in your head, not in the code. There is no shared token layer. Each section file (App, Identity, RuleOfLife, FieldGuide, SevenDayChallenge, FruitAssessment, About, Architecture) and each of the six widgets (Declaration, Examen, PeacePause, FirstFifteen, VerseTracker, ArrowLog) defines its own `gold`, `ivory`, `barlow`, `garamond` constants. Color change requires twelve files. Type change requires the same.
+Right now, every piece of formation content on the site (armor piece copy, rule-of-life rhythm copy, field guide day text, devotion guide examples) lives inline in JSX files. Editing one line of copy requires opening a 2000-line component file. Adding a new day to the Field Guide path requires JSX surgery. There is no separation between content and presentation.
 
-Phase 4 extracts those constants into a token layer, builds a primitive component library, and refactors the six widgets onto a shared `WidgetFrame`. The output should be: one source of truth for color and type, one button implementation, one input implementation, one card implementation, and twelve widget files that are noticeably shorter and easier to read.
+Phase 5 extracts content into JSON files under `src/content/`, builds a typed loader, and refactors the section pages to read from the loader instead of hard-coded strings. This unblocks (a) future content updates by non-developers (or by Claude in single-file edits), (b) eventual CMS integration if desired, (c) content-driven new-piece additions without code changes.
 
-The spec is at `specs/spec-site-enhancement-2026.md` (Theme 4). The build methodology is at `specs/spec-build-architecture.md`. Follow the same Contract → Parallel Build → Integration → Review → Wrap structure.
+The spec is at `specs/spec-site-enhancement-2026.md` (Theme 5). The build methodology is at `specs/spec-build-architecture.md`. Follow the same Contract → Build → Refactor → Review → Wrap structure.
 
 ---
 
 ## Read these files before doing anything else
 
-1. `sessions/state.md` — phase checklist and deferred items
-2. `sessions/contracts.md` — Phase 1, 2, and 3 contracts (FINALIZED), plus PENDING Phase 4 sections at the bottom
-3. `specs/spec-site-enhancement-2026.md` — Theme 4 section
-4. `specs/spec-build-architecture.md` — Phase 4 agent map and session structure
+1. `sessions/state.md` — phase checklist; Phase 4 deferred items
+2. `sessions/contracts.md` — finalized contracts from Phases 1–4
+3. `specs/spec-site-enhancement-2026.md` — Theme 5 section
+4. `specs/spec-build-architecture.md` — Phase 5 agent map
 
 ---
 
@@ -28,122 +28,77 @@ The spec is at `specs/spec-site-enhancement-2026.md` (Theme 4). The build method
 - **Phase 1:** `useFormationProfile` hook + provider + migration. All section/widget files write through the profile.
 - **Phase 2:** `NextStep.jsx` + `formationRecommendation.js`. Live at four transition moments.
 - **Phase 3:** `DevotionOnboarding.jsx`, `DevotionHistory.jsx`, `devotionContext.js`. `DevotionGuide.jsx` is now stateful with mode selection, context threading, history write, and onboarding gate.
+- **Phase 4:** `tokens.css` + 6 primitives + `WidgetFrame`. All six widget files refactored. Tailwind config extends to CSS variables.
 
-These are all in service. Phase 4 should not change their behavior. It may refactor their internal styling to use tokens and primitives, but only if it can be done without behavioral change.
+These are all in service. Phase 5 should not change their behavior.
 
 ---
 
 ## What this session builds
 
 **Files to create:**
-- `src/styles/tokens.css` — CSS custom properties at `:root` for all brand colors, surface colors, gold variants, radii, and font families
-- `src/components/primitives/Button.jsx` — primary, secondary, ghost variants; size and loading props
-- `src/components/primitives/Input.jsx` — text and email; controlled component; focus/blur transitions centralized
-- `src/components/primitives/Card.jsx` — dark container with optional gold top hairline; `padded` and `children` props
-- `src/components/primitives/EyebrowLabel.jsx` — gold uppercase tracking label; text prop only
-- `src/components/primitives/ProgressBar.jsx` — thin gold progress indicator; `value` (0–100) and `label` props
-- `src/components/primitives/SectionHeader.jsx` — eyebrow + display title + optional subtitle
-- `src/components/WidgetFrame.jsx` — shared container for all six formation widgets
+- `src/content/armor.json` — full content for all six armor pieces (label, slug, days array with title/scripture/reflection/practice/declaration for each of 6 days)
+- `src/content/rule-of-life.json` — all five rhythms (presence, prayer, sabbath, community, scripture) with rationale, daily expression, weekly expression, and seasonal expression
+- `src/content/field-guide.json` — Scripture Before Scroll 7-day path with day title, prompt, scripture, reflection, practice
+- `src/content/fruits.json` (optional refactor) — extract `FRUITS` data from `fruitAssessmentData.js` so all FRUIT content lives in one JSON file
+- `src/content/loader.js` — typed loader utility: `getArmorPiece(slug)`, `getAllArmorPieces()`, `getRhythm(slug)`, `getFieldGuideDay(n)`, etc.
+- `src/content/schema.js` (optional) — runtime schema validation using a tiny hand-rolled validator (avoid adding zod as a dep)
 
-**Files to modify (Wave 2 — after primitives ship):**
-- `src/widgets/DeclarationWidget.jsx` — wrap in `WidgetFrame`; replace local color/font constants with tokens
-- `src/widgets/ExamenWidget.jsx` — same
-- `src/widgets/PeacePauseWidget.jsx` — same; preserve the SVG circular progress logic
-- `src/widgets/FirstFifteenWidget.jsx` — same; preserve the custom dropdown logic; add keyboard nav (`ArrowUp`, `ArrowDown`, `Enter`, `Escape`)
-- `src/widgets/VerseTrackerWidget.jsx` — same
-- `src/widgets/ArrowLogWidget.jsx` — same
-- `tailwind.config.*` — extend theme to reference the CSS custom properties so Tailwind utilities share the same source of truth
-- Newsletter capture forms (find all instances) — refactor to use `<Input>` + `<Button>` primitives
+**Files to modify:**
+- `src/Identity.jsx` — replace inline `PIECES` data with `getAllArmorPieces()` loader call
+- `src/RuleOfLife.jsx` — replace inline rhythm data with `getRhythm(slug)`
+- `src/FieldGuide.jsx` — replace inline `DAYS` data with `getFieldGuideDay(n)` / `getFieldGuidePath()`
+- `src/fruitAssessmentData.js` — if fruits.json refactor is done, this file imports FRUITS from JSON; otherwise unchanged
 
 **Files that do not change this session:**
-- All Phase 1, 2, 3 files (hook, migration, NextStep, formationRecommendation, DevotionOnboarding, DevotionHistory, devotionContext, DevotionGuide)
-- Routing, navigation, layout files (App.jsx routing, SiteNav, SiteFooter, MobileTabBar)
-- Section pages outside the widget refactor (Identity, RuleOfLife, FieldGuide, SevenDayChallenge, FruitAssessment, About, Architecture) — these stay on their current inline constants until Phase 5 or later
+- All Phase 1, 2, 3, 4 files (hook, migration, NextStep, recommendation engine, DevotionGuide + onboarding/history/context, tokens.css, primitives, WidgetFrame, refactored widgets)
+- Routing, navigation, layout files
+- All widget files
+- Newsletter capture forms (still deferred from Phase 4)
 
 ---
 
 ## Stage 1: Architect (run first, before any builders)
 
-Spawn an Architect agent with this task:
+Spawn an Architect agent (or do inline if scope is manageable) with this task:
 
-> Read the following files in full: `src/widgets/DeclarationWidget.jsx`, `src/widgets/ExamenWidget.jsx`, `src/widgets/PeacePauseWidget.jsx`, `src/widgets/FirstFifteenWidget.jsx`, `src/widgets/VerseTrackerWidget.jsx`, `src/widgets/ArrowLogWidget.jsx`, `src/App.jsx` (the `C` constants block only), `src/Identity.jsx` (constants block only), `src/RuleOfLife.jsx` (constants block only), `src/FieldGuide.jsx` (constants block only), `src/SevenDayChallenge.jsx` (constants block only), `src/FruitAssessment.jsx` (constants block only), `src/DevotionGuide.jsx` (the `C` constants block). Audit every color, radius, and font family declared at the top of each file.
+> Audit the inline content data structures in `src/Identity.jsx` (the `PIECES` array around line 2700+), `src/RuleOfLife.jsx` (the rhythm definitions), `src/FieldGuide.jsx` (the `DAYS` array), and `src/fruitAssessmentData.js` (`FRUITS` object). Map each shape and document it.
 >
-> Define and write to `sessions/contracts.md` under the existing PENDING sections:
+> Define and write to `sessions/contracts.md` under the existing PENDING "Content JSON Schemas" section:
 >
-> 1. **CSS Token Names** — the full list of `:root` custom properties for `tokens.css`. Minimum required: `--cf-obsidian`, `--cf-hero-bg`, `--cf-rule-bg`, `--cf-field-bg`, `--cf-ivory`, `--cf-gold`, `--cf-gold-faint`, `--cf-gold-glow`, `--cf-white-5`, `--cf-white-10`, `--cf-radius-card`, `--cf-radius-pill`, `--cf-font-brand`, `--cf-font-devotional`. Add any additional tokens you find missing from the audit (e.g., card body backgrounds, border colors, muted text rgba values). For each token, document the source file(s) it was extracted from. State whether the existing per-file constant should be deleted, aliased, or kept as a local override.
+> 1. **ArmorPiece schema** — slug, label, scripture (book/chapter/verse), opening narrative, six day objects each with title/scripture/reflection/practice/declaration. State whether the `CROSS_LINKS` mapping (Phase 2 contract) is included in the piece JSON or stays as a separate `armor-cross-links.json`.
 >
-> 2. **Primitive Component APIs** — full JSDoc and prop types for each primitive: `Button`, `Input`, `Card`, `EyebrowLabel`, `ProgressBar`, `SectionHeader`. Include every variant, every default, every accessibility attribute (`role`, `aria-*`). For `Button`, define which existing button patterns (the gold-fill CTA in SevenDayChallenge, the ghost button in DevotionGuide, the pill download button, etc.) each variant replaces.
+> 2. **Rhythm schema** — slug, label, rationale paragraph, daily/weekly/seasonal expressions, connected armor pieces. Mirror the existing `RULE_OF_LIFE` / armor cross-link data shape.
 >
-> 3. **WidgetFrame API** — the props and slots (`icon`, `title`, `subtitle`, `actions`, `children`). Define the rendered DOM structure and the class names. Define accessibility expectations: `role="region"`, `aria-labelledby`, focus management. Document which existing per-widget container patterns it replaces.
+> 3. **FieldGuideDay schema** — day number, title, scripture reference + text, reflection prose, practice instruction. Day 7 special handling (it triggers the `NextStep` block from Phase 2).
 >
-> 4. **Tailwind config extension** — exactly which `theme.extend.colors`, `theme.extend.fontFamily`, and `theme.extend.borderRadius` entries should be added so Tailwind utility classes pull from the same CSS variables. State whether any Tailwind class is currently in use that would break if remapped.
+> 4. **Fruit schema** — match the existing `FRUITS[slug]` object shape from fruitAssessmentData.js: key, label, greek, formationStatement, recognitionStatement, secondaryFormationStatement, scripture {text, reference}, practice, ruleOfLife {rhythm, path}.
 >
-> 5. **Widget refactor checklist** — for each of the six widgets, the exact constants to replace (local `gold`, `ivory`, etc. → token), the existing outer container JSX block to remove, and the exact `<WidgetFrame icon={...} title={...} subtitle={...}>` invocation to use. State any widget-specific logic that must remain intact (e.g., PeacePause SVG, FirstFifteen dropdown).
+> 5. **Loader API** — function signatures for `getArmorPiece(slug)`, `getAllArmorPieces()`, `getRhythm(slug)`, `getAllRhythms()`, `getFieldGuideDay(n)`, `getFieldGuidePath()`, `getFruit(slug)`, `getAllFruits()`. Return types for each. Behavior when slug/day is unknown.
 >
-> 6. **Newsletter capture locations** — find every `<input type="email">` or newsletter capture form in the codebase (run `grep`). List file + line numbers. State which should be refactored to `<Input>` + `<Button>` and which (if any) are intentionally bespoke.
->
-> 7. **Accessibility pass** — per the spec: `role`, `aria-label`, `aria-expanded` on all interactive widget elements; keyboard nav for FirstFifteen dropdown; `aria-label` on PeacePause SVG progress; audit of all decorative `alt=""` images. List each fix with file and line numbers.
+> 6. **Validation strategy** — runtime check on load (dev-only, fails loudly if schema mismatch) vs build-time check vs none. Recommend the simplest workable approach. No new dependencies unless absolutely required.
 >
 > Do not write implementation code. State any assumptions.
 
-Do not proceed to Stage 2 until the Architect has written the finalized contracts.
+---
+
+## Stage 2: Content extraction + loader
+
+Two parallel builders:
+
+**Builder A — Content JSON files:**
+> Read sessions/contracts.md (Phase 5 content schemas). Extract the inline data from `src/Identity.jsx`, `src/RuleOfLife.jsx`, `src/FieldGuide.jsx`, and (optionally) `src/fruitAssessmentData.js` into `src/content/*.json` files exactly per the schemas. Preserve every word of copy verbatim. Do not summarize. Return a summary including the number of armor pieces, rhythms, and days extracted.
+
+**Builder B — Loader utility:**
+> Read sessions/contracts.md. Implement `src/content/loader.js` per the contracted API. Use ES module imports of the JSON files. Throw a clear error (in dev only — silent fallback in prod) if a requested slug/day is not found. Return a summary.
 
 ---
 
-## Stage 2: Parallel Builders — Wave 1 (primitives + frame + tokens)
+## Stage 3: Section page refactors
 
-After contracts are finalized, spawn these builders in parallel:
+Three parallel refactor agents (Identity, RuleOfLife, FieldGuide). For each:
 
-**Builder A — Tokens + Tailwind config:**
-> Read `sessions/contracts.md` (CSS Token Names + Tailwind config extension sections). Create `src/styles/tokens.css` exactly per the contract. Update `tailwind.config.*` to extend theme to reference the variables. Import `tokens.css` once at the top of `src/main.jsx` (or wherever the app root entry imports global CSS). Return a summary and a list of files touched.
-
-**Builder B — Button + Input + EyebrowLabel:**
-> Read `sessions/contracts.md`. Implement `src/components/primitives/Button.jsx`, `src/components/primitives/Input.jsx`, `src/components/primitives/EyebrowLabel.jsx` per the contracts. Components are functional and use only CSS custom properties (no hex colors). Each component is one file. Match the existing visual language (gold fills, dark surfaces, Barlow/Cormorant fonts). Return a summary of what you built and any deviations from contract.
-
-**Builder C — Card + ProgressBar + SectionHeader:**
-> Read `sessions/contracts.md`. Implement `src/components/primitives/Card.jsx`, `src/components/primitives/ProgressBar.jsx`, `src/components/primitives/SectionHeader.jsx` per the contracts. Same constraints as Builder B. Return a summary.
-
-**Builder D — WidgetFrame:**
-> Read `sessions/contracts.md`. Implement `src/components/WidgetFrame.jsx` per the contract, including accessibility wiring (`role="region"`, `aria-labelledby` on the heading). Use only tokens, no hex colors. Return a summary.
-
----
-
-## Stage 2 Wave 1 — Review checkpoint
-
-Before Wave 2 begins, spawn a Reviewer agent:
-
-> Read every file produced by Wave 1: `src/styles/tokens.css`, `tailwind.config.*`, the six primitives, `WidgetFrame.jsx`. Compare against `sessions/contracts.md`.
->
-> 1. Verify no raw hex colors anywhere in the new files (all colors must reference CSS variables).
-> 2. Verify the variable list in `tokens.css` matches the contract exactly.
-> 3. Verify each primitive's prop API matches the contract.
-> 4. Verify accessibility wiring in `WidgetFrame` matches the contract.
-> 5. Verify Tailwind config extensions resolve to the variables (run a `tailwindcss` build if available).
->
-> Do not fix issues. Report them with file and line numbers. Return a clean/issues list.
-
-Fix any issues before proceeding to Wave 2.
-
----
-
-## Stage 2: Parallel Builders — Wave 2 (widget refactors)
-
-Six parallel refactor agents, one per widget:
-
-> Read `sessions/contracts.md` (Widget refactor checklist). Read `src/widgets/{WIDGET}.jsx`. Refactor:
-> 1. Delete the local color/font constants block that maps to tokens (replace with token references).
-> 2. Wrap the widget's main rendered output in `<WidgetFrame>` per the contract.
-> 3. Replace any newsletter capture forms inside the widget with `<Input>` + `<Button>`.
-> 4. Preserve all widget-specific logic (PeacePause SVG, FirstFifteen dropdown, VerseTracker library merge, ArrowLog API enrichment, etc.).
-> 5. Add the accessibility fixes from the contract.
->
-> Do not change the localStorage / profile read or write behavior. Do not change the widget's rendered features. Return a diff summary.
-
----
-
-## Stage 3: Integrator — newsletter capture refactor
-
-> Read `sessions/contracts.md` (Newsletter capture locations). For each capture form identified, refactor to use `<Input>` + `<Button>`. Preserve existing submit behavior, validation, and analytics calls. Return a diff summary.
+> Read sessions/contracts.md (Loader API section). Read the corresponding section file (`src/Identity.jsx` / `src/RuleOfLife.jsx` / `src/FieldGuide.jsx`). Replace the inline data array/object with a call to the loader. Preserve all rendering behavior. Do not touch widget integrations, NextStep wiring, formation profile reads, or anything else. Return a diff summary.
 
 ---
 
@@ -151,13 +106,12 @@ Six parallel refactor agents, one per widget:
 
 Spawn a Reviewer agent:
 
-> The following files were created or modified this session: [list every file from Waves 1 and 2 and the integrator pass]. Read each file. Compare against `sessions/contracts.md`.
+> The following files were created or modified this session: [list]. Read each file. Compare against sessions/contracts.md.
 >
-> 1. Verify zero raw hex colors in any widget file (all must reference CSS variables or token-derived classes).
-> 2. Verify every widget renders inside `<WidgetFrame>`.
-> 3. Verify accessibility: `role`, `aria-label`, `aria-expanded` on all interactive elements; keyboard nav on FirstFifteen dropdown; `aria-label` on PeacePause SVG.
-> 4. Verify newsletter capture forms all use `<Input>` + `<Button>`.
-> 5. Verify Phase 1/2/3 files are untouched (or changed only in non-behavioral ways).
+> 1. Verify every armor piece, rhythm, and field guide day from the inline source is present in the JSON files (no content lost).
+> 2. Verify the loader returns the same shape that the inline data had (so component code can be a near-1:1 replacement).
+> 3. Verify section pages no longer carry inline content arrays (only loader calls).
+> 4. Verify NextStep / recommendation engine / profile hooks are untouched.
 >
 > Do not fix issues. Report them with file and line numbers. Return a clean/issues list.
 
@@ -172,44 +126,37 @@ Run:
 npm run build
 ```
 
-If the build fails, fix the errors before closing the session. Also run a manual smoke test (start dev server, visually verify the homepage, one widget, one section page, the DevotionGuide). The reviewer cannot test rendering — that is a manual step.
+If the build fails, fix the errors before closing the session. Recommend Luke do a visual click-through of armor pages, rhythm pages, and the Field Guide 7-day path before considering Phase 5 fully landed.
 
 When the build passes:
 
 **Update sessions/state.md:**
-- Mark Phase 4 as COMPLETE with today's date
-- Mark Phase 5 as READY (independent of all prior phases)
-- List any items deferred with reasons
+- Mark Phase 5 as COMPLETE with today's date
+- Note any deferred items
 
 **Append to sessions/log.md:**
 ```
-## Session 4 — Phase 4: Design System (2026-[date])
-**Status:** Complete
+## Session 5 — Phase 5: Content Layer (2026-[date])
+**Status:** Complete (visual smoke-test pending)
 **Files created:** [list]
 **Files modified:** [list]
-**Key decisions:** [any deviations from contracts, new decisions]
+**Key decisions:** [any deviations from contracts]
 **Deferred:** [anything not completed]
 ```
 
-**Write sessions/next.md** with the Phase 5 session prompt. The Phase 5 prompt must follow the same format and cover:
-- Context: Phase 5 builds the content layer (JSON-backed content for armor pieces, rule-of-life rhythms, field guide days, devotion practices)
-- State at session start
-- What Phase 4 built: tokens, primitives, WidgetFrame, widget refactors
-- What this session builds: `src/content/` JSON files, content loader utility, schema validation, refactor of hardcoded content blocks in section pages
-- Stages 1-5 in the same shape
+**Write sessions/next.md** — at this point all five enhancement phases are complete. The next prompt can either (a) cover the deferred items from prior phases (newsletter form refactor, section-page token migration, etc.) or (b) move on to net-new work (CMS integration, Drop 002.5 content sections, community pillar). Recommend option (b) with a prompt sketch for whichever direction Luke wants.
+
+**Commit + push to origin/main** (per the workflow rule established in Session 4).
 
 ---
 
 ## Acceptance criteria (all must be true to close this session)
 
-- [ ] `src/styles/tokens.css` exists with the full contracted variable set
-- [ ] All six primitive components exist and are exported from `src/components/primitives/`
-- [ ] `src/components/WidgetFrame.jsx` exists and is used by all six widgets
+- [ ] `src/content/armor.json`, `rule-of-life.json`, `field-guide.json` exist with all source content extracted
+- [ ] `src/content/loader.js` exists and exports all contracted functions
+- [ ] `src/Identity.jsx`, `src/RuleOfLife.jsx`, `src/FieldGuide.jsx` no longer contain inline content data arrays
 - [ ] `npm run build` passes with no errors
-- [ ] No raw hex colors in any widget file
-- [ ] All newsletter capture forms use `<Input>` + `<Button>` primitives
-- [ ] Accessibility pass items from contract are all addressed
-- [ ] Phase 1/2/3 files are unchanged in behavior
-- [ ] `sessions/state.md` is updated
-- [ ] `sessions/log.md` has a new entry
-- [ ] `sessions/next.md` contains the Phase 5 prompt
+- [ ] No content was lost or paraphrased during extraction
+- [ ] Phase 1–4 files are untouched in behavior
+- [ ] `sessions/state.md`, `sessions/log.md`, `sessions/next.md` are updated
+- [ ] Commit pushed to origin/main

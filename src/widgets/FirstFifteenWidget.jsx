@@ -1,23 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useFormationProfile } from "../hooks/useFormationProfile";
-
-const C = {
-  gold:       "#C9A84C",
-  goldFaint:  "rgba(201,168,76,0.15)",
-  goldGlow:   "rgba(201,168,76,0.06)",
-  goldBorder: "rgba(201,168,76,0.2)",
-  goldDiv:    "rgba(201,168,76,0.1)",
-  inputBg:    "#17140F",
-  cardBg:     "#06050A",
-  ivory:      "#FAF8F5",
-  ivoryMuted: "rgba(250,248,245,0.55)",
-  ivoryDim:   "rgba(250,248,245,0.35)",
-  ivoryFaint: "rgba(250,248,245,0.18)",
-};
-
-const barlow   = { fontFamily: "'Barlow Condensed', sans-serif" };
-const garamond = { fontFamily: "'Cormorant Garamond', serif" };
+import WidgetFrame from "../components/WidgetFrame";
+import Button from "../components/primitives/Button";
 
 const SLOT_LABELS = ["Minutes 1–5", "Minutes 6–10", "Minutes 11–15"];
 
@@ -32,193 +17,301 @@ const PRACTICE_OPTIONS = [
 
 const DEFAULT_SLOTS = ["Silence", "Scripture Reading", "Prayer"];
 
-/* ── Custom Select ── */
+const FF_CSS = `
+  .ff-slot-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 12px;
+  }
+  .ff-slot-label {
+    font-family: var(--cf-font-brand);
+    font-size: 10px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--cf-gold);
+    flex-shrink: 0;
+    min-width: 90px;
+  }
+  .ff-select-trigger {
+    width: 100%;
+    min-height: 44px;
+    background: var(--cf-rule-bg);
+    border: 1px solid var(--cf-gold-faint);
+    border-radius: 8px;
+    padding: 9px 36px 9px 14px;
+    color: var(--cf-ivory);
+    font-family: var(--cf-font-devotional);
+    font-size: 16px;
+    font-style: italic;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+    transition: border-color .2s ease;
+    position: relative;
+  }
+  .ff-select-trigger:focus { border-color: var(--cf-gold-mid); box-shadow: 0 0 0 3px var(--cf-gold-glow); }
+  .ff-select-trigger--open { border-color: var(--cf-gold-mid); }
+  .ff-select-caret {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    color: var(--cf-gold-muted);
+    font-size: 10px;
+    pointer-events: none;
+    transition: transform .2s ease;
+  }
+  .ff-select-popup {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    background: var(--cf-rule-bg);
+    border: 1px solid var(--cf-gold-soft);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 10;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .ff-select-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 9px 14px;
+    min-height: 44px;
+    color: var(--cf-ivory);
+    font-family: var(--cf-font-devotional);
+    font-size: 16px;
+    font-style: italic;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  .ff-select-option:hover,
+  .ff-select-option--highlighted {
+    background: var(--cf-gold-bg);
+    color: var(--cf-gold);
+  }
+  .ff-select-option--selected {
+    background: var(--cf-gold-bg);
+    color: var(--cf-gold);
+  }
 
-function PracticeSelect({ value, onChange, focusId, onFocus, onBlur }) {
+  .ff-notes {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--cf-rule-bg);
+    border: 1px solid var(--cf-gold-faint);
+    border-radius: var(--cf-radius-input);
+    padding: 10px 14px;
+    color: var(--cf-ivory);
+    font-family: var(--cf-font-devotional);
+    font-size: 16px;
+    line-height: 1.55;
+    font-style: italic;
+    outline: none;
+    resize: vertical;
+    transition: border-color .2s ease;
+  }
+  .ff-notes:focus { border-color: var(--cf-gold-mid); }
+  .ff-notes::-webkit-scrollbar { width: 4px; }
+  .ff-notes::-webkit-scrollbar-thumb { background: var(--cf-gold-soft); border-radius: 2px; }
+
+  .ff-rule-link {
+    font-family: var(--cf-font-brand);
+    font-size: 9px;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    color: var(--cf-gold);
+    opacity: 0.6;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .ff-rule-link:hover { opacity: 0.85; }
+
+  .ff-output-card {
+    background: var(--cf-hero-bg);
+    border: 1px solid var(--cf-gold-soft);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 1.5rem;
+  }
+  .ff-output-eyebrow {
+    font-family: var(--cf-font-brand);
+    font-size: 9px;
+    letter-spacing: .44em;
+    text-transform: uppercase;
+    color: var(--cf-gold);
+    margin: 0 0 1.25rem;
+    font-weight: 700;
+  }
+  .ff-output-row {
+    display: flex; align-items: baseline; gap: 14px;
+    padding: 10px 0;
+  }
+  .ff-output-slot {
+    font-family: var(--cf-font-brand);
+    font-size: 9px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--cf-gold);
+    flex-shrink: 0;
+    min-width: 90px;
+    font-weight: 700;
+  }
+  .ff-output-practice {
+    font-family: var(--cf-font-devotional);
+    font-size: 17px;
+    color: var(--cf-ivory);
+    font-style: italic;
+  }
+  .ff-output-divider {
+    height: 1px;
+    background: var(--cf-gold-hairline);
+  }
+  .ff-output-notes {
+    font-family: var(--cf-font-devotional);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--cf-ivory-35);
+    line-height: 1.6;
+    margin: 14px 0 1rem;
+  }
+  .ff-output-helmet {
+    font-family: var(--cf-font-devotional);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--cf-gold);
+    margin: 0;
+  }
+`;
+
+function PracticeSelect({ value, onChange, label }) {
   const [open, setOpen] = useState(false);
+  const [highlight, setHighlight] = useState(() => Math.max(0, PRACTICE_OPTIONS.indexOf(value)));
+  const triggerRef = useRef(null);
+  const popupRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDocClick = (e) => {
+      if (!triggerRef.current?.contains(e.target) && !popupRef.current?.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, [open]);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (!open) { setOpen(true); return; }
+      setHighlight(h => (h + 1) % PRACTICE_OPTIONS.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (!open) { setOpen(true); return; }
+      setHighlight(h => (h - 1 + PRACTICE_OPTIONS.length) % PRACTICE_OPTIONS.length);
+    } else if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      if (!open) { setOpen(true); return; }
+      onChange(PRACTICE_OPTIONS[highlight]);
+      setOpen(false);
+    } else if (e.key === "Escape") {
+      setOpen(false);
+    } else if (e.key === "Tab") {
+      setOpen(false);
+    }
+  };
 
   const handleSelect = (opt) => {
     onChange(opt);
     setOpen(false);
+    triggerRef.current?.focus();
   };
 
   return (
     <div style={{ position: "relative", flex: 1 }}>
-      <style>{`
-        .ff-select-option:hover { background: rgba(201,168,76,0.1) !important; color: #C9A84C !important; }
-      `}</style>
       <button
+        ref={triggerRef}
+        type="button"
+        className={`ff-select-trigger ${open ? "ff-select-trigger--open" : ""}`}
         onClick={() => setOpen(o => !o)}
-        onFocus={onFocus}
-        onBlur={e => { onBlur(e); if (!e.currentTarget.parentNode.contains(e.relatedTarget)) setOpen(false); }}
-        style={{
-          ...garamond,
-          width: "100%",
-          minHeight: "44px",
-          background: C.inputBg,
-          border: `1px solid ${open ? "rgba(201,168,76,0.4)" : C.goldFaint}`,
-          borderRadius: "8px",
-          padding: "9px 36px 9px 14px",
-          color: C.ivory,
-          fontSize: "16px",
-          fontStyle: "italic",
-          textAlign: "left",
-          cursor: "pointer",
-          outline: "none",
-          transition: "border-color .2s",
-          position: "relative",
-        }}
+        onKeyDown={handleKeyDown}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={label ? `${label}: ${value}` : value}
       >
         {value}
-        <span style={{
-          position: "absolute",
-          right: "12px",
-          top: "50%",
-          transform: `translateY(-50%) rotate(${open ? "180deg" : "0deg"})`,
-          color: "rgba(201,168,76,0.5)",
-          fontSize: "10px",
-          transition: "transform .2s",
-          pointerEvents: "none",
-        }}>▾</span>
+        <span className="ff-select-caret" style={{ transform: `translateY(-50%) rotate(${open ? "180deg" : "0deg"})` }}>▾</span>
       </button>
 
       {open && (
-        <div style={{
-          position: "absolute",
-          top: "calc(100% + 4px)",
-          left: 0,
-          right: 0,
-          background: "#17140F",
-          border: `1px solid rgba(201,168,76,0.25)`,
-          borderRadius: "8px",
-          overflow: "hidden",
-          zIndex: 10,
-          boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
-        }}>
-          {PRACTICE_OPTIONS.map(opt => (
-            <button
-              key={opt}
-              className="ff-select-option"
-              onMouseDown={e => { e.preventDefault(); handleSelect(opt); }}
-              style={{
-                ...garamond,
-                display: "block",
-                width: "100%",
-                textAlign: "left",
-                background: opt === value ? "rgba(201,168,76,0.08)" : "none",
-                border: "none",
-                padding: "9px 14px",
-                minHeight: "44px",
-                color: opt === value ? C.gold : C.ivory,
-                fontSize: "16px",
-                fontStyle: "italic",
-                cursor: "pointer",
-                transition: "background .15s, color .15s",
-              }}
-            >
-              {opt}
-            </button>
-          ))}
+        <div
+          ref={popupRef}
+          className="ff-select-popup"
+          role="listbox"
+          aria-label="Practice options"
+        >
+          {PRACTICE_OPTIONS.map((opt, i) => {
+            const cls = [
+              "ff-select-option",
+              opt === value ? "ff-select-option--selected" : "",
+              i === highlight ? "ff-select-option--highlighted" : "",
+            ].filter(Boolean).join(" ");
+            return (
+              <button
+                key={opt}
+                type="button"
+                className={cls}
+                role="option"
+                aria-selected={opt === value}
+                onMouseEnter={() => setHighlight(i)}
+                onMouseDown={e => { e.preventDefault(); handleSelect(opt); }}
+              >
+                {opt}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>
   );
 }
 
-/* ── Output Card ── */
-
 function OutputCard({ slots, notes }) {
   return (
-    <div style={{
-      background: C.cardBg,
-      border: `1px solid ${C.goldBorder}`,
-      borderRadius: "16px",
-      padding: "2rem",
-      marginTop: "1.5rem",
-    }}>
-      <p style={{
-        ...barlow,
-        fontSize: "9px",
-        letterSpacing: ".44em",
-        textTransform: "uppercase",
-        color: C.gold,
-        marginBottom: "1.25rem",
-      }}>
-        My First Fifteen
-      </p>
-
+    <div className="ff-output-card">
+      <p className="ff-output-eyebrow">My First Fifteen</p>
       {slots.map((practice, i) => (
         <div key={i}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: "14px", padding: "10px 0" }}>
-            <span style={{
-              ...barlow,
-              fontSize: "9px",
-              letterSpacing: ".28em",
-              textTransform: "uppercase",
-              color: C.gold,
-              flexShrink: 0,
-              minWidth: "90px",
-            }}>
-              {SLOT_LABELS[i]}
-            </span>
-            <span style={{
-              ...garamond,
-              fontSize: "17px",
-              color: C.ivory,
-              fontStyle: "italic",
-            }}>
-              {practice}
-            </span>
+          <div className="ff-output-row">
+            <span className="ff-output-slot">{SLOT_LABELS[i]}</span>
+            <span className="ff-output-practice">{practice}</span>
           </div>
-          {i < slots.length - 1 && (
-            <div style={{ height: "1px", background: "rgba(201,168,76,0.1)" }} />
-          )}
+          {i < slots.length - 1 && <div className="ff-output-divider" />}
         </div>
       ))}
-
       {notes && (
         <>
-          <div style={{ height: "1px", background: "rgba(201,168,76,0.1)", marginTop: "4px" }} />
-          <p style={{
-            ...garamond,
-            fontStyle: "italic",
-            fontSize: "14px",
-            color: C.ivoryDim,
-            lineHeight: 1.6,
-            marginTop: "14px",
-            marginBottom: "1rem",
-          }}>
-            {notes}
-          </p>
+          <div className="ff-output-divider" style={{ marginTop: 4 }} />
+          <p className="ff-output-notes">{notes}</p>
         </>
       )}
-
-      <p style={{
-        ...garamond,
-        fontStyle: "italic",
-        fontSize: "16px",
-        color: C.gold,
-        marginTop: notes ? 0 : "1.25rem",
-        marginBottom: 0,
-      }}>
+      <p className="ff-output-helmet" style={{ marginTop: notes ? 0 : "1.25rem" }}>
         Helmet on.
       </p>
     </div>
   );
 }
 
-/* ── FIRST FIFTEEN WIDGET ── */
-
 export function FirstFifteenWidget() {
   const { profile, updateProfile, isLoaded } = useFormationProfile();
 
-  const [slots, setSlots]     = useState([...DEFAULT_SLOTS]);
-  const [notes, setNotes]     = useState("");
-  const [saved, setSaved]     = useState(null);  // { slots, notes } | null
-  const [notesFocus, setNotesFocus] = useState(false);
-  const [focusedSlot, setFocusedSlot] = useState(null);
+  const [slots, setSlots] = useState([...DEFAULT_SLOTS]);
+  const [notes, setNotes] = useState("");
+  const [saved, setSaved] = useState(null);
 
-  /* Load from profile once the hook has finished its initial read */
   useEffect(() => {
     if (!isLoaded) return;
     const data = profile.widgets.firstFifteen;
@@ -227,7 +320,7 @@ export function FirstFifteenWidget() {
       if (data.notes !== undefined) setNotes(data.notes);
       setSaved(data);
     }
-  }, [isLoaded]);
+  }, [isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSave = () => {
     const updatedConfig = { slots, notes };
@@ -244,156 +337,54 @@ export function FirstFifteenWidget() {
   };
 
   return (
-    <div style={{
-      background: C.goldGlow,
-      border: `1px solid ${C.goldBorder}`,
-      borderRadius: "20px",
-      overflow: "hidden",
-    }}>
-      <style>{`
-        .ff-save-btn:hover { background: #FAF8F5 !important; }
-        .ff-textarea::-webkit-scrollbar { width: 4px; }
-        .ff-textarea::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 2px; }
-      `}</style>
+    <WidgetFrame
+      title="First Fifteen"
+      subtitle="Design your morning before the world designs it for you."
+    >
+      <style>{FF_CSS}</style>
 
-      {/* Header */}
-      <div style={{ padding: "1.75rem 1.75rem 1.25rem" }}>
-        <p style={{
-          ...barlow,
-          fontSize: "9px",
-          letterSpacing: ".44em",
-          textTransform: "uppercase",
-          color: C.gold,
-          marginBottom: "6px",
-        }}>
-          First Fifteen
-        </p>
-        <p style={{
-          ...garamond,
-          fontStyle: "italic",
-          fontSize: "15px",
-          color: C.ivoryMuted,
-          lineHeight: 1.5,
-        }}>
-          Design your morning before the world designs it for you.
-        </p>
-      </div>
-
-      {/* Slots */}
-      <div style={{ padding: "0 1.75rem" }}>
+      <div style={{ padding: "1.5rem 1.75rem 0" }}>
         {SLOT_LABELS.map((label, i) => (
-          <div
-            key={i}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "14px",
-              paddingBottom: "12px",
-              marginBottom: i < SLOT_LABELS.length - 1 ? "4px" : "0",
-            }}
-          >
-            <span style={{
-              ...barlow,
-              fontSize: "10px",
-              letterSpacing: ".28em",
-              textTransform: "uppercase",
-              color: C.gold,
-              flexShrink: 0,
-              minWidth: "90px",
-            }}>
-              {label}
-            </span>
+          <div key={i} className="ff-slot-row" style={{ marginBottom: i < SLOT_LABELS.length - 1 ? "4px" : 0 }}>
+            <span className="ff-slot-label">{label}</span>
             <PracticeSelect
               value={slots[i]}
               onChange={val => updateSlot(i, val)}
-              focusId={i}
-              onFocus={() => setFocusedSlot(i)}
-              onBlur={() => setFocusedSlot(null)}
+              label={label}
             />
           </div>
         ))}
       </div>
 
-      {/* Notes */}
       <div style={{ padding: "0 1.75rem 1.25rem" }}>
         <textarea
-          className="ff-textarea"
+          className="ff-notes"
           rows={3}
           value={notes}
           onChange={e => setNotes(e.target.value)}
-          onFocus={() => setNotesFocus(true)}
-          onBlur={() => setNotesFocus(false)}
           placeholder="Any notes for your morning..."
-          style={{
-            ...garamond,
-            width: "100%",
-            boxSizing: "border-box",
-            background: C.inputBg,
-            border: `1px solid ${notesFocus ? "rgba(201,168,76,0.4)" : C.goldFaint}`,
-            borderRadius: "10px",
-            padding: "10px 14px",
-            color: C.ivory,
-            fontSize: "16px",
-            lineHeight: 1.55,
-            fontStyle: "italic",
-            outline: "none",
-            resize: "vertical",
-            transition: "border-color .2s",
-          }}
+          aria-label="Morning notes"
         />
       </div>
 
-      {/* Rule of Life Cross-Link */}
       <div style={{ padding: "0 1.75rem 0.5rem", textAlign: "center" }}>
-        <Link
-          to="/rule-of-life/scripture"
-          style={{
-            fontFamily:    "'Barlow Condensed', sans-serif",
-            fontSize:      "9px",
-            letterSpacing: ".32em",
-            textTransform: "uppercase",
-            color:         "#C9A84C",
-            opacity:       0.6,
-            textDecoration:"none",
-            display:       "inline-block",
-          }}
-        >
+        <Link to="/rule-of-life/scripture" className="ff-rule-link">
           Part of the Scripture rhythm →
         </Link>
       </div>
 
-      {/* Save Button */}
       <div style={{ padding: "0 1.75rem 1.75rem" }}>
-        <button
-          className="ff-save-btn"
-          onClick={handleSave}
-          style={{
-            ...barlow,
-            width: "100%",
-            padding: "11px 0",
-            minHeight: "44px",
-            background: C.gold,
-            color: "#0A0A0A",
-            border: "none",
-            borderRadius: "999px",
-            fontSize: "9px",
-            letterSpacing: ".28em",
-            textTransform: "uppercase",
-            cursor: "pointer",
-            fontWeight: 700,
-            transition: "background .2s",
-          }}
-        >
+        <Button variant="primary" size="sm" onClick={handleSave} className="cf-btn--full">
           Save My First Fifteen
-        </button>
+        </Button>
       </div>
+      <style>{`.cf-btn--full { width: 100%; }`}</style>
 
-      {/* Output Card */}
       {saved && (
         <div style={{ padding: "0 1.75rem 1.75rem" }}>
           <OutputCard slots={saved.slots} notes={saved.notes} />
         </div>
       )}
-    </div>
+    </WidgetFrame>
   );
 }

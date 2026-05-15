@@ -1,30 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useFormationProfile } from "../hooks/useFormationProfile";
-
-const C = {
-  gold:       "#C9A84C",
-  goldFaint:  "rgba(201,168,76,0.15)",
-  goldGlow:   "rgba(201,168,76,0.06)",
-  goldBorder: "rgba(201,168,76,0.2)",
-  goldDiv:    "rgba(201,168,76,0.1)",
-  goldMuted:  "rgba(201,168,76,0.5)",
-  inputBg:    "#17140F",
-  ivory:      "#FAF8F5",
-  ivoryMuted: "rgba(250,248,245,0.55)",
-  ivoryDim:   "rgba(250,248,245,0.35)",
-  ivoryFaint: "rgba(250,248,245,0.18)",
-};
-
-const barlow   = { fontFamily: "'Barlow Condensed', sans-serif" };
-const garamond = { fontFamily: "'Cormorant Garamond', serif" };
+import WidgetFrame from "../components/WidgetFrame";
+import Button from "../components/primitives/Button";
+import Input from "../components/primitives/Input";
 
 const DAY_LABELS = ["M", "T", "W", "T", "F", "S", "S"];
+const DAY_NAMES  = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 
-/* ── ISO week key: "YYYY-WNN" ── */
 function isoWeekKey(date = new Date()) {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const day = d.getUTCDay() || 7; // Mon=1 … Sun=7
+  const day = d.getUTCDay() || 7;
   d.setUTCDate(d.getUTCDate() + 4 - day);
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
   const week = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
@@ -32,8 +18,7 @@ function isoWeekKey(date = new Date()) {
 }
 
 function todayDayIndex() {
-  // Mon=0 … Sun=6
-  const day = new Date().getDay(); // 0=Sun
+  const day = new Date().getDay();
   return day === 0 ? 6 : day - 1;
 }
 
@@ -42,66 +27,200 @@ function formatDate(iso) {
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
-/* ── Library Entry ── */
+const VT_CSS = `
+  .vt-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--cf-rule-bg);
+    border: 1px solid var(--cf-gold-faint);
+    border-radius: var(--cf-radius-input);
+    padding: 10px 14px;
+    color: var(--cf-ivory);
+    font-family: var(--cf-font-devotional);
+    font-size: 16px;
+    line-height: 1.55;
+    font-style: italic;
+    outline: none;
+    resize: vertical;
+    transition: border-color .2s ease;
+  }
+  .vt-textarea:focus { border-color: var(--cf-gold-mid); }
+  .vt-textarea::-webkit-scrollbar { width: 4px; }
+  .vt-textarea::-webkit-scrollbar-thumb { background: var(--cf-gold-soft); border-radius: 2px; }
+
+  .vt-current-card {
+    background: rgba(201,168,76,0.04);
+    border: 1px solid var(--cf-gold-faint);
+    border-radius: 14px;
+    padding: 1.25rem;
+  }
+  .vt-current-ref {
+    font-family: var(--cf-font-brand);
+    font-size: 14px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--cf-gold);
+    margin: 0 0 10px;
+    font-weight: 700;
+  }
+  .vt-current-text {
+    font-family: var(--cf-font-devotional);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--cf-ivory);
+    line-height: 1.7;
+    margin: 0 0 1.25rem;
+  }
+  .vt-day-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    border: 1px solid var(--cf-gold-soft);
+    transition: background .2s ease, border-color .2s ease;
+  }
+  .vt-day-btn:hover { border-color: var(--cf-gold-mid); }
+  .vt-day-btn--today { border-color: var(--cf-gold-mid); }
+  .vt-day-btn--checked { background: var(--cf-gold); border-color: var(--cf-gold); }
+  .vt-day-btn--checked span { color: #0A0A0A; font-size: 12px; line-height: 1; }
+  .vt-day-label {
+    font-family: var(--cf-font-brand);
+    font-size: 8px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .vt-day-label--today { color: var(--cf-gold); }
+  .vt-day-label--default { color: var(--cf-ivory-18); }
+
+  .vt-reviewed-count {
+    font-family: var(--cf-font-brand);
+    font-size: 9px;
+    letter-spacing: .2em;
+    color: var(--cf-gold-muted);
+    margin: 0;
+  }
+
+  .vt-empty-state {
+    font-family: var(--cf-font-devotional);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--cf-ivory-18);
+    line-height: 1.7;
+    text-align: center;
+    margin: 0;
+  }
+
+  .vt-rule-link {
+    font-family: var(--cf-font-brand);
+    font-size: 9px;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    color: var(--cf-gold);
+    opacity: 0.6;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .vt-rule-link:hover { opacity: 0.85; }
+
+  .vt-lib-eyebrow {
+    font-family: var(--cf-font-brand);
+    font-size: 9px;
+    letter-spacing: .44em;
+    text-transform: uppercase;
+    color: var(--cf-gold);
+    font-weight: 700;
+  }
+  .vt-lib-count {
+    font-family: var(--cf-font-brand);
+    font-size: 9px;
+    letter-spacing: .1em;
+    color: var(--cf-ivory-18);
+  }
+  .vt-lib-toggle {
+    font-family: var(--cf-font-brand);
+    background: none; border: none;
+    color: var(--cf-gold-muted);
+    font-size: 9px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0;
+    transition: color .15s ease;
+  }
+  .vt-lib-toggle:hover { color: var(--cf-gold); }
+
+  .vt-lib-entry {
+    padding: 14px 0;
+  }
+  .vt-lib-entry-ref {
+    font-family: var(--cf-font-brand);
+    font-size: 11px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--cf-gold);
+    font-weight: 700;
+  }
+  .vt-lib-entry-date {
+    font-family: var(--cf-font-brand);
+    font-size: 8px;
+    letter-spacing: .12em;
+    color: var(--cf-ivory-18);
+  }
+  .vt-lib-entry-text {
+    font-family: var(--cf-font-devotional);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--cf-ivory-35);
+    line-height: 1.6;
+    margin: 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+  }
+  .vt-lib-show-more {
+    font-family: var(--cf-font-brand);
+    background: none; border: none;
+    padding: 4px 0 0;
+    color: var(--cf-gold-muted);
+    font-size: 8px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color .15s ease;
+  }
+  .vt-lib-show-more:hover { color: var(--cf-gold); }
+  .vt-lib-empty {
+    font-family: var(--cf-font-devotional);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--cf-ivory-18);
+    line-height: 1.6;
+    text-align: center;
+    margin: 1rem 0 0;
+  }
+`;
 
 function LibraryEntry({ entry, last }) {
   const [expanded, setExpanded] = useState(false);
-
   return (
-    <div style={{
-      padding: "14px 0",
-      borderBottom: last ? "none" : `1px solid rgba(201,168,76,0.1)`,
-    }}>
+    <div className="vt-lib-entry" style={{ borderBottom: last ? "none" : "1px solid var(--cf-gold-hairline)" }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "6px" }}>
-        <span style={{
-          ...barlow,
-          fontSize: "11px",
-          letterSpacing: ".28em",
-          textTransform: "uppercase",
-          color: C.gold,
-        }}>
-          {entry.ref}
-        </span>
-        <span style={{
-          ...barlow,
-          fontSize: "8px",
-          letterSpacing: ".12em",
-          color: C.ivoryFaint,
-        }}>
-          {formatDate(entry.dateAdded)}
-        </span>
+        <span className="vt-lib-entry-ref">{entry.ref}</span>
+        <span className="vt-lib-entry-date">{formatDate(entry.dateAdded)}</span>
       </div>
-
-      <p style={{
-        ...garamond,
-        fontStyle: "italic",
-        fontSize: "14px",
-        color: C.ivoryDim,
-        lineHeight: 1.6,
-        margin: 0,
-        overflow: "hidden",
-        display: "-webkit-box",
-        WebkitBoxOrient: "vertical",
-        WebkitLineClamp: expanded ? "unset" : 2,
-      }}>
+      <p
+        className="vt-lib-entry-text"
+        style={{ WebkitLineClamp: expanded ? "unset" : 2 }}
+      >
         {entry.text}
       </p>
-
       {entry.text && entry.text.length > 100 && (
-        <button
-          onClick={() => setExpanded(e => !e)}
-          style={{
-            ...barlow,
-            background: "none",
-            border: "none",
-            padding: "4px 0 0",
-            color: C.goldMuted,
-            fontSize: "8px",
-            letterSpacing: ".2em",
-            textTransform: "uppercase",
-            cursor: "pointer",
-          }}
-        >
+        <button className="vt-lib-show-more" onClick={() => setExpanded(e => !e)}>
           {expanded ? "show less" : "show more"}
         </button>
       )}
@@ -109,30 +228,22 @@ function LibraryEntry({ entry, last }) {
   );
 }
 
-/* ── VERSE TRACKER WIDGET ── */
-
 export function VerseTrackerWidget() {
-  const { profile, updateProfile, isLoaded }  = useFormationProfile();
-  const [current, setCurrent]         = useState(null);   // { ref, text, days, weekKey }
-  const [library, setLibrary]         = useState([]);
-  const [refInput, setRefInput]       = useState("");
-  const [textInput, setTextInput]     = useState("");
-  const [refFocus, setRefFocus]       = useState(false);
-  const [textFocus, setTextFocus]     = useState(false);
+  const { profile, updateProfile, isLoaded } = useFormationProfile();
+  const [current, setCurrent]     = useState(null);
+  const [library, setLibrary]     = useState([]);
+  const [refInput, setRefInput]   = useState("");
+  const [textInput, setTextInput] = useState("");
   const [showLibrary, setShowLibrary] = useState(false);
 
-  /* Load & check week rollover once profile is ready */
   useEffect(() => {
     if (!isLoaded) return;
-
     const profileLib = profile?.widgets?.verseTracker?.library ?? [];
     setLibrary(profileLib);
-
     const profileCur = profile?.widgets?.verseTracker?.current ?? null;
     if (profileCur) {
       const currentWeek = isoWeekKey();
       if (profileCur.weekKey && profileCur.weekKey !== currentWeek) {
-        // New week — archive and clear
         archiveAndClear(profileCur);
       } else {
         setCurrent(profileCur);
@@ -140,13 +251,11 @@ export function VerseTrackerWidget() {
     }
   }, [isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  /* Persist current */
   useEffect(() => {
     if (!isLoaded) return;
     updateProfile({ widgets: { verseTracker: { current: current ?? null } } });
   }, [current]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  /* Persist library */
   useEffect(() => {
     if (!isLoaded) return;
     updateProfile({ widgets: { verseTracker: { library } } });
@@ -168,7 +277,6 @@ export function VerseTrackerWidget() {
     const t = textInput.trim();
     if (!r && !t) return;
 
-    // Archive existing
     if (current && current.ref) {
       setLibrary(prev => {
         const updated = [{ ref: current.ref, text: current.text, dateAdded: new Date().toISOString() }, ...prev];
@@ -198,176 +306,69 @@ export function VerseTrackerWidget() {
   };
 
   const reviewedCount = current ? current.days.filter(Boolean).length : 0;
-
-  const inputStyle = (focused) => ({
-    ...garamond,
-    width: "100%",
-    boxSizing: "border-box",
-    background: C.inputBg,
-    border: `1px solid ${focused ? "rgba(201,168,76,0.4)" : C.goldFaint}`,
-    borderRadius: "10px",
-    padding: "10px 14px",
-    color: C.ivory,
-    fontSize: "16px",
-    lineHeight: 1.55,
-    fontStyle: "italic",
-    outline: "none",
-    transition: "border-color .2s",
-  });
+  const canSet = refInput.trim() || textInput.trim();
 
   return (
-    <div style={{
-      background: C.goldGlow,
-      border: `1px solid ${C.goldBorder}`,
-      borderRadius: "20px",
-      overflow: "hidden",
-    }}>
-      <style>{`
-        .vt-set-btn:hover:not(:disabled) { background: #FAF8F5 !important; }
-        .vt-day-btn:hover { border-color: rgba(201,168,76,0.6) !important; }
-        .vt-show-more:hover { color: #C9A84C !important; }
-        .vt-textarea::-webkit-scrollbar { width: 4px; }
-        .vt-textarea::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 2px; }
-      `}</style>
+    <WidgetFrame
+      title="Verse Tracker"
+      subtitle="One verse per week. Fifty-two per year."
+    >
+      <style>{VT_CSS}</style>
 
-      {/* Header */}
-      <div style={{ padding: "1.75rem 1.75rem 1.25rem" }}>
-        <p style={{
-          ...barlow,
-          fontSize: "9px",
-          letterSpacing: ".44em",
-          textTransform: "uppercase",
-          color: C.gold,
-          marginBottom: "6px",
-        }}>
-          Verse Tracker
-        </p>
-        <p style={{
-          ...garamond,
-          fontStyle: "italic",
-          fontSize: "15px",
-          color: C.ivoryMuted,
-          lineHeight: 1.5,
-        }}>
-          One verse per week. Fifty-two per year.
-        </p>
-      </div>
-
-      {/* Input Form */}
-      <div style={{ padding: "0 1.75rem 1.25rem", display: "flex", flexDirection: "column", gap: "10px" }}>
-        <input
+      <div style={{ padding: "1.5rem 1.75rem 1.25rem", display: "flex", flexDirection: "column", gap: "10px" }}>
+        <Input
+          variant="reference"
           value={refInput}
           onChange={e => setRefInput(e.target.value)}
-          onFocus={() => setRefFocus(true)}
-          onBlur={() => setRefFocus(false)}
           placeholder="Romans 8:1"
-          style={{ ...inputStyle(refFocus), fontStyle: "normal", ...barlow, fontSize: "16px", letterSpacing: ".06em" }}
+          ariaLabel="Verse reference"
         />
         <textarea
           className="vt-textarea"
           rows={3}
           value={textInput}
           onChange={e => setTextInput(e.target.value)}
-          onFocus={() => setTextFocus(true)}
-          onBlur={() => setTextFocus(false)}
           placeholder="The verse text..."
-          style={{ ...inputStyle(textFocus), resize: "vertical" }}
+          aria-label="Verse text"
         />
-        <button
-          className="vt-set-btn"
+        <Button
+          variant="primary"
+          size="sm"
+          disabled={!canSet}
           onClick={handleSetVerse}
-          disabled={!refInput.trim() && !textInput.trim()}
-          style={{
-            ...barlow,
-            padding: "11px 0",
-            minHeight: "44px",
-            background: (!refInput.trim() && !textInput.trim()) ? "rgba(201,168,76,0.25)" : C.gold,
-            color: (!refInput.trim() && !textInput.trim()) ? "rgba(10,10,10,0.4)" : "#0A0A0A",
-            border: "none",
-            borderRadius: "999px",
-            fontSize: "9px",
-            letterSpacing: ".28em",
-            textTransform: "uppercase",
-            cursor: (!refInput.trim() && !textInput.trim()) ? "not-allowed" : "pointer",
-            fontWeight: 700,
-            transition: "background .2s, color .2s",
-          }}
+          className="cf-btn--full"
         >
-          Set This Week&rsquo;s Verse
-        </button>
+          Set This Week’s Verse
+        </Button>
       </div>
+      <style>{`.cf-btn--full { width: 100%; }`}</style>
 
-      {/* Current Verse Display */}
       {current ? (
         <div style={{ padding: "0 1.75rem 1.5rem" }}>
-          <div style={{
-            background: "rgba(201,168,76,0.04)",
-            border: `1px solid rgba(201,168,76,0.15)`,
-            borderRadius: "14px",
-            padding: "1.25rem",
-          }}>
-            {current.ref && (
-              <p style={{
-                ...barlow,
-                fontSize: "14px",
-                letterSpacing: ".18em",
-                textTransform: "uppercase",
-                color: C.gold,
-                marginBottom: "10px",
-              }}>
-                {current.ref}
-              </p>
-            )}
-            {current.text && (
-              <p style={{
-                ...garamond,
-                fontStyle: "italic",
-                fontSize: "20px",
-                color: C.ivory,
-                lineHeight: 1.7,
-                margin: 0,
-                marginBottom: "1.25rem",
-              }}>
-                {current.text}
-              </p>
-            )}
+          <div className="vt-current-card">
+            {current.ref && <p className="vt-current-ref">{current.ref}</p>}
+            {current.text && <p className="vt-current-text">{current.text}</p>}
 
-            {/* 7-day circles */}
             <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "nowrap", marginBottom: "10px" }}>
               {DAY_LABELS.map((label, i) => {
                 const checked = current.days[i];
                 const isToday = i === todayDayIndex();
+                const cls = [
+                  "vt-day-btn",
+                  isToday ? "vt-day-btn--today" : "",
+                  checked ? "vt-day-btn--checked" : "",
+                ].filter(Boolean).join(" ");
                 return (
                   <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
                     <button
-                      className="vt-day-btn"
+                      className={cls}
                       onClick={() => toggleDay(i)}
-                      aria-label={`Toggle ${label}`}
-                      style={{
-                        width: "36px",
-                        height: "36px",
-                        borderRadius: "50%",
-                        background: checked ? C.gold : "transparent",
-                        border: `1px solid ${checked ? C.gold : isToday ? "rgba(201,168,76,0.4)" : "rgba(201,168,76,0.2)"}`,
-                        cursor: "pointer",
-                        transition: "background .2s, border-color .2s",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        outline: "none",
-                      }}
+                      aria-label={`Mark ${DAY_NAMES[i]} reviewed`}
+                      aria-pressed={checked}
                     >
-                      {checked && (
-                        <span style={{ color: "#0A0A0A", fontSize: "12px", lineHeight: 1 }}>✓</span>
-                      )}
+                      {checked && <span>✓</span>}
                     </button>
-                    <span style={{
-                      ...barlow,
-                      fontSize: "8px",
-                      letterSpacing: ".12em",
-                      textTransform: "uppercase",
-                      color: isToday ? C.gold : C.ivoryFaint,
-                    }}>
+                    <span className={`vt-day-label ${isToday ? "vt-day-label--today" : "vt-day-label--default"}`}>
                       {label}
                     </span>
                   </div>
@@ -375,119 +376,55 @@ export function VerseTrackerWidget() {
               })}
             </div>
 
-            <p style={{
-              ...barlow,
-              fontSize: "9px",
-              letterSpacing: ".2em",
-              color: C.goldMuted,
-              margin: 0,
-            }}>
-              {reviewedCount} of 7 days reviewed
-            </p>
+            <p className="vt-reviewed-count">{reviewedCount} of 7 days reviewed</p>
           </div>
         </div>
       ) : (
         <div style={{ padding: "0 1.75rem 1.5rem" }}>
-          <p style={{
-            ...garamond,
-            fontStyle: "italic",
-            fontSize: "15px",
-            color: C.ivoryFaint,
-            lineHeight: 1.7,
-            textAlign: "center",
-            margin: 0,
-          }}>
-            Your arsenal is empty. Set your first verse above.
-          </p>
+          <p className="vt-empty-state">Your arsenal is empty. Set your first verse above.</p>
         </div>
       )}
 
-      {/* Rule of Life Cross-Link */}
       <div style={{ padding: "0 1.75rem 1rem", textAlign: "center" }}>
-        <Link
-          to="/rule-of-life/scripture"
-          style={{
-            fontFamily:    "'Barlow Condensed', sans-serif",
-            fontSize:      "9px",
-            letterSpacing: ".32em",
-            textTransform: "uppercase",
-            color:         C.gold,
-            opacity:       0.6,
-            textDecoration:"none",
-            display:       "inline-block",
-          }}
-        >
+        <Link to="/rule-of-life/scripture" className="vt-rule-link">
           Part of the Scripture rhythm →
         </Link>
       </div>
 
-      {/* Divider */}
-      <div style={{ height: "1px", background: C.goldDiv, margin: "0 1.75rem" }} />
+      <div style={{ height: "1px", background: "var(--cf-gold-hairline)", margin: "0 1.75rem" }} />
 
-      {/* Library Section */}
       <div style={{ padding: "1.25rem 1.75rem 1.5rem" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: showLibrary ? "1rem" : 0 }}>
           <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
-            <span style={{
-              ...barlow,
-              fontSize: "9px",
-              letterSpacing: ".44em",
-              textTransform: "uppercase",
-              color: C.gold,
-            }}>
-              My Verses
-            </span>
+            <span className="vt-lib-eyebrow">My Verses</span>
             {library.length > 0 && (
-              <span style={{
-                ...barlow,
-                fontSize: "9px",
-                letterSpacing: ".1em",
-                color: C.ivoryFaint,
-              }}>
+              <span className="vt-lib-count">
                 ({library.length} {library.length === 1 ? "verse" : "verses"})
               </span>
             )}
           </div>
           <button
+            className="vt-lib-toggle"
             onClick={() => setShowLibrary(s => !s)}
-            style={{
-              ...barlow,
-              background: "none",
-              border: "none",
-              color: C.goldMuted,
-              fontSize: "9px",
-              letterSpacing: ".2em",
-              textTransform: "uppercase",
-              cursor: "pointer",
-              padding: 0,
-            }}
+            aria-expanded={showLibrary}
+            aria-controls="vt-lib-list"
           >
             {showLibrary ? "Hide Library ▴" : "Show Library ▾"}
           </button>
         </div>
 
         {showLibrary && (
-          library.length === 0 ? (
-            <p style={{
-              ...garamond,
-              fontStyle: "italic",
-              fontSize: "14px",
-              color: C.ivoryFaint,
-              lineHeight: 1.6,
-              textAlign: "center",
-              margin: "1rem 0 0",
-            }}>
-              No archived verses yet.
-            </p>
-          ) : (
-            <div>
-              {library.map((entry, i) => (
+          <div id="vt-lib-list">
+            {library.length === 0 ? (
+              <p className="vt-lib-empty">No archived verses yet.</p>
+            ) : (
+              library.map((entry, i) => (
                 <LibraryEntry key={i} entry={entry} last={i === library.length - 1} />
-              ))}
-            </div>
-          )
+              ))
+            )}
+          </div>
         )}
       </div>
-    </div>
+    </WidgetFrame>
   );
 }

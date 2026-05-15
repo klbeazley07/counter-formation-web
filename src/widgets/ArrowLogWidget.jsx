@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { useFormationProfile } from "../hooks/useFormationProfile";
+import WidgetFrame from "../components/WidgetFrame";
+import Button from "../components/primitives/Button";
 import {
   Sparkles, History, Trash2, Quote, Loader2, Plus,
   ExternalLink, X, ChevronDown, ChevronUp, Maximize2, ArrowRight,
@@ -350,6 +352,9 @@ function ExpandedView({ lie, setLie, isGenerating, currentTruth, logs, activePop
     <div
       className="al-overlay-in"
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Arrow Log expanded view"
       style={{
         position:       "fixed",
         inset:          0,
@@ -731,36 +736,26 @@ export function ArrowLogWidget() {
       <style>{SHARED_CSS}</style>
 
       {/* ── Sidebar widget (dark, muted) ── */}
-      <div style={{ background: C.goldGlow, border: `1px solid ${C.goldBorder}`, borderRadius: "20px", overflow: "visible", position: "relative" }}>
-
-        {/* Header */}
-        <div style={{ padding: "1.5rem 1.5rem 1rem", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-          <div>
-            <p style={{ ...barlow, fontSize: "9px", letterSpacing: ".44em", textTransform: "uppercase", color: C.gold, marginBottom: "4px" }}>
-              Arrow Log
-            </p>
-            <p style={{ ...garamond, fontStyle: "italic", fontSize: "14px", color: C.ivoryMuted, lineHeight: 1.5, margin: 0 }}>
-              Catch the lie. Answer with truth.
-            </p>
-          </div>
+      <WidgetFrame
+        title="Arrow Log"
+        subtitle="Catch the lie. Answer with truth."
+        headerAction={
           <button
             className="al-max-btn"
             onClick={() => setIsMaximized(true)}
-            aria-label="Expand"
+            aria-label="Expand Arrow Log to full view"
             title="Expand to full view"
             style={{
-              background: "rgba(201,168,76,0.06)", border: `1px solid ${C.goldDiv}`,
+              background: "var(--cf-gold-glow)", border: "1px solid var(--cf-gold-hairline)",
               borderRadius: "8px", padding: "6px", cursor: "pointer",
-              color: C.goldMuted, lineHeight: 1, flexShrink: 0,
-              marginLeft: "12px", marginTop: "2px",
+              color: "var(--cf-gold-muted)", lineHeight: 1, flexShrink: 0,
               transition: "background .15s, color .15s",
             }}
           >
             <Maximize2 size={13} />
           </button>
-        </div>
-
-        <div style={{ height: "1px", background: C.goldDiv, margin: "0 1.5rem" }} />
+        }
+      >
 
         {/* Input */}
         <div style={{ padding: "1.25rem 1.5rem 1rem" }}>
@@ -793,25 +788,16 @@ export function ArrowLogWidget() {
             <p style={{ ...barlow, fontSize: "9px", color: C.ivoryFaint, letterSpacing: ".1em", margin: 0 }}>
               {lie.length > 0 ? `${lie.length} chars` : "Ctrl+Enter to seek"}
             </p>
-            <button
-              className="al-btn-seek"
+            <Button
+              variant="secondary"
+              size="sm"
               onClick={handleGenerate}
-              disabled={isGenerating || !lie.trim()}
-              style={{
-                ...barlow,
-                display: "flex", alignItems: "center", gap: "7px",
-                padding: "8px 16px", borderRadius: "999px",
-                background: "rgba(201,168,76,0.1)", border: `1px solid ${C.goldBorder}`,
-                color: C.gold, fontSize: "9px", letterSpacing: ".22em",
-                textTransform: "uppercase", fontWeight: 700,
-                cursor: (isGenerating || !lie.trim()) ? "not-allowed" : "pointer",
-                opacity: (isGenerating || !lie.trim()) ? 0.5 : 1,
-                transition: "background .2s, opacity .2s",
-              }}
+              disabled={!lie.trim()}
+              loading={isGenerating}
+              icon={!isGenerating ? <Sparkles size={12} /> : undefined}
             >
-              {isGenerating ? <Loader2 size={12} className="al-spin" /> : <Sparkles size={12} />}
               {isGenerating ? "Reflecting" : "Seek Truth"}
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -854,27 +840,21 @@ export function ArrowLogWidget() {
                   </div>
                 )}
                 <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "12px", paddingTop: "12px", borderTop: `1px solid ${C.white06}` }}>
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={() => { setCurrentTruth(null); setActivePopout(null); }}
-                    style={{ ...barlow, background: "none", border: "none", cursor: "pointer", fontSize: "9px", letterSpacing: ".18em", textTransform: "uppercase", color: C.ivoryDim, padding: 0 }}
                   >
                     Discard
-                  </button>
-                  <button
-                    className="al-btn-save"
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="sm"
                     onClick={saveLog}
-                    style={{
-                      ...barlow,
-                      display: "flex", alignItems: "center", gap: "6px",
-                      padding: "7px 14px", borderRadius: "999px",
-                      background: C.gold, color: "#0A0A0A", border: "none",
-                      fontSize: "9px", letterSpacing: ".2em",
-                      textTransform: "uppercase", fontWeight: 700, cursor: "pointer",
-                      transition: "transform .15s, box-shadow .15s",
-                    }}
+                    icon={<Plus size={11} />}
                   >
-                    <Plus size={11} /> Add to Log
-                  </button>
+                    Add to Log
+                  </Button>
                 </div>
               </div>
             ) : null}
@@ -905,6 +885,8 @@ export function ArrowLogWidget() {
         {/* History toggle */}
         <button
           onClick={() => setShowHistory(h => !h)}
+          aria-expanded={showHistory}
+          aria-controls="al-history-list"
           style={{
             ...barlow,
             display: "flex", alignItems: "center", gap: "7px",
@@ -923,7 +905,7 @@ export function ArrowLogWidget() {
 
         {/* History list */}
         {showHistory && (
-          <div>
+          <div id="al-history-list">
             <div style={{ height: "1px", background: C.goldDiv, margin: "0 1.5rem" }} />
             <div className="al-scrollable"
               style={{ maxHeight: "380px", overflowY: "auto", padding: logs.length === 0 ? "2rem 1.5rem" : "0 1.5rem 1.5rem" }}
@@ -940,7 +922,7 @@ export function ArrowLogWidget() {
             </div>
           </div>
         )}
-      </div>
+      </WidgetFrame>
 
       {/* ── Portal overlay ── */}
       {isMaximized && createPortal(

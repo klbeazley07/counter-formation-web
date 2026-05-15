@@ -1,0 +1,63 @@
+/*
+ * Counter Formation — design tokens
+ *
+ * Single source of truth for colors, radii, and font families used across the
+ * app. Replaces the per-file `C` palette constants that previously lived at
+ * the top of every section and widget file. Tailwind config (tailwind.config.js)
+ * extends theme.colors/fontFamily/borderRadius to reference these variables so
+ * utility classes and inline `var(...)` styles share the same source.
+ *
+ * Contract: sessions/contracts.md "CSS Tokens" section.
+ */
+
+:root {
+  /* Surfaces */
+  --cf-obsidian:        #0E0C0A;
+  --cf-hero-bg:         #06050A;
+  --cf-rule-bg:         #17140F;
+  --cf-field-bg:        #111009;
+  --cf-card-warm:       #1A1612;
+  --cf-card-warm-2:     #201C17;
+
+  /* Ink */
+  --cf-ivory:           #FAF8F5;
+  --cf-ivory-90:        rgba(250, 248, 245, 0.90);
+  --cf-ivory-82:        rgba(250, 248, 245, 0.82);
+  --cf-ivory-62:        rgba(250, 248, 245, 0.62);
+  --cf-ivory-55:        rgba(250, 248, 245, 0.55);
+  --cf-ivory-42:        rgba(250, 248, 245, 0.42);
+  --cf-ivory-35:        rgba(250, 248, 245, 0.35);
+  --cf-ivory-28:        rgba(250, 248, 245, 0.28);
+  --cf-ivory-18:        rgba(250, 248, 245, 0.18);
+
+  /* Champagne gold */
+  --cf-gold:            #C9A84C;
+  --cf-gold-mid:        rgba(201, 168, 76, 0.30);
+  --cf-gold-soft:       rgba(201, 168, 76, 0.20);
+  --cf-gold-faint:      rgba(201, 168, 76, 0.15);
+  --cf-gold-hairline:   rgba(201, 168, 76, 0.12);
+  --cf-gold-glow:       rgba(201, 168, 76, 0.06);
+  --cf-gold-bg:         rgba(201, 168, 76, 0.08);
+  --cf-gold-muted:      rgba(201, 168, 76, 0.50);
+
+  /* Neutral overlays */
+  --cf-white-5:         rgba(255, 255, 255, 0.05);
+  --cf-white-8:         rgba(255, 255, 255, 0.08);
+  --cf-white-10:        rgba(255, 255, 255, 0.10);
+
+  /* Radii */
+  --cf-radius-card:     20px;
+  --cf-radius-card-lg:  24px;
+  --cf-radius-pill:     999px;
+  --cf-radius-input:    10px;
+  --cf-radius-input-lg: 14px;
+
+  /* Type */
+  --cf-font-display:    'Michroma', sans-serif;
+  --cf-font-brand:      'Barlow Condensed', sans-serif;
+  --cf-font-devotional: 'Cormorant Garamond', serif;
+  --cf-font-body:       'Inter', sans-serif;
+
+  /* Spacing */
+  --cf-space-card-pad:  1.75rem;
+}

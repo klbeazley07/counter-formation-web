@@ -4,6 +4,49 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 4 — Phase 4: Design System (2026-05-15)
+
+**Status:** Complete (build passes; visual smoke-test still pending — agent cannot drive a browser)
+**Build:** `npm run build` passed (JS 1421→1428 kB, CSS 67→69 kB after tokens.css)
+
+**Files created:**
+- `src/styles/tokens.css` — :root CSS custom properties for surfaces, ink, gold, radii, fonts, spacing
+- `src/components/primitives/Button.jsx` — primary/secondary/ghost × sm/md/lg, loading + disabled, optional leading icon
+- `src/components/primitives/Input.jsx` — text/email/search controlled input with reference variant for short codes; forwarded ref
+- `src/components/primitives/EyebrowLabel.jsx` — xs/sm/md sizes, gold/muted colors
+- `src/components/primitives/Card.jsx` — dark/warm surface, optional gold-gradient hairline, padded sm/md/lg
+- `src/components/primitives/ProgressBar.jsx` — value 0–100 (clamped), optional label, ARIA `role="progressbar"` with `aria-valuenow/min/max`
+- `src/components/primitives/SectionHeader.jsx` — eyebrow + Michroma display title + Cormorant italic subtitle
+- `src/components/WidgetFrame.jsx` — gold-glow chrome with `role="region"` and `aria-labelledby` from `useId()`
+
+**Files modified:**
+- `src/main.jsx` — added `import './styles/tokens.css'` before `./index.css`
+- `tailwind.config.js` — extended theme.colors/fontFamily/borderRadius to reference CSS variables; existing classes (`bg-obsidian`, `text-champagne`, etc.) keep working
+- `src/widgets/DeclarationWidget.jsx` — full rewrite onto WidgetFrame + Button + token references; preserved card output and hover-remove pattern
+- `src/widgets/ExamenWidget.jsx` — full rewrite; Save + View Previous swapped to Button; question left-bar styling preserved as widget-local CSS
+- `src/widgets/PeacePauseWidget.jsx` — full rewrite; pause toggles kept custom (domain-specific state), Save inside edit panel swapped to Button; DayCell SVG gained `aria-label` per day
+- `src/widgets/FirstFifteenWidget.jsx` — full rewrite; PracticeSelect gained ArrowUp/Down/Enter/Escape keyboard navigation + `role="listbox"`/`role="option"` semantics; Save swapped to Button
+- `src/widgets/VerseTrackerWidget.jsx` — full rewrite; refInput swapped to `<Input variant="reference">`, Set/Library toggles to Button; day toggles gained `aria-pressed` and descriptive labels
+- `src/widgets/ArrowLogWidget.jsx` — surgical edits: sidebar wrapped in WidgetFrame (Maximize2 as `headerAction`), Seek Truth + Add to Log + Discard swapped to Button; ExpandedView gained `role="dialog"` + `aria-modal="true"`; history toggle gained `aria-expanded`/`aria-controls`. ExpandedView's warm cream palette preserved intentionally.
+- `sessions/contracts.md` — Phase 4 sections finalized (tokens, primitives, WidgetFrame, Tailwind extension, refactor checklist, accessibility pass, newsletter locations)
+- `sessions/state.md` — Phase 4 complete, Phase 5 ready
+- `sessions/next.md` — Phase 5 prompt (content layer)
+
+**Key decisions:**
+- Newsletter capture form refactor (App.jsx ×2 + SiteFooter + SevenDayChallenge) **deferred**. Original contract said three of four would be refactored. After reading the actual code, the marketing-pill aesthetic (rounded-full, semi-transparent white fill, gold-fill hover) is intentionally distinct from widget-grade dark inputs. Forcing through generic primitives would either drive visual regression or require polluting the primitive API with a "marketing" variant. Documented as deferred with reason; better path is a future `MarketingInput`/`MarketingButton` pair if more forms accumulate.
+- Section pages (Identity, RuleOfLife, FieldGuide, SevenDayChallenge, FruitAssessment, App, About) **not migrated** to tokens in this phase. Per spec, only widget files were in scope. Their per-file `C` constants remain. A future pass can migrate them once primitives are stable.
+- ArrowLogWidget ExpandedView **kept inline**. The warm cream palette in the portal is a deliberate "journal" surface different from the dark sidebar. Refactoring it would either require duplicating tokens or destroying the visual contrast. The sidebar portion uses WidgetFrame; the portal stays as a custom dialog with the new `role="dialog"` + `aria-modal` attributes.
+- `PracticeSelect` in FirstFifteenWidget got keyboard nav (ArrowDown/Up to move, Enter to select, Escape to close, Tab to close), `role="listbox"`/`role="option"`, and visible highlight state — addressing the spec's accessibility-pass requirement.
+- WidgetFrame uses `useId()` for the `aria-labelledby` linkage so each widget instance gets a unique title id. Region role lets screen readers announce widget boundaries.
+
+**Deferred:**
+- Newsletter capture form refactors (4 forms; see decision above)
+- Section page token migration (8 files; in-scope for a future phase)
+- ArrowLogWidget ExpandedView token migration (kept inline by design)
+- Visual smoke test (agent can't drive a browser — recommend Luke click through all six widgets before considering this fully landed)
+
+---
+
 ## Session 3 — Phase 3: Discipleship Agent Foundation (2026-05-15)
 
 **Status:** Complete
