@@ -6,8 +6,8 @@
  * Set it in Cloudflare Pages → Settings → Environment Variables (Production).
  */
 
-const GEMINI_PRIMARY  = "gemini-2.5-pro";
-const GEMINI_FALLBACK = "gemini-2.5-flash-lite";
+const GEMINI_PRIMARY  = "gemini-2.5-flash";
+const GEMINI_FALLBACK = "gemini-1.5-flash";
 const GEMINI_BASE     = "https://generativelanguage.googleapis.com/v1beta/models";
 
 async function callGemini(apiKey, model, body) {
