@@ -106,8 +106,9 @@ Return ONLY a valid JSON object with no markdown formatting, no code fences, no 
       return json({ error: "Empty response from Gemini." }, 502);
     }
 
-    // Strip markdown code fences if the model wraps the JSON anyway
-    text = text.replace(/^```json\s*/i, "").replace(/^```\s*/i, "").replace(/\s*```$/i, "").trim();
+    // Extract JSON object from response — model may wrap it in prose or code fences
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) text = jsonMatch[0];
 
     try {
       return json(JSON.parse(text));
