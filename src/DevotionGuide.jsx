@@ -2,6 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import html2canvas from "html2canvas";
+import { useFormationProfile } from "./hooks/useFormationProfile";
+import { buildDevotionContext } from "./utils/devotionContext";
+import DevotionOnboarding from "./components/DevotionOnboarding";
+import DevotionHistory from "./components/DevotionHistory";
+import { FRUITS } from "./fruitAssessmentData";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
 
@@ -190,6 +195,57 @@ function FieldInput({ label, hint, value, onChange, placeholder, multiline }) {
   );
 }
 
+/* ─── MODE SELECTION ─────────────────────────────────────────────── */
+
+function selectMode(profile) {
+  if (!profile) return null;
+  const devotions = profile.widgets?.devotions ?? [];
+  if (devotions.length > 0) return "returning";
+  const hasAssessment = !!profile.assessment?.completedAt;
+  const hasOnboarding = !!profile.onboarding?.completedAt;
+  if (!hasAssessment && !hasOnboarding) return "onboarding";
+  return "first-devotion";
+}
+
+/* ─── CONTEXT INDICATOR ──────────────────────────────────────────── */
+
+function ContextIndicator({ slugs }) {
+  if (!Array.isArray(slugs) || slugs.length === 0) return null;
+  const labels = slugs
+    .map(s => FRUITS[s]?.label?.toLowerCase() ?? null)
+    .filter(Boolean);
+  if (labels.length === 0) return null;
+  return (
+    <div style={{
+      marginTop: 6,
+      marginBottom: 18,
+      display: "flex",
+      flexWrap: "wrap",
+      alignItems: "baseline",
+      gap: 8,
+    }}>
+      <span style={{
+        fontFamily: "'Barlow Condensed',sans-serif",
+        fontSize: 10,
+        letterSpacing: "0.32em",
+        textTransform: "uppercase",
+        color: "rgba(250,248,245,0.45)",
+        fontWeight: 700,
+      }}>
+        Forming around
+      </span>
+      <span style={{
+        fontFamily: "'Cormorant Garamond',serif",
+        fontSize: 16,
+        fontStyle: "italic",
+        color: C.gold,
+      }}>
+        {labels.join(", ")}
+      </span>
+    </div>
+  );
+}
+
 /* ─── MAIN COMPONENT ─────────────────────────────────────────────── */
 
 export default function DevotionGuide() {
@@ -202,6 +258,9 @@ export default function DevotionGuide() {
   const [error, setError]       = useState(null);
   const [scrolled, setScrolled] = useState(false);
   const resultRef = useRef(null);
+
+  const { profile, updateProfile, isLoaded } = useFormationProfile();
+  const mode = selectMode(profile);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -240,7 +299,12 @@ export default function DevotionGuide() {
       const res = await fetch("/api/generate", {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ passage, theme, bigIdea }),
+        body: JSON.stringify({
+          passage,
+          theme,
+          bigIdea,
+          profile: buildDevotionContext(profile),
+        }),
       });
 
       if (!res.ok) throw new Error("Generation failed");
@@ -248,6 +312,22 @@ export default function DevotionGuide() {
       if (apiErr) throw new Error(apiErr);
 
       setDevotional(text);
+
+      const summary = (text ?? "").slice(0, 200).trim();
+      const newEntry = {
+        generatedAt: new Date().toISOString(),
+        passage,
+        theme,
+        bigIdea,
+        summary,
+      };
+      const prior = profile?.widgets?.devotions ?? [];
+      updateProfile({
+        widgets: {
+          devotions: [newEntry, ...prior].slice(0, 10),
+        },
+      });
+
       setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
     } catch (err) {
       setError(err.message || "Something went wrong. Please try again.");
@@ -397,6 +477,20 @@ export default function DevotionGuide() {
 
       <main style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px 96px" }}>
 
+        {!isLoaded && (
+          <div style={{ textAlign: "center", padding: "48px 0", color: C.dim, fontFamily: "'Barlow Condensed',sans-serif", fontSize: 11, letterSpacing: "0.3em", textTransform: "uppercase" }}>
+            Loading…
+          </div>
+        )}
+
+        {isLoaded && mode === "onboarding" && (
+          <DevotionOnboarding onComplete={() => { /* re-renders via profile change; mode recomputes */ }} />
+        )}
+
+        {isLoaded && mode === "returning" && <DevotionHistory />}
+
+        {isLoaded && mode !== "onboarding" && (
+        <>
         {/* ── Input card ── */}
         <div style={{
           background:    "radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 60%), #1C1813",
@@ -435,6 +529,8 @@ export default function DevotionGuide() {
                 Use one field for a quick devotion, or combine all three for a more shaped and specific formation prompt.
               </p>
             </div>
+
+            <ContextIndicator slugs={profile?.assessment?.formationEdge ?? []} />
 
             <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
               <FieldInput
@@ -601,6 +697,8 @@ export default function DevotionGuide() {
               </div>
             </div>
           </div>
+        )}
+        </>
         )}
       </main>
 

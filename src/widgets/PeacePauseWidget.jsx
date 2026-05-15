@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-
-const TRACKER_KEY   = "cf-peace-tracker";
-const STATEMENT_KEY = "cf-peace-statements";
+import { useFormationProfile } from "../hooks/useFormationProfile";
 
 const C = {
   gold:       "#C9A84C",
@@ -155,6 +153,8 @@ function DayCell({ label, count, isToday }) {
 /* ── PEACE PAUSE WIDGET ── */
 
 export function PeacePauseWidget() {
+  const { profile, updateProfile, isLoaded } = useFormationProfile();
+
   const [tracker, setTracker]       = useState({});       // { "YYYY-MM-DD": { morning, midday, evening } }
   const [statements, setStatements] = useState(DEFAULT_STATEMENTS);
   const [active, setActive]         = useState(null);     // "morning" | "midday" | "evening" | null
@@ -164,27 +164,26 @@ export function PeacePauseWidget() {
   const [timerKey, setTimerKey]     = useState(0);        // remount countdown on new tap
   const editRef = useRef(null);
 
-  /* Load from localStorage */
+  /* Seed local state from profile once loaded */
   useEffect(() => {
-    try {
-      const t = localStorage.getItem(TRACKER_KEY);
-      if (t) setTracker(JSON.parse(t));
-    } catch {}
-    try {
-      const s = localStorage.getItem(STATEMENT_KEY);
-      if (s) setStatements({ ...DEFAULT_STATEMENTS, ...JSON.parse(s) });
-    } catch {}
-  }, []);
+    if (!isLoaded) return;
+    const t = profile.widgets.peaceTracker;
+    if (t && Object.keys(t).length > 0) setTracker(t);
+    const s = profile.widgets.peaceStatements;
+    if (s) setStatements({ ...DEFAULT_STATEMENTS, ...s });
+  }, [isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* Persist tracker */
   useEffect(() => {
-    try { localStorage.setItem(TRACKER_KEY, JSON.stringify(tracker)); } catch {}
-  }, [tracker]);
+    if (!isLoaded) return;
+    updateProfile({ widgets: { peaceTracker: tracker } });
+  }, [tracker]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* Persist statements */
   useEffect(() => {
-    try { localStorage.setItem(STATEMENT_KEY, JSON.stringify(statements)); } catch {}
-  }, [statements]);
+    if (!isLoaded) return;
+    updateProfile({ widgets: { peaceStatements: statements } });
+  }, [statements]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* Focus edit textarea */
   useEffect(() => {

@@ -1004,6 +1004,27 @@ export function RhythmPage() {
               </Link>
             </div>
           )}
+
+          {rhythm === "prayer" && (
+            <div className="rl-section">
+              <p className="rl-sec-label">Connected Armor</p>
+              <Link to="/identity/breastplate-of-righteousness" className="rl-book" style={{ gridTemplateColumns: "1fr", display: "flex", flexDirection: "column" }}>
+                <div className="rl-book-body" style={{ minHeight: "auto" }}>
+                  <div>
+                    <p className="rl-book-author">Connected Armor</p>
+                    <p className="rl-book-title">Breastplate of Righteousness</p>
+                    <p className="rl-book-desc">Your heart, already covered</p>
+                  </div>
+                  <span className="rl-book-cta">
+                    Explore
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M1 5h8M5.5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+                    </svg>
+                  </span>
+                </div>
+              </Link>
+            </div>
+          )}
         </div>
 
         <div className="rl-theology rl-section">

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-
-const STORAGE_KEY = "cf-declaration";
+import { useFormationProfile } from "../hooks/useFormationProfile";
 
 const C = {
   gold:       "#C9A84C",
@@ -36,6 +35,7 @@ const MIN_STATEMENTS = 3;
 /* ─── DECLARATION WIDGET ──────────────────────────────────────────── */
 
 export function DeclarationWidget() {
+  const { profile, updateProfile, isLoaded } = useFormationProfile();
   const [statements, setStatements] = useState(["", "", ""]);
   const [focusIdx,   setFocusIdx]   = useState(null);
   const [hoverIdx,   setHoverIdx]   = useState(null);
@@ -43,32 +43,26 @@ export function DeclarationWidget() {
   const [copied,     setCopied]     = useState(false);
   const debounceRef = useRef(null);
 
-  // Load from localStorage on mount
+  // Load from profile once it has finished hydrating
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          // Ensure at least MIN_STATEMENTS slots
-          const padded = [...parsed];
-          while (padded.length < MIN_STATEMENTS) padded.push("");
-          setStatements(padded);
-        }
-      }
-    } catch {}
-  }, []);
+    if (!isLoaded) return;
+    const saved = profile.widgets.declarations;
+    if (Array.isArray(saved) && saved.length > 0) {
+      const padded = [...saved];
+      while (padded.length < MIN_STATEMENTS) padded.push("");
+      setStatements(padded);
+    }
+  }, [isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Debounced save on every change
   useEffect(() => {
+    if (!isLoaded) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(statements));
-      } catch {}
+      updateProfile({ widgets: { declarations: statements } });
     }, 500);
     return () => clearTimeout(debounceRef.current);
-  }, [statements]);
+  }, [statements]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = (i, val) => {
     setStatements(prev => {
@@ -96,9 +90,7 @@ export function DeclarationWidget() {
     if (filled.length === 0) return;
     setCard(filled);
     // Save on generate (flush debounce)
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(statements));
-    } catch {}
+    updateProfile({ widgets: { declarations: statements } });
   };
 
   const handleCopy = () => {

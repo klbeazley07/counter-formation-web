@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { ScriptureRef } from "./ScriptureRef";
+import { useFormationProfile } from "./hooks/useFormationProfile";
+import NextStep from "./components/NextStep";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
 
@@ -258,25 +260,22 @@ const DAY_META = {
 
 /* ─── STORAGE HELPERS ─────────────────────────────────────────────── */
 
-function getProgress() {
-  try { return JSON.parse(localStorage.getItem("cf7") || "{}"); }
-  catch { return {}; }
+// Converts the profile's completedDays number[] into the legacy Record<string,1>
+// shape that the pure-logic helpers below expect. No localStorage reads occur here.
+function daysToProgressMap(completedDays) {
+  const map = {};
+  completedDays.forEach((n) => { map[n] = 1; });
+  return map;
 }
-function markComplete(n) {
-  const p = getProgress();
-  p[n] = 1;
-  localStorage.setItem("cf7", JSON.stringify(p));
-  window.dispatchEvent(new CustomEvent("cf7-progress"));
-}
-function isDone(n) { return !!getProgress()[n]; }
-function getCompletionCount(progress = getProgress()) {
+
+function getCompletionCount(progress) {
   return DAYS.reduce((acc, day) => acc + (progress[day.n] ? 1 : 0), 0);
 }
-function isUnlocked(n, progress = getProgress()) {
+function isUnlocked(n, progress) {
   if (n === 1) return true;
   return !!progress[n - 1];
 }
-function getCurrentDay(progress = getProgress()) {
+function getCurrentDay(progress) {
   return DAYS.find((day) => !progress[day.n])?.n || DAYS[DAYS.length - 1].n;
 }
 function stripTags(value = "") {
@@ -285,7 +284,7 @@ function stripTags(value = "") {
 function renderRichText(text, key) {
   return <p key={key} dangerouslySetInnerHTML={{ __html: text }} />;
 }
-function getCardState(n, progress = getProgress()) {
+function getCardState(n, progress) {
   const done = !!progress[n];
   const unlocked = isUnlocked(n, progress);
   const current = !done && unlocked && getCurrentDay(progress) === n;
@@ -610,7 +609,7 @@ function CornerNav() {
 /* ─── TRACKER (shared) ───────────────────────────────────────────── */
 
 function Tracker({ activeDayN, progress }) {
-  const p = progress || getProgress();
+  const p = progress || {};
   const currentDay = getCurrentDay(p);
 
   return (
@@ -641,6 +640,7 @@ function Tracker({ activeDayN, progress }) {
 /* ─── LANDING PAGE ────────────────────────────────────────────────── */
 
 export function CFLanding() {
+  const { profile, isLoaded } = useFormationProfile();
   const vbRef = useRef(null);
   const blRef = useRef(null);
   const markRef = useRef(null);
@@ -649,7 +649,11 @@ export function CFLanding() {
   const progRef = useRef(null);
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [progress, setProgress] = useState(getProgress());
+
+  const progress = useMemo(
+    () => daysToProgressMap(isLoaded ? profile.challenge.completedDays : []),
+    [profile.challenge.completedDays, isLoaded]
+  );
 
   const currentDay = useMemo(() => getCurrentDay(progress), [progress]);
   const completionCount = useMemo(() => getCompletionCount(progress), [progress]);
@@ -686,16 +690,11 @@ export function CFLanding() {
         progRef.current.style.width = (d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + "%";
       }
     };
-    const syncProgress = () => setProgress(getProgress());
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("cf7-progress", syncProgress);
-    window.addEventListener("storage", syncProgress);
 
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("cf7-progress", syncProgress);
-      window.removeEventListener("storage", syncProgress);
     };
   }, []);
 
@@ -849,30 +848,32 @@ export function CFLanding() {
 /* ─── DEVOTION PAGE ───────────────────────────────────────────────── */
 
 export function CFDevotion() {
+  const { profile, updateProfile, isLoaded } = useFormationProfile();
   const { day } = useParams();
   const navigate = useNavigate();
   const rfillRef = useRef(null);
   const contentRef = useRef(null);
-  const [progress, setProgress] = useState(getProgress());
   const [showComplete, setShowComplete] = useState(false);
 
   const n = parseInt(day, 10);
   const d = DAYS.find(x => x.n === n);
   const meta = d ? DAY_META[d.n] : null;
 
+  const completedDays = isLoaded ? profile.challenge.completedDays : [];
+  const progress = useMemo(() => daysToProgressMap(completedDays), [completedDays]);
+
   useEffect(() => {
     if (!d) navigate(CHALLENGE_BASE, { replace: true });
   }, [d, navigate]);
 
   useEffect(() => {
-    setProgress(getProgress());
     window.scrollTo(0, 0);
   }, [n]);
 
   useEffect(() => {
-    if (!d) return;
+    if (!d || !isLoaded) return;
 
-    let hasMarked = !!getProgress()[d.n];
+    let hasMarked = completedDays.includes(d.n);
     const el = contentRef.current?.closest(".cf7-dev-scroll") || window;
 
     const onScroll = () => {
@@ -883,23 +884,19 @@ export function CFDevotion() {
       if (rfillRef.current) rfillRef.current.style.width = (pct * 100) + "%";
 
       if (pct > 0.8 && !hasMarked) {
-        markComplete(d.n);
+        const updatedDays = [...completedDays, d.n];
+        updateProfile({ challenge: { completedDays: updatedDays } });
         hasMarked = true;
-        setProgress(getProgress());
         setShowComplete(true);
         window.setTimeout(() => setShowComplete(false), 2600);
       }
     };
-
-    const syncProgress = () => setProgress(getProgress());
 
     if (el === window) {
       window.addEventListener("scroll", onScroll, { passive: true });
     } else {
       el.addEventListener("scroll", onScroll, { passive: true });
     }
-    window.addEventListener("cf7-progress", syncProgress);
-    window.addEventListener("storage", syncProgress);
 
     return () => {
       if (el === window) {
@@ -907,10 +904,8 @@ export function CFDevotion() {
       } else {
         el.removeEventListener("scroll", onScroll);
       }
-      window.removeEventListener("cf7-progress", syncProgress);
-      window.removeEventListener("storage", syncProgress);
     };
-  }, [d]);
+  }, [d, isLoaded]);
 
   if (!d) return null;
 
@@ -1052,26 +1047,7 @@ export function CFDevotion() {
         </Section>
 
         {d.n === 7 && (
-          <div className="cf7-next-step">
-            <p className="cf7-dev-sec-lbl">This Is Not The End</p>
-            <div className="cf7-dev-body" style={{ fontSize: "clamp(15px,3.6vw,18px)" }}>
-              <p>This week was not meant to be a spike of inspiration. It was meant to begin a different pattern.</p>
-              <p>Keep the rule. Protect your attention. Stay in community. Return to these seven days when the pace picks up and the drift starts again.</p>
-              <p>Counter Formation is not a moment. It is a way of living.</p>
-            </div>
-            <Link to={CHALLENGE_BASE} className="cf7-next-step-cta">
-              Return to the Challenge
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M1 6h10M6.5 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </Link>
-            <p style={{ marginTop: "1.75rem", fontSize: "clamp(13px,3.2vw,15px)", color: "rgba(250,248,245,0.55)", lineHeight: 1.7 }}>
-              You've completed the 7-Day Challenge. Ready to go deeper? The Armor of God formation tracks take the disciplines you've started and build them into a daily practice.
-            </p>
-            <Link to="/identity" style={{ display: "inline-flex", alignItems: "center", gap: "6px", marginTop: "0.75rem", color: "#C9A84C", fontSize: "clamp(11px,2.8vw,13px)", letterSpacing: "0.08em", textDecoration: "none" }}>
-              Begin the Armor of God →
-            </Link>
-          </div>
+          <NextStep context="challenge-complete" className="cf7-next-step" />
         )}
 
         <div className="cf7-brand-foot">

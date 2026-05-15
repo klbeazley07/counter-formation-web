@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
-const STORAGE_KEY = "cf-examen-log";
+import { useFormationProfile } from "../hooks/useFormationProfile";
 
 const C = {
   gold:        "#C9A84C",
@@ -41,19 +40,19 @@ function formatDate(iso) {
 /* ─── EXAMEN WIDGET ──────────────────────────────────────────────── */
 
 export function ExamenWidget() {
+  const { profile, updateProfile, isLoaded } = useFormationProfile();
   const [responses, setResponses]     = useState(["", "", "", "", ""]);
   const [focusIdx,  setFocusIdx]      = useState(null);
   const [entries,   setEntries]       = useState([]);
   const [savedMsg,  setSavedMsg]      = useState("");
   const [showPrev,  setShowPrev]      = useState(false);
 
-  // Load from localStorage on mount
+  // Seed entries from profile once the profile has loaded
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) setEntries(JSON.parse(saved));
-    } catch {}
-  }, []);
+    if (!isLoaded) return;
+    const log = profile.widgets.examenLog;
+    if (log && log.length > 0) setEntries(log);
+  }, [isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleResponseChange = (i, val) => {
     setResponses(prev => {
@@ -70,9 +69,7 @@ export function ExamenWidget() {
     };
     const next = [entry, ...entries];
     setEntries(next);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    } catch {}
+    updateProfile({ widgets: { examenLog: next } });
     setResponses(["", "", "", "", ""]);
     setSavedMsg(`Saved — ${formatDate(entry.timestamp)}`);
     setTimeout(() => setSavedMsg(""), 5000);

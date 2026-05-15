@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { gsap } from "gsap";
 import { QUESTIONS, FRUITS, FRUIT_ORDER, CLUSTER_THRESHOLD, SCALE_OPTIONS } from "./fruitAssessmentData";
+import { useFormationProfile } from "./hooks/useFormationProfile";
+import NextStep from "./components/NextStep";
 
 /* ─── CONSTANTS ──────────────────────────────────────────────────────── */
 
@@ -24,8 +26,6 @@ const F = {
   serif: "'Cormorant Garamond', serif",
 };
 
-const LS_KEY       = "cf-fruit-assessment";
-const LS_DRAFT_KEY = "cf-fruit-assessment-draft";
 
 /* ─── INJECTED STYLES ─────────────────────────────────────────────────── */
 
@@ -213,6 +213,9 @@ export default function FruitAssessment() {
   const [primaryFormation, setPrimaryFormation] = useState(null);
   const [scoreSpread, setScoreSpread]           = useState(0);
 
+  // Formation profile
+  const { profile, updateProfile, isLoaded } = useFormationProfile();
+
   // Blackout overlay state
   const blackoutRef        = useRef(null);
   const blackoutActiveRef  = useRef(false);
@@ -226,26 +229,19 @@ export default function FruitAssessment() {
   }, [screen]);
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(LS_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed.current) {
-          setPreviousResult(parsed.current);
-          setScreen("pre-intro");
-        }
-      }
-      localStorage.removeItem(LS_DRAFT_KEY);
-    } catch {}
-  }, []);
+    if (!isLoaded) return;
+    if (profile.assessment.completedAt) {
+      setPreviousResult({
+        completedAt:    profile.assessment.completedAt,
+        scores:         profile.assessment.fruits,
+        formationFruits: profile.assessment.formationEdge,
+        ...(profile.assessment.previousResult || {}),
+      });
+      setScreen("pre-intro");
+    }
+  }, [isLoaded]);
 
-  useEffect(() => {
-    if (screen !== "questions") return;
-    if (!answers.some(a => a !== null)) return;
-    try {
-      localStorage.setItem(LS_DRAFT_KEY, JSON.stringify({ answers, currentQuestion }));
-    } catch {}
-  }, [answers, currentQuestion, screen]);
+  // Draft state is local only -- not persisted.
 
   function completeAssessment(finalAnswers) {
     const sc = calculateScores(finalAnswers);
@@ -261,14 +257,25 @@ export default function FruitAssessment() {
       formationFruits: poles.formationFruits,
       cluster: cl,
     };
-    try {
-      const existing = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
-      localStorage.setItem(LS_KEY, JSON.stringify({
-        current: newResult,
-        previous: existing.current || null,
-      }));
-      localStorage.removeItem(LS_DRAFT_KEY);
-    } catch {}
+    updateProfile({
+      assessment: {
+        fruits:         newResult.scores,
+        completedAt:    newResult.completedAt,
+        formationEdge:  newResult.formationFruits,
+        previousResult: profile.assessment.fruits
+          ? {
+              completedAt:     profile.assessment.completedAt,
+              answers:         [],
+              scores:          profile.assessment.fruits,
+              primaryFruit:    profile.assessment.formationEdge[0] ?? "",
+              primaryEvidence: "",
+              evidenceFruits:  [],
+              formationFruits: profile.assessment.formationEdge,
+              cluster:         [],
+            }
+          : null,
+      },
+    });
     setScores(sc);
     setPrimaryFruit(pf);
     setCluster(cl);
@@ -871,10 +878,7 @@ function ResultsScreen({ scores, primaryFruit, cluster, previousResult, isDeltaM
           )}
         </div>
 
-        {/* Rule of Life crosslink */}
-        <div style={{ marginTop: 48, textAlign: "center" }}>
-          <RuleOfLifeLink fruit={fruit} />
-        </div>
+        <NextStep context="assessment-complete" />
 
       </div>
     </div>

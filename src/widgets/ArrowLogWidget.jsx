@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
+import { useFormationProfile } from "../hooks/useFormationProfile";
 import {
   Sparkles, History, Trash2, Quote, Loader2, Plus,
   ExternalLink, X, ChevronDown, ChevronUp, Maximize2, ArrowRight,
@@ -51,7 +52,6 @@ const EX = {
 const barlow   = { fontFamily: "'Barlow Condensed', sans-serif" };
 const garamond = { fontFamily: "'Cormorant Garamond', serif" };
 
-const STORAGE_KEY = "cf-arrow-log";
 
 /* ─── SHARED CSS ──────────────────────────────────────────────────── */
 
@@ -658,29 +658,25 @@ function ExpandedView({ lie, setLie, isGenerating, currentTruth, logs, activePop
 /* ─── ARROW LOG WIDGET ────────────────────────────────────────────── */
 
 export function ArrowLogWidget() {
-  const [lie, setLie]                   = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [currentTruth, setCurrentTruth] = useState(null);
-  const [logs, setLogs]                 = useState([]);
-  const [showHistory, setShowHistory]   = useState(false);
-  const [activePopout, setActivePopout] = useState(null);
-  const [error, setError]               = useState(null);
-  const [isMaximized, setIsMaximized]   = useState(false);
-  const textareaRef                     = useRef(null);
+  const { profile, updateProfile, isLoaded }  = useFormationProfile();
+  const [lie, setLie]                         = useState("");
+  const [isGenerating, setIsGenerating]       = useState(false);
+  const [currentTruth, setCurrentTruth]       = useState(null);
+  const [logs, setLogs]                       = useState([]);
+  const [showHistory, setShowHistory]         = useState(false);
+  const [activePopout, setActivePopout]       = useState(null);
+  const [error, setError]                     = useState(null);
+  const [isMaximized, setIsMaximized]         = useState(false);
+  const textareaRef                           = useRef(null);
+  const profileSyncedRef                      = useRef(false);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        setLogs(parsed.map(log => ({ ...log, verses: log.verses ?? [], timestamp: log.timestamp ?? log.id })));
-      }
-    } catch {}
-  }, []);
-
-  useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(logs)); } catch {}
-  }, [logs]);
+    if (!isLoaded) return;
+    if (profileSyncedRef.current) return;
+    profileSyncedRef.current = true;
+    const saved = profile.widgets.arrowLog ?? [];
+    setLogs(saved.map(log => ({ ...log, verses: log.verses ?? [], timestamp: log.timestamp ?? log.id })));
+  }, [isLoaded]);
 
   const handleGenerate = async () => {
     if (!lie.trim() || isGenerating) return;
@@ -707,7 +703,10 @@ export function ArrowLogWidget() {
 
   const saveLog = () => {
     if (!currentTruth || !lie.trim()) return;
-    setLogs(prev => [{ id: crypto.randomUUID(), lie: lie.trim(), truth: currentTruth.truth, verses: currentTruth.verses ?? [], timestamp: Date.now() }, ...prev]);
+    const newEntry = { id: crypto.randomUUID(), lie: lie.trim(), truth: currentTruth.truth, verses: currentTruth.verses ?? [], timestamp: Date.now() };
+    const updatedLog = [newEntry, ...logs];
+    setLogs(updatedLog);
+    updateProfile({ widgets: { arrowLog: updatedLog } });
     setLie("");
     setCurrentTruth(null);
     setActivePopout(null);
@@ -715,7 +714,11 @@ export function ArrowLogWidget() {
     textareaRef.current?.focus();
   };
 
-  const deleteLog = (id) => setLogs(prev => prev.filter(e => e.id !== id));
+  const deleteLog = (id) => {
+    const updatedLog = logs.filter(e => e.id !== id);
+    setLogs(updatedLog);
+    updateProfile({ widgets: { arrowLog: updatedLog } });
+  };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) handleGenerate();

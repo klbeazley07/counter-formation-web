@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
-const STORAGE_KEY = "cf-first-fifteen";
+import { useFormationProfile } from "../hooks/useFormationProfile";
 
 const C = {
   gold:       "#C9A84C",
@@ -211,29 +210,29 @@ function OutputCard({ slots, notes }) {
 /* ── FIRST FIFTEEN WIDGET ── */
 
 export function FirstFifteenWidget() {
+  const { profile, updateProfile, isLoaded } = useFormationProfile();
+
   const [slots, setSlots]     = useState([...DEFAULT_SLOTS]);
   const [notes, setNotes]     = useState("");
   const [saved, setSaved]     = useState(null);  // { slots, notes } | null
   const [notesFocus, setNotesFocus] = useState(false);
   const [focusedSlot, setFocusedSlot] = useState(null);
 
-  /* Load from localStorage */
+  /* Load from profile once the hook has finished its initial read */
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const data = JSON.parse(raw);
-        if (data.slots) setSlots(data.slots);
-        if (data.notes !== undefined) setNotes(data.notes);
-        setSaved(data);
-      }
-    } catch {}
-  }, []);
+    if (!isLoaded) return;
+    const data = profile.widgets.firstFifteen;
+    if (data) {
+      if (data.slots) setSlots(data.slots);
+      if (data.notes !== undefined) setNotes(data.notes);
+      setSaved(data);
+    }
+  }, [isLoaded]);
 
   const handleSave = () => {
-    const data = { slots, notes };
-    setSaved(data);
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+    const updatedConfig = { slots, notes };
+    setSaved(updatedConfig);
+    updateProfile({ widgets: { firstFifteen: updatedConfig } });
   };
 
   const updateSlot = (i, val) => {

@@ -1,4 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState, useCallback } from "react";
+import { FormationProfileProvider, useFormationProfile } from "./hooks/useFormationProfile";
 import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -1629,10 +1630,9 @@ function ChallengeModal({ open, onClose }) {
 /* ─── MAIN SITE ───────────────────────────────────────────────────── */
 
 function ChallengeSlideBar() {
+  const { profile, updateProfile, isLoaded } = useFormationProfile();
   const [visible, setVisible] = useState(false);
-  const [dismissed, setDismissed] = useState(
-    () => localStorage.getItem("cf_slidebar_dismissed") === "1"
-  );
+  const dismissed = isLoaded && profile?.dismissed?.slidebar === true;
 
   useEffect(() => {
     if (dismissed) return;
@@ -1644,9 +1644,8 @@ function ChallengeSlideBar() {
   }, [dismissed]);
 
   const dismiss = () => {
-    setDismissed(true);
     setVisible(false);
-    localStorage.setItem("cf_slidebar_dismissed", "1");
+    updateProfile({ dismissed: { slidebar: true } });
   };
 
   if (dismissed) return null;
@@ -1820,6 +1819,7 @@ function MainSite() {
 
 export default function App() {
   return (
+    <FormationProfileProvider>
     <BrowserRouter>
       <ScrollToTop />
       <FieldGuideStyles />
@@ -1866,5 +1866,6 @@ export default function App() {
       <MobileTabBar />
       <div className="md:hidden" style={{ height: "calc(64px + env(safe-area-inset-bottom, 0px))" }} />
     </BrowserRouter>
+    </FormationProfileProvider>
   );
 }

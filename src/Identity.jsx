@@ -12,6 +12,8 @@ import { FirstFifteenWidget } from "./widgets/FirstFifteenWidget";
 import { VerseTrackerWidget } from "./widgets/VerseTrackerWidget";
 import { FormationShareable } from "./FormationShareable";
 import { parseScriptureRefs } from "./utils/parseScriptureRefs";
+import { useFormationProfile } from "./hooks/useFormationProfile";
+import NextStep from "./components/NextStep";
 
 const SHOPIFY_URL = "https://shop.counterformed.com/collections/armor-of-god-collection";
 
@@ -2674,11 +2676,12 @@ const WIDGET_COMPONENTS = {
 /* ─── CROSS-LINK DATA ────────────────────────────────────────────── */
 
 const CROSS_LINKS = {
-  "belt-of-truth":       { to: "/rule-of-life/presence",  rhythm: "PRESENCE",  tagline: "Attention before God" },
-  "gospel-of-peace":     { to: "/rule-of-life/sabbath",   rhythm: "SABBATH",   tagline: "Rest before production" },
-  "shield-of-faith":     { to: "/rule-of-life/community", rhythm: "COMMUNITY", tagline: "Formation together" },
-  "helmet-of-salvation": { to: "/rule-of-life/scripture", rhythm: "SCRIPTURE", tagline: "Truth before noise" },
-  "sword-of-the-spirit": { to: "/rule-of-life/scripture", rhythm: "SCRIPTURE", tagline: "Truth before noise" },
+  "belt-of-truth":               { to: "/rule-of-life/presence",  rhythm: "PRESENCE",  tagline: "Attention before God" },
+  "breastplate-of-righteousness":{ to: "/rule-of-life/prayer",    rhythm: "PRAYER",    tagline: "Dependence before action" },
+  "gospel-of-peace":             { to: "/rule-of-life/sabbath",   rhythm: "SABBATH",   tagline: "Rest before production" },
+  "shield-of-faith":             { to: "/rule-of-life/community", rhythm: "COMMUNITY", tagline: "Formation together" },
+  "helmet-of-salvation":         { to: "/rule-of-life/scripture", rhythm: "SCRIPTURE", tagline: "Truth before noise" },
+  "sword-of-the-spirit":         { to: "/rule-of-life/scripture", rhythm: "SCRIPTURE", tagline: "Truth before noise" },
 };
 
 function CrossLinkCard({ piece }) {
@@ -2721,13 +2724,9 @@ function CrossLinkCard({ piece }) {
 export function ArmorPiecePage() {
   const { piece }     = useParams();
   const navigate      = useNavigate();
+  const { profile, updateProfile, isLoaded } = useFormationProfile();
   const [day, setDay] = useState(1);
-  const [completedDays, setCompletedDays] = useState(() => {
-    try {
-      const stored = localStorage.getItem(`cf-armor-progress-${piece}`);
-      return stored ? JSON.parse(stored) : [];
-    } catch { return []; }
-  });
+  const [completedDays, setCompletedDays] = useState([]);
   const [showQRWelcome, setShowQRWelcome] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     return params.get('qr') === 'true';
@@ -2751,16 +2750,21 @@ export function ArmorPiecePage() {
   useEffect(() => {
     window.scrollTo(0, 0);
     setDay(1);
-    try {
-      const stored = localStorage.getItem(`cf-armor-progress-${piece}`);
-      setCompletedDays(stored ? JSON.parse(stored) : []);
-    } catch { setCompletedDays([]); }
-  }, [piece]);
+    if (isLoaded) {
+      setCompletedDays(profile.armor.progress[piece] ?? []);
+    }
+  }, [piece, isLoaded]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(`cf-armor-progress-${piece}`, JSON.stringify(completedDays));
-    } catch {}
+    if (!isLoaded) return;
+    const patch = { armor: { progress: { [piece]: completedDays } } };
+    if (completedDays.includes(6)) {
+      const current = profile.armor.completedPieces ?? [];
+      if (!current.includes(piece)) {
+        patch.armor.completedPieces = [...current, piece];
+      }
+    }
+    updateProfile(patch);
   }, [completedDays, piece]);
 
   useEffect(() => {
@@ -3077,6 +3081,10 @@ export function ArmorPiecePage() {
             scriptureRef={curDay.scriptures[0]?.ref ?? ""}
             isLastDay={isLastDay}
           />
+
+          {isLastDay && (
+            <NextStep context="armor-piece-complete" pieceSlug={piece} />
+          )}
         </div>
 
         {/* Sticky sidebar */}

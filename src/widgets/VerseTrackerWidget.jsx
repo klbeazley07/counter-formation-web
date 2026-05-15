@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
-const KEY_CURRENT = "cf-sword-current";
-const KEY_LIBRARY = "cf-sword-library";
+import { useFormationProfile } from "../hooks/useFormationProfile";
 
 const C = {
   gold:       "#C9A84C",
@@ -114,6 +112,7 @@ function LibraryEntry({ entry, last }) {
 /* ── VERSE TRACKER WIDGET ── */
 
 export function VerseTrackerWidget() {
+  const { profile, updateProfile, isLoaded }  = useFormationProfile();
   const [current, setCurrent]         = useState(null);   // { ref, text, days, weekKey }
   const [library, setLibrary]         = useState([]);
   const [refInput, setRefInput]       = useState("");
@@ -122,50 +121,46 @@ export function VerseTrackerWidget() {
   const [textFocus, setTextFocus]     = useState(false);
   const [showLibrary, setShowLibrary] = useState(false);
 
-  /* Load & check week rollover on mount */
+  /* Load & check week rollover once profile is ready */
   useEffect(() => {
-    try {
-      const rawLib = localStorage.getItem(KEY_LIBRARY);
-      if (rawLib) setLibrary(JSON.parse(rawLib));
-    } catch {}
+    if (!isLoaded) return;
 
-    try {
-      const rawCur = localStorage.getItem(KEY_CURRENT);
-      if (rawCur) {
-        const cur = JSON.parse(rawCur);
-        const currentWeek = isoWeekKey();
-        if (cur.weekKey && cur.weekKey !== currentWeek) {
-          // New week — archive and clear
-          archiveAndClear(cur);
-        } else {
-          setCurrent(cur);
-        }
+    const profileLib = profile?.widgets?.verseTracker?.library ?? [];
+    setLibrary(profileLib);
+
+    const profileCur = profile?.widgets?.verseTracker?.current ?? null;
+    if (profileCur) {
+      const currentWeek = isoWeekKey();
+      if (profileCur.weekKey && profileCur.weekKey !== currentWeek) {
+        // New week — archive and clear
+        archiveAndClear(profileCur);
+      } else {
+        setCurrent(profileCur);
       }
-    } catch {}
-  }, []);
+    }
+  }, [isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* Persist current */
   useEffect(() => {
-    try {
-      if (current) localStorage.setItem(KEY_CURRENT, JSON.stringify(current));
-      else localStorage.removeItem(KEY_CURRENT);
-    } catch {}
-  }, [current]);
+    if (!isLoaded) return;
+    updateProfile({ widgets: { verseTracker: { current: current ?? null } } });
+  }, [current]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* Persist library */
   useEffect(() => {
-    try { localStorage.setItem(KEY_LIBRARY, JSON.stringify(library)); } catch {}
-  }, [library]);
+    if (!isLoaded) return;
+    updateProfile({ widgets: { verseTracker: { library } } });
+  }, [library]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const archiveAndClear = (entry) => {
     if (!entry || !entry.ref) return;
     setLibrary(prev => {
       const updated = [{ ref: entry.ref, text: entry.text, dateAdded: new Date().toISOString() }, ...prev];
-      try { localStorage.setItem(KEY_LIBRARY, JSON.stringify(updated)); } catch {}
+      updateProfile({ widgets: { verseTracker: { library: updated } } });
       return updated;
     });
     setCurrent(null);
-    try { localStorage.removeItem(KEY_CURRENT); } catch {}
+    updateProfile({ widgets: { verseTracker: { current: null } } });
   };
 
   const handleSetVerse = () => {
@@ -177,7 +172,7 @@ export function VerseTrackerWidget() {
     if (current && current.ref) {
       setLibrary(prev => {
         const updated = [{ ref: current.ref, text: current.text, dateAdded: new Date().toISOString() }, ...prev];
-        try { localStorage.setItem(KEY_LIBRARY, JSON.stringify(updated)); } catch {}
+        updateProfile({ widgets: { verseTracker: { library: updated } } });
         return updated;
       });
     }

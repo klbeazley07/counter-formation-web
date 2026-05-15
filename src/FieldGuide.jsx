@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ScriptureRef } from "./ScriptureRef";
+import { useFormationProfile } from "./hooks/useFormationProfile";
+import NextStep from "./components/NextStep";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
 
@@ -373,21 +375,19 @@ function useScrollReveal(ref) {
 }
 
 function useProgress(day) {
-  const key = "cf-sbs-progress";
-  useEffect(() => {
-    try {
-      const existing = JSON.parse(localStorage.getItem(key) || "[]");
-      if (!existing.includes(day)) {
-        localStorage.setItem(key, JSON.stringify([...existing, day].sort((a, b) => a - b)));
-      }
-    } catch {}
-  }, [day]);
+  const { profile, updateProfile, isLoaded } = useFormationProfile();
+  const completedDays = profile.fieldGuide.completedDays;
 
-  try {
-    return JSON.parse(localStorage.getItem(key) || "[]");
-  } catch {
-    return [];
-  }
+  useEffect(() => {
+    if (!isLoaded) return;
+    if (!completedDays.includes(day)) {
+      const updatedDays = [...completedDays, day].sort((a, b) => a - b);
+      const newDay = Math.min(Math.max(...updatedDays) + 1, 7);
+      updateProfile({ fieldGuide: { completedDays: updatedDays, currentDay: newDay, lastVisit: new Date().toISOString() } });
+    }
+  }, [day, isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return completedDays;
 }
 
 /* ─── SHARED COMPONENTS ───────────────────────────────────────────── */
@@ -634,6 +634,8 @@ export function FGOffice() {
             Completed days: {progress.length ? progress.join(" · ") : "1"}
           </div>
         </div>
+
+        {!next && <NextStep context="field-guide-complete" />}
 
       </div>
     </PageShell>
