@@ -451,6 +451,34 @@ export function FGLanding() {
           </div>
         </div>
 
+        {/* Spiritual Gifts Assessment tile — visible on landing */}
+        <div className="fg-reveal" style={{ marginBottom: 28 }}>
+          <div style={{ background: C.bgCard, border: `1px solid ${C.goldDim}`, padding: "36px 40px", display: "flex", flexDirection: "column", gap: 0, position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 0, left: "10%", right: "10%", height: 1, background: "linear-gradient(90deg, transparent, rgba(201,168,76,0.48), transparent)" }} />
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.34em", textTransform: "uppercase", color: C.gold }}>
+                The Second Anchor
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 24 }}>
+                <div>
+                  <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 26, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.ivory, lineHeight: 1.15, marginBottom: 12 }}>
+                    Spiritual Gifts<br />Assessment
+                  </div>
+                  <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.8, margin: 0, maxWidth: 480 }}>
+                    Where the Spirit is at work through you to build up the body. Self-report, fruitfulness, and the witness of those who know you well, woven into a single picture.
+                  </p>
+                  <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginTop: 14 }}>
+                    19 Gifts &middot; 72 Questions &middot; ~12-15 Min
+                  </div>
+                </div>
+                <Link className="fg-btn-sec" to="/field-guide/gifts" style={{ flexShrink: 0, minWidth: 200 }}>
+                  Begin Assessment &rarr;
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <GoldDivider mt={28} mb={28} />
 
         <div className="fg-meta-grid">

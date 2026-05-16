@@ -30,6 +30,15 @@ import { SiteFooter } from "./components/SiteFooter";
 import { MobileTabBar } from "./components/MobileTabBar";
 import { CampaignBanner } from "./components/CampaignBanner";
 import FruitAssessment, { FAStyles } from "./FruitAssessment";
+import {
+  GiftsIntro,
+  GiftsTake,
+  GiftsProcessing,
+  GiftsResults,
+  GiftsInvite,
+  GiftsObserve,
+  FormationPicture,
+} from "./components/field-guide/gifts/Placeholders";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1843,6 +1852,15 @@ export default function App() {
         <Route path={`${FG_BASE}/new`}      element={<FGNewHere />} />
         <Route path="/field-guide/devotion-guide" element={<DevotionGuide />} />
         <Route path="/field-guide/fruit-assessment" element={<FruitAssessment />} />
+
+        {/* Spiritual Gifts Assessment routes (placeholders pending Sessions 2-4) */}
+        <Route path="/field-guide/gifts" element={<GiftsIntro />} />
+        <Route path="/field-guide/gifts/take" element={<GiftsTake />} />
+        <Route path="/field-guide/gifts/processing" element={<GiftsProcessing />} />
+        <Route path="/field-guide/gifts/results" element={<GiftsResults />} />
+        <Route path="/field-guide/gifts/invite" element={<GiftsInvite />} />
+        <Route path="/field-guide/gifts/observe/:token" element={<GiftsObserve />} />
+        <Route path="/field-guide/formation" element={<FormationPicture />} />
 
         {/* 7-Day Challenge routes */}
         <Route path="/7-day-challenge" element={<CFLanding />} />
