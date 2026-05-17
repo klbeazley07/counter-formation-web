@@ -586,12 +586,13 @@ function FieldGuideSection() {
       cta: "Enter the Rhythm",
     },
     {
-      type: "Practice", rhythm: "Sabbath", date: "February 2026",
-      title: "Practicing Rest",
-      img: "https://images.unsplash.com/photo-1472396961693-142e6e269027?q=80&w=1200",
-      desc: "A weekly rhythm of trust, delight, and resistance to production without end.",
-      href: "#field-guide",
-      cta: "Coming Next",
+      type: "Assessment", rhythm: "Formation", date: "May 2026",
+      title: "Spiritual Gifts",
+      img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1200",
+      desc: "How the Spirit is moving through you to build up the body. Three streams of evidence, woven into a single picture of where God is at work.",
+      href: "/field-guide/gifts",
+      isLink: true,
+      cta: "Begin Assessment",
     },
   ];
 
