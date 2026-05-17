@@ -145,19 +145,19 @@ function LandingScreen({ userName, onBegin }) {
             : <>You have been invited to weigh in</>}
         </h1>
 
-        <p style={{ fontFamily: F.display, fontSize: 18, lineHeight: 1.75, color: C.ivory, margin: "0 0 16px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 200ms both" }}>
+        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 18, lineHeight: 1.75, color: C.ivory, margin: "0 0 16px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 200ms both" }}>
           {displayFirstName ? `${displayFirstName} has invited` : "Someone has invited"} you to take a brief assessment about how God seems to be at work through them. Your honest observations will integrate into their results. This will take about 5 to 7 minutes.
         </p>
 
-        <p style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: C.muted, margin: "0 0 14px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 280ms both" }}>
+        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: C.muted, margin: "0 0 14px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 280ms both" }}>
           The New Testament's logic is that spiritual gifts are confirmed in the body of Christ, not just discovered by the individual believer.{displayFirstName ? ` ${displayFirstName} is asking` : " They are asking"} you to participate in that confirmation.
         </p>
 
-        <p style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: C.muted, margin: "0 0 14px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 340ms both" }}>
+        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: C.muted, margin: "0 0 14px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 340ms both" }}>
           You will be asked one question per gift, with a five-point scale. There is also an "I haven't been in a position to see this" option for any question where you genuinely have not observed what is being asked about. Please use that option freely -- it is more helpful than guessing.
         </p>
 
-        <p style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: C.muted, margin: "0 0 44px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 400ms both" }}>
+        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: C.muted, margin: "0 0 44px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 400ms both" }}>
           You will not see {displayFirstName ? `${displayFirstName}'s` : "their"} own responses or their results. Your role is to weigh in on what you have seen, not to compare or evaluate.
         </p>
 
@@ -211,16 +211,16 @@ function CompletionScreen({ userName }) {
           Thank you for weighing in
         </h1>
 
-        <p style={{ fontFamily: F.display, fontSize: 18, lineHeight: 1.75, color: C.ivory, margin: "0 0 14px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 200ms both" }}>
+        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 18, lineHeight: 1.75, color: C.ivory, margin: "0 0 14px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 200ms both" }}>
           Your responses have been recorded.{" "}
           {displayFirstName ? `${displayFirstName} will` : "They will"} receive an updated picture of where the Spirit is at work through them, now informed by what you have observed.
         </p>
 
-        <p style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: C.muted, margin: "0 0 40px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 280ms both" }}>
+        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: C.muted, margin: "0 0 40px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 280ms both" }}>
           They will not see your individual answers -- only the aggregated result combined with the responses of the others they invited.
         </p>
 
-        <p style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: C.muted, margin: "0 0 36px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 340ms both" }}>
+        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: C.muted, margin: "0 0 36px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 340ms both" }}>
           If you are curious about the assessment yourself, you are welcome to take it. Counter Formation is a free Field Guide for Christian formation.
         </p>
 

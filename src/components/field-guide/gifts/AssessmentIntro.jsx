@@ -303,6 +303,7 @@ export default function AssessmentIntro() {
               {paragraphs.map((p, i) => (
                 <p
                   key={i}
+                  className="cf-prose"
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     fontSize: 18.5,

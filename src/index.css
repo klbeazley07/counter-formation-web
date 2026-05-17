@@ -626,6 +626,21 @@ input[type="email"] {
   .fg-narrow     { max-width: 720px; }
 }
 
+/* ─── FORMATION PROSE — mobile legibility ────────────────────────── */
+/* Cormorant Garamond is designed for large display sizes. At body
+   scale on small screens its thin italic weight becomes hard to read.
+   On mobile, prose paragraphs switch to Inter with a comfortable
+   floor size. Short one-sentence essence statements and atmospheric
+   moments keep Cormorant -- only multi-sentence prose gets this class. */
+@media (max-width: 600px) {
+  .cf-prose {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 16px !important;
+    line-height: 1.85 !important;
+    font-style: normal !important;
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    GEAR SECTION ANIMATIONS
    ═══════════════════════════════════════════════════════════════════ */

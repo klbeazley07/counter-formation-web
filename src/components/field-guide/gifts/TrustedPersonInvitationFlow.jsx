@@ -278,7 +278,7 @@ function StepCollect({ userName, setUserName, recipients, setRecipients, onConti
         Who knows you well?
       </h1>
 
-      <p style={{ fontFamily: F.display, fontSize: 18, lineHeight: 1.72, color: C.muted, margin: "0 0 12px", maxWidth: 620 }}>
+      <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 18, lineHeight: 1.72, color: C.muted, margin: "0 0 12px", maxWidth: 620 }}>
         Choose two or three people in your life who know you well enough to have observed how the Spirit is at work through you. They will receive a brief assessment (5 to 7 minutes) about what they have seen. Their responses will integrate into your results to complete the picture.
       </p>
 
@@ -370,7 +370,7 @@ function StepPersonalize({ userName, recipients, message, setMessage, onBack, on
         Personalize your invitation
       </h1>
 
-      <p style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.7, color: C.muted, margin: "0 0 28px", maxWidth: 580 }}>
+      <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.7, color: C.muted, margin: "0 0 28px", maxWidth: 580 }}>
         Here is the default message that will be sent. You can edit it to make it more personal -- the more specific you can be about why you are asking this person, the more they will value being asked.
       </p>
 
@@ -422,7 +422,7 @@ function StepReview({ userName, recipients, setRecipients, message, onBack, onSe
         Review and send
       </h1>
 
-      <p style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.7, color: C.muted, margin: "0 0 28px", maxWidth: 560 }}>
+      <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.7, color: C.muted, margin: "0 0 28px", maxWidth: 560 }}>
         Check your recipient list. You can remove anyone before sending.
       </p>
 
@@ -501,7 +501,7 @@ function StepSent({ pairings, onReturn }) {
         Your invitations are ready to send
       </h1>
 
-      <p style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.7, color: C.muted, margin: "0 0 10px", maxWidth: 580 }}>
+      <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.7, color: C.muted, margin: "0 0 10px", maxWidth: 580 }}>
         Copy each link below and share it with the corresponding person by email or message. Each link is unique to that person and will tie their responses to your results.
       </p>
 

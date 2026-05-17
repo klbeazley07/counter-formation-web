@@ -309,6 +309,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
                 <BlockQuote reference={w.reference} text={w.text} />
                 {w.note && (
                   <p
+                    className="cf-prose"
                     style={{
                       fontFamily: "'Cormorant Garamond', serif",
                       fontStyle: "italic",
@@ -336,6 +337,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
             />
             {gift.stewardshipCharge.note && (
               <p
+                className="cf-prose"
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontStyle: "italic",
@@ -495,6 +497,7 @@ function SubLabel({ children }) {
 function BodyProse({ children }) {
   return (
     <p
+      className="cf-prose"
       style={{
         fontFamily: "'Cormorant Garamond', serif",
         fontSize: 17,
