@@ -191,6 +191,22 @@ function ExportMode() {
     setTrustedUrl(`${window.location.origin}/field-guide/gifts/recover?import=${payload}`);
   }
 
+  const [showDiag, setShowDiag] = useState(false);
+  const [diagKeys, setDiagKeys] = useState([]);
+
+  function runDiag() {
+    const entries = [];
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        const v = localStorage.getItem(k);
+        entries.push({ key: k, size: v ? v.length : 0 });
+      }
+    } catch { /* ignore */ }
+    setDiagKeys(entries);
+    setShowDiag(true);
+  }
+
   if (selfProgress === undefined) return null;
 
   return (
@@ -380,6 +396,86 @@ function ExportMode() {
               page on the device and browser where you took it.
             </p>
           </>
+        )}
+      </div>
+
+      {/* Diagnostic panel */}
+      <div style={{ marginBottom: 32 }}>
+        <button
+          onClick={runDiag}
+          style={{
+            background: "transparent",
+            border: `1px solid ${C.border}`,
+            color: C.dim,
+            fontFamily: "'Inter', sans-serif",
+            fontSize: 12,
+            letterSpacing: "0.08em",
+            padding: "9px 16px",
+            cursor: "pointer",
+            width: "100%",
+          }}
+        >
+          Diagnose: show all data stored on this device
+        </button>
+        {showDiag && (
+          <div style={{
+            background: C.bgCardSoft,
+            border: `1px solid ${C.border}`,
+            padding: "20px 24px",
+            marginTop: 8,
+          }}>
+            <div style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: 10,
+              letterSpacing: "0.3em",
+              textTransform: "uppercase",
+              color: C.gold,
+              marginBottom: 12,
+            }}>
+              All localStorage keys on this device ({diagKeys.length} total)
+            </div>
+            {diagKeys.length === 0 ? (
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: C.dim, margin: 0 }}>
+                localStorage is empty -- no data at all on this device.
+              </p>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                {diagKeys.map(({ key, size }) => (
+                  <div key={key} style={{ display: "flex", gap: 16, alignItems: "baseline" }}>
+                    <span style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: 12,
+                      color: key.startsWith("cf-") ? C.ivory : C.dim,
+                      fontWeight: key.startsWith("cf-") ? 600 : 400,
+                      wordBreak: "break-all",
+                      flex: 1,
+                    }}>
+                      {key}
+                    </span>
+                    <span style={{
+                      fontFamily: "'Barlow Condensed', sans-serif",
+                      fontSize: 11,
+                      color: C.dim,
+                      flexShrink: 0,
+                    }}>
+                      {size.toLocaleString()} chars
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+            <p style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 12,
+              color: C.dim,
+              margin: "16px 0 0",
+              lineHeight: 1.6,
+            }}>
+              If you see no "cf-" keys, the data is not on this device or browser.
+              Try opening this page in the same browser (and profile) where you
+              originally took the assessment.
+            </p>
+          </div>
         )}
       </div>
 
