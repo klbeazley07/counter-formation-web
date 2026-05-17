@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import GiftConstellation from "./GiftConstellation";
 
 const C = {
   bg: "#06050A",
@@ -182,74 +183,6 @@ function WhatThisIsNotModal({ open, onClose }) {
   );
 }
 
-/* ─── CONSTELLATION PLACEHOLDER (Session 3 will replace) ──────────── */
-
-function ConstellationPlaceholder({ onReturn }) {
-  return (
-    <div
-      style={{
-        textAlign: "center",
-        padding: "60px 24px",
-        border: `1px solid ${C.goldFaint}`,
-        background: C.bgCard,
-      }}
-    >
-      <div
-        style={{
-          fontFamily: "'Barlow Condensed', sans-serif",
-          fontSize: 10,
-          letterSpacing: "0.36em",
-          textTransform: "uppercase",
-          color: C.gold,
-          marginBottom: 14,
-        }}
-      >
-        Coming in Session 3
-      </div>
-      <h2
-        style={{
-          fontFamily: "'Cormorant Garamond', serif",
-          fontStyle: "italic",
-          fontSize: 32,
-          lineHeight: 1.2,
-          color: C.ivory,
-          margin: 0,
-          marginBottom: 14,
-        }}
-      >
-        The Gift Constellation
-      </h2>
-      <p
-        style={{
-          fontSize: 15,
-          lineHeight: 1.8,
-          color: C.muted,
-          maxWidth: 520,
-          margin: "0 auto 24px",
-        }}
-      >
-        The exploration experience renders the 19 gifts as points of light, with gold lines connecting paired gifts. Hover or tap reveals the gift's essence; clicking opens the full profile.
-      </p>
-      <button
-        onClick={onReturn}
-        style={{
-          background: "transparent",
-          border: `1px solid ${C.goldDim}`,
-          color: C.gold,
-          fontFamily: "'Barlow Condensed', sans-serif",
-          fontSize: 12,
-          letterSpacing: "0.28em",
-          textTransform: "uppercase",
-          padding: "12px 22px",
-          cursor: "pointer",
-        }}
-      >
-        ← Return to intro
-      </button>
-    </div>
-  );
-}
-
 /* ─── MAIN: ASSESSMENT INTRO ──────────────────────────────────────── */
 
 export default function AssessmentIntro() {
@@ -283,9 +216,9 @@ export default function AssessmentIntro() {
         .cf-secondary-cta:hover .cf-arrow { transform: translateX(4px); }
       `}</style>
 
-      <div style={{ maxWidth: 760, margin: "0 auto" }}>
+      <div style={{ maxWidth: showConstellation ? 1240 : 760, margin: "0 auto" }}>
         {showConstellation ? (
-          <ConstellationPlaceholder onReturn={() => setShowConstellation(false)} />
+          <GiftConstellation onReturn={() => setShowConstellation(false)} />
         ) : (
           <>
             {/* Eyebrow */}

@@ -112,7 +112,22 @@ End with: (1) live URL of the intro screen, (2) confirmation that the modal open
 
 ---
 
-## SESSION 3 -- Gift Constellation
+## SESSION 3 -- Gift Constellation  **[STATUS: COMPLETE -- 2026-05-16]**
+
+**What was built:**
+- `src/components/field-guide/gifts/GiftConstellation.jsx` -- full Constellation experience rendered as a state within `/field-guide/gifts` (no separate route). Hero Black background, header with hover/tap usage hint, persistent footer CTA returning to `/field-guide/gifts/take` plus a "Return to the assessment intro" link.
+- Desktop layout: responsive SVG (viewBox 1000 x 620, preserveAspectRatio xMidYMid meet) with 19 gift points laid out by category -- Manifestation arc across the top (7 gifts), Ministry block in the middle (8 gifts in two staggered rows), Equipping pair at the bottom (2 gifts), Charismatic cluster set apart to the right (2 gifts). Each point is a glowing Champagne Gold circle with the gift name in Barlow Condensed small caps beneath it. Category eyebrow labels (MANIFESTATION, MINISTRY, EQUIPPING, CHARISMATIC) anchor each cluster.
+- Pairing lines drawn between gift centers from each gift's `pairsWith` array, deduplicated via the `buildEdges` helper (undirected edge set keyed by sorted endpoints). GSAP staggered fade-in on initial mount: 80ms stagger across the lines, 25ms stagger across the points, both with `power2.out` easing.
+- Hover interaction: point expands (radius 4.5 -> 7), glow halo brightens, the gift's label switches from gold to ivory, and the connecting lines to paired gifts thicken from 0.6 to 1.2 stroke and brighten from 0.32 to 0.85 opacity. A `PreviewPanel` floats next to the point with category eyebrow, gift name, essence statement in Cormorant Garamond italic, and scripture anchor reference.
+- Click opens `GiftProfileModal` -- full gift profile (category eyebrow, gift name, essence, working definition, definition-anchor scripture via ScriptureRef, manifestation witnesses with notes, stewardship charge with note, all four body-application subsections), a "See Related Gifts" pill row that switches modal content in place when clicked (single state in parent), and a persistent footer CTA routing to `/field-guide/gifts/take`. Modal uses the same `useBodyScrollLock` / `useEscape` hooks + `cf-fade-in` / `cf-rise-in` keyframes established in Session 2; intentionally no framer-motion (per Session 2 deviation).
+- Mobile layout (`max-width: 768px`): the SVG is replaced by a `MobileCategoryList` -- four category sections each rendering a 2-column grid of tap-targets (gift dot + name). Tap opens the same modal. No connection lines on mobile.
+- `AssessmentIntro.jsx` updated to import and render `GiftConstellation` in place of `ConstellationPlaceholder` (placeholder removed); outer max-width lifts from 760 to 1240 when the Constellation is active so the constellation gets the room it needs.
+
+**Structural deviation from original plan:** None of substance. The original prompt called for the modal to "open with full gift profile" and noted the existing CSS-keyframe pattern from Session 2 -- followed exactly. Layout choices for point positioning (the staggered arc rather than a strict horizontal row) are within the spec's "constellation suggesting stars" language.
+
+---
+
+**Original prompt (kept for context):**
 
 ```
 Read /specs/CF_SpiritualGifts_Spec.md Section 5 in full, especially 5.7 (the pairing map). Also read Section 7 to understand the gift profile content.
