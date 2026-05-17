@@ -32,11 +32,9 @@ import { CampaignBanner } from "./components/CampaignBanner";
 import FruitAssessment, { FAStyles } from "./FruitAssessment";
 import GiftsProcessing from "./components/field-guide/gifts/GiftsProcessing";
 import GiftsResults from "./components/field-guide/gifts/GiftsResults";
-import {
-  GiftsInvite,
-  GiftsObserve,
-  FormationPicture,
-} from "./components/field-guide/gifts/Placeholders";
+import { FormationPicture } from "./components/field-guide/gifts/Placeholders";
+import TrustedPersonInvitationFlow from "./components/field-guide/gifts/TrustedPersonInvitationFlow";
+import TrustedPersonAssessment from "./components/field-guide/gifts/TrustedPersonAssessment";
 import AssessmentIntro from "./components/field-guide/gifts/AssessmentIntro";
 import AssessmentQuestion from "./components/field-guide/gifts/AssessmentQuestion";
 
@@ -1859,8 +1857,8 @@ export default function App() {
         <Route path="/field-guide/gifts/take" element={<AssessmentQuestion />} />
         <Route path="/field-guide/gifts/processing" element={<GiftsProcessing />} />
         <Route path="/field-guide/gifts/results" element={<GiftsResults />} />
-        <Route path="/field-guide/gifts/invite" element={<GiftsInvite />} />
-        <Route path="/field-guide/gifts/observe/:token" element={<GiftsObserve />} />
+        <Route path="/field-guide/gifts/invite" element={<TrustedPersonInvitationFlow />} />
+        <Route path="/field-guide/gifts/observe/:token" element={<TrustedPersonAssessment />} />
         <Route path="/field-guide/formation" element={<FormationPicture />} />
 
         {/* 7-Day Challenge routes */}
