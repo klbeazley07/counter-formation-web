@@ -85,11 +85,14 @@ function shouldShowCharismaticIntro(nextItem, charismaticIntroSeen) {
 export default function AssessmentQuestion() {
   const navigate = useNavigate();
 
-  // Hydrate from localStorage on first render. If nothing in progress, start fresh.
+  // Hydrate from localStorage on first render.
+  // If a completed assessment is found, set null to trigger a redirect to results
+  // rather than clobbering the completed data with a fresh empty state.
   const [progress, setProgress] = useState(() => {
     const saved = loadProgress();
-    if (saved && !saved.completedAt) return saved;
-    return emptyProgress();
+    if (!saved) return emptyProgress();
+    if (saved.completedAt || saved.qIdx >= TOTAL_QUESTIONS) return null;
+    return saved;
   });
 
   // Screen state machine:
@@ -102,20 +105,29 @@ export default function AssessmentQuestion() {
   const [enterDir, setEnterDir] = useState(null);
   const transitioningRef = useRef(false);
 
+  // Completed assessment landed here -- redirect to results without touching data.
+  useEffect(() => {
+    if (progress === null) {
+      navigate("/field-guide/gifts/results", { replace: true });
+    }
+  }, [progress, navigate]);
+
   useEffect(() => {
     document.title = "Spiritual Gifts Assessment · Counter Formation";
   }, []);
 
   useEffect(() => {
+    if (progress === null) return;
     window.scrollTo(0, 0);
-  }, [screen, progress.qIdx]);
+  }, [screen, progress?.qIdx]);
 
   // Persist on every progress change.
   useEffect(() => {
+    if (progress === null) return;
     saveProgress(progress);
   }, [progress]);
 
-  const currentItem = QUESTION_MANIFEST[progress.qIdx];
+  const currentItem = progress ? QUESTION_MANIFEST[progress.qIdx] : null;
   const currentGift = currentItem ? giftsByKey[currentItem.giftKey] : null;
   const currentValue = currentItem ? getStoredResponseValue(progress, currentItem) : null;
 
@@ -253,6 +265,9 @@ export default function AssessmentQuestion() {
   }, []);
 
   /* ── Render ──────────────────────────────────────────────────────── */
+
+  // Redirect in progress (completed assessment found) -- render nothing.
+  if (progress === null) return null;
 
   if (screen === "charismatic-intro") {
     return <CharismaticIntro onContinue={finishCharismaticIntro} />;

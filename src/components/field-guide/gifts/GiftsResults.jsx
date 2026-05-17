@@ -8,6 +8,8 @@ import { gifts, giftsByKey } from "../../../data/gifts";
 import {
   loadProgress,
   hasCompletedAssessment,
+  STORAGE_KEY,
+  TOTAL_QUESTIONS,
 } from "../../../utils/giftsAssessmentStorage";
 import { computeScores } from "../../../utils/scoreCompute";
 import { detectGaps } from "../../../utils/gapDetection";
@@ -583,18 +585,50 @@ export default function GiftsResults() {
   const { profile } = useFormationProfile();
   const fruitComplete = profile?.assessment?.completedAt != null;
 
-  const progress = useMemo(() => loadProgress(), []);
+  // Progress is stateful so Supabase recovery can update it after mount.
+  const [progress, setProgress] = useState(() => loadProgress());
+  // supabaseChecked: true once we've confirmed whether Supabase has data (or isn't available).
+  // Starts true if localStorage already has data so we skip the async check.
+  const [supabaseChecked, setSupabaseChecked] = useState(() => !!loadProgress());
+
   const hasCompleted = useMemo(() => hasCompletedAssessment(progress), [progress]);
 
   // Supabase-merged trusted responses. Starts null (use localStorage); populated
   // after the async fetch completes and is written back to localStorage.
   const [mergedTrusted, setMergedTrusted] = useState(null);
 
+  // If localStorage is empty, try to recover the self-assessment from Supabase
+  // before deciding whether to redirect to /recover.
   useEffect(() => {
+    if (progress) return; // already have local data
+    if (!supabase) { setSupabaseChecked(true); return; }
+    const sessionId = getSessionId();
+    if (!sessionId) { setSupabaseChecked(true); return; }
+    supabase
+      .from("gifts_sessions")
+      .select("progress")
+      .eq("session_id", sessionId)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data?.progress && (data.progress.completedAt || data.progress.qIdx >= TOTAL_QUESTIONS)) {
+          const restored = { ...data.progress };
+          if (!restored.completedAt) {
+            restored.completedAt = restored.lastUpdatedAt || new Date().toISOString();
+          }
+          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(restored)); } catch { /* ignore */ }
+          setProgress(restored);
+        }
+        setSupabaseChecked(true);
+      });
+  }, []); // only on mount
+
+  // Only redirect after Supabase check is done.
+  useEffect(() => {
+    if (!supabaseChecked) return;
     if (!hasCompleted) {
       navigate("/field-guide/gifts/recover", { replace: true });
     }
-  }, [hasCompleted, navigate]);
+  }, [supabaseChecked, hasCompleted, navigate]);
 
   // Fetch observer responses from Supabase and merge with whatever is in localStorage.
   useEffect(() => {
@@ -680,6 +714,16 @@ export default function GiftsResults() {
     }, [scores]);
 
   const hasGaps = Object.keys(gaps).length > 0;
+
+  if (!supabaseChecked) {
+    return (
+      <main style={{ background: "#06050A", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ color: "rgba(250,248,245,0.35)", fontFamily: "'Barlow Condensed', sans-serif", fontSize: 11, letterSpacing: "0.36em", textTransform: "uppercase" }}>
+          Restoring your results&hellip;
+        </div>
+      </main>
+    );
+  }
 
   if (!hasCompleted) return null;
 

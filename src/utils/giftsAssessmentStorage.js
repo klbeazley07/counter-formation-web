@@ -138,7 +138,9 @@ export function saveProgress(progress) {
     // Quota or private mode -- silently fail.
   }
   // Background upsert to Supabase -- never blocks the UI.
-  if (supabase) {
+  // Skip when qIdx is 0 and completedAt is null (empty init state) so we never
+  // clobber a completed session with a blank slate.
+  if (supabase && (next.qIdx > 0 || next.completedAt)) {
     const sessionId = getSessionId();
     if (sessionId) {
       supabase.from("gifts_sessions").upsert({
