@@ -1,6 +1,6 @@
-// Results screen -- Session 5 (initial version, no trusted-person integration yet).
-// Scoring: composite = (inclination × 0.50) + (fruitfulness × 0.50).
-// Trusted-person integration and gap detection come in Session 7.
+// Results screen -- updated in Session 7 with full trusted-person scoring and gap detection.
+// Scoring: compositeScores from scoreCompute.js (inclination 30% + fruitfulness 30% + confirmation 40%).
+// Falls back to 50/50 when no trusted data; shows "pending confirmation" badge until confirmed.
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,6 +9,8 @@ import {
   loadProgress,
   hasCompletedAssessment,
 } from "../../../utils/giftsAssessmentStorage";
+import { computeScores } from "../../../utils/scoreCompute";
+import { detectGaps } from "../../../utils/gapDetection";
 import { GiftProfileModal } from "./GiftConstellation";
 
 const RESULTS_STORAGE_KEY = "cf-gifts-results";
@@ -87,46 +89,11 @@ const STYLES = `
   }
 `;
 
-/* ─── SCORING ─────────────────────────────────────────────────────── */
-
-function computeScores(progress) {
-  const out = {};
-  for (const gift of gifts) {
-    const r = progress?.responses?.[gift.key];
-
-    if (gift.category === "charismatic") {
-      const de = r?.directExperience ?? null; // 0-4 scale value or null
-      const fr = r?.fruitfulness ?? null;
-      let tier;
-      if (de == null) {
-        tier = "notPresent";
-      } else if (de >= 3 && fr != null && fr >= 3) {
-        tier = "active";
-      } else if (de === 0 || de === 1) {
-        tier = "notPresent";
-      } else {
-        tier = "emerging";
-      }
-      out[gift.key] = { isCharismatic: true, directExperience: de, fruitfulness: fr, tier };
-    } else {
-      const inclRaw = r?.inclination ?? [null, null, null];
-      const inclValues = inclRaw.map((v) => (v == null ? 50 : v * 25));
-      const inclScore = inclValues.reduce((a, b) => a + b, 0) / inclValues.length;
-      const frRaw = r?.fruitfulness ?? null;
-      const frScore = frRaw == null ? 50 : frRaw * 25;
-      const composite = inclScore * 0.5 + frScore * 0.5;
-      const tier = composite >= 70 ? "active" : composite >= 50 ? "emerging" : "quiet";
-      out[gift.key] = { isCharismatic: false, inclination: inclScore, fruitfulness: frScore, composite, tier };
-    }
-  }
-  return out;
-}
-
-function saveResultsSnapshot(scores) {
+function saveResultsSnapshot(scores, totalTrustedPersons) {
   try {
     window.localStorage.setItem(
       RESULTS_STORAGE_KEY,
-      JSON.stringify({ computedAt: new Date().toISOString(), scores }),
+      JSON.stringify({ computedAt: new Date().toISOString(), totalTrustedPersons, scores }),
     );
   } catch {
     // Quota or private mode -- silently fail.
@@ -192,7 +159,7 @@ function PendingBadge() {
   );
 }
 
-function GiftCard({ gift, tier, formationText, onReadMore }) {
+function GiftCard({ gift, showPending, formationText, onReadMore }) {
   const categoryLabel = {
     manifestation: "Manifestation",
     ministry: "Ministry",
@@ -202,7 +169,7 @@ function GiftCard({ gift, tier, formationText, onReadMore }) {
 
   return (
     <div className="cf-gift-card">
-      <PendingBadge />
+      {showPending && <PendingBadge />}
       <Eyebrow style={{ marginBottom: 8 }}>{categoryLabel}</Eyebrow>
       <h3
         style={{
@@ -259,16 +226,112 @@ function GiftCard({ gift, tier, formationText, onReadMore }) {
   );
 }
 
+function GapSection({ gaps, onReadMore }) {
+  const gapGifts = Object.entries(gaps)
+    .map(([key, flags]) => ({ gift: giftsByKey[key], flags }))
+    .filter((e) => e.gift);
+
+  if (gapGifts.length === 0) return null;
+
+  return (
+    <section
+      style={{
+        maxWidth: 760,
+        margin: "0 auto 80px",
+        animation: "cf-res-fade 700ms ease-out 175ms both",
+      }}
+    >
+      <SectionHeader>Worth paying attention to</SectionHeader>
+      <p
+        style={{
+          fontFamily: "'Inter', sans-serif",
+          fontSize: 15,
+          lineHeight: 1.8,
+          color: C.muted,
+          marginBottom: 32,
+        }}
+      >
+        The following gifts show a meaningful gap between what you reported about
+        yourself and what the people who know you have observed. These gaps are
+        worth taking seriously -- they are not contradictions to resolve, but
+        questions to sit with.
+      </p>
+
+      {gapGifts.map(({ gift, flags }) => {
+        const gapText = flags.inclinationConfirmationGap
+          ? gift.edgeCases?.inclinationConfirmationGap
+          : gift.edgeCases?.confirmationInclinationGap;
+
+        return (
+          <div
+            key={gift.key}
+            style={{
+              background: C.bgCardSoft,
+              border: `1px solid ${C.goldDim}`,
+              padding: "32px 36px 28px",
+              marginBottom: 16,
+            }}
+          >
+            <Eyebrow style={{ marginBottom: 6 }}>
+              {flags.inclinationConfirmationGap
+                ? "You see it; others don't -- yet"
+                : "Others see it; you don't -- yet"}
+            </Eyebrow>
+            <h3
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: "clamp(22px, 2.6vw, 28px)",
+                lineHeight: 1.2,
+                color: C.ivory,
+                margin: "0 0 16px",
+                fontWeight: 400,
+              }}
+            >
+              {gift.name}
+            </h3>
+            {gapText && (
+              <p
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: 15,
+                  lineHeight: 1.8,
+                  color: C.muted,
+                  margin: "0 0 20px",
+                }}
+              >
+                {gapText}
+              </p>
+            )}
+            <button
+              onClick={() => onReadMore(gift.key)}
+              style={{
+                background: "transparent",
+                border: "none",
+                color: C.gold,
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontSize: 13,
+                letterSpacing: "0.12em",
+                cursor: "pointer",
+                padding: 0,
+                textTransform: "uppercase",
+              }}
+            >
+              Read more →
+            </button>
+          </div>
+        );
+      })}
+    </section>
+  );
+}
+
 function QuietSection({ quietGifts, charismaticNotPresent }) {
   const [openKeys, setOpenKeys] = useState({});
 
   const toggle = (key) =>
     setOpenKeys((prev) => ({ ...prev, [key]: !prev[key] }));
 
-  const allQuiet = [
-    ...quietGifts,
-    ...charismaticNotPresent,
-  ];
+  const allQuiet = [...quietGifts, ...charismaticNotPresent];
 
   return (
     <section
@@ -304,9 +367,10 @@ function QuietSection({ quietGifts, charismaticNotPresent }) {
       <div>
         {allQuiet.map((gift) => {
           const isOpen = !!openKeys[gift.key];
-          const edgeText = gift.category === "charismatic"
-            ? gift.edgeCases?.notPresent
-            : gift.edgeCases?.quiet;
+          const edgeText =
+            gift.category === "charismatic"
+              ? gift.edgeCases?.notPresent
+              : gift.edgeCases?.quiet;
 
           return (
             <div
@@ -359,10 +423,7 @@ function QuietSection({ quietGifts, charismaticNotPresent }) {
                 <div
                   className="cf-quiet-detail"
                   onClick={(e) => e.stopPropagation()}
-                  style={{
-                    marginTop: 16,
-                    paddingBottom: 8,
-                  }}
+                  style={{ marginTop: 16, paddingBottom: 8 }}
                 >
                   <p
                     style={{
@@ -418,7 +479,7 @@ function CharismaticSection({ activeCharismatic, emergingCharismatic, onReadMore
         <GiftCard
           key={gift.key}
           gift={gift}
-          tier="active"
+          showPending={false}
           formationText={gift.formationOutput.active.split("\n\n")[0]}
           onReadMore={onReadMore}
         />
@@ -428,7 +489,7 @@ function CharismaticSection({ activeCharismatic, emergingCharismatic, onReadMore
         <GiftCard
           key={gift.key}
           gift={gift}
-          tier="emerging"
+          showPending={false}
           formationText={gift.edgeCases.emerging}
           onReadMore={onReadMore}
         />
@@ -516,26 +577,29 @@ export default function GiftsResults() {
   const progress = useMemo(() => loadProgress(), []);
   const hasCompleted = useMemo(() => hasCompletedAssessment(progress), [progress]);
 
-  // Redirect if no completed assessment
   useEffect(() => {
     if (!hasCompleted) {
       navigate("/field-guide/gifts", { replace: true });
     }
   }, [hasCompleted, navigate]);
 
-  const scores = useMemo(() => {
-    if (!hasCompleted || !progress) return {};
+  const { scores, totalTrustedPersons, hasTrustedData } = useMemo(() => {
+    if (!hasCompleted || !progress)
+      return { scores: {}, totalTrustedPersons: 0, hasTrustedData: false };
     return computeScores(progress);
   }, [hasCompleted, progress]);
 
-  // Save snapshot to localStorage
+  const gaps = useMemo(() => {
+    if (!hasTrustedData || Object.keys(scores).length === 0) return {};
+    return detectGaps(scores);
+  }, [scores, hasTrustedData]);
+
   useEffect(() => {
     if (hasCompleted && Object.keys(scores).length > 0) {
-      saveResultsSnapshot(scores);
+      saveResultsSnapshot(scores, totalTrustedPersons);
     }
-  }, [hasCompleted, scores]);
+  }, [hasCompleted, scores, totalTrustedPersons]);
 
-  // Show sticky footer once user scrolls past the hero section
   useEffect(() => {
     const node = heroRef.current;
     if (!node) return;
@@ -547,7 +611,6 @@ export default function GiftsResults() {
     return () => observer.disconnect();
   }, []);
 
-  // Partition gifts by tier
   const { active, emerging, quiet, charActive, charEmerging, charNotPresent } =
     useMemo(() => {
       const active = [];
@@ -565,13 +628,17 @@ export default function GiftsResults() {
           else if (s.tier === "emerging") charEmerging.push(gift);
           else charNotPresent.push(gift);
         } else {
-          if (s.tier === "active") active.push(gift);
+          // "activePendingConfirmation" still renders in the Active section
+          if (s.tier === "active" || s.tier === "activePendingConfirmation")
+            active.push(gift);
           else if (s.tier === "emerging") emerging.push(gift);
           else quiet.push(gift);
         }
       }
       return { active, emerging, quiet, charActive, charEmerging, charNotPresent };
     }, [scores]);
+
+  const hasGaps = Object.keys(gaps).length > 0;
 
   if (!hasCompleted) return null;
 
@@ -610,34 +677,56 @@ export default function GiftsResults() {
             >
               Where the Spirit is at work through you
             </h1>
-            <p
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: "clamp(18px, 2vw, 22px)",
-                color: C.muted,
-                lineHeight: 1.65,
-                margin: "0 0 28px",
-                maxWidth: 620,
-              }}
-            >
-              Based on your responses. The full picture will come when two or
-              three trusted people in your life have weighed in on what they
-              have observed.
-            </p>
-            <p
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: 14,
-                color: C.dim,
-                lineHeight: 1.7,
-                margin: 0,
-                padding: "14px 18px",
-                borderLeft: `2px solid ${C.goldDim}`,
-              }}
-            >
-              Results are draft until at least two trusted-person responses are
-              received. Send invitations now to complete the picture.
-            </p>
+
+            {hasTrustedData ? (
+              <p
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: 14,
+                  lineHeight: 1.7,
+                  margin: "0 0 24px",
+                  padding: "14px 18px",
+                  background: "rgba(201,168,76,0.07)",
+                  borderLeft: `2px solid ${C.gold}`,
+                  color: C.ivory,
+                }}
+              >
+                Updated with input from {totalTrustedPersons} trusted person
+                {totalTrustedPersons === 1 ? "" : "s"}. The full picture is now in view.
+              </p>
+            ) : (
+              <p
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: "clamp(18px, 2vw, 22px)",
+                  color: C.muted,
+                  lineHeight: 1.65,
+                  margin: "0 0 28px",
+                  maxWidth: 620,
+                }}
+              >
+                Based on your responses. The full picture will come when two or
+                three trusted people in your life have weighed in on what they
+                have observed.
+              </p>
+            )}
+
+            {!hasTrustedData && (
+              <p
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: 14,
+                  color: C.dim,
+                  lineHeight: 1.7,
+                  margin: 0,
+                  padding: "14px 18px",
+                  borderLeft: `2px solid ${C.goldDim}`,
+                }}
+              >
+                Results are draft until at least two trusted-person responses are
+                received. Send invitations now to complete the picture.
+              </p>
+            )}
           </div>
         </div>
 
@@ -654,16 +743,25 @@ export default function GiftsResults() {
               <SectionHeader>
                 Active -- The Spirit is currently at work in you in these ways
               </SectionHeader>
-              {active.map((gift) => (
-                <GiftCard
-                  key={gift.key}
-                  gift={gift}
-                  tier="active"
-                  formationText={gift.formationOutput.active.split("\n\n")[0]}
-                  onReadMore={setModalKey}
-                />
-              ))}
+              {active.map((gift) => {
+                const s = scores[gift.key];
+                const showPending = !s || s.confirmationCount < 2;
+                return (
+                  <GiftCard
+                    key={gift.key}
+                    gift={gift}
+                    showPending={showPending}
+                    formationText={gift.formationOutput.active.split("\n\n")[0]}
+                    onReadMore={setModalKey}
+                  />
+                );
+              })}
             </section>
+          )}
+
+          {/* ── GAPS ─────────────────────────────────────────────── */}
+          {hasGaps && (
+            <GapSection gaps={gaps} onReadMore={setModalKey} />
           )}
 
           {/* ── EMERGING GIFTS ───────────────────────────────────── */}
@@ -678,15 +776,19 @@ export default function GiftsResults() {
               <SectionHeader>
                 Emerging -- The Spirit may be developing these in you
               </SectionHeader>
-              {emerging.map((gift) => (
-                <GiftCard
-                  key={gift.key}
-                  gift={gift}
-                  tier="emerging"
-                  formationText={gift.edgeCases.emerging}
-                  onReadMore={setModalKey}
-                />
-              ))}
+              {emerging.map((gift) => {
+                const s = scores[gift.key];
+                const showPending = !s || s.confirmationCount < 2;
+                return (
+                  <GiftCard
+                    key={gift.key}
+                    gift={gift}
+                    showPending={showPending}
+                    formationText={gift.edgeCases.emerging}
+                    onReadMore={setModalKey}
+                  />
+                );
+              })}
             </section>
           )}
 
@@ -706,37 +808,39 @@ export default function GiftsResults() {
           )}
 
           {/* ── TRUSTED PERSON CTA (bottom) ──────────────────────── */}
-          <TrustedPersonCTA sticky={false} />
+          {!hasTrustedData && <TrustedPersonCTA sticky={false} />}
         </div>
       </main>
 
       {/* ── PERSISTENT FOOTER CTA ──────────────────────────────────── */}
-      <div className={`cf-results-footer${footerVisible ? " visible" : ""}`}>
-        <div
-          style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: 13,
-            color: C.muted,
-            lineHeight: 1.5,
-          }}
-        >
-          <span
+      {!hasTrustedData && (
+        <div className={`cf-results-footer${footerVisible ? " visible" : ""}`}>
+          <div
             style={{
-              display: "block",
-              fontFamily: "'Barlow Condensed', sans-serif",
-              fontSize: 10,
-              letterSpacing: "0.28em",
-              textTransform: "uppercase",
-              color: C.gold,
-              marginBottom: 2,
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 13,
+              color: C.muted,
+              lineHeight: 1.5,
             }}
           >
-            Complete the picture
-          </span>
-          Results are draft until trusted people weigh in.
+            <span
+              style={{
+                display: "block",
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontSize: 10,
+                letterSpacing: "0.28em",
+                textTransform: "uppercase",
+                color: C.gold,
+                marginBottom: 2,
+              }}
+            >
+              Complete the picture
+            </span>
+            Results are draft until trusted people weigh in.
+          </div>
+          <TrustedPersonCTA sticky={true} />
         </div>
-        <TrustedPersonCTA sticky={true} />
-      </div>
+      )}
 
       {/* ── GIFT PROFILE MODAL ─────────────────────────────────────── */}
       <GiftProfileModal
