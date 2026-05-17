@@ -32,6 +32,7 @@ import { CampaignBanner } from "./components/CampaignBanner";
 import FruitAssessment, { FAStyles } from "./FruitAssessment";
 import GiftsProcessing from "./components/field-guide/gifts/GiftsProcessing";
 import GiftsResults from "./components/field-guide/gifts/GiftsResults";
+import GiftsRecover from "./components/field-guide/gifts/GiftsRecover";
 import FormationPictureView from "./components/field-guide/gifts/FormationPictureView";
 import TrustedPersonInvitationFlow from "./components/field-guide/gifts/TrustedPersonInvitationFlow";
 import TrustedPersonAssessment from "./components/field-guide/gifts/TrustedPersonAssessment";
@@ -1859,6 +1860,7 @@ export default function App() {
         <Route path="/field-guide/gifts/results" element={<GiftsResults />} />
         <Route path="/field-guide/gifts/invite" element={<TrustedPersonInvitationFlow />} />
         <Route path="/field-guide/gifts/observe/:token" element={<TrustedPersonAssessment />} />
+        <Route path="/field-guide/gifts/recover" element={<GiftsRecover />} />
         <Route path="/field-guide/formation" element={<FormationPictureView />} />
 
         {/* 7-Day Challenge routes */}

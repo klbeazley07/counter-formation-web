@@ -186,8 +186,23 @@ export function hasInProgressAssessment(progress = loadProgress()) {
 }
 
 // True when a completed self-assessment exists in storage.
+// Also handles the edge case where all questions were answered but
+// completedAt was not written (e.g. browser killed before the processing
+// screen finished). Repairs the timestamp in-place when detected.
 export function hasCompletedAssessment(progress = loadProgress()) {
-  return Boolean(progress?.completedAt);
+  if (!progress) return false;
+  if (progress.completedAt) return true;
+  if (progress.qIdx >= TOTAL_QUESTIONS) {
+    try {
+      const repaired = {
+        ...progress,
+        completedAt: progress.lastUpdatedAt || new Date().toISOString(),
+      };
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(repaired));
+    } catch { /* quota / private mode */ }
+    return true;
+  }
+  return false;
 }
 
 // Convenience: write a single response and return the new progress object.

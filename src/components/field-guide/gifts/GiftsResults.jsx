@@ -584,7 +584,7 @@ export default function GiftsResults() {
 
   useEffect(() => {
     if (!hasCompleted) {
-      navigate("/field-guide/gifts", { replace: true });
+      navigate("/field-guide/gifts/recover", { replace: true });
     }
   }, [hasCompleted, navigate]);
 
