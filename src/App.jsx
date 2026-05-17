@@ -31,7 +31,6 @@ import { MobileTabBar } from "./components/MobileTabBar";
 import { CampaignBanner } from "./components/CampaignBanner";
 import FruitAssessment, { FAStyles } from "./FruitAssessment";
 import {
-  GiftsIntro,
   GiftsTake,
   GiftsProcessing,
   GiftsResults,
@@ -39,6 +38,7 @@ import {
   GiftsObserve,
   FormationPicture,
 } from "./components/field-guide/gifts/Placeholders";
+import AssessmentIntro from "./components/field-guide/gifts/AssessmentIntro";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1853,8 +1853,8 @@ export default function App() {
         <Route path="/field-guide/devotion-guide" element={<DevotionGuide />} />
         <Route path="/field-guide/fruit-assessment" element={<FruitAssessment />} />
 
-        {/* Spiritual Gifts Assessment routes (placeholders pending Sessions 2-4) */}
-        <Route path="/field-guide/gifts" element={<GiftsIntro />} />
+        {/* Spiritual Gifts Assessment routes */}
+        <Route path="/field-guide/gifts" element={<AssessmentIntro />} />
         <Route path="/field-guide/gifts/take" element={<GiftsTake />} />
         <Route path="/field-guide/gifts/processing" element={<GiftsProcessing />} />
         <Route path="/field-guide/gifts/results" element={<GiftsResults />} />
