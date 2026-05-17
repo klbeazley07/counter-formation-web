@@ -166,9 +166,10 @@ function ExportMode() {
     }
   }, []);
 
-  const selfComplete = selfProgress?.completedAt || selfProgress?.qIdx >= TOTAL_QUESTIONS;
-  const selfPartial = selfProgress && !selfComplete && selfProgress.qIdx > 0;
-  const selfFound = selfComplete || selfPartial;
+  // selfFound = any data at all in localStorage, regardless of completion state
+  const selfFound = !!selfProgress;
+  const selfComplete = selfFound && (selfProgress.completedAt || selfProgress.qIdx >= TOTAL_QUESTIONS);
+  const selfPartial = selfFound && !selfComplete && selfProgress.qIdx > 0;
   const trustedFound = !!trustedData;
 
   function buildSelfUrl() {
@@ -258,7 +259,9 @@ function ExportMode() {
             <StatusBadge ok>
               {selfComplete
                 ? "Completed assessment found"
-                : `In-progress assessment found (question ${selfProgress.qIdx} of ${TOTAL_QUESTIONS})`}
+                : selfPartial
+                  ? `In-progress assessment found (question ${selfProgress.qIdx} of ${TOTAL_QUESTIONS})`
+                  : `Assessment data found (qIdx: ${selfProgress.qIdx})`}
             </StatusBadge>
             <p style={{
               fontFamily: "'Inter', sans-serif",
@@ -269,7 +272,9 @@ function ExportMode() {
             }}>
               {selfComplete
                 ? "Your completed assessment is on this device. Generate a recovery link to import it elsewhere, or go to your results now."
-                : "An in-progress assessment was found. Generate a recovery link to continue on another device."}
+                : selfPartial
+                  ? "An in-progress assessment was found. Generate a recovery link to continue on another device."
+                  : "Assessment data exists on this device but may not be complete. Generate a recovery link to preserve it."}
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: selfUrl ? 20 : 0 }}>
               {selfComplete && (
@@ -439,29 +444,50 @@ function ExportMode() {
                 localStorage is empty -- no data at all on this device.
               </p>
             ) : (
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                {diagKeys.map(({ key, size }) => (
-                  <div key={key} style={{ display: "flex", gap: 16, alignItems: "baseline" }}>
-                    <span style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: 12,
-                      color: key.startsWith("cf-") ? C.ivory : C.dim,
-                      fontWeight: key.startsWith("cf-") ? 600 : 400,
-                      wordBreak: "break-all",
-                      flex: 1,
-                    }}>
-                      {key}
-                    </span>
-                    <span style={{
-                      fontFamily: "'Barlow Condensed', sans-serif",
-                      fontSize: 11,
-                      color: C.dim,
-                      flexShrink: 0,
-                    }}>
-                      {size.toLocaleString()} chars
-                    </span>
-                  </div>
-                ))}
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {diagKeys.map(({ key, size }) => {
+                  let detail = null;
+                  if (key === STORAGE_KEY) {
+                    try {
+                      const parsed = JSON.parse(localStorage.getItem(key));
+                      detail = `qIdx: ${parsed?.qIdx ?? "?"} / ${TOTAL_QUESTIONS} | completedAt: ${parsed?.completedAt ? "yes" : "null"}`;
+                    } catch { detail = "parse error"; }
+                  }
+                  return (
+                    <div key={key} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      <div style={{ display: "flex", gap: 16, alignItems: "baseline" }}>
+                        <span style={{
+                          fontFamily: "'Inter', sans-serif",
+                          fontSize: 12,
+                          color: key.startsWith("cf-") ? C.ivory : C.dim,
+                          fontWeight: key.startsWith("cf-") ? 600 : 400,
+                          wordBreak: "break-all",
+                          flex: 1,
+                        }}>
+                          {key}
+                        </span>
+                        <span style={{
+                          fontFamily: "'Barlow Condensed', sans-serif",
+                          fontSize: 11,
+                          color: C.dim,
+                          flexShrink: 0,
+                        }}>
+                          {size.toLocaleString()} chars
+                        </span>
+                      </div>
+                      {detail && (
+                        <span style={{
+                          fontFamily: "'Inter', sans-serif",
+                          fontSize: 11,
+                          color: C.gold,
+                          paddingLeft: 2,
+                        }}>
+                          {detail}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             )}
             <p style={{
