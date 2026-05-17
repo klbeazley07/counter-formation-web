@@ -14,6 +14,10 @@ import { detectGaps } from "../../../utils/gapDetection";
 import { GiftProfileModal } from "./GiftConstellation";
 import { ScriptureRef } from "../../../ScriptureRef";
 import { useFormationProfile } from "../../../hooks/useFormationProfile";
+import { supabase } from "../../../utils/supabaseClient";
+import { getSessionId } from "../../../utils/giftsSessionId";
+
+const TRUSTED_RESPONSES_KEY = "cf-gifts-trusted-responses";
 
 const RESULTS_STORAGE_KEY = "cf-gifts-results";
 
@@ -582,17 +586,49 @@ export default function GiftsResults() {
   const progress = useMemo(() => loadProgress(), []);
   const hasCompleted = useMemo(() => hasCompletedAssessment(progress), [progress]);
 
+  // Supabase-merged trusted responses. Starts null (use localStorage); populated
+  // after the async fetch completes and is written back to localStorage.
+  const [mergedTrusted, setMergedTrusted] = useState(null);
+
   useEffect(() => {
     if (!hasCompleted) {
       navigate("/field-guide/gifts/recover", { replace: true });
     }
   }, [hasCompleted, navigate]);
 
+  // Fetch observer responses from Supabase and merge with whatever is in localStorage.
+  useEffect(() => {
+    if (!hasCompleted || !supabase) return;
+    const sessionId = getSessionId();
+    if (!sessionId) return;
+    supabase
+      .from("gifts_trusted_responses")
+      .select("token, responses, completed_at")
+      .eq("session_id", sessionId)
+      .then(({ data, error }) => {
+        if (error || !data?.length) return;
+        // Build merged shape: { [token]: { responses, completedAt } }
+        let base = {};
+        try {
+          base = JSON.parse(localStorage.getItem(TRUSTED_RESPONSES_KEY) || "{}");
+        } catch { /* ignore */ }
+        const merged = { ...base };
+        for (const row of data) {
+          if (!merged[row.token]) {
+            merged[row.token] = { responses: row.responses, completedAt: row.completed_at };
+          }
+        }
+        // Write back so localStorage is kept in sync.
+        try { localStorage.setItem(TRUSTED_RESPONSES_KEY, JSON.stringify(merged)); } catch { /* ignore */ }
+        setMergedTrusted(merged);
+      });
+  }, [hasCompleted]);
+
   const { scores, totalTrustedPersons, hasTrustedData } = useMemo(() => {
     if (!hasCompleted || !progress)
       return { scores: {}, totalTrustedPersons: 0, hasTrustedData: false };
-    return computeScores(progress);
-  }, [hasCompleted, progress]);
+    return computeScores(progress, mergedTrusted);
+  }, [hasCompleted, progress, mergedTrusted]);
 
   const gaps = useMemo(() => {
     if (!hasTrustedData || Object.keys(scores).length === 0) return {};

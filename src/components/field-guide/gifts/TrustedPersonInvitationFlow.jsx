@@ -4,6 +4,8 @@
 
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "../../../utils/supabaseClient";
+import { getSessionId } from "../../../utils/giftsSessionId";
 
 /* ─── TOKENS ────────────────────────────────────────────────────────────── */
 
@@ -85,6 +87,20 @@ function saveInviteSent(pairings) {
     }
     localStorage.setItem(TRUSTED_PERSONS_KEY, JSON.stringify(merged));
   } catch { /* ignore */ }
+
+  // Background write to Supabase so observer responses can be attributed cross-device.
+  if (supabase) {
+    const sessionId = getSessionId();
+    if (sessionId) {
+      const rows = pairings.map((p) => ({
+        token: p.token,
+        session_id: sessionId,
+        person_name: p.name || null,
+        relationship: p.relationship || null,
+      }));
+      supabase.from("gifts_trusted_tokens").upsert(rows, { onConflict: "token" }).then(() => {});
+    }
+  }
 }
 
 /* ─── RELATIONSHIP OPTIONS ──────────────────────────────────────────────── */

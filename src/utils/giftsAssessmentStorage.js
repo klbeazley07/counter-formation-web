@@ -1,8 +1,9 @@
 // Spiritual Gifts Assessment -- storage shape, question manifest, and helpers.
-// Single source of truth for the in-progress and completed assessment state.
-// All persistence is via localStorage for v1 (no backend).
+// Primary persistence is localStorage; Supabase is a fire-and-forget backup.
 
 import { gifts } from "../data/gifts";
+import { supabase } from "./supabaseClient";
+import { getSessionId } from "./giftsSessionId";
 
 export const STORAGE_KEY = "cf-gifts-self-assessment";
 
@@ -135,6 +136,18 @@ export function saveProgress(progress) {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   } catch {
     // Quota or private mode -- silently fail.
+  }
+  // Background upsert to Supabase -- never blocks the UI.
+  if (supabase) {
+    const sessionId = getSessionId();
+    if (sessionId) {
+      supabase.from("gifts_sessions").upsert({
+        session_id: sessionId,
+        progress: next,
+        completed_at: next.completedAt || null,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "session_id" }).then(() => {});
+    }
   }
   return next;
 }

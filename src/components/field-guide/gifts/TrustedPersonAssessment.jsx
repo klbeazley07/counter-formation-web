@@ -12,6 +12,7 @@ import {
   TRUSTED_RESPONSES_KEY,
   loadTrustedPersons,
 } from "./TrustedPersonInvitationFlow";
+import { supabase } from "../../../utils/supabaseClient";
 
 /* ─── TOKENS ────────────────────────────────────────────────────────────── */
 
@@ -85,6 +86,25 @@ function markCompleted(token, responses) {
     allResponses[token] = { responses, completedAt };
     localStorage.setItem(TRUSTED_RESPONSES_KEY, JSON.stringify(allResponses));
   } catch { /* ignore */ }
+
+  // Background write to Supabase. Look up the inviter's session_id from gifts_trusted_tokens
+  // so the response can be read cross-device from GiftsResults.
+  if (supabase) {
+    supabase
+      .from("gifts_trusted_tokens")
+      .select("session_id")
+      .eq("token", token)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!data?.session_id) return; // token predates Supabase integration -- skip
+        supabase.from("gifts_trusted_responses").upsert({
+          token,
+          session_id: data.session_id,
+          responses,
+          completed_at: completedAt,
+        }, { onConflict: "token" }).then(() => {});
+      });
+  }
 }
 
 /* ─── HELPERS ───────────────────────────────────────────────────────────── */
