@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { QUESTIONS, FRUITS, FRUIT_ORDER, CLUSTER_THRESHOLD, SCALE_OPTIONS } from "./fruitAssessmentData";
 import { useFormationProfile } from "./hooks/useFormationProfile";
 import NextStep from "./components/NextStep";
+import { hasCompletedAssessment } from "./utils/giftsAssessmentStorage";
 
 /* ─── CONSTANTS ──────────────────────────────────────────────────────── */
 
@@ -830,6 +831,7 @@ function ResultsScreen({ scores, primaryFruit, cluster, previousResult, isDeltaM
   const has7Day = (() => {
     try { return !!localStorage.getItem("cf-challenge-progress"); } catch { return false; }
   })();
+  const giftsComplete = hasCompletedAssessment();
 
   return (
     <div style={{ background: C.bg, minHeight: "100vh", paddingBottom: 96 }}>
@@ -879,6 +881,26 @@ function ResultsScreen({ scores, primaryFruit, cluster, previousResult, isDeltaM
         </div>
 
         <NextStep context="assessment-complete" />
+
+        {/* Spiritual Gifts cross-link */}
+        {!giftsComplete && (
+          <div style={{ marginTop: 48, padding: "32px 40px", border: `1px solid rgba(255,255,255,0.07)`, background: "#110F0D" }}>
+            <div style={{ fontFamily: F.brand, fontSize: 11, letterSpacing: "0.32em", color: C.gold, textTransform: "uppercase", marginBottom: 12 }}>
+              Complete the picture
+            </div>
+            <p style={{ fontFamily: F.body, fontSize: 15, lineHeight: 1.8, color: C.ivoryDim, margin: "0 0 20px" }}>
+              The Formation Picture integrates your fruit results with your Spiritual
+              Gifts results. Take the Spiritual Gifts Assessment to see both
+              dimensions of the Spirit's work in and through you.
+            </p>
+            <Link
+              to="/field-guide/gifts"
+              style={{ display: "inline-block", background: "transparent", color: C.gold, border: `1px solid rgba(201,168,76,0.30)`, fontFamily: F.brand, fontSize: 12, letterSpacing: "0.22em", textTransform: "uppercase", textDecoration: "none", padding: "12px 24px" }}
+            >
+              Take the Spiritual Gifts Assessment →
+            </Link>
+          </div>
+        )}
 
       </div>
     </div>

@@ -12,6 +12,7 @@ import {
 import { computeScores } from "../../../utils/scoreCompute";
 import { detectGaps } from "../../../utils/gapDetection";
 import { GiftProfileModal } from "./GiftConstellation";
+import { useFormationProfile } from "../../../hooks/useFormationProfile";
 
 const RESULTS_STORAGE_KEY = "cf-gifts-results";
 
@@ -573,6 +574,8 @@ export default function GiftsResults() {
   const heroRef = useRef(null);
   const [modalKey, setModalKey] = useState(null);
   const [footerVisible, setFooterVisible] = useState(false);
+  const { profile } = useFormationProfile();
+  const fruitComplete = profile?.assessment?.completedAt != null;
 
   const progress = useMemo(() => loadProgress(), []);
   const hasCompleted = useMemo(() => hasCompletedAssessment(progress), [progress]);
@@ -809,6 +812,62 @@ export default function GiftsResults() {
 
           {/* ── TRUSTED PERSON CTA (bottom) ──────────────────────── */}
           {!hasTrustedData && <TrustedPersonCTA sticky={false} />}
+
+          {/* ── FRUIT ASSESSMENT CROSS-LINK ──────────────────────── */}
+          {!fruitComplete && (
+            <div
+              style={{
+                maxWidth: 760,
+                margin: "0 auto 80px",
+                padding: "32px 40px",
+                border: `1px solid ${C.border}`,
+                background: C.bgCardSoft,
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "'Barlow Condensed', sans-serif",
+                  fontSize: 11,
+                  letterSpacing: "0.36em",
+                  textTransform: "uppercase",
+                  color: C.gold,
+                  marginBottom: 12,
+                }}
+              >
+                Complete the picture
+              </div>
+              <p
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: 15,
+                  lineHeight: 1.8,
+                  color: C.muted,
+                  margin: "0 0 24px",
+                }}
+              >
+                The Formation Picture integrates your gifts with your Fruit of
+                the Spirit results. Take the Fruit of the Spirit Assessment to
+                see both dimensions of the Spirit's work in and through you.
+              </p>
+              <Link
+                to="/field-guide/scripture-before-scroll"
+                style={{
+                  display: "inline-block",
+                  background: "transparent",
+                  color: C.gold,
+                  border: `1px solid ${C.goldDim}`,
+                  fontFamily: "'Michroma', sans-serif",
+                  fontSize: 12,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  textDecoration: "none",
+                  padding: "12px 24px",
+                }}
+              >
+                Take the Fruit of the Spirit Assessment →
+              </Link>
+            </div>
+          )}
         </div>
       </main>
 
