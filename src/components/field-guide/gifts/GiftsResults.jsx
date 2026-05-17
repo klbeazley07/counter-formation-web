@@ -12,6 +12,7 @@ import {
 import { computeScores } from "../../../utils/scoreCompute";
 import { detectGaps } from "../../../utils/gapDetection";
 import { GiftProfileModal } from "./GiftConstellation";
+import { ScriptureRef } from "../../../ScriptureRef";
 import { useFormationProfile } from "../../../hooks/useFormationProfile";
 
 const RESULTS_STORAGE_KEY = "cf-gifts-results";
@@ -356,7 +357,7 @@ function QuietSection({ quietGifts, charismaticNotPresent }) {
         These are gifts where your responses do not indicate strong current
         activity. This is information, not deficiency. The body is built by many
         gifts, and the Spirit gives different gifts to different believers
-        according to his will (1 Corinthians 12:11). Some of these gifts are
+        according to his will (<ScriptureRef reference="1 Corinthians 12:11" text="All these are empowered by one and the same Spirit, who apportions to each one individually as he wills." />). Some of these gifts are
         also commands that apply to every Christian regardless of giftedness --
         hospitality, mercy, serving, giving, evangelism -- and the call to
         practice them remains. The picture you see is of this season. The
@@ -470,8 +471,9 @@ function CharismaticSection({ activeCharismatic, emergingCharismatic, onReadMore
       >
         These two gifts are assessed differently from the core gifts -- on the
         basis of direct personal experience rather than inclination and
-        community confirmation. They are given to some believers, not all (1
-        Corinthians 12:30). The continuationist position held by this
+        community confirmation. They are given to some believers, not all{" "}
+        (<ScriptureRef reference="1 Corinthians 12:30" text="Do all possess gifts of healing? Do all speak with tongues? Do all interpret?" />).
+        {" "}The continuationist position held by this
         instrument is that both remain active and available; the absence of
         either is no commentary on your faith or the Spirit's presence in you.
       </p>

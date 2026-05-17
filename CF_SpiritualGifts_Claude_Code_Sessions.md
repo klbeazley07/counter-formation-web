@@ -562,7 +562,26 @@ End with: (1) screenshot of the full Formation Picture view with both assessment
 
 ---
 
-## SESSION 9 (OPTIONAL) -- ScriptureRef Retrofit
+## SESSION 9 (OPTIONAL) -- ScriptureRef Retrofit  **[STATUS: COMPLETE -- 2026-05-17]**
+
+**What was built:**
+- `GiftsResults.jsx` -- added `ScriptureRef` import; wrapped `1 Corinthians 12:11` in the `QuietSection` explanatory paragraph and `1 Corinthians 12:30` in the `CharismaticSection` explanatory paragraph. Both carry the full ESV verse text in the `text` prop so the popover renders without an extra data fetch. (2 new ScriptureRef instances)
+- `FormationPictureView.jsx` -- added `ScriptureRef` import; in `FruitCard`, replaced the plain `{fruit.scripture.reference}` span with `<ScriptureRef reference={...} text={...} />`. The verse text was already available on the fruit object, so no data change was needed. (1 new ScriptureRef instance)
+- `AssessmentIntro.jsx` -- no scripture references present; no change.
+- `GiftConstellation.jsx` -- already using `ScriptureRef` inside the `BlockQuote` helper for all structured scripture fields (definition anchor, manifestation witnesses, stewardship charge). The `PreviewPanel` shows `gift.scriptureAnchor` as plain text inside a `pointerEvents: "none"` container, so wrapping it with ScriptureRef would have no effect; left as-is.
+
+**Structural deviations from original plan:** None. The INTEGRATION_PARAGRAPHS static prose in `FormationPictureView.jsx` contains inline references ("Galatians 5:22-23", "First Corinthians 12") that are embedded in plain string constants rather than JSX. Converting those would require restructuring the string array into JSX fragments -- beyond the retrofit scope. Those references are not interactive clickable citations; they function as prose attribution.
+
+**ScriptureRef count added per file:**
+- AssessmentIntro.jsx: 0
+- GiftConstellation.jsx: 0 (already complete)
+- GiftsResults.jsx: 2
+- FormationPictureView.jsx: 1
+- **Total: 3**
+
+---
+
+**Original prompt (kept for context):**
 
 ```
 This is a small cleanup session. Apply the existing ScriptureRef component to any scripture references in the new gifts assessment files that are not already wrapped.

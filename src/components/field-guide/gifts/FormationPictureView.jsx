@@ -13,6 +13,7 @@ import {
 } from "../../../utils/giftsAssessmentStorage";
 import { computeScores } from "../../../utils/scoreCompute";
 import { getIntegratedReflection } from "../../../utils/integratedReflection";
+import { ScriptureRef } from "../../../ScriptureRef";
 
 /* ─── TOKENS ──────────────────────────────────────────────────────── */
 
@@ -137,7 +138,7 @@ function FruitCard({ fruitKey }) {
       >
         {fruit.scripture.text}{" "}
         <span style={{ fontStyle: "normal", fontSize: 13, letterSpacing: "0.06em" }}>
-          -- {fruit.scripture.reference}
+          -- <ScriptureRef reference={fruit.scripture.reference} text={fruit.scripture.text} />
         </span>
       </p>
     </div>
