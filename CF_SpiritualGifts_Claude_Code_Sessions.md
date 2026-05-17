@@ -385,7 +385,20 @@ End with: (1) walkthrough of the invitation flow with a test entry, (2) the gene
 
 ---
 
-## SESSION 7 -- Full Scoring + Gap Detection + Results Update
+## SESSION 7 -- Full Scoring + Gap Detection + Results Update  **[STATUS: COMPLETE -- 2026-05-16]**
+
+**What was built:**
+- `src/utils/scoreCompute.js` -- three-stream composite scoring per core gift: inclination (mean of 3 questions, null=50) × 0.30 + fruitfulness × 0.30 + confirmation (mean of non-null trusted-person responses) × 0.40. Falls back to 50/50 with `pendingConfirmation: true` when no trusted data. Flags `inclinationLowConfidence` when 2+ inclination questions null; `fruitfulnessSkipped` when fruitfulness null. Tiers: `active` (composite ≥ 70 + confirmationCount ≥ 2), `activePendingConfirmation` (composite ≥ 70 but < 2 confirmed), `emerging` (50-69), `quiet` (<50). Charismatic scoring unchanged (directExperience + fruitfulness threshold). Reads `"cf-gifts-trusted-responses"` from localStorage (the aggregated key written by TrustedPersonAssessment). Returns `{ scores, totalTrustedPersons, hasTrustedData }`.
+- `src/utils/gapDetection.js` -- `detectGaps(scores)` returns `{ [giftKey]: { inclinationConfirmationGap, confirmationInclinationGap } }` for core gifts with confirmationCount ≥ 2. Inclination-confirmation gap: inclination ≥ 70 AND confirmation ≤ 40. Confirmation-inclination gap: confirmation ≥ 70 AND inclination ≤ 50.
+- `GiftsResults.jsx` updated -- replaces internal `computeScores` with `scoreCompute.js`; adds "UPDATED with input from N trusted person(s)" banner (gold accent) in place of the subhead when `hasTrustedData`; hides the trusted-person CTA block and sticky footer once trusted data is present; renders a "WORTH PAYING ATTENTION TO" gap section between Active and Emerging with gold-bordered cards showing `inclinationConfirmationGap` / `confirmationInclinationGap` edge-case copy; `activePendingConfirmation` gifts render in the Active section with pending badge; confirmed gifts (confirmationCount ≥ 2) in Active render without badge; charismatic gifts never show pending badge.
+
+**Structural deviations from original plan:**
+- *Charismatic gifts: no pending badge.* The spec does not address whether charismatic gifts should carry a pending badge. Since the trusted-person flow covers only core gifts, a "pending confirmation" badge on charismatic gifts would be misleading. Session 7 passes `showPending={false}` to charismatic gift cards.
+- *Trusted-person CTA and sticky footer hidden after confirmation.* The spec says to update the banner and remove badges but does not explicitly say to hide the invitation CTA once trusted data exists. This was added as a natural inference: once the user has trusted responses integrated, prompting them to send more invitations is redundant. The CTA and sticky footer are hidden when `hasTrustedData === true`.
+
+---
+
+**Original prompt (kept for context):**
 
 ```
 Read /specs/CF_SpiritualGifts_Spec.md Section 10 in full.
