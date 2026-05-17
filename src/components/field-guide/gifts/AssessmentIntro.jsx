@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import GiftConstellation from "./GiftConstellation";
+import {
+  loadProgress,
+  clearProgress,
+  hasInProgressAssessment,
+  TOTAL_QUESTIONS,
+} from "../../../utils/giftsAssessmentStorage";
 
 const C = {
   bg: "#06050A",
@@ -188,6 +194,19 @@ function WhatThisIsNotModal({ open, onClose }) {
 export default function AssessmentIntro() {
   const [modalOpen, setModalOpen] = useState(false);
   const [showConstellation, setShowConstellation] = useState(false);
+  const [savedProgress, setSavedProgress] = useState(null);
+
+  useEffect(() => {
+    const sp = loadProgress();
+    if (sp && hasInProgressAssessment(sp)) setSavedProgress(sp);
+  }, []);
+
+  function handleStartOver() {
+    clearProgress();
+    setSavedProgress(null);
+  }
+
+  const resumeAt = savedProgress ? Math.min(savedProgress.qIdx + 1, TOTAL_QUESTIONS) : 0;
 
   const paragraphs = [
     "A spiritual gift is not a personality trait. It is the Holy Spirit at work through a believer, manifesting his presence and power in ways that build up the body of Christ. This assessment does not tell you who you are. It surfaces where the Spirit is currently moving through you, a picture of this season rather than a permanent label.",
@@ -336,6 +355,73 @@ export default function AssessmentIntro() {
               </p>
             </div>
 
+            {/* Resume banner */}
+            {savedProgress && (
+              <div
+                style={{
+                  maxWidth: 600,
+                  margin: "0 auto 36px",
+                  padding: "18px 24px",
+                  border: `1px solid ${C.goldDim}`,
+                  background: "rgba(201,168,76,0.06)",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 14,
+                }}
+              >
+                <div>
+                  <div
+                    style={{
+                      fontFamily: "'Barlow Condensed', sans-serif",
+                      fontSize: 10,
+                      letterSpacing: "0.32em",
+                      textTransform: "uppercase",
+                      color: C.gold,
+                      marginBottom: 4,
+                    }}
+                  >
+                    Saved progress
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontStyle: "italic",
+                      fontSize: 17,
+                      color: C.ivory,
+                    }}
+                  >
+                    You're on question {resumeAt} of {TOTAL_QUESTIONS}.
+                  </div>
+                </div>
+                <button
+                  onClick={handleStartOver}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    color: C.muted,
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: 12,
+                    letterSpacing: "0.06em",
+                    cursor: "pointer",
+                    borderBottom: `1px solid ${C.border}`,
+                    paddingBottom: 2,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = C.ivory;
+                    e.currentTarget.style.borderBottomColor = C.goldDim;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = C.muted;
+                    e.currentTarget.style.borderBottomColor = C.border;
+                  }}
+                >
+                  Start over
+                </button>
+              </div>
+            )}
+
             {/* CTAs */}
             <div
               style={{
@@ -365,7 +451,7 @@ export default function AssessmentIntro() {
                   textAlign: "center",
                 }}
               >
-                Begin Assessment
+                {savedProgress ? "Resume Assessment" : "Begin Assessment"}
               </Link>
               <button
                 onClick={() => setShowConstellation(true)}

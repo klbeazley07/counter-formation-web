@@ -181,7 +181,25 @@ End with: (1) live URL of the Constellation, (2) confirmation that hover/tap pre
 
 ---
 
-## SESSION 4 -- Assessment Question Flow
+## SESSION 4 -- Assessment Question Flow  **[STATUS: COMPLETE -- 2026-05-16]**
+
+**What was built:**
+- `src/utils/giftsAssessmentStorage.js` -- single source of truth for the assessment's localStorage shape, the ordered 72-entry question manifest, the two five-point scales (inclination + frequency), and helpers (`loadProgress`, `saveProgress`, `clearProgress`, `emptyProgress`, `recordResponse`, `getStoredResponseValue`, `hasInProgressAssessment`, `hasCompletedAssessment`). Storage key `cf-gifts-self-assessment`. The `computeInclinationPreview` helper runs on every save so the processing screen has pre-computed per-gift means available (Session 6 still computes the authoritative score).
+- `src/components/field-guide/gifts/AssessmentProgress.jsx` -- thin Champagne Gold horizontal bar, no percentage text. ARIA-attributed for screen readers.
+- `src/components/field-guide/gifts/AssessmentTransition.jsx` -- exports `GiftTransition` (the 2.2s next-gift screen with category eyebrow, gold rule, and Cormorant italic gift name, click/Enter/Space to skip ahead) and `CharismaticIntro` (the framing screen before tongues/interpretation begins, with the spec Section 8.3 copy and a CONTINUE button).
+- `src/components/field-guide/gifts/AssessmentQuestion.jsx` -- the full single-question-per-screen flow at `/field-guide/gifts/take`. Drives an internal state machine (`question` / `gift-transition` / `charismatic-intro`), reads/hydrates from localStorage on mount, persists on every response via a `useEffect` save, and routes to `/field-guide/gifts/processing` after the 72nd question. Layout: progress bar + category eyebrow at top, gift eyebrow `WISDOM -- 1 OF 3` (or `WISDOM -- FRUITFULNESS` / `TONGUES -- DIRECT EXPERIENCE`), Cormorant italic question, 5 stacked scale buttons with leading 01..05 indices and a trailing dot indicator that fills gold on select, then `← Previous` and `Skip this question →` nav links, and a small `Save and return later` link at the very bottom. Tap-to-advance with a 180ms "selected" beat plus the 220ms slide-out, then auto-advance to next question (or transition screen, or charismatic intro). Keyboard: 1-5 to select, Enter/ArrowRight to advance, ArrowLeft to back up.
+- `src/components/field-guide/gifts/AssessmentIntro.jsx` updated to detect in-progress assessments via `hasInProgressAssessment`. When a saved run is present, a "Saved progress -- You're on question N of 72" banner appears above the CTAs, the primary CTA text swaps to `RESUME ASSESSMENT`, and a `Start over` link clears storage on click.
+- `App.jsx` wired -- the `/field-guide/gifts/take` route now points to `AssessmentQuestion`. The `GiftsTake` placeholder import was removed.
+
+**Structural deviations from original plan:**
+- *No explicit Next button.* The spec layout (Section 8.3) lists the five scale buttons, then `← Previous` and `Skip this question →` -- it does not include a Next/Continue button. Implemented as tap-to-advance with a brief 180ms selection beat so the user can still see their answer register before the transition. Keyboard users press Enter to confirm after selecting with 1-5. Previous remains available to correct a mis-tap.
+- *Eyebrow format slightly tightened.* The spec example shows `TEACHING -- 1 OF 3`. For fruitfulness and charismatic direct-experience questions there is no clean `N OF M` pattern, so those use `TEACHING -- FRUITFULNESS` and `TONGUES -- DIRECT EXPERIENCE` respectively, with a small `MINISTRY` (or other category) micro-eyebrow shown above the progress bar. The numeric pattern is preserved for inclination questions only, matching the spec example.
+- *Eyebrows use Barlow Condensed, not Michroma.* The spec calls for "Michroma small caps" but the rest of the Field Guide assessments and AssessmentIntro use Barlow Condensed for the small-caps eyebrows (Michroma is reserved for the CF wordmark and major display moments). Stayed with Barlow Condensed for visual consistency across the assessment.
+- *Gift-to-gift transition is 2.2s, click-to-skip enabled.* The spec called for "2-3 seconds of pause." Set to 2200ms with click/Enter/Space dismissing immediately so a user moving quickly is not blocked.
+
+---
+
+**Original prompt (kept for context):**
 
 ```
 Read /specs/CF_SpiritualGifts_Spec.md Sections 8.3, 8.4, 10.1-10.2.
