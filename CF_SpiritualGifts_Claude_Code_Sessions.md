@@ -242,7 +242,22 @@ End with: (1) screenshot of one inclination question screen, (2) screenshot of o
 
 ---
 
-## SESSION 5 -- Processing Screen + Results Screen (Initial Version)
+## SESSION 5 -- Processing Screen + Results Screen (Initial Version)  **[STATUS: COMPLETE -- 2026-05-16]**
+
+**What was built:**
+- `src/components/field-guide/gifts/GiftsProcessing.jsx` -- processing screen at `/field-guide/gifts/processing`. Hero Black background, slowly rotating Champagne Gold compass-anchor SVG (8-point constellation with outer ring, mid ring, cross arms, diagonal arms, and cardinal/diagonal points), Cormorant italic copy fading in at 1s over 1.8s: "Weighing your responses. Looking at the patterns. The Spirit's work in you is the substance of this picture; what follows is a glimpse, not a verdict." Auto-transitions to `/field-guide/gifts/results` after 4.8 seconds via `useEffect` / `setTimeout`.
+- `src/components/field-guide/gifts/GiftsResults.jsx` -- initial results screen at `/field-guide/gifts/results`. Scores computed from localStorage on mount using no-confirmation formula (inclination × 0.50 + fruitfulness × 0.50, null responses treated as 50). Four display sections: Active gifts (composite ≥ 70), Emerging gifts (composite 50-69), Charismatic gifts (direct-experience + fruitfulness scoring per Spec Section 10.5), and Quiet section (composite < 50 + charismatic Not Present). Each Active/Emerging card shows category eyebrow, Cormorant gift name, italic essence, first paragraph of `formationOutput.active` (Active) or `edgeCases.emerging` (Emerging), a "pending confirmation" badge, and a "Read more →" button opening `GiftProfileModal`. Quiet section shows the verbatim spec explanatory paragraph plus an accordion list where each gift expands to show `edgeCases.quiet` copy. Trusted-person invitation CTA at page bottom plus a persistent fixed footer bar that slides up once the user scrolls past the hero section (IntersectionObserver). Results snapshot saved to localStorage under `cf-gifts-results`. Redirect to `/field-guide/gifts` if no completed assessment in storage.
+- `src/components/field-guide/gifts/GiftConstellation.jsx` -- `GiftProfileModal` exported (was unexported before); Results screen imports it directly for the "Read more" flow.
+- `App.jsx` -- `GiftsProcessing` and `GiftsResults` now import from the real components; `GiftsInvite`, `GiftsObserve`, and `FormationPicture` remain on Placeholders until Sessions 6 and 8.
+
+**Structural deviations from original plan:**
+- *Charismatic section separate from three-tier sections.* The spec places charismatic gifts in their own section distinct from Active/Emerging/Quiet (they use a different scoring basis). The "not present" charismatic gifts fold into the Quiet section's accordion list rather than a separate "Not Present" tier, keeping the Quiet section as the single de-emphasized zone.
+- *Quiet section does not break out Active/Emerging charismatic into the core tier sections.* Active and Emerging charismatic gifts appear only in the Charismatic section, not interspersed with core Active/Emerging tiers. This keeps the scoring differences clear to the user.
+- *No-confirmation scoring produces all "pending confirmation" badges.* All gifts in Session 5 carry the pending badge since no trusted-person data exists yet. The badge and the "Results are draft" callout both prime the user for the trusted-person flow without obscuring the formation content.
+
+---
+
+**Original prompt (kept for context):**
 
 ```
 Read /specs/CF_SpiritualGifts_Spec.md Sections 8.4, 8.5, 10.3 (tier classification).

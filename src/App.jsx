@@ -30,9 +30,9 @@ import { SiteFooter } from "./components/SiteFooter";
 import { MobileTabBar } from "./components/MobileTabBar";
 import { CampaignBanner } from "./components/CampaignBanner";
 import FruitAssessment, { FAStyles } from "./FruitAssessment";
+import GiftsProcessing from "./components/field-guide/gifts/GiftsProcessing";
+import GiftsResults from "./components/field-guide/gifts/GiftsResults";
 import {
-  GiftsProcessing,
-  GiftsResults,
   GiftsInvite,
   GiftsObserve,
   FormationPicture,

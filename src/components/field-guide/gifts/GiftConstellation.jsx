@@ -162,7 +162,7 @@ function ConstellationPoint({ giftKey, pos, isHovered, isPairedToHover, onEnter,
 
 /* ─── GIFT PROFILE MODAL ──────────────────────────────────────────── */
 
-function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
+export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
   useBodyScrollLock(!!giftKey);
   useEscape(onClose, !!giftKey);
   const scrollRef = useRef(null);
