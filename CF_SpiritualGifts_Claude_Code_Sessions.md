@@ -66,7 +66,19 @@ End by giving me: (1) confirmation that the index.js validator passed (build suc
 
 ---
 
-## SESSION 2 -- Assessment Intro Screen + Modal
+## SESSION 2 -- Assessment Intro Screen + Modal  **[STATUS: COMPLETE -- 2026-05-16]**
+
+**What was built:**
+- `src/components/field-guide/gifts/AssessmentIntro.jsx` -- full intro screen at `/field-guide/gifts` with Cormorant Garamond italic hero, three prose paragraphs framing the gift definition + three-stream methodology + trusted-person flow (composed from spec Sections 2-3 since 8.1 only listed topics), the time-required callout, primary `BEGIN ASSESSMENT` button, and secondary `Explore the gifts first →` text link
+- `WhatThisIsNotModal` -- inline component in the same file, accessible modal with the three numbered points verbatim from spec Section 8.1, dismissible via close button / outside click / escape key, with body scroll lock while open
+- `ConstellationPlaceholder` -- inline component for the secondary CTA's state swap; replaced by the real visualization in Session 3
+- Modal transitions use CSS keyframes (`cf-fade-in` and `cf-rise-in`) rather than Framer Motion -- see structural deviation below
+
+**Structural deviation from original plan:** The spec proposed Framer Motion for modal transitions. Framer Motion is not installed in this project and the rest of the site uses GSAP + CSS transitions exclusively. Rather than add a new animation dependency for a single modal, we used inline CSS keyframes plus the existing `useBodyScrollLock` + `useEscape` hook patterns from App.jsx. Spec Section 5.6 already hedges "Framer Motion (or equivalent)" -- this is the equivalent. Future modal/transition work in Sessions 3-8 should follow the same convention unless framer-motion is added deliberately.
+
+---
+
+**Original prompt (kept for context):**
 
 ```
 Read /specs/CF_SpiritualGifts_Spec.md Section 8.1 and Section 5 (Constellation overview).
@@ -142,8 +154,8 @@ MOBILE LAYOUT:
 - Horizontal scroll between categories with the labels as anchor points
 
 TECH:
-- Use Framer Motion for the modal transitions and gift expand/collapse
-- Use GSAP for the connection-line reveal animations
+- Use GSAP for the connection-line reveal animations and any scroll-triggered effects
+- Use CSS keyframes + transitions for the modal open/close and the gift hover expand/collapse (matching the Session 2 pattern in AssessmentIntro.jsx -- framer-motion is intentionally not in the dependency graph). Reuse `useBodyScrollLock` and `useEscape` from AssessmentIntro for the modal.
 - ScriptureRef component for all scripture references inside the modal
 - Pull all content from the gifts module (`import { gifts, giftsByKey, giftsByCategory } from '../data/gifts'`)
 
