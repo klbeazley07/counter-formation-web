@@ -465,7 +465,25 @@ End with: (1) test with a user assessment + 2 trusted-person responses, showing 
 
 ---
 
-## SESSION 8 -- Formation Picture Integration + Final Polish
+## SESSION 8 -- Formation Picture Integration + Final Polish  **[STATUS: COMPLETE -- 2026-05-17]**
+
+**What was built:**
+- `src/components/field-guide/gifts/FormationPictureView.jsx` -- full integrated view at `/field-guide/formation`. Prerequisite check shows inline "not ready" screen (with CTAs to missing assessments) when either assessment is incomplete. Four sections: (1) hero, (2) 3 formation fruit cards (lowest-scoring fruits from `profile.assessment.fruits`, showing formation statement first sentence + scripture), (3) active gifts cards from `computeScores`, (4) static integration prose (4 paragraphs on how gifts and fruit function together) + Gemini-generated reflection paragraph in a gold left-bordered callout + next-step section with personalized "Spirit is forming [Top Fruit] in you while moving through you in [Top Gift]" sentence.
+- `src/utils/integratedReflection.js` -- `getIntegratedReflection(fruitKey, fruitName, giftKey, giftName)` with localStorage caching under `"cf-formation-reflection"`; regenerates when fruit/gift pair changes. Returns null on any failure so the view renders without the reflection rather than erroring.
+- `functions/api/reflection.js` -- POST `/api/reflection` Cloudflare Pages Function. Accepts `{ fruitName, giftName }`, returns `{ text }`. Builds CF voice-constrained prompt per session spec (substituting Gemini for Claude as agreed pre-session). Uses `GEMINI_API_KEY` secret already deployed. Copies retry/fallback pattern from `arrow-log.js`.
+- `App.jsx` -- swaps `FormationPicture` placeholder for `FormationPictureView`; `FormationPicture` import removed.
+- `GiftsResults.jsx` -- cross-link callout at bottom when `profile.assessment.completedAt` is null; links to `/field-guide/scripture-before-scroll`.
+- `FruitAssessment.jsx` -- cross-link callout in `ResultsScreen` when `hasCompletedAssessment()` is false; links to `/field-guide/gifts`. Added `import { hasCompletedAssessment } from "./utils/giftsAssessmentStorage"`.
+
+**Structural deviations from original plan:**
+- *Gemini instead of Claude.* Spec Task 2 called for `claude-sonnet-4-20250514` via the Anthropic API. This codebase uses Gemini via Cloudflare Pages Functions exclusively; no Anthropic key is deployed. Decision made pre-session to use Gemini -- agreed with Luke.
+- *Formation fruits, not evidence fruits.* Spec Section 1 is ambiguous ("top 3 fruit results"). Luke confirmed: show the 3 formation fruits (lowest scores, active shaping work), not evidence fruits (highest scores). Aligns with "WHERE THE SPIRIT IS SHAPING YOUR CHARACTER" heading and "forming [Top Fruit] in you" integration line.
+- *Inline prerequisite screen instead of redirect.* Spec says "redirect to the Field Guide index with a banner." Used an inline screen at `/field-guide/formation` instead -- keeps the URL, explains what's missing, provides CTAs. Cleaner than a redirect that would require modifying the Field Guide landing to display state-based banners.
+- *Formation pathways CTA links to `/field-guide`.* Spec says "routes to newsletter signup with a note that formation pathways are coming." No newsletter route exists. The CTA routes to `/field-guide` with an inline note that pathways are in development.
+
+---
+
+**Original prompt (kept for context):**
 
 ```
 Read /specs/CF_SpiritualGifts_Spec.md Sections 11, 15.
