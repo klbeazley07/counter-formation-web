@@ -55,18 +55,21 @@ const STYLES = `
     flex-direction: column;
     gap: 12px;
     width: 100%;
-    max-width: 360px;
+    max-width: 460px;
     margin: 0 auto;
   }
   .cf-ck__btn {
+    flex: 1;
     width: 100%;
     min-height: 56px;
+    padding: 0 22px;
     border-radius: 999px;
     font-family: 'Michroma', sans-serif;
     font-size: 11px;
-    letter-spacing: 0.26em;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     font-weight: 700;
+    white-space: nowrap;
     cursor: pointer;
     transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
   }
@@ -194,7 +197,7 @@ export default function ConvertKitOptIn({ onDone }) {
               onClick={handleAccept}
               disabled={submitting}
             >
-              {submitting ? "Saving..." : "Yes, count me in"}
+              {submitting ? "Saving..." : "Count me in"}
             </button>
             <button
               type="button"
