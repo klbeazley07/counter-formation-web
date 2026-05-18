@@ -14,7 +14,7 @@ import PersonalizedHome from "./PersonalizedHome";
  * visit by the FormationProfileProvider.
  */
 
-function hasMeaningfulActivity(profile) {
+export function hasMeaningfulActivity(profile) {
   if (!profile) return false;
   if (profile.assessment?.completedAt) return true;
   if (profile.gifts?.completedAt) return true;

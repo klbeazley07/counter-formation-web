@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useFormationProfile } from "../hooks/useFormationProfile";
+import { hasMeaningfulActivity } from "./personal/HomeRouter";
 
 const C = {
   bg: "rgba(6,5,10,0.88)",
@@ -75,10 +77,22 @@ function getNavConfig(pathname) {
 export function SiteNav() {
   const location = useLocation();
   const config = getNavConfig(location.pathname);
+  const { profile } = useFormationProfile();
 
   // Piece pages: BackNav inside Identity.jsx handles top nav
   const isPiecePage = /^\/identity\/[a-z]/.test(location.pathname) && location.pathname !== "/identity";
   if (isPiecePage) return null;
+
+  // Show "Welcome" toggle on the dashboard (path /) when the user has activity.
+  // On /welcome we instead surface a "Your formation" link back to the dashboard.
+  const userHasActivity = hasMeaningfulActivity(profile);
+  const isWelcomePath = location.pathname === "/welcome";
+  const isDashboardPath = location.pathname === "/" && userHasActivity;
+  const toggleLink = isWelcomePath
+    ? { label: "Your formation", href: "/" }
+    : isDashboardPath
+      ? { label: "Welcome", href: "/welcome" }
+      : null;
 
   return (
     <nav
@@ -103,6 +117,21 @@ export function SiteNav() {
         <div className="flex items-center gap-4">
           {/* Desktop links */}
           <div className="hidden md:flex gap-8 mr-4 text-[10px] uppercase tracking-widest" style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700 }}>
+            {toggleLink && (
+              <Link
+                to={toggleLink.href}
+                className="transition-colors py-2"
+                style={{
+                  color: C.gold,
+                  textDecoration: "none",
+                  minHeight: "44px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                }}
+              >
+                {toggleLink.label}
+              </Link>
+            )}
             {config.links.map(l => {
               const isHash = l.href.includes("#");
               const isActive = !isHash && location.pathname === l.href;

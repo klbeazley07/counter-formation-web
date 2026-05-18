@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useFormationProfile } from "../hooks/useFormationProfile";
+import { hasMeaningfulActivity } from "./personal/HomeRouter";
 
 const C = { gold: "#C9A84C", ivory: "#FAF8F5" };
 
@@ -54,12 +56,15 @@ function TabIcon({ name, active }) {
 export function MobileTabBar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { profile } = useFormationProfile();
   const [moreOpen, setMoreOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const [forcedActive, setForcedActive] = useState(null);
   const [scrollTab, setScrollTab] = useState("home");
 
   const isHomepage = location.pathname === "/";
+  const userHasActivity = hasMeaningfulActivity(profile);
+  const isWelcomePath = location.pathname === "/welcome";
 
   // Drag-to-close state
   const touchStartY = useRef(0);
@@ -350,6 +355,36 @@ export function MobileTabBar() {
                   </p>
                 </div>
               </Link>
+
+              {userHasActivity && (
+                <Link
+                  to={isWelcomePath ? "/" : "/welcome"}
+                  onClick={() => setMoreOpen(false)}
+                  style={{
+                    display: "flex", alignItems: "center", gap: "14px",
+                    padding: "14px 16px", borderRadius: "12px",
+                    background: "transparent",
+                    border: `1px solid rgba(255,255,255,0.05)`,
+                    textDecoration: "none",
+                  }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    {isWelcomePath ? (
+                      <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    ) : (
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z M12 7v6 M9 10h6"/>
+                    )}
+                  </svg>
+                  <div>
+                    <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "rgba(250,248,245,0.5)", margin: 0 }}>
+                      {isWelcomePath ? "Your Formation" : "Welcome"}
+                    </p>
+                    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "12px", color: "rgba(250,248,245,0.25)", margin: "2px 0 0" }}>
+                      {isWelcomePath ? "Return to your dashboard" : "View the Counter Formation home"}
+                    </p>
+                  </div>
+                </Link>
+              )}
 
             </div>
           </div>

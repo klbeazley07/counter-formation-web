@@ -79,20 +79,15 @@ function capitalize(s) {
 
 const STYLES = `
   .cf-synth {
-    margin: 0 auto;
-    max-width: 720px;
-    padding: 0 24px;
-    margin-top: -48px;
-    position: relative;
-    z-index: 2;
+    width: 100%;
   }
   .cf-synth__card {
     background: var(--cf-obsidian);
     border: 1px solid var(--cf-gold-soft);
     border-radius: var(--cf-radius-card);
-    padding: clamp(28px, 5vw, 44px);
+    padding: 20px 22px 22px;
     position: relative;
-    box-shadow: 0 24px 48px rgba(0,0,0,0.45);
+    overflow: hidden;
   }
   .cf-synth__card::before {
     content: "";
@@ -100,22 +95,18 @@ const STYLES = `
     top: 0; left: 0; right: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--cf-gold-mid), transparent);
-    border-radius: var(--cf-radius-card) var(--cf-radius-card) 0 0;
   }
-  .cf-synth__eyebrow { margin-bottom: 18px; }
+  .cf-synth__eyebrow { margin-bottom: 12px !important; }
   .cf-synth__body {
     font-family: var(--cf-font-devotional);
     font-style: italic;
-    font-size: clamp(17px, 2.4vw, 22px);
-    line-height: 1.65;
+    font-size: 16px;
+    line-height: 1.6;
     color: var(--cf-ivory-82);
     margin: 0;
   }
   @media (max-width: 600px) {
-    .cf-synth__body {
-      font-size: 17px;
-      line-height: 1.7;
-    }
+    .cf-synth__body { font-size: 16px; line-height: 1.65; }
   }
 `;
 

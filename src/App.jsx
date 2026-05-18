@@ -33,7 +33,7 @@ import FruitAssessment, { FAStyles } from "./FruitAssessment";
 import GiftsProcessing from "./components/field-guide/gifts/GiftsProcessing";
 import GiftsResults from "./components/field-guide/gifts/GiftsResults";
 import GiftsRecover from "./components/field-guide/gifts/GiftsRecover";
-import HomeRouter from "./components/personal/HomeRouter";
+import HomeRouter, { hasMeaningfulActivity } from "./components/personal/HomeRouter";
 import FormationPictureView from "./components/field-guide/gifts/FormationPictureView";
 import TrustedPersonInvitationFlow from "./components/field-guide/gifts/TrustedPersonInvitationFlow";
 import TrustedPersonAssessment from "./components/field-guide/gifts/TrustedPersonAssessment";
@@ -1727,6 +1727,8 @@ function ChallengeSlideBar() {
 function MainSite() {
   const mainRef = useRef(null);
   const [isChallengeOpen, setIsChallengeOpen] = useState(false);
+  const { profile } = useFormationProfile();
+  const showReturnLink = hasMeaningfulActivity(profile);
   useBodyScrollLock(isChallengeOpen);
 
   const closeChallenge = useCallback(() => {
@@ -1811,6 +1813,36 @@ function MainSite() {
       <ChallengeModal open={isChallengeOpen} onClose={closeChallenge} />
       <ChallengeSlideBar />
 
+      {showReturnLink && (
+        <Link
+          to="/"
+          style={{
+            position: "fixed",
+            top: "calc(env(safe-area-inset-top) + 20px)",
+            right: 20,
+            zIndex: 60,
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "10px 16px",
+            background: "rgba(14,12,10,0.92)",
+            border: "1px solid rgba(201,168,76,0.3)",
+            borderRadius: 999,
+            fontFamily: "'Barlow Condensed', sans-serif",
+            fontSize: 10,
+            letterSpacing: "0.26em",
+            textTransform: "uppercase",
+            color: "#C9A84C",
+            textDecoration: "none",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+          }}
+        >
+          Return to your formation
+          <span aria-hidden="true">→</span>
+        </Link>
+      )}
+
       <CinematicHero />
       <SectionDivider />
       <ArchitectureSlider />
@@ -1843,6 +1875,7 @@ export default function App() {
       <Routes>
         {/* Main site */}
         <Route path="/" element={<HomeRouter marketingSite={<MainSite />} />} />
+        <Route path="/welcome" element={<MainSite />} />
 
         {/* Field Guide routes */}
         <Route path={`${FG_BASE}`}          element={<FGLanding />} />
