@@ -9,7 +9,23 @@ import { recommendForDashboard } from "../../utils/formationRecommendation";
  * Cormorant italic greeting, one-line formation focus, single gold CTA.
  */
 
-function greetingFor(hour) {
+function firstNameOf(displayName) {
+  if (!displayName || typeof displayName !== "string") return null;
+  const trimmed = displayName.trim();
+  if (!trimmed) return null;
+  const first = trimmed.split(/\s+/)[0];
+  // Capitalize defensively in case the user typed lowercase.
+  return first.charAt(0).toUpperCase() + first.slice(1);
+}
+
+function greetingFor(hour, name) {
+  if (name) {
+    if (hour < 5)  return `Welcome back, ${name}.`;
+    if (hour < 12) return `Good morning, ${name}.`;
+    if (hour < 17) return `Good afternoon, ${name}.`;
+    if (hour < 21) return `Good evening, ${name}.`;
+    return `Welcome back, ${name}.`;
+  }
   if (hour < 5)  return "Welcome back.";
   if (hour < 12) return "Good morning.";
   if (hour < 17) return "Good afternoon.";
@@ -109,7 +125,8 @@ const STYLES = `
 
 export default function DashboardBanner({ profile }) {
   const hour = new Date().getHours();
-  const greeting = greetingFor(hour);
+  const firstName = firstNameOf(profile?.identity?.displayName);
+  const greeting = greetingFor(hour, firstName);
   const focusLine = formatFormationLine(profile);
   const rec = recommendForDashboard(profile);
 

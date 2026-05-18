@@ -1,12 +1,15 @@
 /*
  * SynthesisCard -- short personal note that names where the user is.
  *
- * Phase 1 renders a deterministic synthesis built from profile signals
- * (formation edge, top gift, current armor piece). Phase 3 swaps the body
- * for an AI-generated reflection from functions/api/synthesize.
+ * Phase 3: fetches an AI-generated 2-4 sentence reflection from
+ * /api/synthesize, keyed by a profile signature + today's date so a given
+ * signature regenerates at most once per day. Falls back gracefully to the
+ * rule-based copy on network error or when the profile has no signal yet.
  */
 
+import { useEffect, useRef, useState } from "react";
 import EyebrowLabel from "../primitives/EyebrowLabel";
+import { synthesisCacheKey } from "../../utils/profileSignature";
 
 const FRUIT_LABELS = {
   love: "love", joy: "joy", peace: "peace", patience: "patience",
@@ -40,7 +43,7 @@ function joinFruits(edges) {
   return `${labels[0]}, ${labels[1]}, and ${labels[2]}`;
 }
 
-function buildSynthesis(profile) {
+function buildFallbackSynthesis(profile) {
   if (!profile) return null;
   const edge = profile.assessment?.formationEdge || [];
   const topGifts = profile.gifts?.topGifts || [];
@@ -52,7 +55,6 @@ function buildSynthesis(profile) {
   const topGiftLabel = topGifts[0] ? GIFT_LABELS[topGifts[0]] : null;
   const armorLabel = activeArmor ? ARMOR_LABELS[activeArmor] : null;
 
-  // No data at all -- gentle invitation
   if (!fruitsLine && !topGiftLabel && !armorLabel) {
     return "Your formation profile is still gathering. The Fruit Assessment is the first step, and the rest of the picture forms from there.";
   }
@@ -75,6 +77,44 @@ function buildSynthesis(profile) {
 
 function capitalize(s) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+}
+
+function hasAnySignal(profile) {
+  if (!profile) return false;
+  const edge = profile.assessment?.formationEdge || [];
+  const topGifts = profile.gifts?.topGifts || [];
+  const armorProgress = profile.armor?.progress || {};
+  const completedPieces = profile.armor?.completedPieces || [];
+  const declarations = (profile.widgets?.declarations || []).filter((d) => typeof d === "string" && d.trim());
+  const challengeDays = (profile.challenge?.completedDays || []).length;
+  return (
+    edge.length > 0 ||
+    topGifts.length > 0 ||
+    Object.keys(armorProgress).length > 0 ||
+    completedPieces.length > 0 ||
+    declarations.length > 0 ||
+    challengeDays > 0
+  );
+}
+
+function readCachedSynthesis(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed.text === "string") return parsed.text;
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+function writeCachedSynthesis(key, text) {
+  try {
+    localStorage.setItem(key, JSON.stringify({ text, savedAt: new Date().toISOString() }));
+  } catch {
+    // localStorage full or disabled. Surface gracefully.
+  }
 }
 
 const STYLES = `
@@ -104,6 +144,23 @@ const STYLES = `
     line-height: 1.6;
     color: var(--cf-ivory-82);
     margin: 0;
+    min-height: 64px;
+  }
+  .cf-synth__body--loading {
+    color: var(--cf-ivory-42);
+  }
+  .cf-synth__pulse {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--cf-gold);
+    margin-right: 8px;
+    vertical-align: middle;
+    animation: cf-synth-pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes cf-synth-pulse {
+    0%, 100% { opacity: 0.3; }
+    50%      { opacity: 0.9; }
   }
   @media (max-width: 600px) {
     .cf-synth__body { font-size: 16px; line-height: 1.65; }
@@ -111,7 +168,75 @@ const STYLES = `
 `;
 
 export default function SynthesisCard({ profile }) {
-  const body = buildSynthesis(profile);
+  const fallback = buildFallbackSynthesis(profile);
+  const signalPresent = hasAnySignal(profile);
+  const cacheKey = profile ? synthesisCacheKey(profile) : null;
+
+  const initialCached = cacheKey ? readCachedSynthesis(cacheKey) : null;
+  const [body, setBody] = useState(initialCached || fallback);
+  const [loading, setLoading] = useState(signalPresent && !initialCached);
+  const lastFetchedKey = useRef(initialCached ? cacheKey : null);
+
+  useEffect(() => {
+    if (!signalPresent || !cacheKey) {
+      setBody(fallback);
+      setLoading(false);
+      return;
+    }
+
+    const cached = readCachedSynthesis(cacheKey);
+    if (cached) {
+      setBody(cached);
+      setLoading(false);
+      lastFetchedKey.current = cacheKey;
+      return;
+    }
+
+    if (lastFetchedKey.current === cacheKey) {
+      // Already attempted this signature today (and likely failed). Don't refetch.
+      return;
+    }
+
+    let cancelled = false;
+    setLoading(true);
+    lastFetchedKey.current = cacheKey;
+
+    (async () => {
+      try {
+        const res = await fetch("/api/synthesize", {
+          method:  "POST",
+          headers: { "Content-Type": "application/json" },
+          body:    JSON.stringify({ profile }),
+        });
+        if (!res.ok) {
+          if (!cancelled) {
+            setBody(fallback);
+            setLoading(false);
+          }
+          return;
+        }
+        const data = await res.json();
+        if (cancelled) return;
+        if (data?.text) {
+          writeCachedSynthesis(cacheKey, data.text);
+          setBody(data.text);
+        } else {
+          setBody(fallback);
+        }
+      } catch {
+        if (!cancelled) setBody(fallback);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  // cacheKey is the only meaningful dependency; fallback derives from profile.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cacheKey, signalPresent]);
+
   if (!body) return null;
 
   return (
@@ -122,7 +247,10 @@ export default function SynthesisCard({ profile }) {
           <EyebrowLabel size="sm" color="gold" className="cf-synth__eyebrow">
             Where you are
           </EyebrowLabel>
-          <p className="cf-synth__body">{body}</p>
+          <p className={`cf-synth__body${loading ? " cf-synth__body--loading" : ""}`}>
+            {loading && <span className="cf-synth__pulse" aria-hidden="true" />}
+            {body}
+          </p>
         </div>
       </div>
     </>

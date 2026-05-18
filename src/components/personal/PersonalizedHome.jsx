@@ -2,6 +2,8 @@ import { useFormationProfile } from "../../hooks/useFormationProfile";
 import DashboardBanner from "./DashboardBanner";
 import DashboardWorkspace from "./DashboardWorkspace";
 import SaveJourneyStrip from "./SaveJourneyStrip";
+import ApparelLane from "./ApparelLane";
+import SignOutLink from "./SignOutLink";
 
 /*
  * showSaveStrip: gates the SaveJourneyStrip to only appear when the user
@@ -22,8 +24,9 @@ function showSaveStrip(profile) {
  * PersonalizedHome -- the returning-user dashboard at `/`.
  *
  * Single-view workspace: slim banner above, two-column workspace below.
- * Fits in a 1024x720 viewport without scroll on desktop; stacks vertically
- * on mobile.
+ * Fits in a 1024x720 viewport without scroll on desktop. The ApparelLane
+ * sits below the workspace fold; on mobile it stacks as the final section
+ * before the MobileTabBar's bottom padding.
  */
 
 const STYLES = `
@@ -47,6 +50,8 @@ export default function PersonalizedHome() {
         {showSaveStrip(profile) && <SaveJourneyStrip />}
         <DashboardBanner profile={profile} />
         <DashboardWorkspace profile={profile} />
+        <ApparelLane profile={profile} />
+        <SignOutLink profile={profile} />
       </main>
     </>
   );
