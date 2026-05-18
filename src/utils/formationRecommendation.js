@@ -177,6 +177,44 @@ export function formationRecommendation(context, profile, pieceSlug) {
       };
     }
 
+    case "rule-of-life-complete": {
+      // Fired at the bottom of the last Rule of Life rhythm (Community).
+      // Point toward the DevotionGuide as the ongoing anchor.
+      const completedRhythms = profile?.ruleOfLife?.completedRhythms ?? [];
+      if (completedRhythms.length >= 5) {
+        return {
+          destination: "/field-guide/devotion-guide",
+          label:       "Enter the Devotion Guide",
+          description: "You've walked every rhythm. The Devotion Guide holds them together.",
+        };
+      }
+      return {
+        destination: "/field-guide/devotion-guide",
+        label:       "Enter the Devotion Guide",
+        description: "Ground your rhythm in the Word. Generate a devotion from where you are.",
+      };
+    }
+
+    case "devotion-guide-complete": {
+      // Fired after a devotion is generated. Point toward Rule of Life.
+      const completedRhythms = profile?.ruleOfLife?.completedRhythms ?? [];
+      const RHYTHM_ORDER = ["presence", "scripture", "prayer", "sabbath", "community"];
+      const nextRhythm = RHYTHM_ORDER.find((r) => !completedRhythms.includes(r));
+      if (nextRhythm) {
+        const label = nextRhythm.charAt(0).toUpperCase() + nextRhythm.slice(1);
+        return {
+          destination: `/rule-of-life/${nextRhythm}`,
+          label:       `Explore ${label} in the Rule of Life`,
+          description: "Build the rhythm that holds what you've been reading.",
+        };
+      }
+      return {
+        destination: "/rule-of-life/presence",
+        label:       "Return to the Rule of Life",
+        description: "The rhythms that shape everything else.",
+      };
+    }
+
     default:
       return FALLBACK;
   }

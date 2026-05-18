@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { ScriptureRef } from "./ScriptureRef";
 import { renderHtmlWithScriptureRefs } from "./utils/parseScriptureRefs";
 import { getAllRhythms, getRhythm } from "./content/loader";
+import NextStep from "./components/NextStep";
 
 export const RULE_BASE = "/rule-of-life";
 
@@ -814,6 +815,8 @@ export function RhythmPage() {
           <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" style={{ width: "26px", height: "26px", opacity: .2, filter: "invert(1)", margin: "0 auto .75rem", display: "block" }} />
           <p style={{ fontSize: "8px", letterSpacing: ".32em", textTransform: "uppercase", color: "rgba(255,255,255,0.18)" }}>Counter Formation · Formed in Christ · Ephesians 6:10–18</p>
         </div>
+
+        {!next && <NextStep context="rule-of-life-complete" />}
 
         <div className="rl-rhythm-nav">
           {prev ? (

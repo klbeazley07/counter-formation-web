@@ -213,7 +213,10 @@ export async function onRequestPost(context) {
 
     const geminiRes = await callGeminiWithFallback(apiKey, {
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.78, maxOutputTokens: 320 },
+      generationConfig: { temperature: 0.78, maxOutputTokens: 512 },
+      // Disable thinking for this simple reflection task -- thinking tokens
+      // compete with output tokens and a 2-4 sentence reflection doesn't need it.
+      thinkingConfig: { thinkingBudget: 0 },
     });
 
     if (!geminiRes.ok) {
@@ -236,7 +239,8 @@ export async function onRequestPost(context) {
       const retryPrompt = prompt + `\n\nIMPORTANT: your previous draft used banned language matching: ${banned.join(", ")}. Rewrite without those words or patterns.`;
       const retry = await callGeminiWithFallback(apiKey, {
         contents: [{ parts: [{ text: retryPrompt }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 320 },
+        generationConfig: { temperature: 0.7, maxOutputTokens: 512 },
+        thinkingConfig: { thinkingBudget: 0 },
       });
       if (retry.ok) {
         const retryData = await retry.json();

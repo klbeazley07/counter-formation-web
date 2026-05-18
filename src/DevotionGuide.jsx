@@ -7,6 +7,7 @@ import { buildDevotionContext } from "./utils/devotionContext";
 import DevotionOnboarding from "./components/DevotionOnboarding";
 import DevotionHistory from "./components/DevotionHistory";
 import EmailCapture from "./components/auth/EmailCapture";
+import NextStep from "./components/NextStep";
 import { FRUITS } from "./fruitAssessmentData";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
@@ -710,6 +711,8 @@ export default function DevotionGuide() {
                 />
               </div>
             )}
+
+            <NextStep context="devotion-guide-complete" />
           </div>
         )}
         </>
