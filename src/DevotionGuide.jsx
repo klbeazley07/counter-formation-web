@@ -6,6 +6,7 @@ import { useFormationProfile } from "./hooks/useFormationProfile";
 import { buildDevotionContext } from "./utils/devotionContext";
 import DevotionOnboarding from "./components/DevotionOnboarding";
 import DevotionHistory from "./components/DevotionHistory";
+import EmailCapture from "./components/auth/EmailCapture";
 import { FRUITS } from "./fruitAssessmentData";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
@@ -257,6 +258,7 @@ export default function DevotionGuide() {
   const [copied, setCopied]     = useState(false);
   const [error, setError]       = useState(null);
   const [scrolled, setScrolled] = useState(false);
+  const [firstDevotionDismissed, setFirstDevotionDismissed] = useState(false);
   const resultRef = useRef(null);
 
   const { profile, updateProfile, isLoaded } = useFormationProfile();
@@ -696,6 +698,18 @@ export default function DevotionGuide() {
                 </p>
               </div>
             </div>
+
+            {/* Email capture: only after the very first generated devotion, only when anonymous. */}
+            {!profile?.identity?.userId
+              && (profile?.widgets?.devotions?.length ?? 0) === 1
+              && !firstDevotionDismissed && (
+              <div style={{ marginTop: 48 }}>
+                <EmailCapture
+                  context="first-devotion"
+                  onDismiss={() => setFirstDevotionDismissed(true)}
+                />
+              </div>
+            )}
           </div>
         )}
         </>

@@ -7,6 +7,7 @@ import NextStep from "./components/NextStep";
 import { hasCompletedAssessment } from "./utils/giftsAssessmentStorage";
 import { syncFruitToSupabase, recoverFruitFromSupabase } from "./utils/fruitSupabaseSync";
 import FruitStrata from "./components/visualizations/FruitStrata";
+import EmailCapture from "./components/auth/EmailCapture";
 
 /* ─── CONSTANTS ──────────────────────────────────────────────────────── */
 
@@ -433,6 +434,7 @@ export default function FruitAssessment() {
   const rProps = {
     scores, primaryFruit, cluster, previousResult, isDeltaMode, setShareOpen,
     evidenceFruits, primaryEvidence, formationFruits, primaryFormation, scoreSpread,
+    isAuthenticated: !!profile?.identity?.userId,
   };
 
   return (
@@ -851,7 +853,10 @@ function ProcessingScreen({ onDone }) {
 /* ─── SCREEN 4: RESULTS ───────────────────────────────────────────────── */
 
 function ResultsScreen({ scores, primaryFruit, cluster, previousResult, isDeltaMode, setShareOpen,
-  evidenceFruits, primaryEvidence, formationFruits, primaryFormation, scoreSpread }) {
+  evidenceFruits, primaryEvidence, formationFruits, primaryFormation, scoreSpread,
+  isAuthenticated }) {
+
+  const [emailDismissed, setEmailDismissed] = useState(false);
 
   if (!scores || !primaryFruit) return null;
 
@@ -909,6 +914,13 @@ function ResultsScreen({ scores, primaryFruit, cluster, previousResult, isDeltaM
         </div>
 
         <NextStep context="assessment-complete" />
+
+        {/* Email capture: offered after results so the user can save their formation profile. */}
+        {!isAuthenticated && !emailDismissed && (
+          <div style={{ marginTop: 48 }}>
+            <EmailCapture context="fruit-complete" onDismiss={() => setEmailDismissed(true)} />
+          </div>
+        )}
 
         {/* Spiritual Gifts cross-link */}
         {!giftsComplete && (

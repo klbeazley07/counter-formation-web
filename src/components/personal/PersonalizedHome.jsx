@@ -1,6 +1,22 @@
 import { useFormationProfile } from "../../hooks/useFormationProfile";
 import DashboardBanner from "./DashboardBanner";
 import DashboardWorkspace from "./DashboardWorkspace";
+import SaveJourneyStrip from "./SaveJourneyStrip";
+
+/*
+ * showSaveStrip: gates the SaveJourneyStrip to only appear when the user
+ * is anonymous AND has meaningful formation work to save AND has not
+ * already dismissed the prompt.
+ *
+ * Phase 3+ may reset profile.dismissed.saveJourneyStrip when the user
+ * completes new meaningful work; for now a dismiss is sticky.
+ */
+function showSaveStrip(profile) {
+  if (!profile) return false;
+  if (profile.identity?.userId) return false;
+  if (profile.dismissed?.saveJourneyStrip) return false;
+  return true;
+}
 
 /*
  * PersonalizedHome -- the returning-user dashboard at `/`.
@@ -28,6 +44,7 @@ export default function PersonalizedHome() {
     <>
       <style>{STYLES}</style>
       <main className="cf-ph">
+        {showSaveStrip(profile) && <SaveJourneyStrip />}
         <DashboardBanner profile={profile} />
         <DashboardWorkspace profile={profile} />
       </main>

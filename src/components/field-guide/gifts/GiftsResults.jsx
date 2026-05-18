@@ -19,6 +19,7 @@ import { useFormationProfile } from "../../../hooks/useFormationProfile";
 import { supabase } from "../../../utils/supabaseClient";
 import { getSessionId } from "../../../utils/giftsSessionId";
 import { mirrorGiftsToProfile } from "../../../utils/giftsProfileMirror";
+import EmailCapture from "../../auth/EmailCapture";
 
 const TRUSTED_RESPONSES_KEY = "cf-gifts-trusted-responses";
 
@@ -585,6 +586,8 @@ export default function GiftsResults() {
   const [footerVisible, setFooterVisible] = useState(false);
   const { profile, updateProfile } = useFormationProfile();
   const fruitComplete = profile?.assessment?.completedAt != null;
+  const isAuthenticated = !!profile?.identity?.userId;
+  const [emailDismissed, setEmailDismissed] = useState(false);
 
   // Progress is stateful so Supabase recovery can update it after mount.
   const [progress, setProgress] = useState(() => loadProgress());
@@ -817,6 +820,13 @@ export default function GiftsResults() {
             )}
           </div>
         </div>
+
+        {/* Email capture: offered once per session after gifts results render. */}
+        {!isAuthenticated && !emailDismissed && (
+          <div style={{ maxWidth: 760, margin: "48px auto 0", padding: "0 24px" }}>
+            <EmailCapture context="gifts-complete" onDismiss={() => setEmailDismissed(true)} />
+          </div>
+        )}
 
         <div style={{ padding: "80px 24px 0" }}>
           {/* ── ACTIVE GIFTS ─────────────────────────────────────── */}
