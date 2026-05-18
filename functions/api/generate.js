@@ -51,11 +51,33 @@ export async function onRequestPost(context) {
       return json({ error: "GEMINI_API_KEY not configured on this deployment." }, 500);
     }
 
-    const { passage = "", theme = "", bigIdea = "" } = await context.request.json();
+    const { passage = "", theme = "", bigIdea = "", profile: ctx = {} } = await context.request.json();
 
     if (!passage && !theme && !bigIdea) {
       return json({ error: "At least one of passage, theme, or bigIdea is required." }, 400);
     }
+
+    // Build optional formation context lines from the profile envelope.
+    const ctxLines = [];
+    if (Array.isArray(ctx.formationEdge) && ctx.formationEdge.length > 0) {
+      ctxLines.push(`Fruit of the Spirit the reader is being shaped in: ${ctx.formationEdge.join(", ")}`);
+    }
+    if (Array.isArray(ctx.topGifts) && ctx.topGifts.length > 0) {
+      ctxLines.push(`Spiritual gifts: ${ctx.topGifts.join(", ")}`);
+    }
+    if (ctx.currentArmorPiece) {
+      const dayNote = ctx.currentArmorDay ? ` (day ${ctx.currentArmorDay})` : "";
+      ctxLines.push(`Currently walking through the Armor of God: ${ctx.currentArmorPiece}${dayNote}`);
+    }
+    if (ctx.recentDeclaration) {
+      ctxLines.push(`A personal declaration they have written: "${ctx.recentDeclaration}"`);
+    }
+    if (ctx.agentFocus) {
+      ctxLines.push(`What is forming them right now (in their own words): "${ctx.agentFocus}"`);
+    }
+    const formationBlock = ctxLines.length > 0
+      ? `\nFormation context for this reader (shape the devotion toward this without making it a report):\n${ctxLines.map(l => `- ${l}`).join("\n")}\n`
+      : "";
 
     const prompt = `
 You are a warm, pastoral spiritual director writing a daily devotional for Counter Formation — a community of people who want to be intentionally formed by Christ rather than shaped by the noise and drift of the world.
@@ -64,7 +86,7 @@ Write a devotional based on the following inputs:
 Passage/Verse: ${passage || "Not provided"}
 Theme: ${theme || "Not provided"}
 Subject, Topic, or Question: ${bigIdea || "Not provided"}
-
+${formationBlock}
 IMPORTANT: If no Scripture passage was provided, select a meaningful Bible passage that fits the theme or topic given.
 
 Tone and Style:

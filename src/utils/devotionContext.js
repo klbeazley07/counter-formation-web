@@ -17,11 +17,13 @@ import { ARMOR_PIECE_SEQUENCE } from "./formationRecommendation";
 
 const DEFAULT_ENVELOPE = {
   formationEdge:     [],
+  topGifts:          [],
   currentArmorPiece: null,
   currentArmorDay:   null,
   challengeComplete: false,
   recentArrowLog:    [],
   recentDeclaration: null,
+  agentFocus:        null,
 };
 
 function deriveCurrentArmor(armorProgress) {
@@ -82,6 +84,10 @@ export function buildDevotionContext(profile) {
     ? profile.assessment.formationEdge.filter(s => typeof s === "string" && s.length > 0)
     : [];
 
+  const topGifts = Array.isArray(profile.gifts?.topGifts)
+    ? profile.gifts.topGifts.filter(s => typeof s === "string" && s.length > 0).slice(0, 3)
+    : [];
+
   const { piece: currentArmorPiece, day: currentArmorDay } = deriveCurrentArmor(
     profile.armor?.progress
   );
@@ -94,12 +100,19 @@ export function buildDevotionContext(profile) {
   const recentArrowLog = deriveRecentArrowLog(profile.widgets?.arrowLog);
   const recentDeclaration = deriveRecentDeclaration(profile.widgets?.declarations);
 
+  // Agent short assessment focus -- the user's own words about what is forming them.
+  const agentFocus = profile.agent?.shortAssessment?.formingRight
+    ? profile.agent.shortAssessment.formingRight.trim() || null
+    : null;
+
   return {
     formationEdge,
+    topGifts,
     currentArmorPiece,
     currentArmorDay,
     challengeComplete,
     recentArrowLog,
     recentDeclaration,
+    agentFocus,
   };
 }

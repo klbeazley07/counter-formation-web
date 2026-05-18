@@ -40,6 +40,7 @@ import TrustedPersonAssessment from "./components/field-guide/gifts/TrustedPerso
 import AssessmentIntro from "./components/field-guide/gifts/AssessmentIntro";
 import AssessmentQuestion from "./components/field-guide/gifts/AssessmentQuestion";
 import AuthCallback from "./components/auth/AuthCallback";
+import AgentOnboarding from "./components/agent/AgentOnboarding";
 import { installAuthStateListener } from "./utils/authBackfill";
 
 // Install the auth listener once at module load so SIGNED_IN events from the
@@ -1918,6 +1919,9 @@ export default function App() {
         <Route path="/identity/:piece" element={<ArmorPiecePage />} />
         <Route path="/practice"   element={<PracticePage />} />
         <Route path="/community"  element={<CommunityPage />} />
+
+        {/* Agent routes */}
+        <Route path="/agent/onboarding" element={<AgentOnboarding />} />
 
         {/* Fallback */}
         <Route path="*" element={<MainSite />} />

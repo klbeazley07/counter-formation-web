@@ -4,7 +4,7 @@ import { migrateFormationProfile } from "../utils/migrateFormationProfile";
 const PROFILE_KEY = "cf:profile";
 
 const DEFAULT_PROFILE = {
-  _version: 3,
+  _version: 4,
   _created: null,
   _updated: null,
   identity: {
@@ -70,6 +70,12 @@ const DEFAULT_PROFILE = {
   dismissed: {
     slidebar: false,
     saveJourneyStrip: false,  // dashboard "Save your journey" prompt (Phase 2)
+  },
+  agent: {
+    onboardingCompletedAt: null,
+    lastNudgeAt:           null,
+    shortAssessment:       null,
+    history:               [],
   },
 };
 
@@ -141,9 +147,9 @@ export function FormationProfileProvider({ children }) {
         // Backfill any new schema keys onto older profiles (v1, v2 → v3).
         // deepMerge here prefers existing values, only adding missing structure.
         initialProfile = deepMerge(DEFAULT_PROFILE, parsed);
-        initialProfile._version = 3;
+        initialProfile._version = 4;
         // Persist the backfill so subsequent loads are cheap.
-        if (parsed._version !== 3) {
+        if (parsed._version !== 4) {
           localStorage.setItem(PROFILE_KEY, JSON.stringify(initialProfile));
         }
       } catch {

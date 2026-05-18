@@ -1,5 +1,6 @@
 import { useFormationProfile } from "../../hooks/useFormationProfile";
 import DashboardBanner from "./DashboardBanner";
+import AgentEntry from "./AgentEntry";
 import DashboardWorkspace from "./DashboardWorkspace";
 import SaveJourneyStrip from "./SaveJourneyStrip";
 import ApparelLane from "./ApparelLane";
@@ -49,6 +50,7 @@ export default function PersonalizedHome() {
       <main className="cf-ph">
         {showSaveStrip(profile) && <SaveJourneyStrip />}
         <DashboardBanner profile={profile} />
+        <AgentEntry profile={profile} />
         <DashboardWorkspace profile={profile} />
         <ApparelLane profile={profile} />
         <SignOutLink profile={profile} />
