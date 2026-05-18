@@ -4,6 +4,64 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 7 — Dashboard Plan, Phase 1.5: Single-View Workspace + Welcome Toggle (2026-05-18)
+
+**Status:** Complete. Build passes (2052 modules, 2007 kB JS, no errors).
+**Plan:** `C:\Users\luke.beazley\.claude\plans\transient-sprouting-bear.md` (Phase 1.5)
+**Commits:** `4171c11`
+
+**What was built:**
+- Phase 1 dashboard layout reviewed with user; the scrolling marketing-style landing was redesigned into a single-view workspace per user feedback ("banner not full page; devotion list on left; visualizations embedded; single view").
+- `src/components/visualizations/FruitStrata.jsx` — pure component extracted from FruitAssessment.jsx:937-1186. Props: `{ scores, maxWidth, reduceMotion, showLabels }`. GSAP entrance animation preserved.
+- `src/components/visualizations/GiftConstellationCompact.jsx` — non-interactive scaled-down constellation SVG. Props: `{ topGifts, height, showLabels }`. Highlights the user's top gifts.
+- `src/components/personal/DashboardBanner.jsx` — slim 200px banner (replaces full-viewport FormationHero).
+- `src/components/personal/DashboardWorkspace.jsx` — two-column grid (35% sidebar / 65% main) on desktop, stacked single-column on mobile.
+- `src/components/personal/DevotionListPanel.jsx` — sidebar list reading `profile.widgets.devotions`. Date + summary + saved status. Routes to Devotion Guide.
+- `src/components/personal/DiagnosticTiles.jsx` — three compact tiles: Gifts (active/emerging/quiet + invited/confirmed), Challenge (day progress), Armor (current piece + day).
+- Restyled `SynthesisCard.jsx` for sidebar width; slimmed `NextStepBand.jsx` into an inline band.
+- `PersonalizedHome.jsx` rewritten as `DashboardBanner + DashboardWorkspace`.
+- Deleted `FormationHero.jsx` and `JourneySummary.jsx`.
+- FruitAssessment.jsx refactored: removed inline ~270-line FormationStrata implementation; now imports the extracted component via a thin wrapper. Behavior unchanged on `/field-guide/fruit-assessment`.
+
+**Navigation toggle:**
+- New route `/welcome` always renders `<MainSite />`, regardless of profile state.
+- `hasMeaningfulActivity(profile)` exported from `HomeRouter.jsx` as the single predicate used by HomeRouter, SiteNav, MobileTabBar, and MainSite.
+- SiteNav: conditional "Welcome" / "Your formation" link.
+- MobileTabBar More sheet: same toggle as a third entry.
+- MainSite: floating "Return to your formation" pill (top-right, only when the visitor has activity).
+
+**Key decisions:**
+- Extracted FruitStrata is rendered both on `/field-guide/fruit-assessment` (full-width, animated) and on the dashboard (narrower, reduceMotion=true).
+- GiftConstellationCompact is intentionally non-interactive on the dashboard. The full interactive constellation continues to live in the existing GiftConstellation.jsx for the results page.
+- ApparelLane deferred to Phase 3 (will sit below the workspace, not inside it).
+- Brand logo behavior unchanged -- always routes to `/`. HomeRouter dispatches.
+
+---
+
+## Session 6 — Dashboard Plan, Phase 1: Personalized Home + Bug Fix (2026-05-17 → 2026-05-18)
+
+**Status:** Complete. Build passes. Shipped behind the conditional `/` route.
+**Plan:** `C:\Users\luke.beazley\.claude\plans\transient-sprouting-bear.md` (Phase 1)
+**Commits:** `d9dc1a6` (bug fix), `ced9be7` (Phase 1 dashboard)
+
+**What was built:**
+- **Trusted-person name bug fixed** (live user-facing). Three layers:
+  - URL `?from=<name>` appended to observer links in `TrustedPersonInvitationFlow.jsx`
+  - Supabase `inviter_name` column added to `gifts_trusted_tokens`; written on invite, read on observer page
+  - Render-time fallback: "the person who invited you" with sentence capitalization when neither source has the name
+- `src/utils/fruitSupabaseSync.js` — Supabase persistence for the Fruit Assessment. Background upsert on completion; recovery effect on mount when localStorage is empty.
+- Supabase migration: `fruit_assessments` table.
+- `src/utils/giftsProfileMirror.js` — lightweight gifts summary mirrored into `cf:profile.gifts` (topGifts, topGiftScores, trustedPersonsInvited/Confirmed, completedAt). Called from GiftsResults and TrustedPersonInvitationFlow.
+- `cf:profile` schema bumped to v3: added `gifts` block, expanded `identity` (userId/authedAt/emailOptIn/displayName), added `dismissed.saveJourneyStrip`. Migration backfills existing v1/v2 profiles via deep-merge on load.
+- Initial dashboard at `/` via `HomeRouter`: full-viewport hero + Journey Summary cards + NextStepBand + footer. (Layout subsequently redesigned in Session 7.)
+- `recommendForDashboard(profile)` added to formationRecommendation.js — picks highest-priority forward action for a returning user.
+
+**Schema additions to Supabase:**
+- `gifts_trusted_tokens.inviter_name` (new column)
+- `fruit_assessments` table (new)
+
+---
+
 ## Session 5 — Phase 5: Content Layer (2026-05-15)
 
 **Status:** Complete (visual smoke-test pending — recommend Luke click through armor track pages, rhythm pages, and Field Guide path)
