@@ -4,6 +4,60 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 8 — Dashboard Plan, Phase 2: Identity Layer (2026-05-18)
+
+**Status:** Complete. Build passes (2057 modules, 2027 kB JS, no errors). Pushed to `main`.
+**Plan:** `C:\Users\luke.beazley\.claude\plans\transient-sprouting-bear.md` (Phase 2)
+**Commit:** `25e132c`
+
+**What was built:**
+
+Supabase schema (two migrations, applied via MCP):
+- `phase2_identity_layer` — `public.users` mirror (id, email, display_name, email_opt_in, convertkit_subscriber_id, timestamps); `user_id` columns added to `fruit_assessments`, `gifts_sessions`, `gifts_trusted_tokens`, `gifts_trusted_responses`; indexes on each; RLS enabled with three policies per table (anon-only on null rows, authenticated-owner on own rows, authenticated-claim for backfill).
+- `phase2_relax_trusted_tables_rls` — rolled RLS back off on `gifts_trusted_tokens` and `gifts_trusted_responses` and dropped their `user_id` columns. Reason: the trusted-person flow is inherently cross-party (an anonymous trusted person clicks an SMS link belonging to a potentially authenticated inviter). The token is the access secret; RLS would break the flow. The plan called for re-keying these tables but doing so makes them unreadable to the SMS recipient.
+
+Frontend:
+- `src/utils/supabaseClient.js` — passes `flowType: "pkce"` plus `detectSessionInUrl`, `autoRefreshToken`, `persistSession`. PKCE is required so the magic link survives iOS Safari and email-client in-app browser context switches (the code verifier lives in the originator's storage; the callback completes the handshake even in a different storage context).
+- `src/utils/authBackfill.js` — `installAuthStateListener()` subscribes once at app boot. On `SIGNED_IN` / `INITIAL_SESSION` / `USER_UPDATED` it runs `runAuthBackfill(user)` which:
+  1. Upserts `public.users` with id + email
+  2. Claims local `cf-gifts-session-id` rows on `fruit_assessments` and `gifts_sessions` (UPDATE … WHERE session_id = X AND user_id IS NULL)
+  3. Hydrates localStorage from Supabase by `user_id` (cross-device handoff: pulls gifts progress, fruit assessment, trusted persons + responses)
+  4. Writes `cf:profile.identity.email/userId/authedAt`
+- `src/components/auth/EmailCapture.jsx` — single shared component with four contexts (`fruit-complete`, `gifts-complete`, `first-devotion`, `save-journey`). Each context has its own eyebrow / headline / body / CTA copy. Calls `supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: `${origin}/auth/callback?context=...`, shouldCreateUser: true } })`. iOS-friendly inputs: `type="email"`, `autoComplete="email"`, `inputMode="email"`, `autoCapitalize="off"`, `font-size: 16px` to prevent auto-zoom.
+- `src/components/auth/AuthCallback.jsx` — handles `/auth/callback`. Polls `getSession()` until the URL tokens are exchanged, runs the backfill, then either shows the ConvertKit opt-in (if `cf:profile.identity.authedAt` was null pre-backfill) or navigates straight to `/`.
+- `src/components/auth/ConvertKitOptIn.jsx` — single yes/no screen shown only on first auth. Yes → POST `/api/subscribe-convertkit` with `{ email, profile: { formationEdge, topGifts, hasFruitAssessment, hasGiftsAssessment } }`, then persist `email_opt_in=true` on `public.users` and in `cf:profile.identity.emailOptIn`. No → persist `false` (no double-prompt).
+- `src/components/personal/SaveJourneyStrip.jsx` — sticky strip at top of `/`. Click "Continue" opens a bottom-sheet modal that mounts `<EmailCapture context="save-journey" />`. Dismiss persists `profile.dismissed.saveJourneyStrip = true`.
+- `functions/api/subscribe-convertkit.js` — Cloudflare Pages Function. Tag-subscribe + optional form-subscribe via Kit (ConvertKit) v3 API. Reads `KIT_API_KEY`, `KIT_FORMATION_TAG_ID`, optional `KIT_FORM_ID` from env. Returns `success: true, skipped: "no-api-key"` (or `"no-tag-id"`) when env is missing, so the opt-in still persists locally without erroring.
+
+Mount points:
+- `src/App.jsx` — `/auth/callback` route; `installAuthStateListener()` called at module load.
+- `src/FruitAssessment.jsx` — `<EmailCapture context="fruit-complete" />` rendered in `ResultsScreen` between `<NextStep>` and the gifts cross-link, gated on `!isAuthenticated && !emailDismissed`.
+- `src/components/field-guide/gifts/GiftsResults.jsx` — `<EmailCapture context="gifts-complete" />` rendered between the hero band and the active-gifts list, gated identically.
+- `src/DevotionGuide.jsx` — `<EmailCapture context="first-devotion" />` rendered below the devotion content, gated on `devotions.length === 1` so it only appears after the very first generated devotion.
+- `src/components/personal/PersonalizedHome.jsx` — `<SaveJourneyStrip />` mounted above `<DashboardBanner />` when `!identity.userId && !dismissed.saveJourneyStrip`.
+
+**Key decisions and divergences from plan:**
+1. RLS scope reduced from "all four assessment tables" to "fruit_assessments and gifts_sessions only." The trusted-person tables are cross-party by design (the token is the access secret; the anonymous recipient must be able to read the inviter's `gifts_trusted_tokens` row and write to `gifts_trusted_responses`). Re-keying those tables on auth would break the SMS recipient flow. Documented this in the second migration's comment header.
+2. ConvertKit integration delivered as a Pages Function rather than extending the existing `worker/` (which lives at api.counterformed.com under a separate wrangler deploy). The function takes the same `KIT_API_KEY` + a new `KIT_FORMATION_TAG_ID` env var. Did not modify the Worker.
+3. Backfill writes directly to `cf:profile` via raw localStorage I/O rather than through `useFormationProfile.updateProfile`. The provider hook is not available from a non-React util module; the trade-off is a brief in-memory/localStorage divergence until the next React render — acceptable because the auth-callback flow ends in a `navigate("/", { replace: true })` which remounts the dashboard against the fresh localStorage value.
+
+**Environment configuration required before this ships in production:**
+- Supabase Auth → URL Configuration: add `https://counterformed.com/auth/callback` (and `http://localhost:5173/auth/callback` for dev) to the redirect allow-list.
+- Cloudflare Pages env vars: add `KIT_API_KEY` and `KIT_FORMATION_TAG_ID` secrets. If absent, the opt-in still persists locally and the user proceeds to the dashboard — no error visible to them.
+
+**Schema additions to Supabase (Phase 2):**
+- `public.users` (id PK → auth.users.id, email UNIQUE, display_name, email_opt_in, convertkit_subscriber_id, created_at, updated_at) — RLS on, owner-only policies.
+- `fruit_assessments.user_id` (nullable, FK → public.users.id, ON DELETE SET NULL) — RLS on with three policies.
+- `gifts_sessions.user_id` (nullable, FK → public.users.id, ON DELETE SET NULL) — RLS on with three policies.
+
+**Verification status:**
+- Build: `npm run build` passes (2057 modules transformed, no errors).
+- Supabase: migrations applied via MCP; advisors confirmed RLS enabled on `fruit_assessments`, `gifts_sessions`, `public.users`. Pre-existing RLS-disabled tables for Forge / Counter Formation Agentic Design System work flagged in advisors but unrelated to this app.
+- End-to-end magic-link flow NOT yet tested in production — requires the Supabase URL allow-list entry + a real inbox round-trip. Flagged for the user to verify after the redirect allow-list is updated.
+- iOS Safari real-device test pending.
+
+---
+
 ## Session 7 — Dashboard Plan, Phase 1.5: Single-View Workspace + Welcome Toggle (2026-05-18)
 
 **Status:** Complete. Build passes (2052 modules, 2007 kB JS, no errors).

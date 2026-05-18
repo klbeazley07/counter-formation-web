@@ -1,8 +1,8 @@
 # Counter Formation Build -- Next Session
 
 **Active plan:** `C:\Users\luke.beazley\.claude\plans\transient-sprouting-bear.md`
-**Last completed:** Session 7 -- Phase 1.5 (single-view dashboard + welcome toggle) on 2026-05-18
-**Up next:** Phase 2 -- Identity layer (Supabase Auth magic links + email capture + ConvertKit opt-in + RLS)
+**Last completed:** Session 8 -- Phase 2 (identity layer, magic link, RLS, ConvertKit) on 2026-05-18
+**Up next:** Phase 3 -- AI synthesis endpoint + apparel surface + polish
 
 ---
 
@@ -11,10 +11,21 @@
 Open Claude Code in this repo and paste:
 
 ```
-Read sessions/next.md and execute Phase 2. Follow the methodology there -- read the plan, do the work, build, commit, push, then update sessions/log.md and sessions/next.md before ending the session.
+Read sessions/next.md and execute Phase 3. Follow the methodology there -- read the plan, do the work, build, commit, push, then update sessions/log.md and sessions/next.md before ending the session.
 ```
 
-That's it. The session will read this file, pick up where Session 7 left off, and follow the workflow below.
+That's it. The session will read this file, pick up where Session 8 left off, and follow the workflow below.
+
+---
+
+## Before Phase 3 ships -- two manual config items left over from Phase 2
+
+Phase 2 is in code and pushed. Two production-environment touches need to happen for the magic-link flow to actually work end-to-end. These don't block Phase 3 starting, but the user should do them when convenient:
+
+1. **Supabase Auth → Authentication → URL Configuration:** add `https://counterformed.com/auth/callback` (and `http://localhost:5173/auth/callback` for dev) to the redirect allow-list.
+2. **Cloudflare Pages → Settings → Environment variables (Production):** add `KIT_API_KEY` (Kit / ConvertKit v3 API key) and `KIT_FORMATION_TAG_ID` (numeric tag id for formation-edge subscribers). Optional: `KIT_FORM_ID` for double-opt-in.
+
+If neither is set, the app still functions -- the opt-in just no-ops silently. Anonymous flow continues to work regardless.
 
 ---
 
@@ -47,63 +58,66 @@ If a session runs out of context mid-work, end with a log entry that flags `Stat
 
 ---
 
-## Phase 2 goal (read the plan for full detail)
+## Phase 3 goal (read the plan for full detail)
 
-Add a durable identity layer on top of the working anonymous flow. Anonymous keeps functioning exactly as it does today; email becomes an offered anchor, never demanded. Once a user authenticates, their existing Supabase rows re-key to their user_id and their data follows them across devices.
+Phase 3 finishes the dashboard: it makes the SynthesisCard live with an AI-generated reflection, adds the apparel surface below the workspace fold, and polishes the experience (greeting, micro-interactions, mobile review, voice-guard).
 
-**Auth mechanism:** Supabase Auth magic link only (`supabase.auth.signInWithOtp({ email })`). No passwords, no OAuth in v1. PKCE flow to survive iOS in-app browser context switches.
+**AI synthesis (`functions/api/synthesize.js`):**
 
-**Four email-capture insertion points (all ship together):**
-- After Fruit Assessment completion (modal)
-- After Gifts Assessment completion (modal)
-- Dashboard persistent strip (dismissable, reappears on new activity)
-- After first devotion generated (slide-in card)
+Cloudflare Pages Function that takes a profile payload and returns a 2-4 sentence formation reflection. Mirrors the pattern of `functions/api/generate.js`. Uses the Counter Formation voice system prompt -- earnest, direct, theologically grounded, no AI tells, no em dashes, no "It's not X, it's Y."
 
-All four route through one shared `<EmailCapture context="..." />` component.
+System prompt sketch (from the plan):
+> You write in the voice of Counter Formation: earnest, direct, theologically grounded, no AI tells. Read the formation profile and write 2 to 4 sentences that name where the person is right now. Do not list their data back to them. Speak to them. Reference one or two specific things from their profile -- a formation edge, a current armor piece, a recent declaration, a top gift. Never use em dashes. Never use "It's not X, it's Y." Never open with "In this season." End with a sentence that gestures toward what is next without commanding it.
 
-**ConvertKit opt-in:** After magic link is clicked and the user is authenticated for the first time, ask a single yes/no question for ongoing formation emails. Yes → call `functions/api/subscribe-convertkit.js` with profile context. Decline persists.
+**Caching:** Key the synthesis to `${profileSignature}-${date}` so it regenerates daily or on profile update, not on every render. Simple JSON.stringify hash of completion timestamps + most recent devotion timestamp.
 
----
+**SynthesisCard wiring:** the existing card currently shows placeholder Phase 1 copy. Replace the body with a fetch to `/api/synthesize`. Fall back gracefully to the rule-based copy on error.
 
-## Files Phase 2 creates (per the plan)
+**ApparelLane (deferred from Phase 1.5):**
 
-- `src/components/auth/EmailCapture.jsx` -- shared email-capture component, context-driven copy
-- `src/components/auth/AuthCallback.jsx` -- handles `/auth/callback` post-magic-link
-- `src/components/auth/ConvertKitOptIn.jsx` -- single yes/no opt-in
-- `src/components/personal/SaveJourneyStrip.jsx` -- dismissable dashboard strip
-- `src/utils/authBackfill.js` -- on first SIGNED_IN, re-key session_id rows to user_id; hydrate localStorage from Supabase on new devices
-- `functions/api/subscribe-convertkit.js` -- ConvertKit subscriber API wrapper (check `functions/api/` first for existing ConvertKit integration to extend)
-- Supabase migration: `public.users` table + `user_id` columns on all assessment tables + RLS policies
+Lives BELOW the workspace dashboard, not inside the single-view fold. On desktop this is the section visible after scrolling past the dashboard; on mobile it's the final stacked section before the MobileTabBar's padding.
 
-## Files Phase 2 modifies
+Three curated products tagged to formation areas. Hardcoded curated set for v1 with a TODO to wire to the Shopify Storefront API later. Horizontal scroll on mobile with `scroll-snap-type: x mandatory` so cards align centered as the user swipes. Cards are 78vw wide so the next one peeks at the right edge.
 
-- `src/utils/supabaseClient.js` -- pass `flowType: 'pkce'`; subscribe to `auth.onAuthStateChange` and trigger `runAuthBackfill()` on first SIGNED_IN
-- `src/App.jsx` -- add `/auth/callback` route
-- `src/FruitAssessment.jsx` -- render `<EmailCapture context="fruit-complete" />` on completion
-- `src/components/field-guide/gifts/GiftsResults.jsx` -- render `<EmailCapture context="gifts-complete" />` once per session
-- `src/components/field-guide/DevotionGuide.jsx` -- render `<EmailCapture context="first-devotion" />` after first devotion
-- `src/components/personal/PersonalizedHome.jsx` -- mount `<SaveJourneyStrip />` at top when `profile.identity.userId` is null AND user has activity AND `profile.dismissed.saveJourneyStrip` is false
+**Polish pass:**
+- DashboardBanner greeting: time-of-day plus name if `profile.identity.displayName` is set (otherwise unaddressed).
+- Sign-out link in PersonalizedHome footer when authenticated.
+- Voice-guard fixture: small Node script at `scripts/check-synthesis-voice.js` that feeds sample profiles to the synthesis endpoint and asserts no banned phrases (em dashes, "It's not X, it's Y", "leverage", "journey" as a noun, etc.). Aligns with the global voice rules in CLAUDE.md.
 
 ---
 
-## Verification checklist for Phase 2
+## Files Phase 3 creates (per the plan)
 
-The plan has the full list. The non-obvious ones to make sure don't get skipped:
+- `functions/api/synthesize.js` -- Cloudflare Pages function for AI synthesis (Gemini, mirror of generate.js)
+- `src/components/personal/ApparelLane.jsx` -- horizontal-scroll apparel band
+- `src/utils/profileSignature.js` -- compact hash for cache keying
+- `scripts/check-synthesis-voice.js` -- voice-guard fixture
+- `src/components/personal/SignOutLink.jsx` -- small sign-out affordance in the footer when authenticated
 
-- **Magic link end-to-end:** request link, click from inbox, land at `/auth/callback`, confirm `cf:profile.identity.userId` populates and Supabase `public.users` has a new row.
-- **Backfill:** confirm all rows in `gifts_sessions`, `gifts_trusted_tokens`, `gifts_trusted_responses`, `fruit_assessments` that match the local session_id now have `user_id` populated.
-- **Cross-device:** in a second browser with empty localStorage, sign in with the same email; confirm dashboard hydrates from Supabase.
-- **RLS:** with one user authenticated, attempt to read another user's row via DevTools using the anon Supabase client. Confirm denied.
-- **ConvertKit:** decline persists (no double-subscription); accept lands the subscriber in ConvertKit with formation-edge tags.
-- **iOS Safari real-device test:** request magic link from Safari, open the email in Apple Mail, tap link, confirm auth completes via PKCE even when opened in the Mail in-app browser.
+## Files Phase 3 modifies
+
+- `src/components/personal/SynthesisCard.jsx` -- swap placeholder copy for `/api/synthesize` fetch, with daily cache + graceful fallback
+- `src/components/personal/DashboardBanner.jsx` -- name-aware greeting if `profile.identity.displayName` is set
+- `src/components/personal/PersonalizedHome.jsx` -- mount `<ApparelLane />` below the workspace; mount `<SignOutLink />` when authenticated
+- `wrangler.toml` / Cloudflare Pages env -- ensure `GEMINI_API_KEY` is already set (it is, generate.js uses it)
+
+---
+
+## Verification checklist for Phase 3
+
+- **Synthesis API:** curl `/api/synthesize` with a mock profile, confirm 2-4 sentence output with no em dashes, no banned phrases.
+- **Voice-guard:** `node scripts/check-synthesis-voice.js` passes on a fixture set of 3-5 representative profiles.
+- **SynthesisCard daily caching:** mount the card, refresh, confirm only one fetch fires. Update a profile field and confirm a new fetch.
+- **Apparel lane on mobile:** real iOS Safari device test -- horizontal scroll has momentum, scroll-snap aligns each card, tap opens the Shopify product URL with UTM tags preserved.
+- **Apparel lane on desktop:** sits cleanly below the workspace fold; doesn't break the single-view discipline of the dashboard above.
+- **Sign-out:** authenticated user clicks sign-out, returns to anonymous state, `cf:profile.identity.userId` cleared, dashboard still renders (using the local data that's now identity-less).
 
 ---
 
 ## Environment notes
 
-- Cloudflare Pages env vars `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are already set in production.
-- For Phase 2 ConvertKit: check `functions/api/` for existing ConvertKit integration. The wrangler config likely already has a `CONVERTKIT_API_KEY` secret. If not, the secret will need to be added to Cloudflare Pages.
-- Supabase Auth uses the project's existing site URL for email redirect. Verify under Supabase Dashboard → Authentication → URL Configuration that `https://counterformed.com/auth/callback` is in the allow-list before testing the magic link in production.
+- Cloudflare Pages env vars `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and `GEMINI_API_KEY` are already set in production. Phase 3's synthesis function reuses `GEMINI_API_KEY`.
+- Phase 2 ConvertKit env still pending (see top of file). Not a blocker for Phase 3.
 
 ---
 
@@ -119,6 +133,6 @@ These predate the dashboard plan and remain ready to pick up between phases if L
 
 ---
 
-## After Phase 2
+## After Phase 3
 
-Phase 3 of the dashboard plan: AI synthesis endpoint (`functions/api/synthesize.js`) + apparel surface + polish. The plan has full detail.
+The dashboard plan ships. Phase 4+ work returns to the broader 5-theme enhancement spec at `specs/spec-site-enhancement-2026.md`: Connection Tissue, Design System polish, Content Layer. The Discipleship Agent thread (DevotionGuide → memory, continuity, onboarding assessment) becomes a candidate next direction once Phase 3 closes.
