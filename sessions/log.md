@@ -4,6 +4,63 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 9 — Dashboard Plan, Phase 3: AI synthesis + apparel lane + dashboard polish (2026-05-18)
+
+**Status:** Complete. Build passes (2060 modules, 2040 kB JS, no errors). Pushed to `main`.
+**Plan:** `C:\Users\luke.beazley\.claude\plans\transient-sprouting-bear.md` (Phase 3)
+**Commit:** `b38e1ca`
+
+**What was built:**
+
+AI synthesis endpoint:
+- `functions/api/synthesize.js` -- Cloudflare Pages Function. Reuses the `GEMINI_API_KEY` already in production for `/api/generate`. Builds a compact profile digest (formation edge, top gifts, active armor, completed armor, two most recent declarations, recent devotion theme, challenge day, displayName) and feeds it to Gemini 2.5 Flash with a Counter Formation voice prompt that bans em dashes, the "It's not X, it's Y" pattern, AI-tell openers ("In this season," "Now more than ever," etc.), and the global word blocklist from CLAUDE.md. Falls back to Gemini 1.5 Flash on transient 5xx. Output is scrubbed (em dashes → periods, trim surrounding quotes) and re-checked against the banned-phrase list; one retry with a sharper voice reminder if the model trips a guard. Returns `{ text, voiceGuardTriggered? }`.
+- `src/utils/profileSignature.js` -- djb2 fold over a JSON-serialized digest (edge + completion timestamps + active armor + declarations + most recent devotion timestamp + name). Paired with `todayKey()` to produce `cf:synth:<sig>:<YYYY-MM-DD>` cache keys.
+
+SynthesisCard rewired:
+- `src/components/personal/SynthesisCard.jsx` -- on mount, reads `localStorage[cacheKey]`; if hit, paints instantly. If miss and the profile has any signal, fetches `/api/synthesize`, caches the result, and shows a small pulse dot while loading. On any failure path (no signal, HTTP error, empty response) falls back to the rule-based copy preserved from Phase 1. The `lastFetchedKey` ref prevents re-fetching the same signature on remount or strict-mode double-invocation.
+
+Apparel surface:
+- `src/components/personal/ApparelLane.jsx` -- mounts BELOW the workspace inside `PersonalizedHome`. Three hardcoded curated products (Everyday Tee, Technical Hoodie, Trucker Hat) tagged to fruit / armor / rule-of-life pillars; tags are unused at render time today but documented as the hook for future profile-driven selection. Desktop: 3-column grid. Mobile (≤760px): horizontal scroll with `scroll-snap-type: x mandatory`, cards 78vw wide, 320px max. Every shop link wraps through `urlWithUtm()` so the click is attributable to `dashboard` / `apparel_lane`.
+- `bandSubtitle()` reads the profile's first formation edge and active armor and selects between three contextual italic taglines ("Worn while you walk the X," "Apparel as a visual anchor for X," neutral fallback). TODO marked in-file: wire to Shopify Storefront API for live inventory.
+
+Greeting polish:
+- `src/components/personal/DashboardBanner.jsx` -- `firstNameOf()` extracts the first token of `profile.identity.displayName`; `greetingFor(hour, name)` returns "Good morning, Luke." / "Good evening." style. Falls through to the unaddressed greeting when displayName is null. CLAUDE.md global rule respected: no em dashes; punctuation is comma + period.
+
+Sign-out affordance:
+- `src/components/personal/SignOutLink.jsx` -- only renders when `profile.identity.userId` is set. Slim footer line: "Signed in as <email> · Sign out." Click runs `supabase.auth.signOut()` then resets `profile.identity` to anonymous defaults via `updateProfile`. cf-gifts-* and other formation history are NOT cleared so the user keeps working on the same device after signing out; re-auth re-links the data.
+- Mounted at the bottom of `PersonalizedHome` after `<ApparelLane />`.
+
+Voice-guard fixture:
+- `scripts/check-synthesis-voice.js` -- node-only fixture script. Five representative profiles (fruit+gifts+armor, fruits-only, gifts-only, deep-armor, declarations-heavy). POSTs each to `/api/synthesize` (default `http://localhost:8788`, override with `--url=`), then runs the response through the same banned-phrase regex set as the server-side guard plus sentence-count validation (must be 2-5 sentences). Exits 0 on full pass, 1 on any offense. Usable as a pre-deploy spot-check.
+
+**Mount points:**
+- `src/components/personal/PersonalizedHome.jsx` -- now composes `SaveJourneyStrip + DashboardBanner + DashboardWorkspace + ApparelLane + SignOutLink`. The SaveJourneyStrip and SignOutLink are mutually exclusive by design (one renders for anonymous, the other for authenticated).
+
+**Key decisions and divergences from plan:**
+1. Synthesis caching is `localStorage`-only, not in a shared cache table. Per-user, per-day, per-signature cache keys are short and the cost of a Gemini regenerate on a new device is acceptable.
+2. The voice-guard "journey" rule is scoped to noun usage (`(your|the|a|this|my) journey`) so verb-form "we journey together" wouldn't false-positive. Gemini almost never produces that phrasing anyway with the system prompt in place.
+3. ApparelLane is hardcoded for v1. The Shopify Storefront API integration is left as a TODO comment in-file. Tags on each product (`{ fruit, armor, rule }`) are wired into the data shape but not yet consumed by the selection logic.
+4. Server-side voice guard does a one-retry escalation rather than failing the request. Gracefully degrades to the rule-based fallback if both attempts trip the guard. Better UX than a 500.
+5. SignOutLink does NOT clear cf-gifts-* keys. The user can sign out and continue using the dashboard locally; the local formation work is preserved and re-attached on next auth. Documented in the file header.
+
+**Verification status:**
+- Build: `npm run build` passes (2060 modules transformed, no errors).
+- Voice-guard script: NOT run against production yet. The user can run `node scripts/check-synthesis-voice.js --url=https://counterformed.com` after the deploy lands to spot-check the live endpoint.
+- Real iOS Safari device test: still deferred (same as Phase 2). The ApparelLane mobile scroll-snap behavior in particular should be verified on a real device, not just emulated.
+- Cross-device cache miss test: not yet exercised. Sign in on a fresh device with auth, confirm the SynthesisCard fires a fresh `/api/synthesize` call (cache key will differ because localStorage is empty).
+
+**Schema additions to Supabase:** None. Phase 3 is purely application-layer.
+
+**Environment configuration:** `GEMINI_API_KEY` is already set in Cloudflare Pages (the existing `/api/generate` uses it). No new env vars required.
+
+**Deferred / still open:**
+- Real iOS Safari mobile test of the magic-link flow AND the ApparelLane scroll-snap (carried over from Phase 2).
+- Run the voice-guard script against the production deployment to confirm Gemini's actual output stays in voice across the five fixtures.
+- Wire ApparelLane product selection to the profile's formation edge / active armor / top gift instead of hardcoded curation.
+- Shopify Storefront API integration for live inventory and pricing.
+
+---
+
 ## Session 8.5 — Phase 2 hardening: AuthCallback OTP fix + production wiring + end-to-end verification (2026-05-18)
 
 **Status:** Complete. Magic-link auth verified working end-to-end in production. Build passes.
