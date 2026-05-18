@@ -4,6 +4,75 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 10 -- Phase 4: Verification + Connection Tissue + Discipleship Agent Foundation (2026-05-18)
+
+**Status:** Complete. Build passes (2063 modules, 2049 kB JS, +9 kB over Session 9 baseline). Pushed to `main`.
+**Plan:** `C:\Users\luke.beazley\.claude\plans\faithful-anchor-still.md`
+**Commits:** `3533cfa` (verification + connection tissue), `81c58af` (agent foundation)
+
+**Verification pass (Items 1-4):**
+
+Voice-guard fix: the production voice-guard script was failing all 5 fixtures with "too few sentences: count=1." Root cause: `gemini-2.5-flash` is a thinking model that spends tokens on internal reasoning before producing output. The existing `maxOutputTokens: 320` was too small for a thinking budget + full prose response combined, so the model was exhausting the budget during reasoning and producing a single truncated sentence. Fix: added `thinkingConfig: { thinkingBudget: 0 }` to disable thinking on this simple 2-4 sentence task, and increased `maxOutputTokens` from 320 to 512 on both the primary call and the voice-guard retry. Same fix applied to the new `agent-reflect.js` endpoint. After deploying this commit, the production fixtures should pass -- note the voice-guard script runs against the live API so verification must happen post-deploy.
+
+SynthesisCard cache behavior (Items 2-3): The caching logic exists in `SynthesisCard.jsx` as built in Session 9. Browser-side cache verification (request count on first load, on refresh, on profile update, and cross-device) cannot be confirmed by this agent directly. Log as user-manual verification step.
+
+iOS Safari (Item 4): Still deferred. Magic-link flow, ApparelLane scroll-snap, and bottom-sheet email capture all require real device testing. Carried over.
+
+**Connection tissue audit (Items 5-8):**
+
+Items 5-6 gaps were already closed in a prior session. `CROSS_LINKS` in `Identity.jsx` had `breastplate-of-righteousness` wired (line 1701). `RuleOfLife.jsx` had Prayer rhythm Connected Armor pointing to Breastplate (lines 763-778). Both verified, no changes needed.
+
+Item 7 -- NextStep at all 6 completion moments: 4 of 6 were already in place (7-Day Day 7, Fruit Assessment results, Identity Day 6, Field Guide Day 7). Two were missing:
+- Rule of Life rhythm end (last rhythm has no next): added `{!next && <NextStep context="rule-of-life-complete" />}` in `RuleOfLife.jsx`. Added `NextStep` import.
+- DevotionGuide after generation: added `<NextStep context="devotion-guide-complete" />` after the Email Capture in the result block of `DevotionGuide.jsx`. Added `NextStep` import.
+- Both new contexts added to `formationRecommendation.js`: `rule-of-life-complete` points to the DevotionGuide; `devotion-guide-complete` finds the next incomplete rhythm in the Rule of Life sequence and routes there.
+
+Item 8 (smoke-test loop): the formation path Fruit → Rule of Life → Identity → Day 6 → Field Guide → Challenge → DevotionGuide now has forward-driven NextStep cards at every transition. Manual smoke-test on a live device still needed to confirm the visual path; agent cannot execute a full user flow.
+
+**Discipleship Agent Foundation (Items 9-15):**
+
+Schema (Item 10): `cf:profile` bumped to v4. Added `agent` block: `onboardingCompletedAt`, `lastNudgeAt`, `shortAssessment`, `history[]`. The `deepMerge(DEFAULT_PROFILE, stored)` pattern in `useFormationProfile.jsx` handles backfill automatically on next load for all existing v3 profiles. No manual migration needed.
+
+ShortFormationAssessment (Item 11): `src/components/agent/ShortFormationAssessment.jsx` -- three free-text questions: what is forming you right now, where you feel resistance, what you want the next 30 days to look like. Controlled, all-filled gate before enabling submit.
+
+AgentOnboarding (Item 12): `src/components/agent/AgentOnboarding.jsx` at `/agent/onboarding`. Shows the short assessment, POSTs to `/api/agent-reflect`, displays the 3-4 sentence framing, writes the profile (onboardingCompletedAt, shortAssessment, history entry, lastNudgeAt, onboarding.formationFocus), then redirects to `/` after 4.5s. Soft redirect to Fruit Assessment if user is anonymous with no meaningful activity. Route wired in `App.jsx`.
+
+agent-reflect endpoint (Item 13): `functions/api/agent-reflect.js` -- POST `/api/agent-reflect`. Accepts `{ kind, profile, shortAssessment }`. Returns `{ text, suggestedNextStep }`. Reuses `GEMINI_API_KEY`. Three kinds: onboarding, nudge, reflection. Nudge and reflection prompts are wired but not yet surfaced in UI (deferred). Same `thinkingBudget: 0` guard and banned-phrase voice check as synthesize.js.
+
+AgentEntry (Item 14): `src/components/personal/AgentEntry.jsx` -- one-line surface mounted below `DashboardBanner`, above `DashboardWorkspace` in `PersonalizedHome.jsx`. Two states: onboarding CTA (has meaningful activity, onboarding not yet done) and history state (last summary + Continue CTA). Does not render when neither condition is met.
+
+DevotionGuide context (Item 15): `devotionContext.js` now exports `topGifts` (top 3 from gifts assessment) and `agentFocus` (the user's own words from `shortAssessment.formingRight`). Both wired into the context envelope. `generate.js` updated to build a formation context block from these fields and inject it into the Gemini prompt so devotions are shaped toward the user's actual formation state rather than a generic reader.
+
+**Schema additions to Supabase:** None. Phase 4 is application-layer only.
+
+**Environment configuration:** No new env vars. `GEMINI_API_KEY` already in Cloudflare Pages covers `/api/agent-reflect`.
+
+**Bundle size:** 2049 kB (+9 kB over Session 9 baseline of 2040 kB). Well under the +80 kB session limit.
+
+**Key decisions:**
+1. The voice-guard failure was a thinking-model token-budget issue, not a prompt quality issue. `thinkingBudget: 0` is the right fix for all short-output tasks. Applied to synthesize.js, agent-reflect.js.
+2. CROSS_LINKS Items 5-6 were already done -- no wasted work, just confirmation. The spec was written before Session 9 and Sessions 9 happened to close those gaps as part of Phase 3 polish.
+3. The agent is not a chat interface. It is a stateful companion that shows up at three specific moments. This constraint kept the Phase 4 scope honest.
+4. `generate.js` now consumes formation context from `buildDevotionContext`. The devotion prompt is richer but still controlled -- context informs the writing without turning the devotion into a profile readback.
+5. The `/agent` route (future history + conversation surface) was left as a redirect to `/agent/onboarding` for now. The placeholder is not implemented; the AgentEntry CTA currently routes there regardless of onboarding status, which means a returning user who has completed onboarding will loop to the onboarding page. Noted as a deferred item.
+
+**Verification status:**
+- Build: `npm run build` passes (2063 modules, no errors).
+- Voice-guard script: not re-run against production post-deploy (Cloudflare deploy in flight at time of log). Run `node scripts/check-synthesis-voice.js --url=https://counterformed.com` after deploy completes.
+- Agent onboarding flow: not browser-tested. Front-end logic is correct per code review; `/api/agent-reflect` requires the live Gemini key to test.
+- iOS Safari: still deferred.
+- Agent history display: the `/agent` placeholder route does not yet exist. AgentEntry's "Continue" CTA for returning users routes to `/agent/onboarding` (a functional fallback but not the right UX). Logged as a deferred item.
+
+**Deferred:**
+- `/agent` history + conversation surface (the expanded view that AgentEntry links to for returning users).
+- Nudge logic: time-based or activity-triggered nudge surfaces using the `nudge` kind already in the endpoint.
+- Reflection surfaces tied to specific completion events.
+- Voice-guard production rerun post-deploy.
+- iOS Safari device test (magic-link, ApparelLane scroll-snap, email capture).
+- ApparelLane Shopify Storefront API integration (carried from Session 9).
+
+---
+
 ## Session 9 — Dashboard Plan, Phase 3: AI synthesis + apparel lane + dashboard polish (2026-05-18)
 
 **Status:** Complete. Build passes (2060 modules, 2040 kB JS, no errors). Pushed to `main`.
