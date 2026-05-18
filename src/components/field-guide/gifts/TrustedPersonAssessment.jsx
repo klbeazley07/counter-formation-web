@@ -3,7 +3,7 @@
 // 17 questions (one per core gift), frequency scale + "I haven't been in a position to see this".
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { gifts } from "../../../data/gifts";
 import AssessmentProgress from "./AssessmentProgress";
 import { GiftTransition } from "./AssessmentTransition";
@@ -116,7 +116,11 @@ function firstNameOf(fullName) {
 
 function questionText(gift, userName) {
   const q = gift.communityConfirmationQuestion || "";
-  return q.replace(/\[Name\]/g, firstNameOf(userName));
+  const name = firstNameOf(userName);
+  if (name) return q.replace(/\[Name\]/g, name);
+  // Graceful fallback when name isn't available in URL, Supabase, or local pairing.
+  const filled = q.replace(/\[Name\]/g, "the person who invited you");
+  return filled.charAt(0).toUpperCase() + filled.slice(1);
 }
 
 // True when consecutive questions cross a category boundary.
@@ -421,6 +425,7 @@ function QuestionScreen({ qIdx, responses, userName, onAnswer, onBack, onSkip, o
 export default function TrustedPersonAssessment() {
   const { token } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   // Look up the pairing to get the subject's name.
   const pairing = React.useMemo(() => {
@@ -428,7 +433,24 @@ export default function TrustedPersonAssessment() {
     return persons.find((p) => p.token === token) || null;
   }, [token]);
 
-  const userName = pairing?.userName || pairing?.name || "";
+  // Inviter name source priority: URL ?from= → Supabase lookup → local pairing.
+  // URL is the fast path; Supabase is the backstop for forwarded links.
+  const urlFrom = searchParams.get("from") || "";
+  const [supabaseInviterName, setSupabaseInviterName] = useState("");
+
+  useEffect(() => {
+    if (urlFrom || !supabase || !token) return;
+    supabase
+      .from("gifts_trusted_tokens")
+      .select("inviter_name")
+      .eq("token", token)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data?.inviter_name) setSupabaseInviterName(data.inviter_name);
+      });
+  }, [token, urlFrom]);
+
+  const userName = urlFrom || supabaseInviterName || pairing?.userName || "";
 
   // Load saved progress for this token.
   const [screen, setScreen] = useState(() => {

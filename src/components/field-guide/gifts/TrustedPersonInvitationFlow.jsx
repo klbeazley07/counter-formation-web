@@ -97,6 +97,7 @@ function saveInviteSent(pairings) {
         session_id: sessionId,
         person_name: p.name || null,
         relationship: p.relationship || null,
+        inviter_name: p.userName || null,
       }));
       supabase.from("gifts_trusted_tokens").upsert(rows, { onConflict: "token" }).then(() => {});
     }
@@ -526,7 +527,8 @@ function StepSent({ pairings, onReturn }) {
       </p>
 
       {pairings.map((p) => {
-        const url = `${getOrigin()}/field-guide/gifts/observe/${p.token}`;
+        const fromParam = p.userName ? `?from=${encodeURIComponent(p.userName)}` : "";
+        const url = `${getOrigin()}/field-guide/gifts/observe/${p.token}${fromParam}`;
         const isCopied = copiedToken === p.token;
         return (
           <div
