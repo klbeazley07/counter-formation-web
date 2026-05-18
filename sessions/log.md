@@ -4,6 +4,44 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 8.5 — Phase 2 hardening: AuthCallback OTP fix + production wiring + end-to-end verification (2026-05-18)
+
+**Status:** Complete. Magic-link auth verified working end-to-end in production. Build passes.
+**Plan:** post-Phase-2 hardening pass; not a planned session per se but resolves Phase 2's blocking gaps.
+**Commits:** `46da081` (ConvertKitOptIn button fix), `0824068` (AuthCallback OTP-verify + safety timeouts)
+
+**Production environment now configured:**
+- Supabase Auth → URL Configuration: `https://counterformed.com/auth/callback` (+ www + localhost) added to redirect allow-list.
+- Cloudflare Pages env: `KIT_API_KEY` (secret) and `KIT_FORMATION_TAG_ID=19653896` (plain) set. The `/api/subscribe-convertkit` endpoint verified live via curl returning `subscriberId`.
+- Custom SMTP wired in Supabase: Resend (`smtp.resend.com`, port 465, username `resend`, API key in password). Sender: `Counter Formation <formation@counterformed.com>`. Verified domain `counterformed.com` was pre-existing in Resend.
+- Custom Counter Formation email templates pasted into Supabase Authentication → Emails → Templates for "Confirm signup" and "Magic Link." Dark obsidian + Champagne Gold + Cormorant italic, table-based HTML for email-client compatibility.
+
+**Bug fixes shipped:**
+1. `ConvertKitOptIn` two-button layout was breaking — "Yes, count me in" wrapped onto two lines because flexbox sized each child by content and the Michroma + 0.26em letter-spacing combination overflowed. Fix: `flex: 1` for equal widths, `white-space: nowrap`, shortened the label to "Count me in," loosened tracking to 0.22em, widened container to 460px.
+2. `AuthCallback` hung indefinitely on the loading screen — the leading bug of Phase 2. Root cause: Supabase's default email templates emit magic-link URLs in `?token_hash=&type=` (OTP verify) format, NOT the `?code=` (PKCE) format that `detectSessionInUrl` handles. Our PKCE-only callback silently ignored the URL. Fix in `src/components/auth/AuthCallback.jsx`:
+   - Detect `token_hash` + `type` in `useSearchParams`, call `supabase.auth.verifyOtp({ token_hash, type })` before polling.
+   - Doubled the poll window to 40 iterations × 150ms = 6 seconds.
+   - Wrapped `runAuthBackfill` in a `Promise.race` with a 6s timeout so a hung Supabase query never strands the user (the auth-state listener retries the backfill in the background regardless).
+   - Added a 12-second escape-hatch timeout that navigates home if nothing resolves.
+   - Added a "Return home" link to the error screen.
+
+**End-to-end verification (real user, real inbox, real device):**
+- Requested magic link from production dashboard.
+- Email arrived from `Counter Formation <formation@counterformed.com>` with Counter Formation branding.
+- Clicked link → landed at `/auth/callback` → AuthCallback's `verifyOtp` path engaged → session landed → backfill ran → user advanced past the callback screen.
+- Confirmed: `klbeazley@gmail.com` row exists in Supabase `auth.users` with created_at + last_sign_in_at populated (12:16:34 + 12:17:40 GMT-0500).
+
+**Memory saved for Phase 3+:**
+- `project_auth_pkce_otp_gotcha.md` — the OTP-verify URL flavor must be handled explicitly; do not assume PKCE config alone is sufficient.
+- `project_supabase_rls_trusted_tables.md` — the trusted-person tables intentionally have RLS OFF; the Supabase advisor will continue to flag them as errors and that's fine.
+
+**Deferred / known cosmetic items still open:**
+- Real iOS Safari device test (was deferred from Phase 2; still not done — the desktop flow is verified but mobile-Safari + Apple-Mail in-app browser context handoff has not been exercised).
+- Cross-device handoff test (sign in from a second browser with empty localStorage; confirm dashboard hydrates from Supabase).
+- Reset Password template still on Supabase default — won't fire in magic-link-only flow, but worth branding for consistency in a future polish pass.
+
+---
+
 ## Session 8 — Dashboard Plan, Phase 2: Identity Layer (2026-05-18)
 
 **Status:** Complete. Build passes (2057 modules, 2027 kB JS, no errors). Pushed to `main`.
