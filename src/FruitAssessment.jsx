@@ -5,6 +5,7 @@ import { QUESTIONS, FRUITS, FRUIT_ORDER, CLUSTER_THRESHOLD, SCALE_OPTIONS } from
 import { useFormationProfile } from "./hooks/useFormationProfile";
 import NextStep from "./components/NextStep";
 import { hasCompletedAssessment } from "./utils/giftsAssessmentStorage";
+import { syncFruitToSupabase, recoverFruitFromSupabase } from "./utils/fruitSupabaseSync";
 
 /* ─── CONSTANTS ──────────────────────────────────────────────────────── */
 
@@ -239,7 +240,27 @@ export default function FruitAssessment() {
         ...(profile.assessment.previousResult || {}),
       });
       setScreen("pre-intro");
+      return;
     }
+    // Local profile is empty -- try Supabase recovery before assuming first-time visitor.
+    let cancelled = false;
+    recoverFruitFromSupabase().then((recovered) => {
+      if (cancelled || !recovered) return;
+      updateProfile({
+        assessment: {
+          fruits: recovered.fruits,
+          completedAt: recovered.completedAt,
+          formationEdge: recovered.formationEdge,
+        },
+      });
+      setPreviousResult({
+        completedAt: recovered.completedAt,
+        scores: recovered.fruits,
+        formationFruits: recovered.formationEdge,
+      });
+      setScreen("pre-intro");
+    });
+    return () => { cancelled = true; };
   }, [isLoaded]);
 
   // Draft state is local only -- not persisted.
@@ -276,6 +297,12 @@ export default function FruitAssessment() {
             }
           : null,
       },
+    });
+    // Background sync to Supabase -- survives localStorage clears and crosses devices once auth lands.
+    syncFruitToSupabase({
+      scores: newResult.scores,
+      formationEdge: newResult.formationFruits,
+      completedAt: newResult.completedAt,
     });
     setScores(sc);
     setPrimaryFruit(pf);

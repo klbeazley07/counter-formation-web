@@ -18,6 +18,7 @@ import { ScriptureRef } from "../../../ScriptureRef";
 import { useFormationProfile } from "../../../hooks/useFormationProfile";
 import { supabase } from "../../../utils/supabaseClient";
 import { getSessionId } from "../../../utils/giftsSessionId";
+import { mirrorGiftsToProfile } from "../../../utils/giftsProfileMirror";
 
 const TRUSTED_RESPONSES_KEY = "cf-gifts-trusted-responses";
 
@@ -582,7 +583,7 @@ export default function GiftsResults() {
   const heroRef = useRef(null);
   const [modalKey, setModalKey] = useState(null);
   const [footerVisible, setFooterVisible] = useState(false);
-  const { profile } = useFormationProfile();
+  const { profile, updateProfile } = useFormationProfile();
   const fruitComplete = profile?.assessment?.completedAt != null;
 
   // Progress is stateful so Supabase recovery can update it after mount.
@@ -672,8 +673,10 @@ export default function GiftsResults() {
   useEffect(() => {
     if (hasCompleted && Object.keys(scores).length > 0) {
       saveResultsSnapshot(scores, totalTrustedPersons);
+      // Mirror a lightweight summary into cf:profile.gifts so the dashboard reads one source.
+      mirrorGiftsToProfile(updateProfile, scores);
     }
-  }, [hasCompleted, scores, totalTrustedPersons]);
+  }, [hasCompleted, scores, totalTrustedPersons, updateProfile]);
 
   useEffect(() => {
     const node = heroRef.current;

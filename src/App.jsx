@@ -33,6 +33,7 @@ import FruitAssessment, { FAStyles } from "./FruitAssessment";
 import GiftsProcessing from "./components/field-guide/gifts/GiftsProcessing";
 import GiftsResults from "./components/field-guide/gifts/GiftsResults";
 import GiftsRecover from "./components/field-guide/gifts/GiftsRecover";
+import HomeRouter from "./components/personal/HomeRouter";
 import FormationPictureView from "./components/field-guide/gifts/FormationPictureView";
 import TrustedPersonInvitationFlow from "./components/field-guide/gifts/TrustedPersonInvitationFlow";
 import TrustedPersonAssessment from "./components/field-guide/gifts/TrustedPersonAssessment";
@@ -1841,7 +1842,7 @@ export default function App() {
       <SiteNav />
       <Routes>
         {/* Main site */}
-        <Route path="/" element={<MainSite />} />
+        <Route path="/" element={<HomeRouter marketingSite={<MainSite />} />} />
 
         {/* Field Guide routes */}
         <Route path={`${FG_BASE}`}          element={<FGLanding />} />

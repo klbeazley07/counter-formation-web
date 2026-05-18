@@ -6,6 +6,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../../utils/supabaseClient";
 import { getSessionId } from "../../../utils/giftsSessionId";
+import { mirrorGiftsToProfile } from "../../../utils/giftsProfileMirror";
+import { useFormationProfile } from "../../../hooks/useFormationProfile";
 
 /* ─── TOKENS ────────────────────────────────────────────────────────────── */
 
@@ -580,6 +582,7 @@ function StepSent({ pairings, onReturn }) {
 
 export default function TrustedPersonInvitationFlow() {
   const navigate = useNavigate();
+  const { updateProfile } = useFormationProfile();
   const [step, setStep] = useState(1);
   const [userName, setUserName] = useState(loadStoredUserName);
   const [recipients, setRecipients] = useState([
@@ -614,6 +617,8 @@ export default function TrustedPersonInvitationFlow() {
 
     if (pairings.length === 0) return;
     saveInviteSent(pairings);
+    // Refresh the gifts summary so the dashboard's "invited" count is current.
+    mirrorGiftsToProfile(updateProfile, null);
     setSentPairings(pairings);
     setStep(4);
   }

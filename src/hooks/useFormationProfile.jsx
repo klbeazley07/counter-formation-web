@@ -4,17 +4,28 @@ import { migrateFormationProfile } from "../utils/migrateFormationProfile";
 const PROFILE_KEY = "cf:profile";
 
 const DEFAULT_PROFILE = {
-  _version: 1,
+  _version: 3,
   _created: null,
   _updated: null,
   identity: {
     email: null,
+    userId: null,         // Supabase auth.uid() when authenticated (Phase 2)
+    authedAt: null,
+    emailOptIn: false,
+    displayName: null,
   },
   assessment: {
     fruits:         null,
     completedAt:    null,
     formationEdge:  [],
     previousResult: null,
+  },
+  gifts: {
+    completedAt: null,
+    topGifts: [],
+    topGiftScores: {},
+    trustedPersonsInvited: 0,
+    trustedPersonsConfirmed: 0,
   },
   challenge: {
     completedDays: [],
@@ -58,6 +69,7 @@ const DEFAULT_PROFILE = {
   },
   dismissed: {
     slidebar: false,
+    saveJourneyStrip: false,  // dashboard "Save your journey" prompt (Phase 2)
   },
 };
 
@@ -125,7 +137,15 @@ export function FormationProfileProvider({ children }) {
     const raw = localStorage.getItem(PROFILE_KEY);
     if (raw) {
       try {
-        initialProfile = JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        // Backfill any new schema keys onto older profiles (v1, v2 → v3).
+        // deepMerge here prefers existing values, only adding missing structure.
+        initialProfile = deepMerge(DEFAULT_PROFILE, parsed);
+        initialProfile._version = 3;
+        // Persist the backfill so subsequent loads are cheap.
+        if (parsed._version !== 3) {
+          localStorage.setItem(PROFILE_KEY, JSON.stringify(initialProfile));
+        }
       } catch {
         initialProfile = null;
       }

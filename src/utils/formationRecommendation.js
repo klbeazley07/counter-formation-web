@@ -181,3 +181,92 @@ export function formationRecommendation(context, profile, pieceSlug) {
       return FALLBACK;
   }
 }
+
+/**
+ * Dashboard-mode recommendation. Picks the single highest-priority forward
+ * action for a returning user across all sections. Read-only over the profile.
+ *
+ * Priority order:
+ *  1. Resume in-progress challenge
+ *  2. Resume in-progress armor piece
+ *  3. Complete the Fruit Assessment if it's null
+ *  4. Complete the Gifts Assessment if it's started but not finished
+ *  5. Invite trusted persons if Gifts is done and none invited
+ *  6. Otherwise: open Devotion Guide
+ */
+export function recommendForDashboard(profile) {
+  if (!profile) return FALLBACK;
+
+  // 1. Challenge in progress
+  const challengeDays = profile.challenge?.completedDays || [];
+  if (profile.challenge?.startedAt && !profile.challenge?.completedAt && challengeDays.length > 0) {
+    const lastDay = Math.max(...challengeDays);
+    const nextDay = Math.min(lastDay + 1, 7);
+    return {
+      destination: `/7-day-challenge/day/${nextDay}`,
+      label:       `Continue Day ${nextDay}`,
+      description: `Pick up the 7-Day Challenge where you left off.`,
+    };
+  }
+
+  // 2. Armor piece in progress (one with progress but not in completedPieces)
+  const armorProgress = profile.armor?.progress || {};
+  const completedPieces = profile.armor?.completedPieces || [];
+  const inProgressPiece = Object.keys(armorProgress).find((slug) => {
+    if (completedPieces.includes(slug)) return false;
+    const days = armorProgress[slug];
+    return Array.isArray(days) ? days.length > 0 : false;
+  });
+  if (inProgressPiece) {
+    const name = pieceLabel(inProgressPiece);
+    return {
+      destination: `/identity/${inProgressPiece}`,
+      label:       `Continue the ${name}`,
+      description: `Your formation through ${name} is underway. Return to the next day.`,
+    };
+  }
+
+  // 3. Fruit Assessment incomplete
+  if (!profile.assessment?.completedAt) {
+    return {
+      destination: "/field-guide/fruit-assessment",
+      label:       "Begin the Fruit Assessment",
+      description: "The first step is naming where the Spirit is forming you.",
+    };
+  }
+
+  // 4. Gifts started but not done
+  const giftsCompletedAt = profile.gifts?.completedAt;
+  if (!giftsCompletedAt) {
+    return {
+      destination: "/field-guide/gifts",
+      label:       "Take the Gifts Assessment",
+      description: "Where is the Spirit moving through you? Twenty-five minutes to find out.",
+    };
+  }
+
+  // 5. Gifts done but no trusted persons invited
+  const invited = profile.gifts?.trustedPersonsInvited || 0;
+  const confirmed = profile.gifts?.trustedPersonsConfirmed || 0;
+  if (invited === 0) {
+    return {
+      destination: "/field-guide/gifts/invite",
+      label:       "Invite your trusted people",
+      description: "Your gifts profile is only complete when others have weighed in.",
+    };
+  }
+  if (confirmed < invited) {
+    return {
+      destination: "/field-guide/gifts/results",
+      label:       `View your gifts (${confirmed} of ${invited} confirmed)`,
+      description: "See where your trusted people have weighed in so far.",
+    };
+  }
+
+  // 6. Fallback: devotion guide
+  return {
+    destination: "/field-guide/devotion-guide",
+    label:       "Open the Devotion Guide",
+    description: "Generate a devotion grounded in where your formation is right now.",
+  };
+}
