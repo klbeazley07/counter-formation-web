@@ -4,6 +4,27 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 14 -- Phase 7: ARMOR_PIECES migration + synthesis voice check (2026-05-19)
+
+**Status:** Complete. Build passes (2065 modules, 2054 kB -- unchanged from Phase 6 baseline). Pushed to `main`.
+
+**Items completed:**
+
+**Synthesis voice check (Item 1):** All 5 fixtures pass against `https://counterformed.com/api/synthesize`. The Anthropic API migration from Session 13 is confirmed working in production.
+
+**ARMOR_PIECES migration to armor.json (Item 3):** Each of the 6 entries in `armor.json` now carries the 7 overview summary fields the ring UI reads: `scripture`, `scriptureText`, `theology`, `tension`, `practice` (summary string), `hook`, `product`. Encoding artifacts from the source JSX fixed: `â€"` → `--` (per voice guide), `Â·` → `·`. `Identity.jsx` now imports `getAllArmorPieces()` from the content loader and drops the 62-line inline `const ARMOR_PIECES` array.
+
+**iOS Safari test (Item 2):** Still deferred. Requires real device.
+
+**Key decisions:**
+1. The `practice` field in `armor.json` is a short summary string (not the full `practice.body` object) -- the ring UI shows it as a one-liner under "Daily Practice", while the full 7-day practice body lives in `days[n].practice.body`.
+2. The `product` field uses `·` (middle dot) for the Drop 002 designator, matching the storefront notation.
+3. `PIECE_ORDER` remains defined locally in `Identity.jsx` -- it is used by the per-piece sub-page components (`BackNav`, `ArmorPiece`) which need it at module scope. The content loader's internal `PIECE_ORDER` is unexported.
+
+**Bundle size:** 2054 kB (unchanged). 2065 modules (unchanged).
+
+---
+
 ## Session 13 -- Phase 6 continuation: Gemini → Claude API migration (2026-05-19)
 
 **Status:** Complete. Build passes (2065 modules, unchanged from Session 12). Pushed to `main`.
