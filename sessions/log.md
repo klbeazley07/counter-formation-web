@@ -4,6 +4,40 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 16 -- Phase 9: ApparelLane v2 lite + const C batch cleanup (2026-05-19)
+
+**Status:** Complete. Build passes (2066 modules, 2057 kB -- ~3 kB increase from token string literals). Pushed to `main`.
+
+**Items completed:**
+
+**ApparelLane v2 lite (Item 2):** Refactored `ApparelLane.jsx` to profile-driven product ordering. Key changes:
+- `getProfileSignal(profile)` extracts `{ activeArmor, formationEdge }` from the profile once; both `bandSubtitle` and the new scoring logic share it.
+- `profileScore(product, signal)` returns 3 for an active armor match, 2 for a formation edge (fruit) match, 0 otherwise.
+- `resolvedEyebrow(product, signal)` returns a formation-aware eyebrow string (`"Wear the Belt of Truth"`, `"Anchor for self-control"`) when a match scores; falls back to the hardcoded eyebrow when not.
+- Products are sorted by score descending with stable index tiebreaker before render.
+- No Shopify Storefront API required; full fallback to original CURATED_APPAREL order when no profile signal.
+
+**const C cleanup -- FruitAssessment.jsx (Item 3):** Removed `const C` (10 keys, ~12 lines) and `const F` (3 keys, ~5 lines) from FruitAssessment.jsx. All 88 `C.*` and 68 `F.*` inline style references replaced with CSS vars from `tokens.css`. Added `--cf-gold-45` to tokens.css for the `goldSoft` (rgba 0.45) value that had no exact var.
+
+**const C cleanup -- About.jsx (Item 4):** Removed `const C` (6 keys, ~9 lines). All 35 `C.*` references replaced. `C.gearBg` was defined but never used -- deleted with the block.
+
+**const C cleanup -- FieldGuide.jsx (Item 5):** Removed `const C` (12 keys, ~14 lines). All 40 `C.*` references replaced. Added `--cf-ivory-58` and `--cf-ivory-24` to tokens.css for the `muted` (0.58) and `dim` (0.24) ivory values that had no exact vars. `FGLabel`'s default parameter `color = C.gold` became `color = "var(--cf-gold)"` (string, required for JS default params).
+
+**iOS Safari test (Item 1):** Still deferred. Requires real device. Carrying to Phase 10.
+
+**Key decisions:**
+1. CSS vars in JSX style object values must be JavaScript strings (`"var(--cf-gold)"`, not bare `var(--cf-gold)`). CSS template literal strings use bare CSS var syntax -- no `${}` wrapping. This distinction tripped up the bulk replacement and required two correction passes.
+2. `const F` (font family strings in FruitAssessment.jsx) cleaned up in the same pass as `const C` -- same pattern, same substitution into `var(--cf-font-*)` tokens.
+3. Tokens.css grew by 3 new vars: `--cf-gold-45`, `--cf-ivory-58`, `--cf-ivory-24`. These were true gaps; adding them is correct rather than rounding to the nearest existing var.
+4. `FG_CSS` template string (injected styles in FieldGuide.jsx) still has hardcoded hex values -- that's a separate deferred refactor (moving CSS to a .css file).
+5. `FA_CSS` template string (injected styles in FruitAssessment.jsx) also still has hardcoded hex values -- same deferred status.
+
+**Remaining const C files:** 26 files still have `const C` definitions. The next three largest by usage after this session are `SevenDayChallenge.jsx`, `DevotionGuide.jsx`, and the gifts assessment component tree.
+
+**Bundle size:** 2057 kB (~3 kB up from Phase 8). 2066 modules (unchanged).
+
+---
+
 ## Session 15 -- Phase 8: Identity content cleanup + FieldGuide extraction (2026-05-19)
 
 **Status:** Complete. Build passes (2066 modules, 2054 kB -- +1 module for field-guide-landing.json, bundle size unchanged). Pushed to `main`.
