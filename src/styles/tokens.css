@@ -24,10 +24,12 @@
   --cf-ivory-90:        rgba(250, 248, 245, 0.90);
   --cf-ivory-82:        rgba(250, 248, 245, 0.82);
   --cf-ivory-62:        rgba(250, 248, 245, 0.62);
+  --cf-ivory-58:        rgba(250, 248, 245, 0.58);
   --cf-ivory-55:        rgba(250, 248, 245, 0.55);
   --cf-ivory-42:        rgba(250, 248, 245, 0.42);
   --cf-ivory-35:        rgba(250, 248, 245, 0.35);
   --cf-ivory-28:        rgba(250, 248, 245, 0.28);
+  --cf-ivory-24:        rgba(250, 248, 245, 0.24);
   --cf-ivory-18:        rgba(250, 248, 245, 0.18);
 
   /* Champagne gold */
@@ -39,6 +41,7 @@
   --cf-gold-glow:       rgba(201, 168, 76, 0.06);
   --cf-gold-bg:         rgba(201, 168, 76, 0.08);
   --cf-gold-muted:      rgba(201, 168, 76, 0.50);
+  --cf-gold-45:         rgba(201, 168, 76, 0.45);
 
   /* Neutral overlays */
   --cf-white-5:         rgba(255, 255, 255, 0.05);

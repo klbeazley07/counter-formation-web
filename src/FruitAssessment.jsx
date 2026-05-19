@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+﻿import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { gsap } from "gsap";
 import { QUESTIONS, FRUITS, FRUIT_ORDER, CLUSTER_THRESHOLD, SCALE_OPTIONS } from "./fruitAssessmentData";
@@ -8,28 +8,6 @@ import { hasCompletedAssessment } from "./utils/giftsAssessmentStorage";
 import { syncFruitToSupabase, recoverFruitFromSupabase } from "./utils/fruitSupabaseSync";
 import FruitStrata from "./components/visualizations/FruitStrata";
 import EmailCapture from "./components/auth/EmailCapture";
-
-/* ─── CONSTANTS ──────────────────────────────────────────────────────── */
-
-const C = {
-  bg:         "#06050A",
-  bgSurf:     "#0E0C0A",
-  bgCard:     "#17140F",
-  gold:       "#C9A84C",
-  goldSoft:   "rgba(201,168,76,0.45)",
-  goldFaint:  "rgba(201,168,76,0.15)",
-  goldMid:    "rgba(201,168,76,0.08)",
-  ivory:      "#FAF8F5",
-  ivoryDim:   "rgba(250,248,245,0.62)",
-  ivoryFaint: "rgba(250,248,245,0.28)",
-};
-
-const F = {
-  brand: "'Michroma', sans-serif",
-  body:  "'Inter', sans-serif",
-  serif: "'Cormorant Garamond', serif",
-};
-
 
 /* ─── INJECTED STYLES ─────────────────────────────────────────────────── */
 
@@ -503,10 +481,10 @@ function PreIntroScreen({ previous, onView, onRetake, onDelta }) {
         onMouseLeave={() => setHov(false)}
         style={{
           display: "block", width: "100%", padding: "14px 24px",
-          border: `1px solid ${soft ? C.goldSoft : C.gold}`,
-          background: hov ? C.goldMid : "transparent",
-          color: soft ? C.ivoryDim : C.gold,
-          fontFamily: F.brand, fontSize: 12, letterSpacing: "0.28em",
+          border: `1px solid ${soft ? "var(--cf-gold-45)" : "var(--cf-gold)"}`,
+          background: hov ? "var(--cf-gold-bg)" : "transparent",
+          color: soft ? "var(--cf-ivory-62)" : "var(--cf-gold)",
+          fontFamily: "var(--cf-font-display)", fontSize: 12, letterSpacing: "0.28em",
           textTransform: "uppercase", cursor: "pointer",
           transition: "background 0.2s ease",
         }}
@@ -517,15 +495,15 @@ function PreIntroScreen({ previous, onView, onRetake, onDelta }) {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px" }}>
+    <div style={{ minHeight: "100vh", background: "var(--cf-hero-bg)", display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px" }}>
       <div style={{ maxWidth: 520, width: "100%", textAlign: "center" }}>
-        <div className="fa-up-0" style={{ fontFamily: F.brand, fontSize: 11, letterSpacing: "0.32em", color: C.gold, textTransform: "uppercase", marginBottom: 24 }}>
+        <div className="fa-up-0" style={{ fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.32em", color: "var(--cf-gold)", textTransform: "uppercase", marginBottom: 24 }}>
           Welcome Back
         </div>
-        <h1 className="fa-up-1" style={{ fontFamily: F.brand, fontSize: 28, letterSpacing: "0.12em", textTransform: "uppercase", color: C.ivory, marginBottom: 32, lineHeight: 1.3 }}>
+        <h1 className="fa-up-1" style={{ fontFamily: "var(--cf-font-display)", fontSize: 28, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--cf-ivory)", marginBottom: 32, lineHeight: 1.3 }}>
           Your Formation Continues
         </h1>
-        <p className="fa-up-2" style={{ fontFamily: F.body, fontWeight: 300, fontSize: 16, color: C.ivoryDim, lineHeight: 1.7, marginBottom: 40 }}>
+        <p className="fa-up-2" style={{ fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 16, color: "var(--cf-ivory-62)", lineHeight: 1.7, marginBottom: 40 }}>
           You completed this assessment on {formatDate(previous.completedAt)}. Your current area of formation was {fruit ? fruit.label : previous.primaryFruit}. The Spirit is still at work. You can revisit your last results, retake the assessment fresh, or see how you have moved.
         </p>
         <div className="fa-up-3" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -545,36 +523,36 @@ function IntroScreen({ onBegin }) {
   const [btnHov, setBtnHov] = useState(false);
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: "96px 24px", position: "relative", overflow: "hidden" }}>
+    <div style={{ minHeight: "100vh", background: "var(--cf-hero-bg)", display: "flex", alignItems: "center", justifyContent: "center", padding: "96px 24px", position: "relative", overflow: "hidden" }}>
       <div className="fa-fruit-bg" style={{
         position: "absolute", right: "6%", top: "50%", transform: "translateY(-50%)",
         display: "flex", flexDirection: "column", gap: 20, opacity: 0.05,
         pointerEvents: "none", userSelect: "none",
       }}>
         {FRUIT_NAMES.map(n => (
-          <span key={n} style={{ fontFamily: F.brand, fontSize: 12, letterSpacing: "0.4em", textTransform: "uppercase", color: C.ivory, whiteSpace: "nowrap" }}>{n}</span>
+          <span key={n} style={{ fontFamily: "var(--cf-font-display)", fontSize: 12, letterSpacing: "0.4em", textTransform: "uppercase", color: "var(--cf-ivory)", whiteSpace: "nowrap" }}>{n}</span>
         ))}
       </div>
 
       <div style={{ maxWidth: 640, width: "100%", position: "relative", zIndex: 1 }}>
-        <div className="fa-up-0" style={{ fontFamily: F.brand, fontSize: 11, letterSpacing: "0.32em", color: C.gold, textTransform: "uppercase", marginBottom: 20 }}>
+        <div className="fa-up-0" style={{ fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.32em", color: "var(--cf-gold)", textTransform: "uppercase", marginBottom: 20 }}>
           Field Guide &middot; Fruit of the Spirit
         </div>
-        <h1 className="fa-up-1" style={{ fontFamily: F.brand, fontSize: "clamp(28px,5vw,36px)", letterSpacing: "0.12em", textTransform: "uppercase", color: C.ivory, lineHeight: 1.3, marginBottom: 32 }}>
+        <h1 className="fa-up-1" style={{ fontFamily: "var(--cf-font-display)", fontSize: "clamp(28px,5vw,36px)", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--cf-ivory)", lineHeight: 1.3, marginBottom: 32 }}>
           Where Is the Spirit Working in You?
         </h1>
-        <div className="fa-up-2" style={{ width: 48, height: 1, background: C.goldFaint, marginBottom: 32 }} />
-        <p className="fa-up-2" style={{ fontFamily: F.body, fontWeight: 300, fontSize: 17, color: C.ivory, lineHeight: 1.8, marginBottom: 24 }}>
+        <div className="fa-up-2" style={{ width: 48, height: 1, background: "var(--cf-gold-faint)", marginBottom: 32 }} />
+        <p className="fa-up-2" style={{ fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 17, color: "var(--cf-ivory)", lineHeight: 1.8, marginBottom: 24 }}>
           Paul wrote about the fruit of the Spirit in the singular. Not fruits. One fruit, with nine qualities, growing in proportion to abiding in Christ. Where you find deficiency in any of them, you are not discovering a fixed trait. You are finding an area where the Spirit has more room to work right now.
         </p>
-        <p className="fa-up-3" style={{ fontFamily: F.body, fontWeight: 300, fontSize: 17, color: C.ivory, lineHeight: 1.8, marginBottom: 40 }}>
+        <p className="fa-up-3" style={{ fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 17, color: "var(--cf-ivory)", lineHeight: 1.8, marginBottom: 40 }}>
           This is not a personality quiz. It is 27 behavioral questions designed for honest self-report, not self-idealization. The goal is not to categorize you. The goal is to show you where formation is most needed -- and to give you one concrete practice for the week ahead.
         </p>
         <div className="fa-up-4" style={{ maxWidth: 520, margin: "0 auto 40px", textAlign: "center" }}>
-          <p style={{ fontFamily: F.serif, fontStyle: "italic", fontSize: 22, color: C.ivory, lineHeight: 1.6, margin: "0 0 16px" }}>
+          <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: 22, color: "var(--cf-ivory)", lineHeight: 1.6, margin: "0 0 16px" }}>
             &ldquo;But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, self-control.&rdquo;
           </p>
-          <div style={{ fontFamily: F.brand, fontSize: 11, letterSpacing: "0.28em", color: C.gold, textTransform: "uppercase" }}>
+          <div style={{ fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.28em", color: "var(--cf-gold)", textTransform: "uppercase" }}>
             Galatians 5:22&ndash;23
           </div>
         </div>
@@ -584,14 +562,14 @@ function IntroScreen({ onBegin }) {
             onMouseEnter={() => setBtnHov(true)}
             onMouseLeave={() => setBtnHov(false)}
             style={{
-              padding: "18px 40px", border: `1px solid ${C.gold}`, background: btnHov ? C.goldMid : "transparent",
-              color: C.gold, fontFamily: F.brand, fontSize: 13, letterSpacing: "0.28em",
+              padding: "18px 40px", border: `1px solid var(--cf-gold)`, background: btnHov ? "var(--cf-gold-bg)" : "transparent",
+              color: "var(--cf-gold)", fontFamily: "var(--cf-font-display)", fontSize: 13, letterSpacing: "0.28em",
               textTransform: "uppercase", cursor: "pointer", transition: "background 0.2s ease",
             }}
           >
             Begin Assessment
           </button>
-          <p style={{ fontFamily: F.body, fontWeight: 300, fontSize: 13, color: C.ivoryDim, marginTop: 16 }}>
+          <p style={{ fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 13, color: "var(--cf-ivory-62)", marginTop: 16 }}>
             27 questions &middot; approximately 6 minutes
           </p>
         </div>
@@ -673,7 +651,7 @@ function QuestionScreen({ qExitClass, qEnterClass, answers, currentQuestion, sel
   const mobileTargetOpacity  = ambientOpacity ? 0.06 : 0;
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, display: "flex", flexDirection: "column", padding: "32px 24px", position: "relative", overflow: "hidden" }}>
+    <div style={{ minHeight: "100vh", background: "var(--cf-hero-bg)", display: "flex", flexDirection: "column", padding: "32px 24px", position: "relative", overflow: "hidden" }}>
 
       {/* Ambient Fruit -- Desktop: right edge, rotated -90deg */}
       <div
@@ -690,11 +668,11 @@ function QuestionScreen({ qExitClass, qEnterClass, answers, currentQuestion, sel
         <div style={{
           transform: "rotate(-90deg)",
           transformOrigin: "center center",
-          fontFamily: F.brand,
+          fontFamily: "var(--cf-font-display)",
           fontSize: 140,
           letterSpacing: "0.44em",
           textTransform: "uppercase",
-          color: C.ivory,
+          color: "var(--cf-ivory)",
           opacity: desktopTargetOpacity,
           transition: reduced ? "none" : `opacity ${ambientTransDuration} ease`,
           whiteSpace: "nowrap",
@@ -717,11 +695,11 @@ function QuestionScreen({ qExitClass, qEnterClass, answers, currentQuestion, sel
         }}
       >
         <div style={{
-          fontFamily: F.brand,
+          fontFamily: "var(--cf-font-display)",
           fontSize: 80,
           letterSpacing: "0.44em",
           textTransform: "uppercase",
-          color: C.ivory,
+          color: "var(--cf-ivory)",
           opacity: mobileTargetOpacity,
           transition: reduced ? "none" : `opacity ${ambientTransDuration} ease`,
           whiteSpace: "nowrap",
@@ -736,7 +714,7 @@ function QuestionScreen({ qExitClass, qEnterClass, answers, currentQuestion, sel
         <div className="fa-progress-track">
           <div className="fa-progress-fill" style={{ width: `${progress}%` }} />
         </div>
-        <div style={{ fontFamily: F.body, fontWeight: 300, fontSize: 12, color: C.ivoryDim, letterSpacing: "0.16em", textTransform: "uppercase", marginTop: 12 }}>
+        <div style={{ fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 12, color: "var(--cf-ivory-62)", letterSpacing: "0.16em", textTransform: "uppercase", marginTop: 12 }}>
           Question {currentQuestion + 1} of 27
         </div>
       </div>
@@ -747,7 +725,7 @@ function QuestionScreen({ qExitClass, qEnterClass, answers, currentQuestion, sel
           className={[qExitClass, qEnterClass].filter(Boolean).join(" ")}
           style={{ transition: "opacity 0.21s ease, transform 0.21s ease" }}
         >
-          <p style={{ fontFamily: F.body, fontWeight: 400, fontSize: "clamp(19px,2.5vw,22px)", color: C.ivory, lineHeight: 1.55, marginBottom: 48 }}>
+          <p style={{ fontFamily: "var(--cf-font-body)", fontWeight: 400, fontSize: "clamp(19px,2.5vw,22px)", color: "var(--cf-ivory)", lineHeight: 1.55, marginBottom: 48 }}>
             {q.text}
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -768,7 +746,7 @@ function QuestionScreen({ qExitClass, qEnterClass, answers, currentQuestion, sel
         {currentQuestion > 0 ? (
           <button
             onClick={goBack}
-            style={{ background: "none", border: "none", color: C.ivoryDim, fontFamily: F.body, fontSize: 13, letterSpacing: "0.16em", textTransform: "uppercase", cursor: "pointer", padding: "8px 0" }}
+            style={{ background: "none", border: "none", color: "var(--cf-ivory-62)", fontFamily: "var(--cf-font-body)", fontSize: 13, letterSpacing: "0.16em", textTransform: "uppercase", cursor: "pointer", padding: "8px 0" }}
           >
             &larr; Back
           </button>
@@ -789,9 +767,9 @@ function AnswerOption({ label, isSelected, onClick }) {
       style={{
         width: "100%", maxWidth: 640,
         padding: "20px 24px", textAlign: "left",
-        border: `1px solid ${isSelected ? C.gold : hov ? C.goldSoft : C.goldFaint}`,
-        background: isSelected ? C.goldMid : hov ? "rgba(201,168,76,0.04)" : "transparent",
-        color: C.ivory, fontFamily: F.body, fontWeight: 400, fontSize: 15,
+        border: `1px solid ${isSelected ? "var(--cf-gold)" : hov ? "var(--cf-gold-45)" : "var(--cf-gold-faint)"}`,
+        background: isSelected ? "var(--cf-gold-bg)" : hov ? "rgba(201,168,76,0.04)" : "transparent",
+        color: "var(--cf-ivory)", fontFamily: "var(--cf-font-body)", fontWeight: 400, fontSize: 15,
         cursor: "pointer", transition: "border-color 0.2s ease, background 0.2s ease",
       }}
     >
@@ -809,8 +787,8 @@ function NextButton({ canAdvance, isLast, onClick }) {
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        padding: "16px 36px", border: `1px solid ${C.gold}`, background: hov && canAdvance ? C.goldMid : "transparent",
-        color: C.gold, fontFamily: F.brand, fontSize: 13, letterSpacing: "0.28em",
+        padding: "16px 36px", border: `1px solid var(--cf-gold)`, background: hov && canAdvance ? "var(--cf-gold-bg)" : "transparent",
+        color: "var(--cf-gold)", fontFamily: "var(--cf-font-display)", fontSize: 13, letterSpacing: "0.28em",
         textTransform: "uppercase", cursor: canAdvance ? "pointer" : "not-allowed",
         opacity: canAdvance ? 1 : 0.4, transition: "background 0.2s ease, opacity 0.2s ease",
       }}
@@ -830,7 +808,7 @@ function ProcessingScreen({ onDone }) {
 
   return (
     <div style={{
-      minHeight: "100vh", background: C.bg,
+      minHeight: "100vh", background: "var(--cf-hero-bg)",
       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
       padding: "48px 24px",
     }}>
@@ -840,10 +818,10 @@ function ProcessingScreen({ onDone }) {
         className="fa-helmet-pulse"
         style={{ width: 48, height: 48, filter: "invert(1) grayscale(1)", marginBottom: 40 }}
       />
-      <p style={{ fontFamily: F.serif, fontStyle: "italic", fontSize: 22, color: C.ivory, textAlign: "center", maxWidth: 440, lineHeight: 1.6, margin: "0 0 16px" }}>
+      <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: 22, color: "var(--cf-ivory)", textAlign: "center", maxWidth: 440, lineHeight: 1.6, margin: "0 0 16px" }}>
         &ldquo;Be still, and know that I am God.&rdquo;
       </p>
-      <div style={{ fontFamily: F.brand, fontSize: 11, letterSpacing: "0.28em", color: C.gold, textTransform: "uppercase" }}>
+      <div style={{ fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.28em", color: "var(--cf-gold)", textTransform: "uppercase" }}>
         Psalm 46:10
       </div>
     </div>
@@ -867,18 +845,18 @@ function ResultsScreen({ scores, primaryFruit, cluster, previousResult, isDeltaM
   const giftsComplete = hasCompletedAssessment();
 
   return (
-    <div style={{ background: C.bg, minHeight: "100vh", paddingBottom: 96 }}>
+    <div style={{ background: "var(--cf-hero-bg)", minHeight: "100vh", paddingBottom: 96 }}>
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "96px 24px 0" }}>
 
         {/* Section 1: Header */}
         <div className="fa-up-0" style={{ marginBottom: 64, textAlign: "center" }}>
-          <div style={{ fontFamily: F.brand, fontSize: 11, letterSpacing: "0.32em", color: C.gold, textTransform: "uppercase" }}>
+          <div style={{ fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.32em", color: "var(--cf-gold)", textTransform: "uppercase" }}>
             Your Formation Profile
           </div>
-          <h1 style={{ fontFamily: F.brand, fontSize: "clamp(26px,4vw,32px)", letterSpacing: "0.12em", textTransform: "uppercase", color: C.ivory, marginTop: 16, marginBottom: 20 }}>
+          <h1 style={{ fontFamily: "var(--cf-font-display)", fontSize: "clamp(26px,4vw,32px)", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--cf-ivory)", marginTop: 16, marginBottom: 20 }}>
             Where the Spirit Is at Work
           </h1>
-          <p style={{ fontFamily: F.body, fontWeight: 300, fontSize: 16, color: C.ivoryDim, lineHeight: 1.7, maxWidth: 520, margin: "0 auto" }}>
+          <p style={{ fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 16, color: "var(--cf-ivory-62)", lineHeight: 1.7, maxWidth: 520, margin: "0 auto" }}>
             This is where the Spirit is at work in you -- and where He has the most room.
           </p>
         </div>
@@ -906,7 +884,7 @@ function ResultsScreen({ scores, primaryFruit, cluster, previousResult, isDeltaM
           {!has7Day && (
             <Link
               to="/7-day-challenge"
-              style={{ padding: "16px 28px", border: "none", background: "transparent", color: C.ivoryDim, fontFamily: F.body, fontSize: 13, letterSpacing: "0.16em", textTransform: "uppercase", textDecoration: "underline", cursor: "pointer", display: "inline-flex", alignItems: "center" }}
+              style={{ padding: "16px 28px", border: "none", background: "transparent", color: "var(--cf-ivory-62)", fontFamily: "var(--cf-font-body)", fontSize: 13, letterSpacing: "0.16em", textTransform: "uppercase", textDecoration: "underline", cursor: "pointer", display: "inline-flex", alignItems: "center" }}
             >
               Begin the 7-Day Challenge &rarr;
             </Link>
@@ -925,17 +903,17 @@ function ResultsScreen({ scores, primaryFruit, cluster, previousResult, isDeltaM
         {/* Spiritual Gifts cross-link */}
         {!giftsComplete && (
           <div style={{ marginTop: 48, padding: "32px 40px", border: `1px solid rgba(255,255,255,0.07)`, background: "#110F0D" }}>
-            <div style={{ fontFamily: F.brand, fontSize: 11, letterSpacing: "0.32em", color: C.gold, textTransform: "uppercase", marginBottom: 12 }}>
+            <div style={{ fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.32em", color: "var(--cf-gold)", textTransform: "uppercase", marginBottom: 12 }}>
               Complete the picture
             </div>
-            <p style={{ fontFamily: F.body, fontSize: 15, lineHeight: 1.8, color: C.ivoryDim, margin: "0 0 20px" }}>
+            <p style={{ fontFamily: "var(--cf-font-body)", fontSize: 15, lineHeight: 1.8, color: "var(--cf-ivory-62)", margin: "0 0 20px" }}>
               The Formation Picture integrates your fruit results with your Spiritual
               Gifts results. Take the Spiritual Gifts Assessment to see both
               dimensions of the Spirit's work in and through you.
             </p>
             <Link
               to="/field-guide/gifts"
-              style={{ display: "inline-block", background: "transparent", color: C.gold, border: `1px solid rgba(201,168,76,0.30)`, fontFamily: F.brand, fontSize: 12, letterSpacing: "0.22em", textTransform: "uppercase", textDecoration: "none", padding: "12px 24px" }}
+              style={{ display: "inline-block", background: "transparent", color: "var(--cf-gold)", border: `1px solid rgba(201,168,76,0.30)`, fontFamily: "var(--cf-font-display)", fontSize: 12, letterSpacing: "0.22em", textTransform: "uppercase", textDecoration: "none", padding: "12px 24px" }}
             >
               Take the Spiritual Gifts Assessment →
             </Link>
@@ -982,14 +960,14 @@ function EvidenceSection({ scores, evidenceFruits, primaryEvidence }) {
     <div ref={sectionRef} style={{ marginTop: 128 }}>
       {/* Section header */}
       <div style={{ textAlign: "center", marginBottom: 56 }}>
-        <div style={{ fontFamily: F.brand, fontSize: 11, letterSpacing: "0.32em", color: C.gold, textTransform: "uppercase" }}>
+        <div style={{ fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.32em", color: "var(--cf-gold)", textTransform: "uppercase" }}>
           Evidence of Abiding
         </div>
-        <div style={{ width: 320, height: 1, background: C.gold, margin: "32px auto 0" }} />
-        <h2 style={{ fontFamily: F.brand, fontSize: "clamp(28px,4vw,36px)", letterSpacing: "0.1em", textTransform: "uppercase", color: C.ivory, lineHeight: 1.1, marginTop: 32, marginBottom: 0 }}>
+        <div style={{ width: 320, height: 1, background: "var(--cf-gold)", margin: "32px auto 0" }} />
+        <h2 style={{ fontFamily: "var(--cf-font-display)", fontSize: "clamp(28px,4vw,36px)", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--cf-ivory)", lineHeight: 1.1, marginTop: 32, marginBottom: 0 }}>
           What the Spirit<br />Is Producing
         </h2>
-        <p style={{ fontFamily: F.body, fontWeight: 300, fontSize: 16, color: C.ivoryDim, lineHeight: 1.75, maxWidth: 520, margin: "24px auto 0" }}>
+        <p style={{ fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 16, color: "var(--cf-ivory-62)", lineHeight: 1.75, maxWidth: 520, margin: "24px auto 0" }}>
           These three fruits are most visible in your life right now. Not because of your effort. Because you have been abiding, and this is what abiding produces.
         </p>
       </div>
@@ -1038,21 +1016,21 @@ function EvidenceFruitCard({ fruit, isPrimary }) {
   const fruitSize = isPrimary ? 28 : 22;
   const greekSize = isPrimary ? 16 : 15;
   const stmtSize  = isPrimary ? 16 : 15;
-  const stmtColor = isPrimary ? C.ivory : "rgba(250,248,245,0.88)";
+  const stmtColor = isPrimary ? "var(--cf-ivory)" : "rgba(250,248,245,0.88)";
   const eyebrowText = isPrimary ? "Most Evident" : "Also Visible";
 
   return (
     <div ref={cardRef} style={{ borderLeft: `1px solid ${borderColor}`, paddingLeft: 24 }}>
-      <div style={{ fontFamily: F.body, fontWeight: 400, fontSize: 11, letterSpacing: "0.24em", textTransform: "uppercase", color: eyebrowColor }}>
+      <div style={{ fontFamily: "var(--cf-font-body)", fontWeight: 400, fontSize: 11, letterSpacing: "0.24em", textTransform: "uppercase", color: eyebrowColor }}>
         {eyebrowText}
       </div>
-      <div style={{ fontFamily: F.brand, fontSize: fruitSize, letterSpacing: "0.1em", textTransform: "uppercase", color: C.ivory, marginTop: 12 }}>
+      <div style={{ fontFamily: "var(--cf-font-display)", fontSize: fruitSize, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--cf-ivory)", marginTop: 12 }}>
         {fruit.label}
       </div>
-      <div style={{ fontFamily: F.serif, fontStyle: "italic", fontSize: greekSize, color: C.ivoryDim, marginTop: 6 }}>
+      <div style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: greekSize, color: "var(--cf-ivory-62)", marginTop: 6 }}>
         {fruit.greek}
       </div>
-      <p style={{ fontFamily: F.body, fontWeight: 300, fontSize: stmtSize, color: stmtColor, lineHeight: 1.85, marginTop: 24 }}>
+      <p style={{ fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: stmtSize, color: stmtColor, lineHeight: 1.85, marginTop: 24 }}>
         {fruit.recognitionStatement}
       </p>
     </div>
@@ -1089,7 +1067,7 @@ function TransitionElement({ scoreSpread }) {
   return (
     <div ref={elRef} style={{ maxWidth: 720, margin: "128px auto", textAlign: "center" }}>
       <div style={{ width: 48, height: 1, background: "rgba(201,168,76,0.3)", margin: "0 auto" }} />
-      <p style={{ fontFamily: F.serif, fontStyle: "italic", fontSize: 20, color: C.ivoryDim, lineHeight: 1.5, maxWidth: 480, margin: "32px auto 0" }}>
+      <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: 20, color: "var(--cf-ivory-62)", lineHeight: 1.5, maxWidth: 480, margin: "32px auto 0" }}>
         {text}
       </p>
       <div style={{ width: 48, height: 1, background: "rgba(201,168,76,0.3)", margin: "32px auto 0" }} />
@@ -1123,14 +1101,14 @@ function FormationEdgeSection({ scores, formationFruits, primaryFormation }) {
     <div ref={sectionRef} style={{ marginTop: 128 }}>
       {/* Section header */}
       <div style={{ textAlign: "center", marginBottom: 56 }}>
-        <div style={{ fontFamily: F.brand, fontSize: 11, letterSpacing: "0.32em", color: C.gold, textTransform: "uppercase" }}>
+        <div style={{ fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.32em", color: "var(--cf-gold)", textTransform: "uppercase" }}>
           Your Formation Edge
         </div>
-        <div style={{ width: 320, height: 1, background: C.gold, margin: "32px auto 0" }} />
-        <h2 style={{ fontFamily: F.brand, fontSize: "clamp(28px,4vw,36px)", letterSpacing: "0.1em", textTransform: "uppercase", color: C.ivory, lineHeight: 1.1, marginTop: 32, marginBottom: 0 }}>
+        <div style={{ width: 320, height: 1, background: "var(--cf-gold)", margin: "32px auto 0" }} />
+        <h2 style={{ fontFamily: "var(--cf-font-display)", fontSize: "clamp(28px,4vw,36px)", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--cf-ivory)", lineHeight: 1.1, marginTop: 32, marginBottom: 0 }}>
           Where the Spirit<br />Has Room to Work
         </h2>
-        <p style={{ fontFamily: F.body, fontWeight: 300, fontSize: 16, color: C.ivoryDim, lineHeight: 1.75, maxWidth: 520, margin: "24px auto 0" }}>
+        <p style={{ fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 16, color: "var(--cf-ivory-62)", lineHeight: 1.75, maxWidth: 520, margin: "24px auto 0" }}>
           These three fruits are where the work continues. This is not a verdict on your character. It is a map of where the Spirit is actively moving right now, and where your surrender is being asked for.
         </p>
       </div>
@@ -1265,7 +1243,7 @@ function FormationFruitCard({ fruitKey, isPrimary }) {
         <div
           ref={eyebrowRef}
           style={{
-            fontFamily: F.body, fontWeight: 400, fontSize: 11,
+            fontFamily: "var(--cf-font-body)", fontWeight: 400, fontSize: 11,
             letterSpacing: "0.24em", textTransform: "uppercase",
             color: eyebrowColor, opacity: 0,
             transform: "translateY(20px)",
@@ -1281,7 +1259,7 @@ function FormationFruitCard({ fruitKey, isPrimary }) {
             style={{
               position: "absolute", left: 0,
               width: 240, height: 1,
-              background: C.gold,
+              background: "var(--cf-gold)",
               transformOrigin: "left center",
               opacity: 0,
             }}
@@ -1292,9 +1270,9 @@ function FormationFruitCard({ fruitKey, isPrimary }) {
         <div
           ref={nameRef}
           style={{
-            fontFamily: F.brand, fontSize: fruitSize,
+            fontFamily: "var(--cf-font-display)", fontSize: fruitSize,
             letterSpacing: "0.1em", textTransform: "uppercase",
-            color: C.ivory, marginTop: 12,
+            color: "var(--cf-ivory)", marginTop: 12,
             clipPath: "inset(100% 0 0 0)",
             opacity: 0,
           }}
@@ -1306,8 +1284,8 @@ function FormationFruitCard({ fruitKey, isPrimary }) {
         <div
           ref={greekRef}
           style={{
-            fontFamily: F.serif, fontStyle: "italic", fontSize: greekSize,
-            color: C.ivoryDim, marginTop: 6,
+            fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: greekSize,
+            color: "var(--cf-ivory-62)", marginTop: 6,
             opacity: 0, transform: "translateY(10px)",
           }}
         >
@@ -1318,8 +1296,8 @@ function FormationFruitCard({ fruitKey, isPrimary }) {
         <p
           ref={stmtRef}
           style={{
-            fontFamily: F.body, fontWeight: 300, fontSize: 16,
-            color: C.ivory, lineHeight: 1.85, marginTop: 24,
+            fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 16,
+            color: "var(--cf-ivory)", lineHeight: 1.85, marginTop: 24,
             opacity: 0, transform: "translateY(16px)",
           }}
         >
@@ -1331,24 +1309,24 @@ function FormationFruitCard({ fruitKey, isPrimary }) {
           ref={scriptRef}
           style={{
             marginTop: 32, paddingTop: 24, paddingBottom: 24,
-            borderTop: `1px solid ${C.goldFaint}`, borderBottom: `1px solid ${C.goldFaint}`,
+            borderTop: `1px solid var(--cf-gold-faint)`, borderBottom: `1px solid var(--cf-gold-faint)`,
             opacity: 0, transform: "translateY(16px)",
           }}
         >
-          <p style={{ fontFamily: F.serif, fontStyle: "italic", fontWeight: 300, fontSize: 19, color: C.ivory, lineHeight: 1.55 }}>
+          <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontWeight: 300, fontSize: 19, color: "var(--cf-ivory)", lineHeight: 1.55 }}>
             &ldquo;{fruit.scripture.text}&rdquo;
           </p>
-          <div style={{ fontFamily: F.brand, fontSize: 11, letterSpacing: "0.28em", color: C.gold, textTransform: "uppercase", marginTop: 14 }}>
+          <div style={{ fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.28em", color: "var(--cf-gold)", textTransform: "uppercase", marginTop: 14 }}>
             {fruit.scripture.reference}
           </div>
         </div>
 
         {/* Weekly practice */}
         <div ref={practRef} style={{ marginTop: 24, opacity: 0, transform: "translateY(16px)" }}>
-          <div style={{ fontFamily: F.brand, fontSize: 11, letterSpacing: "0.32em", color: C.gold, textTransform: "uppercase" }}>
+          <div style={{ fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.32em", color: "var(--cf-gold)", textTransform: "uppercase" }}>
             This Week
           </div>
-          <p style={{ fontFamily: F.body, fontWeight: 400, fontSize: 15, color: C.ivory, lineHeight: 1.7, marginTop: 12 }}>
+          <p style={{ fontFamily: "var(--cf-font-body)", fontWeight: 400, fontSize: 15, color: "var(--cf-ivory)", lineHeight: 1.7, marginTop: 12 }}>
             {fruit.practice}
           </p>
         </div>
@@ -1359,16 +1337,16 @@ function FormationFruitCard({ fruitKey, isPrimary }) {
   // Secondary formation card
   return (
     <div ref={cardRef} style={{ borderLeft: `1px solid ${borderColor}`, paddingLeft: 24 }}>
-      <div style={{ fontFamily: F.body, fontWeight: 400, fontSize: 11, letterSpacing: "0.24em", textTransform: "uppercase", color: eyebrowColor }}>
+      <div style={{ fontFamily: "var(--cf-font-body)", fontWeight: 400, fontSize: 11, letterSpacing: "0.24em", textTransform: "uppercase", color: eyebrowColor }}>
         {eyebrowText}
       </div>
-      <div style={{ fontFamily: F.brand, fontSize: fruitSize, letterSpacing: "0.1em", textTransform: "uppercase", color: C.ivory, marginTop: 12 }}>
+      <div style={{ fontFamily: "var(--cf-font-display)", fontSize: fruitSize, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--cf-ivory)", marginTop: 12 }}>
         {fruit.label}
       </div>
-      <div style={{ fontFamily: F.serif, fontStyle: "italic", fontSize: greekSize, color: C.ivoryDim, marginTop: 6 }}>
+      <div style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: greekSize, color: "var(--cf-ivory-62)", marginTop: 6 }}>
         {fruit.greek}
       </div>
-      <p style={{ fontFamily: F.body, fontWeight: 300, fontSize: 15, color: "rgba(250,248,245,0.88)", lineHeight: 1.8, marginTop: 20 }}>
+      <p style={{ fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 15, color: "rgba(250,248,245,0.88)", lineHeight: 1.8, marginTop: 20 }}>
         {fruit.secondaryFormationStatement}
       </p>
     </div>
@@ -1385,8 +1363,8 @@ function GoldButton({ onClick, children }) {
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        padding: "16px 28px", border: `1px solid ${C.gold}`, background: hov ? C.goldMid : "transparent",
-        color: C.gold, fontFamily: F.brand, fontSize: 12, letterSpacing: "0.28em",
+        padding: "16px 28px", border: `1px solid var(--cf-gold)`, background: hov ? "var(--cf-gold-bg)" : "transparent",
+        color: "var(--cf-gold)", fontFamily: "var(--cf-font-display)", fontSize: 12, letterSpacing: "0.28em",
         textTransform: "uppercase", cursor: "pointer", transition: "background 0.2s ease",
       }}
     >
@@ -1400,11 +1378,11 @@ function RuleOfLifeLink({ fruit }) {
   return (
     <Link
       to={fruit.ruleOfLife.path}
-      style={{ fontFamily: F.body, fontWeight: 300, fontSize: 13, color: hov ? C.gold : C.ivoryDim, textDecoration: "none", transition: "color 0.2s ease" }}
+      style={{ fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 13, color: hov ? "var(--cf-gold)" : "var(--cf-ivory-62)", textDecoration: "none", transition: "color 0.2s ease" }}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
     >
-      This connects to the <span style={{ color: C.gold }}>{fruit.ruleOfLife.rhythm}</span> rhythm in your Rule of Life &rarr;
+      This connects to the <span style={{ color: "var(--cf-gold)" }}>{fruit.ruleOfLife.rhythm}</span> rhythm in your Rule of Life &rarr;
     </Link>
   );
 }
@@ -1417,35 +1395,35 @@ function DeltaBlock({ scores, primaryFruit, fruit, previous }) {
   return (
     <div style={{ marginTop: 56, textAlign: "center" }}>
       <div style={{ display: "flex", justifyContent: "center", marginBottom: 32 }}>
-        <div style={{ width: 48, height: 1, background: C.goldFaint }} />
+        <div style={{ width: 48, height: 1, background: "var(--cf-gold-faint)" }} />
       </div>
-      <div style={{ fontFamily: F.brand, fontSize: 11, letterSpacing: "0.28em", color: C.goldSoft, textTransform: "uppercase" }}>
+      <div style={{ fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.28em", color: "var(--cf-gold-45)", textTransform: "uppercase" }}>
         Since Your Last Assessment
       </div>
-      <div style={{ fontFamily: F.body, fontWeight: 300, fontSize: 13, color: C.ivoryDim, marginTop: 8 }}>
+      <div style={{ fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 13, color: "var(--cf-ivory-62)", marginTop: 8 }}>
         {dayCount} days ago
       </div>
       <div style={{ marginTop: 32 }}>
         {FRUIT_ORDER.map(k => {
           const diff = scores[k] - (prev[k] || 0);
           const arrow = diff >= 5 ? "\u2197" : diff <= -5 ? "\u2198" : "\u2192";
-          const arrowColor = diff >= 5 ? C.gold : C.ivoryFaint;
+          const arrowColor = diff >= 5 ? "var(--cf-gold)" : "var(--cf-ivory-28)";
           return (
             <div key={k} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 8 }}>
-              <div style={{ width: 120, textAlign: "right", fontFamily: F.body, fontWeight: 400, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.12em", color: C.ivoryDim }}>{FRUITS[k].label}</div>
-              <div style={{ width: 40, textAlign: "right", fontFamily: F.body, fontWeight: 300, fontSize: 12, color: C.ivoryFaint }}>{prev[k] ?? "--"}</div>
+              <div style={{ width: 120, textAlign: "right", fontFamily: "var(--cf-font-body)", fontWeight: 400, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--cf-ivory-62)" }}>{FRUITS[k].label}</div>
+              <div style={{ width: 40, textAlign: "right", fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 12, color: "var(--cf-ivory-28)" }}>{prev[k] ?? "--"}</div>
               <div style={{ width: 20, textAlign: "center", fontSize: 14, color: arrowColor }}>{arrow}</div>
-              <div style={{ width: 40, fontFamily: F.body, fontWeight: 300, fontSize: 12, color: C.ivory }}>{scores[k]}</div>
+              <div style={{ width: 40, fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 12, color: "var(--cf-ivory)" }}>{scores[k]}</div>
             </div>
           );
         })}
       </div>
-      <p style={{ fontFamily: F.body, fontWeight: 400, fontSize: 15, color: primaryChanged ? C.ivory : C.ivoryDim, maxWidth: 480, margin: "32px auto 0", lineHeight: 1.7 }}>
+      <p style={{ fontFamily: "var(--cf-font-body)", fontWeight: 400, fontSize: 15, color: primaryChanged ? "var(--cf-ivory)" : "var(--cf-ivory-62)", maxWidth: 480, margin: "32px auto 0", lineHeight: 1.7 }}>
         {primaryChanged
           ? `Your area of formation has shifted from ${FRUITS[previous.primaryFruit]?.label || previous.primaryFruit} to ${fruit.label}.`
           : `Your area of formation is still ${fruit.label}.`}
       </p>
-      <p style={{ fontFamily: F.body, fontWeight: 300, fontSize: 13, color: C.ivoryDim, marginTop: 8 }}>
+      <p style={{ fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 13, color: "var(--cf-ivory-62)", marginTop: 8 }}>
         {primaryChanged ? "This is what abiding looks like over time. Keep going." : "Formation is slow work. The Spirit is not in a hurry."}
       </p>
     </div>
@@ -1712,21 +1690,21 @@ function ShareModal({ fruitKey, evidenceFruitKey, scores, format, setFormat, var
       zIndex: 1000, padding: 24,
     }}>
       <div style={{
-        maxWidth: 560, width: "100%", background: C.bgCard,
-        border: `1px solid ${C.goldFaint}`, padding: "32px 24px",
+        maxWidth: 560, width: "100%", background: "var(--cf-rule-bg)",
+        border: `1px solid var(--cf-gold-faint)`, padding: "32px 24px",
         position: "relative", maxHeight: "90vh", overflowY: "auto",
       }}>
         <button
           onClick={onClose}
-          style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", color: C.ivoryDim, fontSize: 24, cursor: "pointer", padding: 8, lineHeight: 1 }}
+          style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", color: "var(--cf-ivory-62)", fontSize: 24, cursor: "pointer", padding: 8, lineHeight: 1 }}
         >
           &times;
         </button>
 
-        <div style={{ fontFamily: F.brand, fontSize: 11, letterSpacing: "0.32em", color: C.gold, textTransform: "uppercase", marginBottom: 8 }}>
+        <div style={{ fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.32em", color: "var(--cf-gold)", textTransform: "uppercase", marginBottom: 8 }}>
           Share Your Formation
         </div>
-        <h2 style={{ fontFamily: F.brand, fontSize: 22, letterSpacing: "0.12em", textTransform: "uppercase", color: C.ivory, marginBottom: 24 }}>
+        <h2 style={{ fontFamily: "var(--cf-font-display)", fontSize: 22, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--cf-ivory)", marginBottom: 24 }}>
           Generate Your Card
         </h2>
 
@@ -1736,7 +1714,7 @@ function ShareModal({ fruitKey, evidenceFruitKey, scores, format, setFormat, var
 
         {/* Format toggle */}
         <div style={{ marginBottom: 12 }}>
-          <div style={{ fontFamily: F.brand, fontSize: 10, letterSpacing: "0.24em", color: C.ivoryFaint, textTransform: "uppercase", marginBottom: 8 }}>Format</div>
+          <div style={{ fontFamily: "var(--cf-font-display)", fontSize: 10, letterSpacing: "0.24em", color: "var(--cf-ivory-28)", textTransform: "uppercase", marginBottom: 8 }}>Format</div>
           <div style={{ display: "flex", gap: 8 }}>
             <FormatPill label="Square" active={format === "square"} onClick={() => setFormat("square")} />
             <FormatPill label="Story"  active={format === "story"}  onClick={() => setFormat("story")}  />
@@ -1745,7 +1723,7 @@ function ShareModal({ fruitKey, evidenceFruitKey, scores, format, setFormat, var
 
         {/* Variant toggle */}
         <div style={{ marginBottom: 24 }}>
-          <div style={{ fontFamily: F.brand, fontSize: 10, letterSpacing: "0.24em", color: C.ivoryFaint, textTransform: "uppercase", marginBottom: 8 }}>Variant</div>
+          <div style={{ fontFamily: "var(--cf-font-display)", fontSize: 10, letterSpacing: "0.24em", color: "var(--cf-ivory-28)", textTransform: "uppercase", marginBottom: 8 }}>Variant</div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <FormatPill label="Formation Edge" active={variant === "formation"} onClick={() => setVariant("formation")} />
             <FormatPill label="Both Fruits"    active={variant === "both"}      onClick={() => setVariant("both")}      />
@@ -1756,14 +1734,14 @@ function ShareModal({ fruitKey, evidenceFruitKey, scores, format, setFormat, var
           <GoldButton onClick={handleDownload}>Download PNG</GoldButton>
           <button
             onClick={handleShare}
-            style={{ padding: "14px 24px", border: "none", background: "transparent", color: C.ivory, fontFamily: F.body, fontSize: 13, cursor: "pointer" }}
+            style={{ padding: "14px 24px", border: "none", background: "transparent", color: "var(--cf-ivory)", fontFamily: "var(--cf-font-body)", fontSize: 13, cursor: "pointer" }}
           >
             Share
           </button>
         </div>
 
         {shareError && (
-          <p style={{ fontFamily: F.body, fontSize: 13, color: C.ivoryDim, textAlign: "center", marginTop: 12 }}>
+          <p style={{ fontFamily: "var(--cf-font-body)", fontSize: 13, color: "var(--cf-ivory-62)", textAlign: "center", marginTop: 12 }}>
             {shareError}
           </p>
         )}
@@ -1778,10 +1756,10 @@ function FormatPill({ label, active, onClick }) {
       onClick={onClick}
       style={{
         padding: "6px 16px",
-        border: `1px solid ${active ? C.gold : C.goldFaint}`,
+        border: `1px solid ${active ? "var(--cf-gold)" : "var(--cf-gold-faint)"}`,
         background: "transparent",
-        color: active ? C.gold : C.ivoryDim,
-        fontFamily: F.brand, fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase",
+        color: active ? "var(--cf-gold)" : "var(--cf-ivory-62)",
+        fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase",
         cursor: "pointer", borderRadius: 999, transition: "all 0.2s ease",
       }}
     >

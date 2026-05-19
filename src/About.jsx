@@ -1,21 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+﻿import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
-
-/* ─── CONSTANTS ───────────────────────────────────────────────────── */
-
-const C = {
-  heroBg:  "#06050A",
-  darkBg:  "#0E0C0A",
-  ruleBg:  "#17140F",
-  gold:    "#C9A84C",
-  ivory:   "#FAF8F5",
-  gearBg:  "#F5F2EC",
-};
 
 /* ─── SEO META (export for parent to apply via react-helmet or head) */
 
@@ -58,7 +47,7 @@ export function AboutStyles() {
         align-items: center;
         text-align: center;
         padding: 6rem 1.5rem 4rem;
-        background: ${C.heroBg};
+        background: var(--cf-hero-bg);
         overflow: hidden;
       }
       .about-hero::after {
@@ -66,7 +55,7 @@ export function AboutStyles() {
         position: absolute;
         bottom: 0; left: 0; right: 0;
         height: 30%;
-        background: linear-gradient(to top, ${C.darkBg}, transparent);
+        background: linear-gradient(to top, "var(--cf-obsidian)", transparent);
         pointer-events: none;
       }
       .about-hero-glow {
@@ -85,7 +74,7 @@ export function AboutStyles() {
         font-weight: 700;
         letter-spacing: 0.38em;
         text-transform: uppercase;
-        color: ${C.gold};
+        color: var(--cf-gold);
         margin-bottom: 1.5rem;
       }
 
@@ -96,7 +85,7 @@ export function AboutStyles() {
         font-weight: 400;
         font-size: clamp(1.6rem, 4.2vw, 3.2rem);
         line-height: 1.35;
-        color: ${C.ivory};
+        color: var(--cf-ivory);
         max-width: 780px;
         margin: 0 auto 2rem;
       }
@@ -119,7 +108,7 @@ export function AboutStyles() {
         font-size: 9px;
         letter-spacing: 0.3em;
         text-transform: uppercase;
-        color: ${C.gold};
+        color: var(--cf-gold);
         opacity: 0.6;
       }
 
@@ -138,7 +127,7 @@ export function AboutStyles() {
         font-weight: 700;
         letter-spacing: 0.38em;
         text-transform: uppercase;
-        color: ${C.gold};
+        color: var(--cf-gold);
         margin-bottom: 1.25rem;
       }
       .about-section-headline {
@@ -147,7 +136,7 @@ export function AboutStyles() {
         font-size: clamp(1.5rem, 3.5vw, 2.4rem);
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        color: ${C.ivory};
+        color: var(--cf-ivory);
         line-height: 1.15;
         margin-bottom: 2rem;
       }
@@ -163,7 +152,7 @@ export function AboutStyles() {
       .about-prose p { margin-bottom: 1.5rem; }
       .about-prose p:last-child { margin-bottom: 0; }
       .about-prose strong {
-        color: ${C.ivory};
+        color: var(--cf-ivory);
         font-weight: 700;
       }
 
@@ -173,8 +162,8 @@ export function AboutStyles() {
         font-style: italic;
         font-size: clamp(1.25rem, 2.8vw, 1.75rem);
         line-height: 1.5;
-        color: ${C.ivory};
-        border-left: 2px solid ${C.gold};
+        color: var(--cf-ivory);
+        border-left: 2px solid var(--cf-gold);
         padding-left: 1.5rem;
         margin: 3rem 0;
         max-width: 640px;
@@ -184,7 +173,7 @@ export function AboutStyles() {
       .about-gold-rule {
         width: 60px;
         height: 1px;
-        background: ${C.gold};
+        background: var(--cf-gold);
         opacity: 0.4;
         margin: 3rem 0;
       }
@@ -216,7 +205,7 @@ export function AboutStyles() {
         font-weight: 700;
         letter-spacing: 0.38em;
         text-transform: uppercase;
-        color: ${C.gold};
+        color: var(--cf-gold);
         margin-bottom: 0.75rem;
       }
       .about-pillar-title {
@@ -225,7 +214,7 @@ export function AboutStyles() {
         font-size: 1.25rem;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: ${C.ivory};
+        color: var(--cf-ivory);
         margin-bottom: 1rem;
       }
       .about-pillar-body {
@@ -270,7 +259,7 @@ export function AboutStyles() {
         font-size: 9px;
         font-weight: 700;
         letter-spacing: 0.32em;
-        color: ${C.gold};
+        color: var(--cf-gold);
         opacity: 0.6;
         display: block;
         margin-bottom: 0.75rem;
@@ -281,7 +270,7 @@ export function AboutStyles() {
         font-size: 1rem;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: ${C.ivory};
+        color: var(--cf-ivory);
         margin-bottom: 0.75rem;
       }
       .about-pipeline-body {
@@ -294,7 +283,7 @@ export function AboutStyles() {
 
       /* ── Founder section ── */
       .about-founder-bg {
-        background: ${C.ruleBg};
+        background: var(--cf-rule-bg);
         border-top: 1px solid rgba(255,255,255,0.04);
         border-bottom: 1px solid rgba(255,255,255,0.04);
       }
@@ -303,13 +292,13 @@ export function AboutStyles() {
       .about-cta-section {
         text-align: center;
         padding: 6rem 1.5rem;
-        background: ${C.heroBg};
+        background: var(--cf-hero-bg);
       }
       .about-cta-headline {
         font-family: 'Cormorant Garamond', serif;
         font-style: italic;
         font-size: clamp(1.3rem, 3vw, 2rem);
-        color: ${C.ivory};
+        color: var(--cf-ivory);
         max-width: 600px;
         margin: 0 auto 2.5rem;
         line-height: 1.45;
@@ -330,8 +319,8 @@ export function AboutStyles() {
         font-family: 'Barlow Condensed', sans-serif;
         font-weight: 700; font-size: 11px;
         letter-spacing: 0.18em; text-transform: uppercase;
-        color: ${C.heroBg};
-        background: ${C.gold};
+        color: var(--cf-hero-bg);
+        background: var(--cf-gold);
         padding: 14px 32px;
         border-radius: 6px;
         text-decoration: none;
@@ -343,7 +332,7 @@ export function AboutStyles() {
         font-family: 'Barlow Condensed', sans-serif;
         font-weight: 700; font-size: 11px;
         letter-spacing: 0.18em; text-transform: uppercase;
-        color: ${C.ivory};
+        color: var(--cf-ivory);
         background: transparent;
         border: 1px solid rgba(250,248,245,0.2);
         padding: 14px 32px;
@@ -351,7 +340,7 @@ export function AboutStyles() {
         text-decoration: none;
         transition: border-color 0.3s, transform 0.3s;
       }
-      .about-btn-outline:hover { border-color: ${C.gold}; transform: translateY(-1px); }
+      .about-btn-outline:hover { border-color: var(--cf-gold); transform: translateY(-1px); }
 
       /* ── Footer mark ── */
       .about-footer-mark {
@@ -394,7 +383,7 @@ export function AboutStyles() {
         font-size: 11px;
         letter-spacing: 0.18em;
         text-transform: uppercase;
-        color: ${C.gold};
+        color: var(--cf-gold);
         background: none;
         border: 1px solid rgba(201,168,76,0.25);
         padding: 12px 24px;
@@ -404,7 +393,7 @@ export function AboutStyles() {
         transition: border-color 0.3s, background 0.3s;
       }
       .about-expand-btn:hover {
-        border-color: ${C.gold};
+        border-color: var(--cf-gold);
         background: rgba(201,168,76,0.06);
       }
       .about-expand-arrow {
@@ -430,7 +419,7 @@ export function AboutStyles() {
 
 function Divider() {
   return (
-    <div className="flex items-center justify-center py-6 px-4" style={{ background: C.darkBg }}>
+    <div className="flex items-center justify-center py-6 px-4" style={{ background: "var(--cf-obsidian)" }}>
       <div className="flex-1 h-[1px] bg-white/5" />
       <div className="mx-4 md:mx-8 opacity-[0.12]">
         <img src="/helmet.png" className="w-6 h-6 md:w-8 md:h-8 grayscale invert" alt="" loading="lazy" />
@@ -467,7 +456,7 @@ export default function AboutPage() {
   }, []);
 
   return (
-    <article ref={pageRef} style={{ backgroundColor: C.darkBg, color: C.ivory, minHeight: "100vh" }}>
+    <article ref={pageRef} style={{ backgroundColor: "var(--cf-obsidian)", color: "var(--cf-ivory)", minHeight: "100vh" }}>
       <AboutStyles />
 
       {/* ─── SECTION 1 — CINEMATIC HERO ─────────────────────────── */}
@@ -491,7 +480,7 @@ export default function AboutPage() {
 
 
       {/* ─── SECTION 2 — THE PROBLEM ────────────────────────────── */}
-      <section className="about-section" style={{ background: C.darkBg }} aria-labelledby="about-problem">
+      <section className="about-section" style={{ background: "var(--cf-obsidian)" }} aria-labelledby="about-problem">
         <div className="about-reading">
           <p className="about-section-eyebrow about-reveal">The Problem</p>
           <h2 id="about-problem" className="about-section-headline about-reveal">
@@ -535,7 +524,7 @@ export default function AboutPage() {
 
 
       {/* ─── SECTION 3 — THE MISSION ────────────────────────────── */}
-      <section className="about-section" style={{ background: C.darkBg }} aria-labelledby="about-mission">
+      <section className="about-section" style={{ background: "var(--cf-obsidian)" }} aria-labelledby="about-mission">
         <div className="about-content">
           <div className="about-reading" style={{ padding: 0 }}>
             <p className="about-section-eyebrow about-reveal">The Mission</p>
@@ -601,7 +590,7 @@ export default function AboutPage() {
 
 
       {/* ─── SECTION 4 — THE ECOSYSTEM ──────────────────────────── */}
-      <section className="about-section" style={{ background: C.ruleBg }} aria-labelledby="about-ecosystem">
+      <section className="about-section" style={{ background: "var(--cf-rule-bg)" }} aria-labelledby="about-ecosystem">
         <div className="about-content">
           <div className="about-reading" style={{ padding: 0 }}>
             <p className="about-section-eyebrow about-reveal">The Ecosystem</p>
@@ -659,7 +648,7 @@ export default function AboutPage() {
 
 
       {/* ─── SECTION 5 — THE FIVE RHYTHMS ───────────────────────── */}
-      <section className="about-section" style={{ background: C.darkBg }} aria-labelledby="about-rhythms">
+      <section className="about-section" style={{ background: "var(--cf-obsidian)" }} aria-labelledby="about-rhythms">
         <div className="about-reading">
           <p className="about-section-eyebrow about-reveal">The Rule of Life</p>
           <h2 id="about-rhythms" className="about-section-headline about-reveal">
@@ -702,7 +691,7 @@ export default function AboutPage() {
                   fontFamily: "'Barlow Condensed', sans-serif",
                   fontSize: "9px", fontWeight: 700,
                   letterSpacing: "0.32em",
-                  color: C.gold, opacity: 0.5,
+                  color: "var(--cf-gold)", opacity: 0.5,
                   minWidth: "28px",
                 }}>
                   {String(i + 1).padStart(2, "0")}
@@ -712,7 +701,7 @@ export default function AboutPage() {
                   fontWeight: 700, fontSize: "1.05rem",
                   textTransform: "uppercase",
                   letterSpacing: "0.06em",
-                  color: C.ivory, flex: 1,
+                  color: "var(--cf-ivory)", flex: 1,
                 }}>
                   {r.name}
                 </span>
@@ -962,7 +951,7 @@ export default function AboutPage() {
             fontSize: "9px",
             letterSpacing: "0.3em",
             textTransform: "uppercase",
-            color: C.gold, opacity: 0.4,
+            color: "var(--cf-gold)", opacity: 0.4,
             marginTop: "0.5rem",
           }}>
             Ephesians 6:10-11

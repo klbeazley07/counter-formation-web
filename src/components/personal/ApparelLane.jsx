@@ -86,23 +86,43 @@ function urlWithUtm(url, slug) {
   }
 }
 
-/*
- * Picks a small contextual line based on the profile, shown above the band.
- * Falls back to a neutral line when the profile has no signal.
- */
-function bandSubtitle(profile) {
-  const edge = profile?.assessment?.formationEdge?.[0];
+function getProfileSignal(profile) {
+  const formationEdge = profile?.assessment?.formationEdge?.[0] ?? null;
   const armorProgress = profile?.armor?.progress || {};
   const completedPieces = profile?.armor?.completedPieces || [];
-  const activeArmor = Object.keys(armorProgress).find((slug) => !completedPieces.includes(slug));
+  const activeArmor = Object.keys(armorProgress).find((slug) => !completedPieces.includes(slug)) ?? null;
+  return { activeArmor, formationEdge };
+}
 
+function bandSubtitle(signal) {
+  const { activeArmor, formationEdge } = signal || {};
   if (activeArmor && ARMOR_LABELS[activeArmor]) {
     return `Worn while you walk the ${ARMOR_LABELS[activeArmor]}.`;
   }
-  if (edge && FRUIT_LABELS[edge]) {
-    return `Apparel as a visual anchor for ${FRUIT_LABELS[edge]}.`;
+  if (formationEdge && FRUIT_LABELS[formationEdge]) {
+    return `Apparel as a visual anchor for ${FRUIT_LABELS[formationEdge]}.`;
   }
   return "Apparel as a visual anchor. Battle the drift.";
+}
+
+function profileScore(product, signal) {
+  if (!signal) return 0;
+  const { activeArmor, formationEdge } = signal;
+  if (activeArmor && product.tags.armor === activeArmor) return 3;
+  if (formationEdge && product.tags.fruit === formationEdge) return 2;
+  return 0;
+}
+
+function resolvedEyebrow(product, signal) {
+  if (!signal) return product.eyebrow;
+  const { activeArmor, formationEdge } = signal;
+  if (activeArmor && product.tags.armor === activeArmor && ARMOR_LABELS[activeArmor]) {
+    return `Wear the ${ARMOR_LABELS[activeArmor]}`;
+  }
+  if (formationEdge && product.tags.fruit === formationEdge && FRUIT_LABELS[formationEdge]) {
+    return `Anchor for ${FRUIT_LABELS[formationEdge]}`;
+  }
+  return product.eyebrow;
 }
 
 const STYLES = `
@@ -244,7 +264,11 @@ const STYLES = `
 `;
 
 export default function ApparelLane({ profile }) {
-  const subtitle = bandSubtitle(profile);
+  const signal = getProfileSignal(profile);
+  const subtitle = bandSubtitle(signal);
+  const products = [...CURATED_APPAREL]
+    .map((p, i) => ({ ...p, _score: profileScore(p, signal), _i: i }))
+    .sort((a, b) => b._score - a._score || a._i - b._i);
 
   return (
     <>
@@ -269,7 +293,7 @@ export default function ApparelLane({ profile }) {
             Three pieces from the current collection. Each one is designed as a daily reminder that the formation work is real.
           </p>
           <div className="cf-apparel__lane">
-            {CURATED_APPAREL.map((product) => (
+            {products.map((product) => (
               <a
                 key={product.slug}
                 href={urlWithUtm(product.shopUrl, product.slug)}
@@ -286,7 +310,7 @@ export default function ApparelLane({ profile }) {
                   />
                 </div>
                 <div className="cf-apparel__meta">
-                  <p className="cf-apparel__eyebrow">{product.eyebrow}</p>
+                  <p className="cf-apparel__eyebrow">{resolvedEyebrow(product, signal)}</p>
                   <p className="cf-apparel__name">{product.name}</p>
                   <p className="cf-apparel__copy">{product.copy}</p>
                 </div>
