@@ -4,6 +4,40 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 12 -- Phase 6: Infrastructure Triage + Design System + Content Migration (2026-05-19)
+
+**Status:** Complete. Build passes (2065 modules, 2054 kB JS, -1 kB under Phase 5 baseline). Pushed to `main`.
+
+**Items completed:**
+
+**Cloudflare 502 investigation (Item 1):** Purely manual -- Cloudflare Pages dashboard access required to verify GEMINI_API_KEY and check function error logs. Code is correct. Manual step still outstanding: open the CF Pages dashboard > counter-formation-web > Functions tab, check for errors on `/api/synthesize`, verify GEMINI_API_KEY is set under Settings > Environment Variables.
+
+**iOS Safari test (Item 2):** Still deferred. Requires real device. Carried forward again.
+
+**NewsletterCapture consolidation (Item 3):** `src/components/NewsletterCapture.jsx` created. Self-contained component: manages email/loading/error/submitted state, POSTs to `/subscribe` worker, accepts `source`, `buttonLabel` (ReactNode), `buttonStyle` ("outline" | "filled"), `successText`, `onSuccess` callback, and a forwarded `ref` for auto-focus. `SiteFooter.jsx` FullFooter: dropped all local state + inline POST logic, now uses `<NewsletterCapture source="join_formation" .../>`. Also removed dead `C` palette constant from that file. `App.jsx` ChallengeModal: dropped email/loading/error state + handleSubmit, kept `submitted` state for the success CTA block, uses `<NewsletterCapture ref={emailRef} source="7day_challenge_modal" buttonStyle="filled" onSuccess={...}/>`. `SevenDayChallenge.jsx`: wired the previously no-op `handleSubmit` to fire a silent fire-and-forget POST to `/subscribe` with `source: "7day_challenge"`. The challenge starts regardless of whether the call succeeds.
+
+**Accessibility pass (Item 4):** `FirstFifteenWidget.jsx`: added `aria-activedescendant` to the trigger button and `id="ff-option-${i}"` to each popup option -- screen readers now announce which option is highlighted during keyboard nav. Audited all `focus:outline-none` usage across the widget/personal component directories (none found). Fixed the one remaining bare `focus:outline-none` on the ComingSoonLane notify input in `App.jsx` -- added `focus-visible:ring-2 focus-visible:ring-[#C9A84C]/40`.
+
+**Brand token migration (Item 5):** Targeted scope. Identity.jsx: replaced 3 raw inline hex values (`#C9A84C`, `#FAF8F5`) with `var(--cf-gold)` / `var(--cf-ivory)` in specific style props. RuleOfLife.jsx: removed dead `const C = {...}` declaration (was defined but had 0 usages -- dead code). Remaining 31 files with `const C` are deferred (active usages, pure code-hygiene win with no visual impact; 68+ usages in Identity alone without a dedicated cleanup session).
+
+**Content migrations (Items 6-9 partial):** DevotionOnboarding.jsx: replaced the local `const RHYTHMS = [...]` array with `getAllRhythms().map(r => ({ slug: r.slug, label: r.title, hint: r.sub }))` driven by `rule-of-life.json` via the content loader. The field mapping is exact: `title` = label, `sub` = hint. Added `import { getAllRhythms } from "../content/loader"`. ARMOR_PIECES migration deferred: `armor.json` already exists with full devotional content but lacks the 7 overview summary fields (theology, tension, practice-summary, hook, product, scripture, scriptureText) that Identity.jsx uses for its ring/overview UI. The merge requires careful data work and encoding cleanup -- flagged for Session 13.
+
+**Bundle size:** 2054 kB (-1 kB under Phase 5 baseline of 2055 kB). 2065 modules (+1). Under budget.
+
+**Key decisions:**
+1. `NewsletterCapture` uses `forwardRef` so the ChallengeModal's `emailRef` auto-focus pattern survives the refactor unchanged.
+2. `buttonLabel` accepts ReactNode so the modal's `<>Begin <ArrowRight/></>` button label renders correctly.
+3. SevenDayChallenge fire-and-forget: the challenge flow should never depend on the email capture succeeding. The POST fires and the result is swallowed.
+4. The RHYTHMS derivation is a one-liner that keeps no local state -- if `rule-of-life.json` ever changes, DevotionOnboarding follows automatically.
+5. ARMOR_PIECES deferred: the summary-field vs. full-content structure mismatch makes this a data operation that deserves its own session, not a late-session add.
+
+**Verification status:**
+- Build: `npm run build` passes (2065 modules, no errors)
+- Cloudflare 502: blocked on manual dashboard check
+- iOS Safari: manual, deferred
+
+---
+
 ## Session 11 -- Phase 5: Agent History + Nudge Surfaces (2026-05-18)
 
 **Status:** Complete. Build passes (2064 modules, 2055 kB JS, +6 kB over Session 10 baseline). Pushed to `main`.
