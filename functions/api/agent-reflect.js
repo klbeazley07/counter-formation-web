@@ -5,14 +5,11 @@
  * optional shortAssessment. Returns a 3-4 sentence formation framing plus a
  * suggestedNextStep URL.
  *
- * Reuses GEMINI_API_KEY from the production env (same key as /api/generate and
- * /api/synthesize -- no new env vars required). Same voice guard pattern as
- * synthesize.js.
+ * Required secret: ANTHROPIC_API_KEY
  */
 
-const GEMINI_PRIMARY  = "gemini-2.5-flash";
-const GEMINI_FALLBACK = "gemini-1.5-flash";
-const GEMINI_BASE     = "https://generativelanguage.googleapis.com/v1beta/models";
+const ANTHROPIC_BASE = "https://api.anthropic.com/v1/messages";
+const MODEL          = "claude-haiku-4-5-20251001";
 
 const FRUIT_LABELS = {
   love: "love", joy: "joy", peace: "peace", patience: "patience",
@@ -29,10 +26,6 @@ const ARMOR_LABELS = {
   "sword-of-the-spirit":          "Sword of the Spirit",
 };
 
-// ---------------------------------------------------------------------------
-// Profile digest (mirrors synthesize.js but includes shortAssessment)
-// ---------------------------------------------------------------------------
-
 function buildDigest(profile = {}, shortAssessment = null) {
   const edges = Array.isArray(profile.assessment?.formationEdge)
     ? profile.assessment.formationEdge.slice(0, 3).map((f) => FRUIT_LABELS[f] || f)
@@ -42,7 +35,7 @@ function buildDigest(profile = {}, shortAssessment = null) {
     ? profile.gifts.topGifts.slice(0, 3)
     : [];
 
-  const armorProgress  = profile.armor?.progress || {};
+  const armorProgress   = profile.armor?.progress || {};
   const completedPieces = profile.armor?.completedPieces || [];
   const activeArmorSlug = Object.keys(armorProgress).find((s) => !completedPieces.includes(s));
   const activeArmor     = activeArmorSlug ? ARMOR_LABELS[activeArmorSlug] || activeArmorSlug : null;
@@ -52,36 +45,30 @@ function buildDigest(profile = {}, shortAssessment = null) {
   );
 
   return {
-    displayName:          profile.identity?.displayName || null,
-    formationEdge:        edges,
+    displayName:         profile.identity?.displayName || null,
+    formationEdge:       edges,
     topGifts,
     activeArmor,
-    completedArmorCount:  completedPieces.length,
-    declarations:         declarations.slice(0, 2),
-    challengeDay:         Array.isArray(profile.challenge?.completedDays)
-                            ? profile.challenge.completedDays.length
-                            : 0,
+    completedArmorCount: completedPieces.length,
+    declarations:        declarations.slice(0, 2),
+    challengeDay:        Array.isArray(profile.challenge?.completedDays)
+                           ? profile.challenge.completedDays.length
+                           : 0,
     shortAssessment,
   };
 }
 
-// ---------------------------------------------------------------------------
-// System prompts by kind
-// ---------------------------------------------------------------------------
+const SYSTEM_PROMPT = `You write in the voice of Counter Formation: earnest, direct, theologically grounded, Christ-centered, no AI tells.
 
-const VOICE_RULES = `
 Hard voice rules:
 - Never use em dashes. Use periods or commas instead.
 - Never use the pattern "It's not X, it's Y."
 - Never open with "In this season," "In today's world," "Now more than ever," or "Let's."
 - Never use these words: leverage, utilize, harness, unlock, unleash, empower, foster, optimize, streamline, seamless, robust, transformative, journey (as a noun for a process), ecosystem, paradigm, synergy, stakeholders, multifaceted, nuanced, innovative, vibrant, dynamic, impactful.
-- Never use bullet points, headers, or markdown. Plain prose only.
-`.trim();
+- Never use bullet points, headers, or markdown. Plain prose only.`;
 
 function buildPrompt(kind, digest) {
   const lines = [];
-  lines.push("You write in the voice of Counter Formation: earnest, direct, theologically grounded, Christ-centered, no AI tells.");
-  lines.push("");
 
   if (kind === "onboarding") {
     lines.push("This is a formation onboarding. The user just answered three honest questions about where they are right now.");
@@ -96,8 +83,6 @@ function buildPrompt(kind, digest) {
     lines.push("Write 2-3 sentences that name what they have done and gesture toward what is next.");
   }
 
-  lines.push("");
-  lines.push(VOICE_RULES);
   lines.push("");
   lines.push("Formation profile:");
   if (digest.displayName)             lines.push(`- Name: ${digest.displayName}`);
@@ -121,10 +106,6 @@ function buildPrompt(kind, digest) {
   return lines.join("\n");
 }
 
-// ---------------------------------------------------------------------------
-// Suggested next step (simple rule-based for v1)
-// ---------------------------------------------------------------------------
-
 function suggestNextStep(kind, digest) {
   if (kind === "onboarding") {
     if (!digest.formationEdge.length && !digest.topGifts.length) {
@@ -137,10 +118,6 @@ function suggestNextStep(kind, digest) {
   }
   return null;
 }
-
-// ---------------------------------------------------------------------------
-// Gemini helpers (same pattern as synthesize.js)
-// ---------------------------------------------------------------------------
 
 const BANNED_PHRASES = [
   /—/,
@@ -181,42 +158,33 @@ function scrubOutput(text) {
   return s.replace(/\s{2,}/g, " ");
 }
 
-async function callGemini(apiKey, model, body) {
-  return fetch(`${GEMINI_BASE}/${model}:generateContent?key=${apiKey}`, {
+async function callClaude(apiKey, body) {
+  return fetch(ANTHROPIC_BASE, {
     method:  "POST",
-    headers: { "Content-Type": "application/json" },
-    body:    JSON.stringify(body),
+    headers: {
+      "Content-Type":      "application/json",
+      "x-api-key":         apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify(body),
   });
 }
 
-async function callGeminiWithRetry(apiKey, model, body, maxAttempts = 3) {
+async function callClaudeWithRetry(apiKey, body, maxAttempts = 2) {
   let lastRes;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    lastRes = await callGemini(apiKey, model, body);
+    lastRes = await callClaude(apiKey, body);
     if (lastRes.ok || lastRes.status === 400 || lastRes.status === 401) break;
-    if (attempt < maxAttempts) await new Promise((r) => setTimeout(r, attempt * 1200));
+    if (attempt < maxAttempts) await new Promise((r) => setTimeout(r, attempt * 1000));
   }
   return lastRes;
 }
 
-async function callGeminiWithFallback(apiKey, body) {
-  let res = await callGeminiWithRetry(apiKey, GEMINI_PRIMARY, body);
-  if (!res.ok && res.status !== 400 && res.status !== 401) {
-    console.warn(`${GEMINI_PRIMARY} returned ${res.status}, falling back to ${GEMINI_FALLBACK}`);
-    res = await callGeminiWithRetry(apiKey, GEMINI_FALLBACK, body);
-  }
-  return res;
-}
-
-// ---------------------------------------------------------------------------
-// Handler
-// ---------------------------------------------------------------------------
-
 export async function onRequestPost(context) {
   try {
-    const apiKey = context.env.GEMINI_API_KEY;
+    const apiKey = context.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
-      return json({ error: "GEMINI_API_KEY not configured." }, 500);
+      return json({ error: "ANTHROPIC_API_KEY not configured." }, 500);
     }
 
     const { kind = "onboarding", profile = {}, shortAssessment = null } = await context.request.json();
@@ -228,37 +196,41 @@ export async function onRequestPost(context) {
     const digest = buildDigest(profile, shortAssessment);
     const prompt = buildPrompt(kind, digest);
 
-    const geminiRes = await callGeminiWithFallback(apiKey, {
-      contents:         [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.78, maxOutputTokens: 512 },
-      thinkingConfig:   { thinkingBudget: 0 },
+    const claudeRes = await callClaudeWithRetry(apiKey, {
+      model:       MODEL,
+      max_tokens:  512,
+      temperature: 0.78,
+      system:      SYSTEM_PROMPT,
+      messages:    [{ role: "user", content: prompt }],
     });
 
-    if (!geminiRes.ok) {
-      const detail = await geminiRes.text();
-      console.error("Gemini agent-reflect error:", geminiRes.status, detail);
-      return json({ error: `Reflection failed (${geminiRes.status}).` }, 502);
+    if (!claudeRes.ok) {
+      const detail = await claudeRes.text();
+      console.error("Claude agent-reflect error:", claudeRes.status, detail);
+      return json({ error: `Reflection failed (${claudeRes.status}).` }, 502);
     }
 
-    const data = await geminiRes.json();
-    const raw  = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+    const data = await claudeRes.json();
+    const raw  = data?.content?.[0]?.text ?? "";
     const text = scrubOutput(raw);
 
     if (!text) {
-      return json({ error: "Empty response from Gemini." }, 502);
+      return json({ error: "Empty response from Claude." }, 502);
     }
 
     const banned = detectBannedPhrases(text);
     if (banned.length > 0) {
       const retryPrompt = prompt + `\n\nIMPORTANT: your previous draft used banned language matching: ${banned.join(", ")}. Rewrite without those words or patterns.`;
-      const retry = await callGeminiWithFallback(apiKey, {
-        contents:         [{ parts: [{ text: retryPrompt }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 512 },
-        thinkingConfig:   { thinkingBudget: 0 },
+      const retry = await callClaudeWithRetry(apiKey, {
+        model:       MODEL,
+        max_tokens:  512,
+        temperature: 0.7,
+        system:      SYSTEM_PROMPT,
+        messages:    [{ role: "user", content: retryPrompt }],
       });
       if (retry.ok) {
         const retryData = await retry.json();
-        const retryText = scrubOutput(retryData?.candidates?.[0]?.content?.parts?.[0]?.text ?? "");
+        const retryText = scrubOutput(retryData?.content?.[0]?.text ?? "");
         if (retryText && detectBannedPhrases(retryText).length === 0) {
           return json({ text: retryText, suggestedNextStep: suggestNextStep(kind, digest), voiceGuardTriggered: true });
         }
