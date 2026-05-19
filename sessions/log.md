@@ -4,6 +4,29 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 13 -- Phase 6 continuation: Gemini → Claude API migration (2026-05-19)
+
+**Status:** Complete. Build passes (2065 modules, unchanged from Session 12). Pushed to `main`.
+
+**Items completed:**
+
+**Gemini → Claude API migration (all 5 functions):** All Cloudflare Pages Functions now call the Anthropic API via raw `fetch` using `ANTHROPIC_API_KEY`. The Gemini API, its primary/fallback retry pattern, and `thinkingConfig: { thinkingBudget: 0 }` are removed entirely from the codebase.
+
+- `synthesize.js`: `claude-haiku-4-5-20251001`, max_tokens 512, temperature 0.78. System prompt carries voice rules; user message carries the profile digest. Voice guard (banned-phrase detection + retry) preserved.
+- `agent-reflect.js`: `claude-haiku-4-5-20251001`, max_tokens 512, temperature 0.78. All logic retained: FRUIT_LABELS, ARMOR_LABELS, buildDigest, buildPrompt, suggestNextStep, voice guard.
+- `generate.js`: `claude-sonnet-4-6`, max_tokens 4096, temperature 0.85. System prompt holds pastoral voice and 11-section structure; user message carries passage/theme/bigIdea + formation block.
+- `reflection.js`: `claude-haiku-4-5-20251001`, max_tokens 512, temperature 0.85. System prompt holds voice rules; user message is the specific fruitName + giftName task.
+- `arrow-log.js`: `claude-haiku-4-5-20251001`, max_tokens 1024, temperature 0.7. Dropped `responseMimeType: "application/json"` (Anthropic does not support this); prompt already instructs plain JSON output, so the JSON.parse path is unchanged.
+
+**Key decisions:**
+1. `claude-sonnet-4-6` for `generate.js` only -- it's the only function writing 700-1100 word structured long-form content. All short-prose functions use Haiku.
+2. No system prompt on `arrow-log.js` -- the prompt is a pure JSON-output instruction and adding a system voice layer would interfere with structured output compliance.
+3. `callClaudeWithRetry` uses 2 attempts (down from Gemini's 3) since Anthropic API reliability does not require the same defensive depth.
+
+**Verification:** `npm run build` passes. Functions are pure Cloudflare Workers runtime (no Node.js APIs) -- no additional deploy steps required. ANTHROPIC_API_KEY is confirmed set in the CF Pages dashboard (Production + Preview).
+
+---
+
 ## Session 12 -- Phase 6: Infrastructure Triage + Design System + Content Migration (2026-05-19)
 
 **Status:** Complete. Build passes (2065 modules, 2054 kB JS, -1 kB under Phase 5 baseline). Pushed to `main`.

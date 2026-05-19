@@ -2,8 +2,8 @@
 
 **Active plan:** `C:\Users\luke.beazley\.claude\plans\faithful-anchor-still.md` (Phase 4 -- agent foundation, complete)
 **Reference specs:** `specs/spec-site-enhancement-2026.md` (Themes 4 continuation, 5)
-**Last completed:** Session 12 -- Phase 6 (NewsletterCapture + a11y + token cleanup + content migration) on 2026-05-19
-**Up next:** Phase 7 -- Cloudflare 502 resolution + ARMOR_PIECES migration + remaining Theme 5 content.
+**Last completed:** Session 13 -- Phase 6 continuation (Gemini → Claude API migration across all 5 functions) on 2026-05-19
+**Up next:** Phase 7 -- ARMOR_PIECES migration + remaining Theme 5 content.
 
 ---
 
@@ -40,9 +40,9 @@ Two items still open from Phase 6:
 
 ### High priority -- carried over
 
-1. **Cloudflare Pages 502 fix.** Manual dashboard investigation required (see above). Cannot be completed by an agent session alone -- but once the dashboard is checked and `GEMINI_API_KEY` is confirmed, run the check script to verify.
+1. **Synthesis voice check.** Now that all 5 functions use `ANTHROPIC_API_KEY`, run `node scripts/check-synthesis-voice.js --url=https://counterformed.com` and confirm 5/5 pass.
 
-2. **iOS Safari test.** Manual step. Log results.
+2. **iOS Safari test.** Manual step. Log results: (a) magic-link end-to-end on real iOS Safari, (b) ApparelLane scroll-snap behavior, (c) bottom-sheet email capture.
 
 ### Medium priority -- content migration
 
@@ -70,7 +70,7 @@ Two items still open from Phase 6:
 
 ## Environment notes
 
-- Cloudflare Pages env: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `GEMINI_API_KEY`, `KIT_API_KEY`, `KIT_FORMATION_TAG_ID` -- all should be set. The 502s on `/api/synthesize` suggest `GEMINI_API_KEY` may need verification in the dashboard.
+- Cloudflare Pages env: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `ANTHROPIC_API_KEY`, `KIT_API_KEY`, `KIT_FORMATION_TAG_ID` -- all should be set. `GEMINI_API_KEY` is no longer used by any function and can be removed from the CF dashboard at any time.
 - `cf:profile` is at schema v4. Phase 7 does not require a schema bump.
 - RLS: enabled on `public.users`, `fruit_assessments`, `gifts_sessions`. Intentionally OFF on `gifts_trusted_tokens` and `gifts_trusted_responses`.
 - Content loader: `src/content/loader.js` exports `getAllArmorPieces`, `getArmorPiece`, `getAllRhythms`, `getRhythm`, `getFieldGuidePath`, `getFieldGuideDay`, `getAllFruits`, `getFruit`. `armor.json` has 6 entries, `rule-of-life.json` has 5, `field-guide.json` has 7, `fruits.json` has 9.
