@@ -4,6 +4,40 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 11 -- Phase 5: Agent History + Nudge Surfaces (2026-05-18)
+
+**Status:** Complete. Build passes (2064 modules, 2055 kB JS, +6 kB over Session 10 baseline). Pushed to `main`.
+
+**Items completed:**
+
+**Voice-guard check (Item 1):** Production script hit 5/5 HTTP 502 failures. The responses are HTML Cloudflare error pages (not the function's own 502 JSON), which means the function is not executing at all at the edge -- likely a Cloudflare Pages deployment issue or GEMINI_API_KEY quota exhaustion on the production project. The `thinkingBudget: 0` fix is correctly deployed in the code (synthesize.js lines 219 and 245). This is an infrastructure issue, not a voice quality issue. Flagged for manual investigation: check Cloudflare Pages dashboard for function errors, and verify GEMINI_API_KEY is set under Settings > Environment Variables.
+
+**AgentHistory page (Item 2):** `src/components/agent/AgentHistory.jsx` created and wired to `/agent` in `App.jsx`. Read-only page showing `profile.agent.history` entries in reverse-chronological order with kind badge (Formation Assessment / Re-engagement / Reflection), date, and summary. Empty state handles the zero-history case. "Take a New Assessment" CTA routes to `/agent/onboarding`. Route wired as `<Route path="/agent" element={<AgentHistory />} />` in App.jsx just above the existing `/agent/onboarding` route.
+
+**AgentEntry fixes (Items 2 + 4 + 5):** `AgentEntry.jsx` was rewritten from scratch to support three states:
+1. **Onboarding CTA** (not done, has activity): routes to `/agent/onboarding` -- unchanged behavior
+2. **Nudge state** (onboarding done, >7 days since lastNudgeAt): inline button fires `/api/agent-reflect` with `kind: "nudge"`, writes history entry + lastNudgeAt back to profile via `updateProfile`, displays returned text inline without navigating away. After the nudge text is displayed, a "View Formation Record →" link to `/agent` appears.
+3. **History state** (onboarding done, not nudging): shows truncated last summary + "Continue" CTA now correctly routes to `/agent` (was incorrectly hardcoded to `/agent/onboarding` for all returning users).
+
+`shouldNudge(profile)` utility added inline in AgentEntry: checks `onboardingCompletedAt` set, `lastNudgeAt` >7 days ago, and `hasMeaningfulActivity(profile)`. `PersonalizedHome.jsx` updated to destructure `updateProfile` from `useFormationProfile()` and pass it to `AgentEntry`.
+
+**iOS Safari test (Item 3):** Still deferred. Requires real device. Carried over to next session.
+
+**Bundle size:** 2055 kB (+6 kB over Session 10 baseline of 2049 kB). Under the +80 kB session limit.
+
+**Key decisions:**
+1. `shouldNudge` lives in AgentEntry rather than a shared utility because no other component needs it at this stage. If a second surface ever needs nudge logic, extract to a shared lib.
+2. The nudge result is displayed inline in AgentEntry (no navigation), per spec. After reading it, the user clicks "View Formation Record" to reach the full history. This keeps the dashboard experience low-friction.
+3. `AgentEntry` receives `updateProfile` as a prop from PersonalizedHome rather than calling `useFormationProfile()` internally -- avoids dual hook instances with independent state.
+4. Voice-guard 502s are flagged as infrastructure, not voice quality. The code fix (thinkingBudget: 0) is already in production. Next step is to check the Cloudflare Pages function log for the actual error.
+
+**Verification status:**
+- Build: `npm run build` passes (2064 modules, no errors)
+- Voice-guard: blocked on infrastructure 502s (not code-related)
+- iOS Safari: manual, deferred
+
+---
+
 ## Session 10 -- Phase 4: Verification + Connection Tissue + Discipleship Agent Foundation (2026-05-18)
 
 **Status:** Complete. Build passes (2063 modules, 2049 kB JS, +9 kB over Session 9 baseline). Pushed to `main`.

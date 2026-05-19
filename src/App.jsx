@@ -41,6 +41,7 @@ import AssessmentIntro from "./components/field-guide/gifts/AssessmentIntro";
 import AssessmentQuestion from "./components/field-guide/gifts/AssessmentQuestion";
 import AuthCallback from "./components/auth/AuthCallback";
 import AgentOnboarding from "./components/agent/AgentOnboarding";
+import AgentHistory from "./components/agent/AgentHistory";
 import { installAuthStateListener } from "./utils/authBackfill";
 
 // Install the auth listener once at module load so SIGNED_IN events from the
@@ -1921,6 +1922,7 @@ export default function App() {
         <Route path="/community"  element={<CommunityPage />} />
 
         {/* Agent routes */}
+        <Route path="/agent"            element={<AgentHistory />} />
         <Route path="/agent/onboarding" element={<AgentOnboarding />} />
 
         {/* Fallback */}

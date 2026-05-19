@@ -40,7 +40,7 @@ const STYLES = `
 `;
 
 export default function PersonalizedHome() {
-  const { profile, isLoaded } = useFormationProfile();
+  const { profile, updateProfile, isLoaded } = useFormationProfile();
 
   if (!isLoaded || !profile) return null;
 
@@ -50,7 +50,7 @@ export default function PersonalizedHome() {
       <main className="cf-ph">
         {showSaveStrip(profile) && <SaveJourneyStrip />}
         <DashboardBanner profile={profile} />
-        <AgentEntry profile={profile} />
+        <AgentEntry profile={profile} updateProfile={updateProfile} />
         <DashboardWorkspace profile={profile} />
         <ApparelLane profile={profile} />
         <SignOutLink profile={profile} />
