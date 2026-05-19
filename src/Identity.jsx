@@ -1417,16 +1417,6 @@ function ClosingSection() {
   );
 }
 
-const ARMOR_PIECE_TITLES = {
-  "belt-of-truth": "Belt of Truth",
-  "breastplate-of-righteousness": "Breastplate of Righteousness",
-  "gospel-of-peace": "Gospel of Peace",
-  "shield-of-faith": "Shield of Faith",
-  "helmet-of-salvation": "Helmet of Salvation",
-  "sword-of-the-spirit": "Sword of the Spirit",
-};
-
-
 const LANDING_SECTIONS = [
   { id: "hero",       label: "The Identity Pillar" },
   { id: "scripture",  label: "Ephesians 6" },
@@ -1612,15 +1602,6 @@ const PIECE_ORDER = [
   "helmet-of-salvation",
   "sword-of-the-spirit",
 ];
-
-const WIDGET_META = {
-  "belt-of-truth":               { name: "Daily Examen",               desc: "Five guided examination questions with journaling fields. A nightly review of the day through the lens of consolation and desolation." },
-  "breastplate-of-righteousness":{ name: "Declaration Builder",        desc: "Build a morning declaration card from your own identity statements. Formatted, printable, and shareable." },
-  "gospel-of-peace":             { name: "Peace Pause Timer",          desc: "A three-checkpoint timer for morning, midday, and evening anchoring moments throughout the day." },
-  "shield-of-faith":             { name: "Arrow Log",                  desc: "Name a lie you are believing. The tool returns a biblical truth and supporting scripture. Save entries to build a personal record over time." },
-  "helmet-of-salvation":         { name: "First Fifteen Designer",     desc: "Design your morning first-fifteen-minute practice: Scripture, silence, prayer, declaration â€” in the order that forms you." },
-  "sword-of-the-spirit":         { name: "Verse Memorization Tracker", desc: "Input your weekly verse, mark daily review completions, and build a growing library of memorized Scripture." },
-};
 
 /* â”€â”€â”€ WIDGET MAP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 

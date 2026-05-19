@@ -4,6 +4,37 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 15 -- Phase 8: Identity content cleanup + FieldGuide extraction (2026-05-19)
+
+**Status:** Complete. Build passes (2066 modules, 2054 kB -- +1 module for field-guide-landing.json, bundle size unchanged). Pushed to `main`.
+
+**Items completed:**
+
+**Identity dead code removal (Item 2):** Removed two unreferenced constants from `Identity.jsx`:
+- `ARMOR_PIECE_TITLES` (8 lines) -- slug-to-title map defined after the Phase 7 armor.json migration made it redundant. Was never referenced anywhere in the codebase.
+- `WIDGET_META` (8 lines) -- slug-to-widget-description map. Also never referenced. Carried an encoding artifact (`â€"`) that no longer matters.
+
+**FieldGuide content extraction (Item 3):** Extracted two inline content arrays from `FieldGuide.jsx` to `src/content/field-guide-landing.json`:
+- `WHY` -- 6 teaching sections explaining "Scripture Before Scroll" (why the practice matters)
+- `NEW_SECTIONS` -- 4 explainer sections about Counter Formation for the landing page
+
+New loader export `getFieldGuideLanding()` added to `src/content/loader.js`. `FieldGuide.jsx` now destructures `{ why: WHY, newSections: NEW_SECTIONS }` from the loader. The existing `field-guide.json` (7-day daily office array) and its assertCount are untouched. No visual or behavioral change.
+
+**iOS Safari test (Item 1):** Still deferred. Requires real device. Carrying to Phase 9.
+
+**ApparelLane v2 (Item 4):** Scope assessed, not implemented. Requires: profile field reads (`fruitScores`, `armorEdge`, `gifts.top`), Shopify Storefront API integration for tag/metafield-based queries, a recommendation rule engine, and fallback to current hardcoded curation. Candidate for Phase 9.
+
+**const C cleanup (Item 5):** Deferred. 31 files, pure code hygiene, no user-facing change. Best as a dedicated per-file find-and-replace session.
+
+**Key decisions:**
+1. `CROSS_LINKS` stays in Identity.jsx -- it is in use (by `CrossLinkCard`) and mixes UI routing URLs (`to`) with content (`tagline`), making it unsuitable for armor.json without a schema decision about embedding routing data in content files.
+2. `field-guide-landing.json` is a separate file from `field-guide.json` (daily offices) -- the daily array assertCount is not disturbed, and the two content types have different shapes and usage contexts.
+3. em dashes in the original inline strings (`—`) were converted to double hyphens (`--`) in the JSON file, per the voice guide.
+
+**Bundle size:** 2054 kB (unchanged). 2066 modules (+1 for field-guide-landing.json).
+
+---
+
 ## Session 14 -- Phase 7: ARMOR_PIECES migration + synthesis voice check (2026-05-19)
 
 **Status:** Complete. Build passes (2065 modules, 2054 kB -- unchanged from Phase 6 baseline). Pushed to `main`.

@@ -1,6 +1,7 @@
 import armorData from './armor.json';
 import rhythmData from './rule-of-life.json';
 import fieldGuideData from './field-guide.json';
+import fieldGuideLandingData from './field-guide-landing.json';
 import fruitsData from './fruits.json';
 
 // Canonical sequences — source of truth for ordering in getAllArmorPieces() and getAllFruits()
@@ -76,6 +77,10 @@ export function getFieldGuideDay(n) {
 
 export function getFieldGuidePath() {
   return fieldGuideData;
+}
+
+export function getFieldGuideLanding() {
+  return fieldGuideLandingData;
 }
 
 export function getFruit(slug) {
