@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useFormationProfile } from "../hooks/useFormationProfile";
 import { FRUIT_ORDER, FRUITS } from "../fruitAssessmentData";
+import { getAllRhythms } from "../content/loader";
 
 /*
  * DevotionOnboarding — short orientation flow for first-time users.
@@ -33,13 +34,7 @@ const C = {
   inputText:"#17140F",
 };
 
-const RHYTHMS = [
-  { slug: "presence",  label: "Presence",  hint: "Attention before God"          },
-  { slug: "prayer",    label: "Prayer",    hint: "Dependence before action"      },
-  { slug: "sabbath",   label: "Sabbath",   hint: "Rest before production"        },
-  { slug: "community", label: "Community", hint: "Formation together"            },
-  { slug: "scripture", label: "Scripture", hint: "Truth before noise"            },
-];
+const RHYTHMS = getAllRhythms().map(r => ({ slug: r.slug, label: r.title, hint: r.sub }));
 
 const RHYTHM_SLUGS = RHYTHMS.map(r => r.slug);
 

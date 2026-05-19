@@ -241,6 +241,7 @@ function PracticeSelect({ value, onChange, label }) {
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={label ? `${label}: ${value}` : value}
+        aria-activedescendant={open ? `ff-option-${highlight}` : undefined}
       >
         {value}
         <span className="ff-select-caret" style={{ transform: `translateY(-50%) rotate(${open ? "180deg" : "0deg"})` }}>▾</span>
@@ -262,6 +263,7 @@ function PracticeSelect({ value, onChange, label }) {
             return (
               <button
                 key={opt}
+                id={`ff-option-${i}`}
                 type="button"
                 className={cls}
                 role="option"

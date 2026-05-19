@@ -42,6 +42,7 @@ import AssessmentQuestion from "./components/field-guide/gifts/AssessmentQuestio
 import AuthCallback from "./components/auth/AuthCallback";
 import AgentOnboarding from "./components/agent/AgentOnboarding";
 import AgentHistory from "./components/agent/AgentHistory";
+import NewsletterCapture from "./components/NewsletterCapture";
 import { installAuthStateListener } from "./utils/authBackfill";
 
 // Install the auth listener once at module load so SIGNED_IN events from the
@@ -988,7 +989,7 @@ function DroppingSoonStrip({ products, accent, accentMuted }) {
                 onChange={e => setNotifyEmail(prev => ({ ...prev, [product.slug]: e.target.value }))}
                 onKeyDown={e => e.key === "Enter" && handleNotify(product.slug)}
                 placeholder="email"
-                className="flex-1 min-w-0 px-3 py-2 rounded-full text-[10px] text-white placeholder-white/25 focus:outline-none tracking-wider uppercase"
+                className="flex-1 min-w-0 px-3 py-2 rounded-full text-[10px] text-white placeholder-white/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C]/40 tracking-wider uppercase"
                 style={{ background: "rgba(255,255,255,0.05)", border: `1px solid ${accentMuted}` }}
                 autoFocus
                 disabled={notifyLoading[product.slug]}
@@ -1463,10 +1464,7 @@ function GearSection() {
 }
 
 function ChallengeModal({ open, onClose }) {
-  const [email, setEmail]         = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading]     = useState(false);
-  const [error, setError]         = useState(null);
   const dialogRef = useRef(null);
   const emailRef = useRef(null);
   const returnFocusRef = useRef(null);
@@ -1513,32 +1511,8 @@ function ChallengeModal({ open, onClose }) {
 
   useEffect(() => {
     if (open) return;
-    setEmail("");
     setSubmitted(false);
-    setLoading(false);
-    setError(null);
   }, [open]);
-
-  const handleSubmit = async () => {
-    if (!email || loading) return;
-    setLoading(true);
-    setError(null);
-
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/subscribe`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, source: "7day_challenge_modal" }),
-      });
-
-      if (!res.ok) throw new Error();
-      setSubmitted(true);
-    } catch {
-      setError("Something went wrong. Try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (!open) return null;
 
@@ -1587,32 +1561,13 @@ function ChallengeModal({ open, onClose }) {
 
             {!submitted ? (
               <div className="mx-auto mt-10 max-w-xl">
-                <div className="flex flex-col gap-3 sm:flex-row">
-                  <input
-                    ref={emailRef}
-                    type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    onKeyDown={e => e.key === "Enter" && handleSubmit()}
-                    placeholder="your@email.com"
-                    disabled={loading}
-                    className="flex-1 rounded-full px-5 py-4 text-[11px] uppercase tracking-[0.18em] text-white placeholder-white/22 focus:outline-none disabled:opacity-50"
-                    style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)" }}
-                    onFocus={e => e.currentTarget.style.borderColor = "rgba(201,168,76,0.40)"}
-                    onBlur={e => e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)"}
-                  />
-                  <button
-                    type="button"
-                    onClick={handleSubmit}
-                    disabled={loading}
-                    className="flex items-center justify-center gap-2 rounded-full bg-[#C9A84C] px-8 py-4 text-[12px] font-bold uppercase tracking-widest text-black transition-all hover:bg-[#FAF8F5] disabled:opacity-50"
-                  >
-                    {loading ? "..." : <><span>Begin</span> <ArrowRight size={13} /></>}
-                  </button>
-                </div>
-                {error && (
-                  <p className="mt-3 text-[12px] uppercase tracking-[0.2em] text-red-400">{error}</p>
-)}
+                <NewsletterCapture
+                  ref={emailRef}
+                  source="7day_challenge_modal"
+                  buttonLabel={<><span>Begin</span> <ArrowRight size={13} /></>}
+                  buttonStyle="filled"
+                  onSuccess={() => setSubmitted(true)}
+                />
               </div>
             ) : (
               <div className="mt-10">

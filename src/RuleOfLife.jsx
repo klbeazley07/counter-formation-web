@@ -7,13 +7,6 @@ import NextStep from "./components/NextStep";
 
 export const RULE_BASE = "/rule-of-life";
 
-const C = {
-  heroBg: "#06050A",
-  darkBg: "#0E0C0A",
-  ruleBg: "#17140F",
-  gold:   "#C9A84C",
-  ivory:  "#FAF8F5",
-};
 
 /* ─── AUTHOR PHOTOS ──────────────────────────────────────────────── */
 

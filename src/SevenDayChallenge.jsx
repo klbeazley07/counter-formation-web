@@ -701,6 +701,11 @@ export function CFLanding() {
   const handleSubmit = () => {
     if (!email || !email.includes("@")) return;
     setSubmitted(true);
+    fetch(`${import.meta.env.VITE_API_URL}/subscribe`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, source: "7day_challenge" }),
+    }).catch(() => {});
   };
 
   return (

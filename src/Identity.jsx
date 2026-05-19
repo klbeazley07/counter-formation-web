@@ -1732,7 +1732,7 @@ function CrossLinkCard({ piece }) {
       <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "8px", letterSpacing: ".36em", textTransform: "uppercase", color: "rgba(201,168,76,0.55)", marginBottom: "6px" }}>
         Connected Rhythm
       </p>
-      <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "13px", letterSpacing: ".2em", textTransform: "uppercase", color: "#C9A84C", fontWeight: 700, marginBottom: "4px" }}>
+      <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "13px", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--cf-gold)", fontWeight: 700, marginBottom: "4px" }}>
         {link.rhythm}
       </p>
       <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "14px", color: "rgba(250,248,245,0.45)", lineHeight: 1.4 }}>
@@ -1949,10 +1949,10 @@ export function ArmorPiecePage() {
         {data.icon && (
           <img src={data.icon} alt="" style={{ width: 40, mixBlendMode: "screen", opacity: 0.12, marginBottom: "2rem" }} />
         )}
-        <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "10px", letterSpacing: "0.5em", textTransform: "uppercase", color: "#C9A84C", marginBottom: "1.5rem", fontWeight: 700 }}>
+        <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "10px", letterSpacing: "0.5em", textTransform: "uppercase", color: "var(--cf-gold)", marginBottom: "1.5rem", fontWeight: 700 }}>
           You're Wearing the Armor
         </p>
-        <h2 style={{ fontFamily: "'Michroma', sans-serif", fontSize: "clamp(28px, 6vw, 52px)", textTransform: "uppercase", letterSpacing: "0.1em", color: "#FAF8F5", lineHeight: 0.9, marginBottom: "1rem" }}>
+        <h2 style={{ fontFamily: "'Michroma', sans-serif", fontSize: "clamp(28px, 6vw, 52px)", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--cf-ivory)", lineHeight: 0.9, marginBottom: "1rem" }}>
           {data.title}
         </h2>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "clamp(15px, 3vw, 20px)", color: "rgba(250,248,245,0.4)", marginBottom: "3rem" }}>
