@@ -35,13 +35,6 @@ const AUTHORS = {
 
 export const RHYTHMS = getAllRhythms();
 
-/* ─── STORAGE HELPERS ─────────────────────────────────────────────── */
-
-function getBookProgress() {
-  try { return JSON.parse(localStorage.getItem("cf_books") || "{}"); }
-  catch { return {}; }
-}
-
 /* ─── INTERACTIVE: EXAMEN WALKTHROUGH (Presence) ─────────────────── */
 
 function ExamenWalkthrough() {
@@ -655,123 +648,36 @@ export function RhythmPage() {
           </div>
 
           {/* ── Connected Armor Cross-Links ── */}
-          {rhythm === "presence" && (
+          {Array.isArray(data.connectedArmor) && data.connectedArmor.length > 0 && (
             <div className="rl-section">
               <p className="rl-sec-label">Connected Armor</p>
-              <Link to="/identity/belt-of-truth" className="rl-book" style={{ gridTemplateColumns: "1fr", display: "flex", flexDirection: "column" }}>
-                <div className="rl-book-body" style={{ minHeight: "auto" }}>
-                  <div>
-                    <p className="rl-book-author">Connected Armor</p>
-                    <p className="rl-book-title">Belt of Truth</p>
-                    <p className="rl-book-desc">The foundation everything else attaches to</p>
+              {data.connectedArmor.map((piece, idx) => (
+                <Link
+                  key={piece.slug}
+                  to={`/identity/${piece.slug}`}
+                  className="rl-book"
+                  style={{
+                    gridTemplateColumns: "1fr",
+                    display: "flex",
+                    flexDirection: "column",
+                    marginBottom: idx < data.connectedArmor.length - 1 ? "0.75rem" : 0,
+                  }}
+                >
+                  <div className="rl-book-body" style={{ minHeight: "auto" }}>
+                    <div>
+                      <p className="rl-book-author">Connected Armor</p>
+                      <p className="rl-book-title">{piece.title}</p>
+                      <p className="rl-book-desc">{piece.desc}</p>
+                    </div>
+                    <span className="rl-book-cta">
+                      Explore
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                        <path d="M1 5h8M5.5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+                      </svg>
+                    </span>
                   </div>
-                  <span className="rl-book-cta">
-                    Explore
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                      <path d="M1 5h8M5.5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                    </svg>
-                  </span>
-                </div>
-              </Link>
-            </div>
-          )}
-
-          {rhythm === "scripture" && (
-            <div className="rl-section">
-              <p className="rl-sec-label">Connected Armor</p>
-              <Link to="/identity/sword-of-the-spirit" className="rl-book" style={{ gridTemplateColumns: "1fr", display: "flex", flexDirection: "column", marginBottom: "0.75rem" }}>
-                <div className="rl-book-body" style={{ minHeight: "auto" }}>
-                  <div>
-                    <p className="rl-book-author">Connected Armor</p>
-                    <p className="rl-book-title">Sword of the Spirit</p>
-                    <p className="rl-book-desc">The Word is a weapon</p>
-                  </div>
-                  <span className="rl-book-cta">
-                    Explore
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                      <path d="M1 5h8M5.5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                    </svg>
-                  </span>
-                </div>
-              </Link>
-              <Link to="/identity/helmet-of-salvation" className="rl-book" style={{ gridTemplateColumns: "1fr", display: "flex", flexDirection: "column" }}>
-                <div className="rl-book-body" style={{ minHeight: "auto" }}>
-                  <div>
-                    <p className="rl-book-author">Connected Armor</p>
-                    <p className="rl-book-title">Helmet of Salvation</p>
-                    <p className="rl-book-desc">A protected mind</p>
-                  </div>
-                  <span className="rl-book-cta">
-                    Explore
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                      <path d="M1 5h8M5.5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                    </svg>
-                  </span>
-                </div>
-              </Link>
-            </div>
-          )}
-
-          {rhythm === "sabbath" && (
-            <div className="rl-section">
-              <p className="rl-sec-label">Connected Armor</p>
-              <Link to="/identity/gospel-of-peace" className="rl-book" style={{ gridTemplateColumns: "1fr", display: "flex", flexDirection: "column" }}>
-                <div className="rl-book-body" style={{ minHeight: "auto" }}>
-                  <div>
-                    <p className="rl-book-author">Connected Armor</p>
-                    <p className="rl-book-title">Gospel of Peace</p>
-                    <p className="rl-book-desc">Ground beneath you</p>
-                  </div>
-                  <span className="rl-book-cta">
-                    Explore
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                      <path d="M1 5h8M5.5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                    </svg>
-                  </span>
-                </div>
-              </Link>
-            </div>
-          )}
-
-          {rhythm === "community" && (
-            <div className="rl-section">
-              <p className="rl-sec-label">Connected Armor</p>
-              <Link to="/identity/shield-of-faith" className="rl-book" style={{ gridTemplateColumns: "1fr", display: "flex", flexDirection: "column" }}>
-                <div className="rl-book-body" style={{ minHeight: "auto" }}>
-                  <div>
-                    <p className="rl-book-author">Connected Armor</p>
-                    <p className="rl-book-title">Shield of Faith</p>
-                    <p className="rl-book-desc">Behind what God has said</p>
-                  </div>
-                  <span className="rl-book-cta">
-                    Explore
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                      <path d="M1 5h8M5.5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                    </svg>
-                  </span>
-                </div>
-              </Link>
-            </div>
-          )}
-
-          {rhythm === "prayer" && (
-            <div className="rl-section">
-              <p className="rl-sec-label">Connected Armor</p>
-              <Link to="/identity/breastplate-of-righteousness" className="rl-book" style={{ gridTemplateColumns: "1fr", display: "flex", flexDirection: "column" }}>
-                <div className="rl-book-body" style={{ minHeight: "auto" }}>
-                  <div>
-                    <p className="rl-book-author">Connected Armor</p>
-                    <p className="rl-book-title">Breastplate of Righteousness</p>
-                    <p className="rl-book-desc">Your heart, already covered</p>
-                  </div>
-                  <span className="rl-book-cta">
-                    Explore
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                      <path d="M1 5h8M5.5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                    </svg>
-                  </span>
-                </div>
-              </Link>
+                </Link>
+              ))}
             </div>
           )}
         </div>

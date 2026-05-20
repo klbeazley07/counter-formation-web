@@ -4,7 +4,7 @@ import { migrateFormationProfile } from "../utils/migrateFormationProfile";
 const PROFILE_KEY = "cf:profile";
 
 const DEFAULT_PROFILE = {
-  _version: 4,
+  _version: 5,
   _created: null,
   _updated: null,
   identity: {
@@ -43,6 +43,7 @@ const DEFAULT_PROFILE = {
   },
   ruleOfLife: {
     completedRhythms: [],
+    bookmarks:        {},
   },
   onboarding: {
     completedAt:      null,
@@ -144,12 +145,28 @@ export function FormationProfileProvider({ children }) {
     if (raw) {
       try {
         const parsed = JSON.parse(raw);
-        // Backfill any new schema keys onto older profiles (v1, v2 → v3).
-        // deepMerge here prefers existing values, only adding missing structure.
+        // Backfill any new schema keys onto older profiles. deepMerge prefers
+        // existing values, only adding missing structure.
         initialProfile = deepMerge(DEFAULT_PROFILE, parsed);
-        initialProfile._version = 4;
+        // v4 → v5: fold any standalone cf_books legacy key into ruleOfLife.bookmarks.
+        if ((parsed._version ?? 0) < 5) {
+          try {
+            const legacy = localStorage.getItem("cf_books");
+            if (legacy) {
+              const parsedBooks = JSON.parse(legacy);
+              if (parsedBooks && typeof parsedBooks === "object" && !Array.isArray(parsedBooks)) {
+                initialProfile.ruleOfLife.bookmarks = {
+                  ...initialProfile.ruleOfLife.bookmarks,
+                  ...parsedBooks,
+                };
+              }
+            }
+            localStorage.removeItem("cf_books");
+          } catch {}
+        }
+        initialProfile._version = 5;
         // Persist the backfill so subsequent loads are cheap.
-        if (parsed._version !== 4) {
+        if (parsed._version !== 5) {
           localStorage.setItem(PROFILE_KEY, JSON.stringify(initialProfile));
         }
       } catch {
