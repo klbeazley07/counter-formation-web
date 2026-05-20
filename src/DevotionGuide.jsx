@@ -9,7 +9,27 @@ import DevotionHistory from "./components/DevotionHistory";
 import EmailCapture from "./components/auth/EmailCapture";
 import NextStep from "./components/NextStep";
 import { FRUITS } from "./fruitAssessmentData";
+import { withScriptureRefs } from "./utils/parseScriptureRefs";
 import "./styles/devotion-guide.css";
+
+/* ─── MARKDOWN RENDERERS ───────────────────────────────────────────
+ * Override block-level markdown elements so any scripture reference in
+ * AI-generated devotional text becomes an interactive ScriptureRef
+ * (hover popover + Bible.com chapter link).
+ */
+const MARKDOWN_COMPONENTS = {
+  p:          ({ node, children, ...props }) => <p {...props}>{withScriptureRefs(children)}</p>,
+  li:         ({ node, children, ...props }) => <li {...props}>{withScriptureRefs(children)}</li>,
+  blockquote: ({ node, children, ...props }) => <blockquote {...props}>{withScriptureRefs(children)}</blockquote>,
+  h1:         ({ node, children, ...props }) => <h1 {...props}>{withScriptureRefs(children)}</h1>,
+  h2:         ({ node, children, ...props }) => <h2 {...props}>{withScriptureRefs(children)}</h2>,
+  h3:         ({ node, children, ...props }) => <h3 {...props}>{withScriptureRefs(children)}</h3>,
+  h4:         ({ node, children, ...props }) => <h4 {...props}>{withScriptureRefs(children)}</h4>,
+  h5:         ({ node, children, ...props }) => <h5 {...props}>{withScriptureRefs(children)}</h5>,
+  h6:         ({ node, children, ...props }) => <h6 {...props}>{withScriptureRefs(children)}</h6>,
+  em:         ({ node, children, ...props }) => <em {...props}>{withScriptureRefs(children)}</em>,
+  strong:     ({ node, children, ...props }) => <strong {...props}>{withScriptureRefs(children)}</strong>,
+};
 
 /* ─── FIELD INPUT ─────────────────────────────────────────────────── */
 
@@ -573,12 +593,7 @@ export default function DevotionGuide() {
             <div style={{ background: "var(--cf-obsidian)", border: `1px solid ${"var(--cf-white-8)"}`, borderRadius: 24, padding: "clamp(32px,5vw,80px)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${"var(--cf-gold-mid)"},transparent)` }} />
               <div className="dg-markdown">
-                {/* TODO: Convert to ScriptureRef when this section is refactored —
-                    AI-generated devotional content may include scripture references as plain
-                    text inside Markdown. To make them interactive, the generate API would need
-                    to return structured data (reference + text pairs) alongside the narrative,
-                    or a post-processing step could parse and replace known reference patterns. */}
-                <ReactMarkdown>{devotional}</ReactMarkdown>
+                <ReactMarkdown components={MARKDOWN_COMPONENTS}>{devotional}</ReactMarkdown>
               </div>
               <div style={{ marginTop: 64, paddingTop: 48, borderTop: "1px solid rgba(255,255,255,0.05)", textAlign: "center" }}>
                 <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.3em", color: "var(--cf-ivory-24)", textTransform: "uppercase" }}>

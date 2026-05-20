@@ -314,6 +314,7 @@ export default function FruitAssessment() {
     scores, primaryFruit, cluster, previousResult, isDeltaMode, setShareOpen,
     evidenceFruits, primaryEvidence, formationFruits, primaryFormation, scoreSpread,
     isAuthenticated: !!profile?.identity?.userId,
+    has7Day: (profile?.challenge?.completedDays?.length ?? 0) > 0,
   };
 
   return (
@@ -733,16 +734,13 @@ function ProcessingScreen({ onDone }) {
 
 function ResultsScreen({ scores, primaryFruit, cluster, previousResult, isDeltaMode, setShareOpen,
   evidenceFruits, primaryEvidence, formationFruits, primaryFormation, scoreSpread,
-  isAuthenticated }) {
+  isAuthenticated, has7Day }) {
 
   const [emailDismissed, setEmailDismissed] = useState(false);
 
   if (!scores || !primaryFruit) return null;
 
   const fruit = FRUITS[primaryFruit];
-  const has7Day = (() => {
-    try { return !!localStorage.getItem("cf-challenge-progress"); } catch { return false; }
-  })();
   const giftsComplete = hasCompletedAssessment();
 
   return (

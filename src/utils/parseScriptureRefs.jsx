@@ -42,6 +42,25 @@ export function parseScriptureRefs(text) {
 }
 
 /**
+ * Walks React children recursively. Replaces any string child with the result
+ * of parseScriptureRefs() and recurses into any element children, preserving
+ * the original element type and props.
+ *
+ * Use this to add interactive scripture references to rendered Markdown or
+ * any tree of React children where the text is unknown at author time
+ * (e.g., AI-generated content). Skips `<a>` elements so existing links are
+ * not re-wrapped.
+ */
+export function withScriptureRefs(children) {
+  return React.Children.map(children, (child) => {
+    if (typeof child === "string") return parseScriptureRefs(child);
+    if (!React.isValidElement(child)) return child;
+    if (child.type === "a" || child.props?.children === undefined) return child;
+    return React.cloneElement(child, undefined, withScriptureRefs(child.props.children));
+  });
+}
+
+/**
  * Like parseScriptureRefs but handles HTML strings containing <em> tags.
  * Splits on <em>...</em> segments, applies scripture ref parsing to each
  * text node, and returns JSX. Replaces dangerouslySetInnerHTML usage.
