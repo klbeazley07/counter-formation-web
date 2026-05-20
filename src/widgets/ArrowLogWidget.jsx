@@ -677,9 +677,10 @@ export function ArrowLogWidget() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ lie: lie.trim() }),
       });
-      if (!res.ok) throw new Error(`Request failed (${res.status})`);
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
+      let data = null;
+      try { data = await res.json(); } catch {}
+      if (!res.ok) throw new Error(data?.error || `Request failed (${res.status})`);
+      if (data?.error) throw new Error(data.error);
       setCurrentTruth(data);
     } catch (err) {
       setError(err.message || "Something went wrong. Please try again.");

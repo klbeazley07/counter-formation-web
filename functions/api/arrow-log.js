@@ -8,6 +8,21 @@
 const ANTHROPIC_BASE = "https://api.anthropic.com/v1/messages";
 const MODEL          = "claude-haiku-4-5-20251001";
 
+/**
+ * Best-effort extraction of a JSON object from a Claude response. Claude
+ * occasionally wraps JSON in ```json ... ``` fences or adds a one-line
+ * preamble despite explicit instructions. Strip fences and isolate the
+ * outermost { ... } block before parsing.
+ */
+function extractJson(text) {
+  let cleaned = (text ?? "").trim();
+  cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "");
+  const first = cleaned.indexOf("{");
+  const last  = cleaned.lastIndexOf("}");
+  if (first !== -1 && last > first) cleaned = cleaned.slice(first, last + 1);
+  return JSON.parse(cleaned);
+}
+
 async function callClaude(apiKey, body) {
   return fetch(ANTHROPIC_BASE, {
     method:  "POST",
@@ -96,9 +111,9 @@ Return ONLY a valid JSON object with no markdown formatting, no code fences, no 
     }
 
     try {
-      return json(JSON.parse(text));
-    } catch {
-      console.error("Failed to parse Claude response as JSON:", text);
+      return json(extractJson(text));
+    } catch (parseErr) {
+      console.error("Failed to parse Claude response as JSON:", text, parseErr);
       return json({ error: "Malformed response from Claude. Please try again." }, 502);
     }
   } catch (err) {
