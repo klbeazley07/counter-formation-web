@@ -4,6 +4,40 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 18 -- Phase 11: const C final batch + DG_CSS extraction (2026-05-20)
+
+**Status:** Complete. Build passes (2068 modules unchanged; JS 2046 kB (-2 kB), CSS 78.4 kB (+1.5 kB -- DG_CSS moved to CSS bundle)). All `const C` palette constants are now eliminated from src/.
+
+**Items completed:**
+
+**const C cleanup -- 12 files, ~200 usages.** Plan called for 10 files; an audit found 12. Per-file substitutions used the now-stable token mapping (tokens.css unchanged in Phase 11 -- no new vars required).
+
+- `src/components/DevotionHistory.jsx` -- dead 7-key block deleted, zero usages.
+- `src/components/MobileTabBar.jsx` -- 12 usages of gold/ivory. Three `${C.gold}NN` and one `C.gold + "33"` hex-alpha concats inlined as literal `#C9A84CNN`.
+- `src/components/SiteNav.jsx` -- 6 usages. `C.bg` (rgba 0.88, no token) inlined as literal rgba.
+- `src/components/visualizations/FruitStrata.jsx` + `GiftConstellationCompact.jsx` -- standard token substitutions; goldFaint/goldDim variants used 0.02 rounding.
+- `src/components/DevotionOnboarding.jsx` -- 13-key block but only `C.gold` was actually used; rest were dead and deleted with block.
+- `src/components/agent/AgentHistory.jsx` + `AgentOnboarding.jsx` + `ShortFormationAssessment.jsx` -- standard tokens. ShortFormationAssessment's `goldDim (0.14)` mapped to `--cf-gold-faint` (0.01 rounding).
+- `src/App.jsx` -- 15 usages of heroBg/darkBg/ruleBg/fieldBg/gold. `lightMid/gearBg/ivory` keys were dead (deleted with block). Multiple hex-alpha concats in linear-gradients inlined as literal hex (`#17140F88`, `#C9A84C55`, etc.).
+- `src/Identity.jsx` -- 68 usages, most in hex-alpha concat patterns inside template-literal CSS strings (`${C.ivory}NN`, `${C.gold}NN`, `${C.heroBg}NN`). All such concats inlined as literal hex strings; bare references in JSX style objects replaced with `"var(--cf-*)"`.
+- `src/widgets/ArrowLogWidget.jsx` -- 40 usages across a 14-key palette. Standard tokens for gold/ivory variants. Three palette entries left inlined as literal rgba (no matching token): `redFaint`, `greenFaint`, `white06`. `goldGlow`, `ivoryMuted`, `white10` keys were dead.
+
+**Hex-alpha concatenation pattern (new gotcha to record).** Many files used `${C.gold}55`, `C.gold + "33"`, `${C.heroBg}ee` to append a hex alpha to a base color inside template-literal CSS or JSX style. CSS vars cannot be string-concatenated this way -- `var(--cf-gold)55` is not a valid color value. Resolution: inline the literal hex string at every such site (`#C9A84C55`, `#06050Aee`). Future per-file C cleanups must check for this pattern.
+
+**DG_CSS extraction.** `DevotionGuide.jsx` had a 86-line `const DG_CSS` template-literal CSS block rendered via inline `<style>{DG_CSS}</style>`. Extracted verbatim to `src/styles/devotion-guide.css` and added `import "./styles/devotion-guide.css"` at the top of the component. No exported component to remove (DG_CSS was internal-only; FG_CSS/FA_CSS had exported style components in Phase 10).
+
+**Key decisions:**
+
+1. Hex-alpha concats inlined as literal hex rather than introducing dozens of new alpha-specific tokens. Tokens are reserved for design-system canonical values; ad-hoc 4-digit alpha tweaks belong inline.
+2. Two extra files surfaced beyond next.md's list of 10: `SiteNav.jsx` and `Identity.jsx`. Plan adjusted to 12. Phase 11 still leaves no const C in src/.
+3. Dead palette keys deleted with their blocks rather than preserved -- per existing pattern.
+
+**Bundle:** 2068 modules unchanged. JS 2046 kB (-2 kB) and CSS 78.4 kB (+1.5 kB); net is small JS savings as expected when moving template-literal CSS strings into static CSS files.
+
+**Remaining const C files:** zero. `grep -rln "const C = {" src/` returns no results.
+
+---
+
 ## Session 17 -- Phase 10: const C continuation + FG_CSS/FA_CSS extraction (2026-05-20)
 
 **Status:** Complete. Build passes (2068 modules, JS 2049 kB (-8 kB), CSS 76.9 kB (+7.7 kB -- inline styles moved to CSS bundle)). Pushed to `main`.

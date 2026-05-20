@@ -1,9 +1,9 @@
 # Counter Formation Build -- Next Session
 
-**Active plan:** `C:\Users\luke.beazley\.claude\plans\phase-10-const-c-continuation-css-extraction.md` (Phase 10 -- const C continuation + FG_CSS/FA_CSS extraction, complete)
-**Reference specs:** `specs/spec-site-enhancement-2026.md` (Theme 5 continuation)
-**Last completed:** Session 17 -- Phase 10 (const C cleanup: DevotionGuide + 12 gifts components; FG_CSS/FA_CSS extracted to static .css files; DashboardBanner nav overlap fix) on 2026-05-20
-**Up next:** Phase 11 -- const C final batch (10 remaining files) + DG_CSS extraction
+**Active plan:** `C:\Users\luke.beazley\.claude\plans\phase-11-const-c-final-batch-dg-css.md` (Phase 11 -- const C final batch + DG_CSS extraction, complete)
+**Reference specs:** `specs/spec-site-enhancement-2026.md`
+**Last completed:** Session 18 -- Phase 11 (const C cleanup: 12 files + DG_CSS extraction) on 2026-05-20
+**Up next:** Phase 12 -- design system contract hardening + carry-over items, OR pick the next theme from the 2026 enhancement spec.
 
 ---
 
@@ -12,54 +12,44 @@
 Open Claude Code in this repo and paste:
 
 ```
-Read sessions/next.md and execute Phase 11. Follow the methodology -- write the plan file first, then work through the todo list. Build, commit, push, then update sessions/log.md and sessions/next.md.
+Read sessions/next.md and execute Phase 12. Follow the methodology -- write the plan file first, then work through the todo list. Build, commit, push, then update sessions/log.md and sessions/next.md.
 ```
 
 ---
 
-## Where Phase 10 left things
+## Where Phase 11 left things
 
-All high-priority const C files are clean. FG_CSS and FA_CSS are now static .css files imported via Vite. DashboardBanner nav overlap is fixed.
+Zero `const C` palette definitions remain in src/. All colors flow through `src/styles/tokens.css` via `var(--cf-*)` references or are inlined as literal hex/rgba where no token applies. Three CSS extractions are done (FG_CSS, FA_CSS, DG_CSS); inline `<style>{...}</style>` for app-section CSS is no longer used in those three sections.
 
-**Key gotcha for const C sessions (updated):** Replace longer key names before shorter prefix subsets. E.g., replace `C.goldFaint`, `C.goldDim`, `C.goldMid` BEFORE `C.gold`; replace `C.bgCardSoft`, `C.bgCard` BEFORE `C.bg`. A two-pass approach: (1) replace longer keys first, (2) then shorter ones. CSS vars in JSX style object values must be JS strings (`"var(--cf-gold)"`). CSS vars in template literal CSS strings use bare CSS syntax.
+**Carry-over from prior phases (still open):**
 
-Three items still open from prior phases:
+1. **iOS Safari device test.** Manual step. Test on a real iOS device: (a) magic-link end-to-end, (b) ApparelLane scroll-snap behavior, (c) bottom-sheet email capture. Log pass/fail.
 
-**Cloudflare 502 on `/api/synthesize`.** Synthesis voice check passes. If 502s resurface: check the Cloudflare Pages dashboard for `counter-formation-web`, Functions tab. `GEMINI_API_KEY` is unused and can be removed from CF environment variables.
+2. **Cloudflare 502 on `/api/synthesize`.** Synthesis voice check passes. If 502s resurface: check the CF Pages dashboard for `counter-formation-web`, Functions tab.
 
-**iOS Safari device test.** Still deferred. Test: (a) magic-link end-to-end on real iOS Safari, (b) ApparelLane scroll-snap behavior, (c) bottom-sheet email capture. Log pass/fail.
+3. **`GEMINI_API_KEY` removal from Cloudflare.** Manual: remove the unused env var from the CF Pages dashboard.
 
-**`CROSS_LINKS` in Identity.jsx.** In use by `CrossLinkCard`. Mixes UI routing URLs with content taglines. Leave unless a future phase decides to embed routing data in armor.json.
+4. **`CROSS_LINKS` in Identity.jsx.** In use by `CrossLinkCard`. Mixes UI routing URLs with content taglines. Leave unless a future phase decides to embed routing data in armor.json.
 
 ---
 
-## Todo list for Phase 11
+## Suggestions for Phase 12
 
-### High priority -- carried over
+The const C / inline-CSS refactor stream is finished. The next phase should either harden the design-system contract or pick up a theme from the enhancement spec. Three candidate directions:
 
-1. **iOS Safari test.** Manual step. Log results: (a) magic-link end-to-end on real iOS Safari, (b) ApparelLane scroll-snap behavior, (c) bottom-sheet email capture.
+### Option A -- Design system contract hardening (small, focused)
 
-### Medium priority
+- **Audit residual hex literals.** With const C gone, what hex/rgba literals remain in src/? `grep -rn '#[0-9A-Fa-f]\{3,6\}\|rgba(' src/ --include="*.jsx"` will reveal them. Categorize: (a) hex-alpha concats inlined this phase (acceptable), (b) one-off color-state literals (acceptable), (c) drift that should become tokens. Add tokens only where a value appears 3+ times across files.
+- **Add a contract test.** `sessions/contracts.md` documents the design-system contract. Consider a build-time grep test that fails CI if a file reintroduces `const C = {`. Cheap insurance.
+- **`tokens.css` cleanup.** Are any tokens now unused? `grep -rln "var(--cf-gold-glow)" src/` etc. Sweep and remove dead tokens.
 
-2. **const C final batch (10 files).** Remaining files with `const C` definitions:
-   - `src/App.jsx` -- check usage count
-   - `src/components/agent/AgentHistory.jsx` -- check usage count
-   - `src/components/agent/AgentOnboarding.jsx` -- check usage count
-   - `src/components/agent/ShortFormationAssessment.jsx` -- check usage count
-   - `src/components/DevotionHistory.jsx` -- check usage count
-   - `src/components/DevotionOnboarding.jsx` -- check usage count
-   - `src/components/MobileTabBar.jsx` -- 2 keys, likely small
-   - `src/components/visualizations/FruitStrata.jsx` -- check usage count
-   - `src/components/visualizations/GiftConstellationCompact.jsx` -- check usage count
-   - `src/widgets/ArrowLogWidget.jsx` -- check usage count
-   
-   Recommended approach: check usage counts first, then handle in batches by size. Use the same key-replacement ordering rule (longer before shorter).
+### Option B -- Continue with enhancement spec themes
 
-3. **DG_CSS extraction.** `DevotionGuide.jsx` still has `const DG_CSS` (inline CSS string, ~50 lines). Same pattern as FG_CSS/FA_CSS -- extract to `src/styles/devotion-guide.css` and replace `<style>{DG_CSS}</style>` with a Vite CSS import.
+Reference `specs/spec-site-enhancement-2026.md`. After Phase 9's ApparelLane v2 lite, the remaining themes are queued. Check the spec for the next sequenced item -- likely Connection Tissue or Agent Foundation work.
 
-### Lower priority
+### Option C -- Agent surface continuity
 
-4. **GEMINI_API_KEY removal from Cloudflare.** Manual step: remove the unused env var from the CF Pages dashboard.
+From the auto-memory: `/agent history page not yet built` is a known gap in the discipleship-agent foundation. The schema, onboarding, and AgentEntry surface exist; history is the missing piece. Could be a self-contained phase.
 
 ---
 
@@ -75,8 +65,8 @@ Three items still open from prior phases:
 
 ## Environment notes
 
-- Cloudflare Pages env: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `ANTHROPIC_API_KEY`, `KIT_API_KEY`, `KIT_FORMATION_TAG_ID` -- all should be set. `GEMINI_API_KEY` is no longer used and can be removed.
-- `cf:profile` is at schema v4. Phase 11 does not require a schema bump.
+- Cloudflare Pages env: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `ANTHROPIC_API_KEY`, `KIT_API_KEY`, `KIT_FORMATION_TAG_ID`. `GEMINI_API_KEY` is unused and should be removed.
+- `cf:profile` is at schema v4.
 - RLS: enabled on `public.users`, `fruit_assessments`, `gifts_sessions`. Intentionally OFF on `gifts_trusted_tokens` and `gifts_trusted_responses`.
-- tokens.css now includes: `--cf-surface-raised` (#110F0D), `--cf-gold-10` (rgba 0.10), `--cf-gold-45` (rgba 0.45), `--cf-ivory-58` (rgba 0.58), `--cf-ivory-24` (rgba 0.24) in addition to all prior vars.
-- CSS files added this phase: `src/styles/field-guide.css`, `src/styles/fruit-assessment.css`. Both are imported via Vite in their respective components.
+- CSS files in `src/styles/`: `tokens.css`, `field-guide.css`, `fruit-assessment.css`, `devotion-guide.css`.
+- All section CSS now lives in static `.css` files (no more `<style>{TEMPLATE_LITERAL}</style>` in section components).
