@@ -4,6 +4,52 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 19 -- Phase 12: spec close-out + 2 user-reported fixes (2026-05-20)
+
+**Status:** Complete. Phase 12 (all 8 items) shipped. Two user-reported issues also resolved mid-session and pushed early so production picked them up immediately. Build passes; const-C contract test passes; JS 2046 kB unchanged, CSS 78.29 kB (-0.12 kB from token sweep).
+
+**Push cadence:** Five commits to main. Items 1 + Devotion Guide bundled; Arrow Log fix on its own; then Item 2 (+ Item 4 RuleOfLife refactor by accident -- same file); Items 3 + 4 (formationRecommendation + JSON); Items 5 + 6 (content extractions); Items 7 + 8 (hygiene).
+
+**User-reported issues (interrupts, both addressed before completing the spec items):**
+
+1. **Devotion Guide scripture refs were plain text, not linked.** AI-generated devotional markdown rendered through `<ReactMarkdown>` without any post-processing. A TODO comment at the markdown render site acknowledged the gap. Fix: added `withScriptureRefs()` to `parseScriptureRefs.jsx` that walks React children recursively, applies the existing `parseScriptureRefs` to string nodes, and clones element children (skipping `<a>` to preserve real links). DevotionGuide.jsx now passes ReactMarkdown a `components` map (p, li, blockquote, h1-h6, em, strong) that runs every text node through the helper. Scripture references now show interactive popovers with verse text (when in the static index) and a "Read full chapter →" link to Bible.com.
+
+2. **Arrow Log returning 502.** The endpoint *is* on Anthropic (`claude-haiku-4-5-20251001`), not Gemini -- the user's suspicion that it had been "flipped to Anthropic" was correct; that flip happened earlier. The actual root cause: arrow-log.js was the only Claude endpoint calling bare `JSON.parse()` on Claude's text. When Claude wraps the structured-output response in markdown code fences (`​```json ... ```​`) or adds a one-line preamble despite the prompt's "no markdown formatting" instruction, the parse throws and the function returns 502 "Malformed response". The widget then showed the generic "Request failed (502)" because it threw on `!res.ok` before reading the response body. Two fixes: added `extractJson()` to the function that strips fences and isolates the outermost `{...}` block; widget now reads `res.json()` before throwing so the function's `error` message reaches the UI.
+
+**Phase 12 items completed:**
+
+**Item 1 -- cf-challenge-progress legacy read.** FruitAssessment.jsx's ResultsScreen read `localStorage.getItem("cf-challenge-progress")` directly to compute `has7Day`. Refactored: parent now computes `has7Day = (profile?.challenge?.completedDays?.length ?? 0) > 0` from `useFormationProfile` and passes as a prop alongside the existing `isAuthenticated` derived prop.
+
+**Item 2 -- cf_books to profile, schema v5.** `getBookProgress()` in RuleOfLife.jsx was the only `cf_books` reference and had no call site -- dead code from a March refactor. Deleted the helper. Bumped `useFormationProfile` `_version` 4 → 5; added `ruleOfLife.bookmarks: {}` to the default profile; added a v4→v5 migration block that folds any standalone `cf_books` key into `ruleOfLife.bookmarks` and removes the legacy localStorage entry. Idempotent and safe for users with no `cf_books` data.
+
+**Item 3 -- qr-arrival NextStep context.** Added `case "qr-arrival"` to `formationRecommendation.js` that uses the existing `ARMOR_PIECE_CROSS_LINKS` reverse map to point a QR-scanning user at the rule-of-life rhythm tied to the armor piece. Identity.jsx now captures `?qr=true` at mount into a stable `arrivedViaQR` flag (so the NextStep persists after the existing QR welcome modal strips the param via `replaceState`) and renders `<NextStep context="qr-arrival" pieceSlug={piece} />` at the top of the content column when set.
+
+**Item 4 -- Connected Armor data-driven from JSON.** Added a `connectedArmor` array to each rhythm in rule-of-life.json. Replaced five hand-rolled per-rhythm Connected Armor blocks in RuleOfLife.jsx (~110 lines of repeated JSX) with a single data-driven `data.connectedArmor.map(...)` block (~25 lines). JS bundle dropped 3 kB. Note: this refactor accidentally rode along in the Item 2 commit since both edited RuleOfLife.jsx -- chronologically it ended up there.
+
+**Item 5 -- SevenDayChallenge DAYS + DAY_META extracted.** Created `src/content/challenge/days.json` with `{ days: [...], dayMeta: {...} }`. Added `getChallengeDays()` and `getChallengeDayMeta()` to loader.js with an `assertCount(days, 7)` guard. Renamed in-file references from `DAYS`/`DAY_META` to `CHALLENGE_DAYS`/`CHALLENGE_DAY_META` so the strict acceptance grep (`const DAYS|const DAY_META`) returns zero. File dropped 1088 → 854 lines. The remaining bulk is the `ChallengeStyles` 600+ line template-literal CSS block; that extraction is Phase 13 territory.
+
+**Item 6 -- fruitAssessmentData.js to JSON.** Discovery: `src/content/fruits.json` was already a verbatim copy of the `FRUITS` export from `fruitAssessmentData.js`. The new `src/content/assessment/fruit-questions.json` therefore only needed three keys: `scaleOptions`, `clusterThreshold`, `questions`. Loader.js now exports `FRUITS = fruitsData`, `QUESTIONS`, `SCALE_OPTIONS`, `CLUSTER_THRESHOLD`, and a now-exported `FRUIT_ORDER`. The five consumer files only changed their import path; no other touchpoints. `src/fruitAssessmentData.js` deleted.
+
+**Item 7 -- const-C contract test.** `scripts/check-no-const-c.mjs` walks `src/` for `const C = {` and exits 1 with a file list on violation. `package.json` adds `lint:tokens` and a `prebuild` hook that runs it. `npm run build` now refuses to ship if the pattern is reintroduced.
+
+**Item 8 -- unused token sweep.** Scanned every `--cf-*` token in `src/styles/tokens.css` against the rest of `src/` via a usage-count script. The next.md candidates (gold-glow, ivory-90/82/42) all turned out to be in active use -- prediction was wrong; verification was worth it. Actual unused tokens removed: `--cf-card-warm-2`, `--cf-white-10`, `--cf-radius-card-lg`, `--cf-radius-input-lg`.
+
+**Key decisions:**
+
+1. **Rename rather than alias for Item 5.** Acceptance grep was strict: `const DAYS|const DAY_META` must return zero matches. Renamed `DAYS` → `CHALLENGE_DAYS` (and DAY_META similarly) globally via a whole-word Node script rather than aliasing the imports as `DAYS`. Cleaner and satisfies the literal acceptance test.
+
+2. **Item 6 simplified by discovering fruits.json was a duplicate.** The spec anticipated naming collision between fruits.json's getFruit() and the assessment FRUITS data. Once I confirmed they were the same data, I just unified them through loader.js exports rather than maintaining two parallel sources.
+
+3. **Verified tokens.css sweep candidates instead of trusting next.md.** Confirmed actual usage counts. Saved four wrongly-flagged tokens (cf-gold-glow, cf-ivory-90/82/42) from deletion.
+
+4. **Arrow Log fix went out as its own commit, pushed mid-session.** User reported a production issue; the rest of Phase 12 can wait for the deploy queue, but a 502 on a production widget should not. Separated the commit and pushed before continuing.
+
+**Bundle:** 2069 modules (+1 from new JSON imports). JS 2046 kB unchanged, CSS 78.29 kB (-0.12 kB). `npm run lint:tokens` exits 0.
+
+**Remaining for Phase 13 (handoff in next.md):** Primitives adoption + accessibility sweep. SevenDayChallenge.jsx's ChallengeStyles template-literal CSS block is also a logical follow-up extraction even though it's not explicitly in the Phase 13 spec.
+
+---
+
 ## Session 18 -- Phase 11: const C final batch + DG_CSS extraction (2026-05-20)
 
 **Status:** Complete. Build passes (2068 modules unchanged; JS 2046 kB (-2 kB), CSS 78.4 kB (+1.5 kB -- DG_CSS moved to CSS bundle)). All `const C` palette constants are now eliminated from src/.
