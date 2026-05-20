@@ -92,6 +92,28 @@ function pieceLabel(slug) {
  */
 export function formationRecommendation(context, profile, pieceSlug) {
   switch (context) {
+    case "qr-arrival": {
+      // Fired when a user lands on an armor piece via the QR code on the back
+      // of a garment (?qr=true). The intro state acknowledges they are
+      // physically wearing the armor and points them toward the rhythm that
+      // holds it -- the natural forward action after the six-day formation.
+      if (!pieceSlug || !ARMOR_PIECE_SEQUENCE.includes(pieceSlug)) return FALLBACK;
+      const cross = ARMOR_PIECE_CROSS_LINKS[pieceSlug];
+      const name  = pieceLabel(pieceSlug);
+      if (!cross) {
+        return {
+          destination: `/identity/${pieceSlug}`,
+          label:       `Walk the ${name}`,
+          description: `You're wearing this armor. Walk the formation track that forms it into you.`,
+        };
+      }
+      return {
+        destination: cross.path,
+        label:       `Continue into ${cross.label}`,
+        description: `You're wearing the ${name}. The rhythm of ${cross.label} is where it takes root.`,
+      };
+    }
+
     case "challenge-complete": {
       const edge = profile?.assessment?.formationEdge;
       if (!edge || edge.length === 0) return FALLBACK;

@@ -1,6 +1,9 @@
 [
   {
     "slug": "presence",
+    "connectedArmor": [
+      { "slug": "belt-of-truth", "title": "Belt of Truth", "desc": "The foundation everything else attaches to" }
+    ],
     "title": "Presence",
     "sub": "Attention before God",
     "rhythm": "RHYTHM 01",
@@ -56,6 +59,10 @@
   },
   {
     "slug": "scripture",
+    "connectedArmor": [
+      { "slug": "sword-of-the-spirit", "title": "Sword of the Spirit", "desc": "The Word is a weapon" },
+      { "slug": "helmet-of-salvation", "title": "Helmet of Salvation", "desc": "A protected mind" }
+    ],
     "title": "Scripture",
     "sub": "Truth before noise",
     "rhythm": "RHYTHM 02",
@@ -111,6 +118,9 @@
   },
   {
     "slug": "prayer",
+    "connectedArmor": [
+      { "slug": "breastplate-of-righteousness", "title": "Breastplate of Righteousness", "desc": "Your heart, already covered" }
+    ],
     "title": "Prayer",
     "sub": "Dependence before action",
     "rhythm": "RHYTHM 03",
@@ -167,6 +177,9 @@
   },
   {
     "slug": "sabbath",
+    "connectedArmor": [
+      { "slug": "gospel-of-peace", "title": "Gospel of Peace", "desc": "Ground beneath you" }
+    ],
     "title": "Sabbath",
     "sub": "Rest before production",
     "rhythm": "RHYTHM 04",
@@ -222,6 +235,9 @@
   },
   {
     "slug": "community",
+    "connectedArmor": [
+      { "slug": "shield-of-faith", "title": "Shield of Faith", "desc": "Behind what God has said" }
+    ],
     "title": "Community",
     "sub": "Formation together",
     "rhythm": "RHYTHM 05",

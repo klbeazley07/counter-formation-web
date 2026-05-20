@@ -1665,6 +1665,12 @@ export function ArmorPiecePage() {
     const params = new URLSearchParams(window.location.search);
     return params.get('qr') === 'true';
   });
+  // Captured at mount so the qr-arrival NextStep card persists after the
+  // modal dismiss handler strips ?qr=true from the URL via replaceState.
+  const [arrivedViaQR] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('qr') === 'true';
+  });
   const [qrFadingOut, setQRFadingOut] = useState(false);
   const progRef       = useRef(null);
   const wrapRef       = useRef(null);
@@ -1921,6 +1927,14 @@ export function ArmorPiecePage() {
 
       {/* â”€â”€ Two-column content â”€â”€ */}
       <div className="ap-content">
+
+        {arrivedViaQR && (
+          <NextStep
+            context="qr-arrival"
+            pieceSlug={piece}
+            className="ap-qr-arrival"
+          />
+        )}
 
         {/* Day selector */}
         <div className="ap-day-nav">
