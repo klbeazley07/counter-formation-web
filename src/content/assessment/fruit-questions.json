@@ -1,0 +1,40 @@
+{
+  "scaleOptions": [
+    { "value": 1, "label": "Rarely" },
+    { "value": 2, "label": "Occasionally" },
+    { "value": 3, "label": "Sometimes" },
+    { "value": 4, "label": "Often" },
+    { "value": 5, "label": "Usually" },
+    { "value": 6, "label": "Almost Always" }
+  ],
+  "clusterThreshold": 8,
+  "questions": [
+    { "id": "love_1",         "fruitKey": "love",         "reverse": false, "text": "When someone disappoints or wrongs me, my first instinct is to consider what they might be carrying rather than focus on how I have been affected." },
+    { "id": "joy_1",          "fruitKey": "joy",          "reverse": false, "text": "My sense of contentment remains relatively stable across good and difficult seasons, rather than rising and falling with circumstances." },
+    { "id": "peace_1",        "fruitKey": "peace",        "reverse": false, "text": "When outcomes are outside my control, I am able to release them without extended anxiety or mental rehearsal." },
+    { "id": "patience_1",     "fruitKey": "patience",     "reverse": false, "text": "When people or processes move more slowly than I would like, I respond with steadiness rather than frustration." },
+    { "id": "kindness_1",     "fruitKey": "kindness",     "reverse": false, "text": "I am attentive to the needs of people around me, even when I am preoccupied with my own concerns." },
+    { "id": "goodness_1",     "fruitKey": "goodness",     "reverse": false, "text": "My private behavior and my public behavior are consistent. I live with similar integrity when no one is watching." },
+    { "id": "faithfulness_1", "fruitKey": "faithfulness", "reverse": false, "text": "I follow through on commitments even when my motivation has faded or circumstances have changed." },
+    { "id": "gentleness_1",   "fruitKey": "gentleness",   "reverse": false, "text": "I am able to correct, confront, or disagree with someone without leaving them feeling diminished or attacked." },
+    { "id": "self_control_1", "fruitKey": "self_control", "reverse": false, "text": "When an appetite -- food, attention, entertainment, anger, lust -- pulls at me, I am generally able to pause before acting." },
+    { "id": "love_2",         "fruitKey": "love",         "reverse": true,  "text": "I find myself keeping a mental ledger of how people have treated me and adjusting what I give them accordingly." },
+    { "id": "joy_2",          "fruitKey": "joy",          "reverse": true,  "text": "When life feels flat or hard, I struggle to access any genuine sense of gladness." },
+    { "id": "peace_2",        "fruitKey": "peace",        "reverse": true,  "text": "My mind tends to loop on worst-case scenarios, especially at night or in quiet moments." },
+    { "id": "patience_2",     "fruitKey": "patience",     "reverse": true,  "text": "I find myself mentally rehearsing a frustrated response before I have even reacted outwardly." },
+    { "id": "kindness_2",     "fruitKey": "kindness",     "reverse": true,  "text": "I tend to move past people I encounter in daily life without really noticing them." },
+    { "id": "goodness_2",     "fruitKey": "goodness",     "reverse": true,  "text": "There are meaningful gaps between what I profess publicly and how I actually behave in private." },
+    { "id": "faithfulness_2", "fruitKey": "faithfulness", "reverse": true,  "text": "I tend to start commitments strong and let them quietly fade when they become inconvenient." },
+    { "id": "gentleness_2",   "fruitKey": "gentleness",   "reverse": true,  "text": "When I am frustrated, my strength tends to come out as sharpness or force rather than restraint." },
+    { "id": "self_control_2", "fruitKey": "self_control", "reverse": true,  "text": "My actions are more often driven by what I feel in the moment than by what I have decided is true." },
+    { "id": "love_3",         "fruitKey": "love",         "reverse": false, "text": "When a relationship requires sacrifice with no clear personal benefit, I tend to lean in rather than pull back." },
+    { "id": "joy_3",          "fruitKey": "joy",          "reverse": false, "text": "I find genuine delight in ordinary moments, not just in milestones or achievements." },
+    { "id": "peace_3",        "fruitKey": "peace",        "reverse": false, "text": "I bring a calming presence to tense or uncertain situations rather than adding to the friction." },
+    { "id": "patience_3",     "fruitKey": "patience",     "reverse": false, "text": "When I am wronged or treated unfairly, I am able to wait and trust rather than retaliate or force resolution." },
+    { "id": "kindness_3",     "fruitKey": "kindness",     "reverse": false, "text": "I find myself looking for practical ways to make things easier for the people in my life." },
+    { "id": "goodness_3",     "fruitKey": "goodness",     "reverse": false, "text": "When I see an opportunity to do what is right, I act on it even when it is inconvenient or costly." },
+    { "id": "faithfulness_3", "fruitKey": "faithfulness", "reverse": false, "text": "I sustain spiritual rhythms and disciplines through dry seasons, not only when they feel rewarding." },
+    { "id": "gentleness_3",   "fruitKey": "gentleness",   "reverse": false, "text": "My strength and conviction tend to express themselves with restraint and care rather than force." },
+    { "id": "self_control_3", "fruitKey": "self_control", "reverse": false, "text": "I have established rhythms and boundaries in my life that hold even when I do not feel like maintaining them." }
+  ]
+}

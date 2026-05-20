@@ -8,7 +8,7 @@ import DevotionOnboarding from "./components/DevotionOnboarding";
 import DevotionHistory from "./components/DevotionHistory";
 import EmailCapture from "./components/auth/EmailCapture";
 import NextStep from "./components/NextStep";
-import { FRUITS } from "./fruitAssessmentData";
+import { FRUITS } from "./content/loader";
 import { withScriptureRefs } from "./utils/parseScriptureRefs";
 import "./styles/devotion-guide.css";
 

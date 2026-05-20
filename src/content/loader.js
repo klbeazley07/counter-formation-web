@@ -3,6 +3,8 @@ import rhythmData from './rule-of-life.json';
 import fieldGuideData from './field-guide.json';
 import fieldGuideLandingData from './field-guide-landing.json';
 import fruitsData from './fruits.json';
+import challengeData from './challenge/days.json';
+import assessmentData from './assessment/fruit-questions.json';
 
 // Canonical sequences — source of truth for ordering in getAllArmorPieces() and getAllFruits()
 const PIECE_ORDER = [
@@ -14,7 +16,7 @@ const PIECE_ORDER = [
   'sword-of-the-spirit',
 ];
 
-const FRUIT_ORDER = [
+export const FRUIT_ORDER = [
   'love',
   'joy',
   'peace',
@@ -25,6 +27,13 @@ const FRUIT_ORDER = [
   'gentleness',
   'self_control',
 ];
+
+// Re-exports of the fruit assessment + fruit content for direct named-import.
+// Replaces the deprecated src/fruitAssessmentData.js module.
+export const FRUITS = fruitsData;
+export const SCALE_OPTIONS = assessmentData.scaleOptions;
+export const CLUSTER_THRESHOLD = assessmentData.clusterThreshold;
+export const QUESTIONS = assessmentData.questions;
 
 // Dev-only count assertion — warns on mismatch but never throws
 function assertCount(value, expected, name) {
@@ -42,6 +51,7 @@ assertCount(armorData, 6, 'armor.json');
 assertCount(rhythmData, 5, 'rule-of-life.json');
 assertCount(fieldGuideData, 7, 'field-guide.json');
 assertCount(fruitsData, 9, 'fruits.json');
+assertCount(challengeData.days, 7, 'challenge/days.json#days');
 
 export function getArmorPiece(slug) {
   const piece = armorData.find((p) => p.slug === slug);
@@ -93,4 +103,12 @@ export function getFruit(slug) {
 
 export function getAllFruits() {
   return FRUIT_ORDER.map((slug) => fruitsData[slug]).filter(Boolean);
+}
+
+export function getChallengeDays() {
+  return challengeData.days;
+}
+
+export function getChallengeDayMeta() {
+  return challengeData.dayMeta;
 }

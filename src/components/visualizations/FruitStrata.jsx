@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { FRUITS } from "../../fruitAssessmentData";
+import { FRUITS } from "../../content/loader";
 
 /*
  * FruitStrata -- the 9-fruit horizontal bar chart visualization.

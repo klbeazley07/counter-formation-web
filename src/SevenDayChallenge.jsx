@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { ScriptureRef } from "./ScriptureRef";
 import { useFormationProfile } from "./hooks/useFormationProfile";
 import NextStep from "./components/NextStep";
+import { getChallengeDays, getChallengeDayMeta } from "./content/loader";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
 
@@ -10,244 +11,9 @@ export const CHALLENGE_BASE = "/7-day-challenge";
 
 /* ─── DATA ────────────────────────────────────────────────────────── */
 
-const DAYS = [
-  {
-    n: 1,
-    title:   "You Are Being Formed",
-    theme:   "The Question",
-    // Solitary figure in dim, dramatic light — identity, shaping
-    img:     "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1400&auto=format&fit=crop",
-    imgThumb:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=600&auto=format&fit=crop",
-    opening: "You are not becoming who you are by accident.",
-    body: [
-      "You are being shaped. Right now. Today. In ways you probably haven't stopped to notice.",
-      "Every habit is training you. Every pattern you repeat is forming the person you are becoming. Every hour you spend moving through the world — distracted, rushed, half-present — is quietly building something in you.",
-      "Dallas Willard used to say that the human soul is like a garden. If you don't tend it, it doesn't stay empty. Things just grow on their own. Mostly weeds.",
-      "The question has never been whether you will be formed. The question is what will do the forming.",
-    ],
-    teaching: [
-      "Paul doesn't say \"be careful.\" He says <em>do not be conformed.</em> Because if you do nothing — you already are.",
-      "The word he uses is <em>syschematizo</em> — to be pressed into the mold of something, shaped by external forces without resistance. The world around you is an extraordinarily effective formation system. It does not need your permission. It just needs your attention.",
-      "Most of what you think, most of what you desire, most of what you instinctively reach for — it wasn't chosen. It was absorbed. Quietly. Repeatedly. Over time. And now it just feels like you.",
-      "But Paul sets conformation against transformation — <em>metamorphosis</em>. Not just better behavior. Actual transformation — from the inside out — into the image and likeness of Christ.",
-    ],
-    scriptures: [
-      { t: "Do not be conformed to this world, but be transformed by the renewal of your mind…", r: "Romans 12:2" },
-      { t: "And we all… are being transformed into the same image from one degree of glory to another.", r: "2 Corinthians 3:18" },
-    ],
-    practice:   "Sit in silence — 15 minutes. No phone. No input. No background noise.\n\nAsk yourself honestly: What has been shaping me lately? What do I turn to without thinking? What has my attention — and what is that doing to me?\n\nWrite it down. Don't clean it up. Don't explain it. Just see it.",
-    reflection: "Where do you see the world shaping you without resistance?",
-    prayer:     "God,\n\nI've been formed in ways I haven't stopped to notice.\nSome of it I chose. Most of it I didn't.\n\nOpen my eyes. Show me what is shaping my life — and what needs to change.\n\nI don't want to drift. Renew my mind. Reform my life.\n\nAmen.",
-  },
-  {
-    n: 2,
-    title:   "Scripture Before the Algorithm",
-    theme:   "The Morning",
-    // Open Bible in warm morning window light — scripture, first hour
-    img:     "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1400&auto=format&fit=crop",
-    imgThumb:"https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600&auto=format&fit=crop",
-    opening: "There's a version of your morning that looks something like this:",
-    body: [
-      "Alarm goes off. Phone in hand. Before your feet hit the floor, you've already absorbed a dozen notifications, a fragment of news, two or three things to worry about, and the ambient noise of everyone else's life.",
-      "And then you wonder why it's hard to feel present with God.",
-      "The architects of the attention economy are not neutral. They study what captures you. They iterate on what keeps you. They are professionals at formation — and they have a head start on your day.",
-      "The ancient church called the first hour the <em>hora prima</em> — and it belonged to God. Not because the rest of the day didn't matter, but because they understood that the beginning shapes everything that follows.",
-      "What you give your first attention to — you give your heart to.",
-    ],
-    teaching: [
-      "Jesus, in the middle of the most demanding season of his public ministry, got up before dawn to be with his Father. Mark records it intentionally — immediately after a day of relentless ministry, before any of it resumed, Jesus withdrew.",
-      "This is the pattern. Not a quiet time as religious performance. Not a box to check. But a deliberate reordering of the day — starting with the voice of the Father before the noise of the world.",
-      "The algorithm will tell you what to be anxious about. Scripture will tell you who you are.",
-    ],
-    scriptures: [
-      { t: "O Lord, in the morning you hear my voice; in the morning I prepare a sacrifice for you and watch.", r: "Psalm 5:3" },
-      { t: "Very early in the morning, while it was still dark, Jesus got up, left the house and went off to a solitary place, where he prayed.", r: "Mark 1:35" },
-    ],
-    practice:   "Tomorrow morning — before anything else:\n\nDon't touch your phone for the first 30 minutes after waking.\n\nOpen Scripture instead. Read slowly. Psalm 23. Psalm 46. John 15. Don't rush it. Don't study it. Just sit with it.\n\nAsk: What is God saying to me in this?\n\nThen sit in silence for a few minutes before you move into the day.",
-    reflection: "Who narrates your morning right now — and what is that forming in you?",
-    prayer:     "God,\n\nI've been giving my first attention to everything but you.\nNot out of rebellion — mostly just out of habit.\n\nReorder my mornings. Give me ears to hear your voice before the noise gets in.\n\nLet me start in you.\n\nAmen.",
-  },
-  {
-    n: 3,
-    title:   "The Pace of Your Life",
-    theme:   "The Speed",
-    // Still misty mountain lake — solitude, unhurried, quiet
-    img:     "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=1400&auto=format&fit=crop",
-    imgThumb:"https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=600&auto=format&fit=crop",
-    opening: "Most people don't think much about the pace of their life.",
-    body: [
-      "They think about how much they have to do. How full things feel. How many tabs are open — not just on their computer, but in their head.",
-      "But underneath all of that, something else is happening.",
-      "You are being formed by the speed at which you live. Not just externally. Internally. You can be sitting completely still and still be rushing — your mind already on the next thing, your attention already somewhere else.",
-      "The philosopher Josef Pieper wrote that the inability to be still — what he called <em>acedia</em>, or restlessness — is not just a personality type. It's a spiritual condition. A soul that cannot be quiet cannot hear God. It cannot perceive beauty. It cannot love well.",
-      "Hurry is not neutral. Hurry is a formation system.",
-    ],
-    teaching: [
-      "Jesus' rebuke of Martha sounds like a critique of work. It's not. He's diagnosing a soul condition. <em>\"You are anxious and troubled about many things.\"</em> Martha isn't just busy. She is performing her love for Jesus rather than receiving from him.",
-      "That's the thing about hurry. It doesn't just affect your schedule. It affects your capacity to perceive — to notice God, to be present with people, to recognize what's going on inside you.",
-      "The cure isn't time management. It's ruthlessly eliminating hurry from your life. That starts with the willingness to be still. Not as a technique. As a posture of trust.",
-    ],
-    scriptures: [
-      { t: "Be still, and know that I am God.", r: "Psalm 46:10" },
-      { t: "Martha, Martha, you are anxious and troubled about many things, but one thing is necessary.", r: "Luke 10:41–42" },
-    ],
-    practice:   "Choose one simple moment today — eating, walking, sitting outside — and slow it down completely.\n\nNo phone. No multitasking. No input.\n\nPay attention to what you see, what you hear, what you feel.\n\nWhen your mind runs ahead — and it will — gently bring it back. That returning is the practice.",
-    reflection: "Where do you feel the most rushed right now — even when nothing urgent is happening?",
-    prayer:     "God,\n\nI've been moving fast for a long time. Even when I stop, my mind doesn't.\n\nSlow me down. Help me be present to what is right in front of me. Teach me to live at a different pace — the pace of someone who actually trusts you.\n\nAmen.",
-  },
-  {
-    n: 4,
-    title:   "What You Hold Onto",
-    theme:   "The Grip",
-    // Hands open, soft light — release, surrender, trust
-    img:     "https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=1400&auto=format&fit=crop",
-    imgThumb:"https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=600&auto=format&fit=crop",
-    opening: "There are things you're holding onto right now.",
-    body: [
-      "Some of them are obvious. Some are deeper down — beneath the plans and the preferences and the way you think things ought to go.",
-      "Expectations. Outcomes. Control. The quiet insistence that certain things in your life stay exactly where you put them.",
-      "Most of the time, it doesn't feel like a problem. Until something moves.",
-      "Then you feel it — the tension that tells you how tightly you've been gripping.",
-      "Formation moves through the open hand. But most of us are not practiced at opening it.",
-    ],
-    teaching: [
-      "Surrender sounds simple — until it becomes specific. It's easy to say \"I trust God\" in the abstract. It's harder when things don't go the way you planned. When you don't understand what he's doing.",
-      "Jesus doesn't frame discipleship as adding something onto your life. He frames it as laying something down. <em>\"Take up your cross daily.\"</em> That word <em>daily</em> is the whole point — a daily, sometimes hourly, choice to release what your hands want to grip.",
-      "The early desert fathers had a phrase for this: <em>apatheia</em> — not apathy, but a settled quality of soul that can hold all things loosely because it has found its rest in God alone. That's not resignation. It's freedom.",
-    ],
-    scriptures: [
-      { t: "Whoever wants to be my disciple must deny themselves and take up their cross daily and follow me.", r: "Luke 9:23" },
-      { t: "Trust in the Lord with all your heart and lean not on your own understanding.", r: "Proverbs 3:5" },
-    ],
-    practice:   "Sit quietly and ask:\n\nWhat am I trying to control right now?\nWhat outcome am I gripping?\nWhat would happen inside me if this didn't go the way I want?\n\nBe specific. Name it.\n\nThen say it out loud: \"God, I'm holding onto this — and I'm choosing to give it to you.\"\n\nSit quietly afterward. Don't immediately fill the space.",
-    reflection: "What would it actually look like to trust God with this — not just say that you do?",
-    prayer:     "God,\n\nI hold onto things without even realizing it. Plans. Expectations. Outcomes I've already decided should happen.\n\nHelp me to open my hands. Not because I feel ready — but because I trust you.\n\nTeach me what daily surrender actually looks like in my life.\n\nAmen.",
-  },
-  {
-    n: 5,
-    title:   "What You Avoid",
-    theme:   "The Interior",
-    // Single shaft of light through dark forest — interior honesty, what's hidden
-    img:     "https://images.unsplash.com/photo-1501854140801-50d01698950b?q=80&w=1400&auto=format&fit=crop",
-    imgThumb:"https://images.unsplash.com/photo-1501854140801-50d01698950b?q=80&w=600&auto=format&fit=crop",
-    opening: "There are things happening inside of you that you don't spend much time with.",
-    body: [
-      "Not because they aren't there. You can feel them sometimes, at the edges — a low hum of anxiety, a flicker of resentment, a tiredness that doesn't seem to be about sleep.",
-      "But it's easier to keep moving. To stay distracted. Because when things get quiet, stuff starts to come up.",
-      "Blaise Pascal wrote that all of humanity's problems stem from man's inability to sit quietly in a room alone. He meant that we are practiced at avoiding ourselves — because when things get quiet, what surfaces is real.",
-      "So we fill the space. With content. With noise. With productivity. With anything that keeps us from having to look at what's underneath.",
-      "But whatever you don't face doesn't go away. It goes deeper.",
-    ],
-    teaching: [
-      "You can manage your behavior very well and still be almost entirely disconnected from your interior life. Productive. Consistent. Outwardly composed. And still carrying unaddressed anxiety, unprocessed grief, a low-grade exhaustion you've named \"just being busy.\"",
-      "David doesn't open Psalm 139 by asking God to fix what's visible. He asks God to search what is hidden. <em>\"Know my heart. Know my anxious thoughts.\"</em> That's where real change begins. Not at the surface. Underneath it.",
-      "The Ignatian practice of <em>examen</em> is built on this premise: at the end of each day, you stop and ask where God was present and where you drifted. Not to generate guilt. To generate awareness. Because a soul that cannot examine itself cannot grow.",
-    ],
-    scriptures: [
-      { t: "Search me, O God, and know my heart; test me and know my anxious thoughts.", r: "Psalm 139:23–24" },
-      { t: "Above all else, guard your heart, for everything you do flows from it.", r: "Proverbs 4:23" },
-    ],
-    practice:   "Write honestly — without editing, without explaining:\n\nWhat have I been feeling lately that I haven't named?\nWhat's been sitting under the surface?\nWhat have I been reaching for to avoid sitting with myself?\n\nDon't try to fix it. Don't try to resolve it. Just see it.\n\nThen bring it to God. Not with explanations. Just with honesty.",
-    reflection: "What have you been carrying that you haven't actually acknowledged?",
-    prayer:     "God,\n\nI've been avoiding things in my own heart. Not because I don't care — but because I don't always know what to do with them.\n\nSearch me. Show me what is really going on inside of me. And meet me there.\n\nAmen.",
-  },
-  {
-    n: 6,
-    title:   "You Cannot Do This Alone",
-    theme:   "The Community",
-    // Two people sitting together, warm light — shared life, community
-    img:     "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1400&auto=format&fit=crop",
-    imgThumb:"https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=600&auto=format&fit=crop",
-    opening: "It's easy to keep your life at the surface with people.",
-    body: [
-      "Talk about work. Kids. Weekend plans. How things are going — the version you're comfortable with. And never let anyone actually see what's underneath.",
-      "Most of us have mastered the art of being known without being known.",
-      "But formation — real formation — doesn't happen in isolation. It never has.",
-      "The ancient practice of spiritual direction, the monastic tradition of communal life, the New Testament pattern of fellowship far more than a weekly gathering — all of it points to the same reality: we are formed by the people we are with.",
-      "Which means the depth of your community is not a social preference. It's a formation question.",
-    ],
-    teaching: [
-      "The early church did not treat community as an optional supplement to personal faith. It was the environment in which faith was practiced, tested, and deepened.",
-      "The Greek word <em>koinonia</em> — usually translated \"fellowship\" — meant something far more substantive than gathering. Shared life. Common participation. Mutual belonging.",
-      "You cannot become like Jesus alone, because Jesus himself did not live alone. He lived in close proximity to twelve people — eating with them, traveling with them, letting them see him tired, grieving, frustrated, praying. That proximity is what formed them.",
-      "Genuine community requires the one thing most of us quietly resist: being seen as we actually are. Not the competent version. The real version. That vulnerability is not weakness. It is the door.",
-    ],
-    scriptures: [
-      { t: "Let us consider how we may spur one another on toward love and good deeds, not giving up meeting together…", r: "Hebrews 10:24–25" },
-      { t: "Confess your sins to each other and pray for each other so that you may be healed.", r: "James 5:16" },
-    ],
-    practice:   "Reach out to one person today. Not casually. Intentionally.\n\nShare one real thing — something you're working through, something God has been showing you this week, something that has been hard.\n\nThen ask them the same question.\n\nThis is how community is built. Not through events. Through honest conversation, repeated over time.",
-    reflection: "What keeps you from letting people see what is actually going on in you?",
-    prayer:     "God,\n\nI tend to keep things to myself. Not always intentionally — it's just easier.\n\nGive me the courage to be honest. And surround me with people who are willing to do the same.\n\nForm me through community, not just in spite of its difficulty.\n\nAmen.",
-  },
-  {
-    n: 7,
-    title:   "Build a Life That Forms You",
-    theme:   "The Rule",
-    // Ancient stone architecture, permanence, foundation — building, structure
-    img:     "https://images.unsplash.com/photo-1470115636492-6d2b56f9146d?q=80&w=1400&auto=format&fit=crop",
-    imgThumb:"https://images.unsplash.com/photo-1470115636492-6d2b56f9146d?q=80&w=600&auto=format&fit=crop",
-    opening: "Here's the honest truth about the end of a week like this:",
-    body: [
-      "The feeling fades.",
-      "Insight without structure rarely becomes transformation. You can see things clearly, feel genuinely moved, want something different — and three weeks from now be right back in the same patterns, wondering what happened.",
-      "This is not a character flaw. It's just how human formation works.",
-      "You become what you repeatedly do — not what you occasionally feel.",
-      "The ancient tradition of a <em>Rule of Life</em> is simply the decision to stop leaving your formation to chance. A chosen structure — rhythms, relationships, and practices that create the conditions in which transformation is actually possible.",
-    ],
-    teaching: [
-      "Paul uses the language of training — <em>gymnazō</em> — the same word for an athlete in disciplined preparation. Not striving. Not earning. Training. An athlete doesn't train to earn approval. They train because they want to be capable of what they're called to do.",
-      "Keep it simple. The Rule that lasts is not the most ambitious one. It's the one you'll actually keep — the small, consistent, daily choices that accumulate into a different kind of life.",
-      "<em>What will anchor your day?</em> Scripture. Silence. Prayer. Even five minutes, taken seriously, compounds over time. <em>What will reset your week?</em> A Sabbath rhythm — one day where you stop and declare that God is in charge. <em>What will protect your attention?</em> A digital boundary. The greatest threat to your formation is not immorality. It's distraction.",
-    ],
-    scriptures: [
-      { t: "Train yourself for godliness; for while bodily training is of some value, godliness is of value in every way.", r: "1 Timothy 4:7–8" },
-      { t: "Remain in me, as I also remain in you. No branch can bear fruit by itself; it must remain in the vine.", r: "John 15:4" },
-    ],
-    practice:   "Write a simple Rule of Life. Three categories. Keep it short enough to actually remember.\n\nDaily: What will anchor you to God each morning?\n\nWeekly: Where will you rest, reset, and trust?\n\nDigital: What one boundary will protect your attention?\n\nThen — and this is the most important step — tell one person what you wrote. Not to perform it. To be held to it.",
-    reflection: "What will you actually follow through on — not just what sounds right?",
-    prayer:     "God,\n\nI don't want this to stay at the level of intention.\n\nHelp me build something real. Give me discipline where I've been inconsistent. Give me grace where I fail.\n\nShape my life through what I choose to practice. Form me over time.\n\nYou are the vine. I want to remain.\n\nAmen.",
-  },
-];
+const CHALLENGE_DAYS = getChallengeDays();
+const CHALLENGE_DAY_META = getChallengeDayMeta();
 
-
-const DAY_META = {
-  1: {
-    line: "The world does not need your permission. It just needs your attention.",
-    why: "If you never name what is shaping you, you will keep calling it normal. Awareness is the first break from drift.",
-    change: "Today changes the posture. You stop assuming your life is neutral and start paying attention to what is actually training your mind and desires.",
-  },
-  2: {
-    line: "What you give your first attention to — you give your heart to.",
-    why: "Morning is not just a time slot. It is a direction-setting window. The first voice in has unusual power over the tone of the day.",
-    change: "This shifts the first thirty minutes from reaction to intention. Scripture becomes the first framing voice instead of the algorithm.",
-  },
-  3: {
-    line: "Hurry is not neutral. Hurry is a formation system.",
-    why: "A rushed life trains a rushed soul. You lose the ability to notice God, receive people, and hear what is happening inside you.",
-    change: "Today interrupts automatic speed. You begin practicing presence instead of living mentally ahead of your life.",
-  },
-  4: {
-    line: "Formation moves through the open hand.",
-    why: "What you grip begins to govern you. Surrender is not passive; it is the refusal to let anxiety and control become your operating system.",
-    change: "This reframes trust as a real action. You name what you are clutching and practice release instead of management.",
-  },
-  5: {
-    line: "Whatever you don't face doesn't go away. It goes deeper.",
-    why: "An unexamined inner life still drives your outer life. Hidden fear, resentment, exhaustion, and grief all shape your reactions whether you name them or not.",
-    change: "Today moves honesty to the center. You stop managing appearances and begin bringing what is real into the light before God.",
-  },
-  6: {
-    line: "Most of us have mastered the art of being known without being known.",
-    why: "Isolation preserves image but limits formation. Shared life is not an optional add-on to discipleship; it is one of the places discipleship actually happens.",
-    change: "This pushes you beyond private spirituality. You practice honest presence with another person instead of staying surfaced and self-protected.",
-  },
-  7: {
-    line: "You become what you repeatedly do — not what you occasionally feel.",
-    why: "Insight without structure fades quickly. Real change needs practices, rhythms, and boundaries that can hold conviction when emotion wears off.",
-    change: "Today turns reflection into architecture. You begin building a repeatable pattern of life instead of waiting for another meaningful moment."
-  },
-};
 
 
 /* ─── STORAGE HELPERS ─────────────────────────────────────────────── */
@@ -261,14 +27,14 @@ function daysToProgressMap(completedDays) {
 }
 
 function getCompletionCount(progress) {
-  return DAYS.reduce((acc, day) => acc + (progress[day.n] ? 1 : 0), 0);
+  return CHALLENGE_DAYS.reduce((acc, day) => acc + (progress[day.n] ? 1 : 0), 0);
 }
 function isUnlocked(n, progress) {
   if (n === 1) return true;
   return !!progress[n - 1];
 }
 function getCurrentDay(progress) {
-  return DAYS.find((day) => !progress[day.n])?.n || DAYS[DAYS.length - 1].n;
+  return CHALLENGE_DAYS.find((day) => !progress[day.n])?.n || CHALLENGE_DAYS[CHALLENGE_DAYS.length - 1].n;
 }
 function stripTags(value = "") {
   return value.replace(/<[^>]+>/g, "");
@@ -606,7 +372,7 @@ function Tracker({ activeDayN, progress }) {
 
   return (
     <div className="cf7-tracker">
-      {DAYS.map((d) => {
+      {CHALLENGE_DAYS.map((d) => {
         const done = !!p[d.n];
         const unlocked = isUnlocked(d.n, p);
         const cur = (activeDayN ? d.n === activeDayN : d.n === currentDay) && !done;
@@ -751,7 +517,7 @@ export function CFLanding() {
             <p className="cf7-intensity-line">
               {completionCount === 0
                 ? "Start with Day 1. Stay in order. Let the week build on itself."
-                : completionCount === DAYS.length
+                : completionCount === CHALLENGE_DAYS.length
                   ? "All seven complete. Go back through them slowly and keep the rhythm."
                   : `You are ${completionCount} day${completionCount === 1 ? "" : "s"} in. Continue with Day ${currentDay}.`}
             </p>
@@ -761,7 +527,7 @@ export function CFLanding() {
         <div className="cf7-cards-shell">
         <div className="cf7-grid-wrap">
           <div className="cf7-grid">
-            {DAYS.map((d) => {
+            {CHALLENGE_DAYS.map((d) => {
               const { done, unlocked, current } = getCardState(d.n, progress);
               const stateLabel = done ? "Completed" : current ? "Start Here" : unlocked ? "Continue" : "Locked";
               return (
@@ -853,8 +619,8 @@ export function CFDevotion() {
   const [showComplete, setShowComplete] = useState(false);
 
   const n = parseInt(day, 10);
-  const d = DAYS.find(x => x.n === n);
-  const meta = d ? DAY_META[d.n] : null;
+  const d = CHALLENGE_DAYS.find(x => x.n === n);
+  const meta = d ? CHALLENGE_DAY_META[d.n] : null;
 
   const completedDays = isLoaded ? profile.challenge.completedDays : [];
   const progress = useMemo(() => daysToProgressMap(completedDays), [completedDays]);
@@ -906,8 +672,8 @@ export function CFDevotion() {
 
   if (!d) return null;
 
-  const prev = DAYS.find(x => x.n === n - 1);
-  const next = DAYS.find(x => x.n === n + 1);
+  const prev = CHALLENGE_DAYS.find(x => x.n === n - 1);
+  const next = CHALLENGE_DAYS.find(x => x.n === n + 1);
   const practiceLines = d.practice.split("\n").map((l, i) => l ? <p key={i}>{l}</p> : <br key={i} />);
   const prayerLines = d.prayer.split("\n").map((l, i) => l ? <p key={i}>{l}</p> : <br key={i} />);
   const pullQuote = meta?.line || stripTags(d.teaching[0]);

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useFormationProfile } from "../hooks/useFormationProfile";
-import { FRUIT_ORDER, FRUITS } from "../fruitAssessmentData";
-import { getAllRhythms } from "../content/loader";
+import { FRUIT_ORDER, FRUITS, getAllRhythms } from "../content/loader";
 
 /*
  * DevotionOnboarding — short orientation flow for first-time users.

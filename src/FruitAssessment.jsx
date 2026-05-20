@@ -1,7 +1,7 @@
 ﻿import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { gsap } from "gsap";
-import { QUESTIONS, FRUITS, FRUIT_ORDER, CLUSTER_THRESHOLD, SCALE_OPTIONS } from "./fruitAssessmentData";
+import { QUESTIONS, FRUITS, FRUIT_ORDER, CLUSTER_THRESHOLD, SCALE_OPTIONS } from "./content/loader";
 import { useFormationProfile } from "./hooks/useFormationProfile";
 import NextStep from "./components/NextStep";
 import { hasCompletedAssessment } from "./utils/giftsAssessmentStorage";

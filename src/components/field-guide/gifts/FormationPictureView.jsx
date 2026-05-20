@@ -5,7 +5,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormationProfile } from "../../../hooks/useFormationProfile";
-import { FRUITS } from "../../../fruitAssessmentData";
+import { FRUITS } from "../../../content/loader";
 import { gifts } from "../../../data/gifts";
 import {
   loadProgress,
