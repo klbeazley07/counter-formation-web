@@ -17,17 +17,6 @@ import { GiftTransition, CharismaticIntro } from "./AssessmentTransition";
 
 /* ─── TOKENS ──────────────────────────────────────────────────────────── */
 
-const C = {
-  bg: "#06050A",
-  ivory: "#FAF8F5",
-  gold: "#C9A84C",
-  goldDim: "rgba(201,168,76,0.45)",
-  goldFaint: "rgba(201,168,76,0.18)",
-  goldMid: "rgba(201,168,76,0.08)",
-  muted: "rgba(250,248,245,0.62)",
-  dim: "rgba(250,248,245,0.34)",
-  border: "rgba(255,255,255,0.08)",
-};
 
 const F = {
   display: "'Cormorant Garamond', serif",
@@ -298,8 +287,8 @@ export default function AssessmentQuestion() {
   return (
     <main
       style={{
-        background: C.bg,
-        color: C.ivory,
+        background: "var(--cf-hero-bg)",
+        color: "var(--cf-ivory)",
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
@@ -343,11 +332,11 @@ export default function AssessmentQuestion() {
             fontSize: 10,
             letterSpacing: "0.32em",
             textTransform: "uppercase",
-            color: C.muted,
+            color: "var(--cf-ivory-62)",
           }}
         >
           <span>{CATEGORY_LABEL[currentGift.category] || ""}</span>
-          <span style={{ color: C.dim }}>
+          <span style={{ color: "var(--cf-ivory-35)" }}>
             {progress.qIdx + 1} / {TOTAL_QUESTIONS}
           </span>
         </div>
@@ -376,7 +365,7 @@ export default function AssessmentQuestion() {
               fontSize: 11,
               letterSpacing: "0.36em",
               textTransform: "uppercase",
-              color: C.gold,
+              color: "var(--cf-gold)",
               marginBottom: 30,
               textAlign: "center",
             }}
@@ -391,7 +380,7 @@ export default function AssessmentQuestion() {
               fontStyle: "italic",
               fontSize: "clamp(22px, 3.2vw, 28px)",
               lineHeight: 1.45,
-              color: C.ivory,
+              color: "var(--cf-ivory)",
               maxWidth: 580,
               margin: "0 auto 44px",
               textAlign: "center",
@@ -447,7 +436,7 @@ export default function AssessmentQuestion() {
           style={{
             background: "none",
             border: "none",
-            color: isFirstQuestion ? C.dim : C.muted,
+            color: isFirstQuestion ? "var(--cf-ivory-35)" : "var(--cf-ivory-62)",
             fontFamily: F.body,
             fontSize: 13,
             letterSpacing: "0.04em",
@@ -457,10 +446,10 @@ export default function AssessmentQuestion() {
             transition: "color 200ms ease",
           }}
           onMouseEnter={(e) => {
-            if (!isFirstQuestion) e.currentTarget.style.color = C.ivory;
+            if (!isFirstQuestion) e.currentTarget.style.color = "var(--cf-ivory)";
           }}
           onMouseLeave={(e) => {
-            if (!isFirstQuestion) e.currentTarget.style.color = C.muted;
+            if (!isFirstQuestion) e.currentTarget.style.color = "var(--cf-ivory-62)";
           }}
         >
           &larr; Previous
@@ -471,7 +460,7 @@ export default function AssessmentQuestion() {
           style={{
             background: "none",
             border: "none",
-            color: C.muted,
+            color: "var(--cf-ivory-62)",
             fontFamily: F.body,
             fontSize: 13,
             letterSpacing: "0.04em",
@@ -479,8 +468,8 @@ export default function AssessmentQuestion() {
             padding: "8px 4px",
             transition: "color 200ms ease",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = C.ivory)}
-          onMouseLeave={(e) => (e.currentTarget.style.color = C.muted)}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "var(--cf-ivory)")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--cf-ivory-62)")}
           title="Records a neutral response and flags the question. Skipping reduces the accuracy of your results."
         >
           Skip this question &rarr;
@@ -494,22 +483,22 @@ export default function AssessmentQuestion() {
           style={{
             background: "transparent",
             border: "none",
-            color: C.dim,
+            color: "var(--cf-ivory-35)",
             fontFamily: F.body,
             fontSize: 12,
             letterSpacing: "0.06em",
             cursor: "pointer",
-            borderBottom: `1px solid ${C.border}`,
+            borderBottom: `1px solid ${"var(--cf-white-8)"}`,
             paddingBottom: 2,
             transition: "color 200ms ease, border-color 200ms ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.color = C.muted;
-            e.currentTarget.style.borderBottomColor = C.goldFaint;
+            e.currentTarget.style.color = "var(--cf-ivory-62)";
+            e.currentTarget.style.borderBottomColor = "var(--cf-gold-soft)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.color = C.dim;
-            e.currentTarget.style.borderBottomColor = C.border;
+            e.currentTarget.style.color = "var(--cf-ivory-35)";
+            e.currentTarget.style.borderBottomColor = "var(--cf-white-8)";
           }}
         >
           Save and return later
@@ -524,10 +513,10 @@ export default function AssessmentQuestion() {
 function ScaleButton({ label, index, isSelected, onClick }) {
   const [hov, setHov] = useState(false);
 
-  const border = isSelected ? C.gold : hov ? C.goldDim : C.goldFaint;
-  const bg = isSelected ? C.goldMid : hov ? "rgba(201,168,76,0.04)" : "transparent";
-  const color = isSelected ? C.ivory : C.ivory;
-  const numColor = isSelected ? C.gold : C.dim;
+  const border = isSelected ? "var(--cf-gold)" : hov ? "var(--cf-gold-45)" : "var(--cf-gold-soft)";
+  const bg = isSelected ? "var(--cf-gold-bg)" : hov ? "rgba(201,168,76,0.04)" : "transparent";
+  const color = isSelected ? "var(--cf-ivory)" : "var(--cf-ivory)";
+  const numColor = isSelected ? "var(--cf-gold)" : "var(--cf-ivory-35)";
 
   return (
     <button
@@ -570,8 +559,8 @@ function ScaleButton({ label, index, isSelected, onClick }) {
           width: 12,
           height: 12,
           borderRadius: "50%",
-          border: `1px solid ${isSelected ? C.gold : C.goldFaint}`,
-          background: isSelected ? C.gold : "transparent",
+          border: `1px solid ${isSelected ? "var(--cf-gold)" : "var(--cf-gold-soft)"}`,
+          background: isSelected ? "var(--cf-gold)" : "transparent",
           justifySelf: "end",
           transition: "background 180ms ease, border-color 180ms ease",
         }}

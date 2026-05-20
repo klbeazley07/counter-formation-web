@@ -8,14 +8,6 @@ import NextStep from "./components/NextStep";
 
 export const CHALLENGE_BASE = "/7-day-challenge";
 
-const C = {
-  heroBg: "#06050A",
-  darkBg: "#0E0C0A",
-  ruleBg: "#17140F",
-  gold:   "#C9A84C",
-  ivory:  "#FAF8F5",
-};
-
 /* ─── DATA ────────────────────────────────────────────────────────── */
 
 const DAYS = [

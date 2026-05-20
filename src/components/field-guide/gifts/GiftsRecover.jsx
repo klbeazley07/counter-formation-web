@@ -16,21 +16,6 @@ import {
 
 const TRUSTED_RESPONSES_KEY = "cf-gifts-trusted-responses";
 
-const C = {
-  bg: "#06050A",
-  bgCard: "#0E0C0A",
-  bgCardSoft: "#110F0D",
-  gold: "#C9A84C",
-  goldDim: "rgba(201,168,76,0.30)",
-  goldFaint: "rgba(201,168,76,0.10)",
-  ivory: "#FAF8F5",
-  muted: "rgba(250,248,245,0.62)",
-  dim: "rgba(250,248,245,0.34)",
-  border: "rgba(255,255,255,0.07)",
-  green: "rgba(100,200,120,0.85)",
-  greenFaint: "rgba(100,200,120,0.10)",
-  red: "rgba(220,80,80,0.85)",
-};
 
 /* ─── ENCODE / DECODE ─────────────────────────────────────────────── */
 
@@ -72,7 +57,7 @@ function Eyebrow({ children }) {
       fontSize: 11,
       letterSpacing: "0.36em",
       textTransform: "uppercase",
-      color: C.gold,
+      color: "var(--cf-gold)",
       marginBottom: 12,
     }}>
       {children}
@@ -87,7 +72,7 @@ function StatusBadge({ ok, children }) {
       alignItems: "center",
       gap: 8,
       padding: "6px 14px",
-      background: ok ? C.greenFaint : "rgba(220,80,80,0.08)",
+      background: ok ? "rgba(100,200,120,0.10)" : "rgba(220,80,80,0.08)",
       border: `1px solid ${ok ? "rgba(100,200,120,0.25)" : "rgba(220,80,80,0.25)"}`,
       marginBottom: 16,
     }}>
@@ -97,7 +82,7 @@ function StatusBadge({ ok, children }) {
         fontSize: 12,
         letterSpacing: "0.18em",
         textTransform: "uppercase",
-        color: ok ? C.green : C.red,
+        color: ok ? "rgba(100,200,120,0.85)" : "rgba(220,80,80,0.85)",
       }}>
         {children}
       </span>
@@ -110,12 +95,12 @@ function CopyButton({ url, label }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       <div style={{
-        background: C.bgCardSoft,
-        border: `1px solid ${C.border}`,
+        background: "var(--cf-surface-raised)",
+        border: `1px solid ${"var(--cf-white-8)"}`,
         padding: "12px 16px",
         fontFamily: "'Inter', sans-serif",
         fontSize: 12,
-        color: C.dim,
+        color: "var(--cf-ivory-35)",
         wordBreak: "break-all",
         lineHeight: 1.5,
         maxHeight: 80,
@@ -127,8 +112,8 @@ function CopyButton({ url, label }) {
         onClick={() => copy(url)}
         style={{
           background: copied ? "rgba(100,200,120,0.12)" : "transparent",
-          border: `1px solid ${copied ? "rgba(100,200,120,0.4)" : C.goldDim}`,
-          color: copied ? C.green : C.gold,
+          border: `1px solid ${copied ? "rgba(100,200,120,0.4)" : "var(--cf-gold-mid)"}`,
+          color: copied ? "rgba(100,200,120,0.85)" : "var(--cf-gold)",
           fontFamily: "'Barlow Condensed', sans-serif",
           fontSize: 12,
           letterSpacing: "0.24em",
@@ -219,7 +204,7 @@ function ExportMode() {
         fontSize: "clamp(32px, 5vw, 50px)",
         lineHeight: 1.1,
         margin: "0 0 16px",
-        color: C.ivory,
+        color: "var(--cf-ivory)",
         fontWeight: 400,
       }}>
         Recover your assessment data
@@ -228,7 +213,7 @@ function ExportMode() {
         fontFamily: "'Inter', sans-serif",
         fontSize: 15,
         lineHeight: 1.8,
-        color: C.muted,
+        color: "var(--cf-ivory-62)",
         margin: "0 0 48px",
       }}>
         This page reads what is stored on this device and generates a recovery
@@ -238,8 +223,8 @@ function ExportMode() {
 
       {/* Self-assessment section */}
       <div style={{
-        background: C.bgCard,
-        border: `1px solid ${C.border}`,
+        background: "var(--cf-obsidian)",
+        border: `1px solid ${"var(--cf-white-8)"}`,
         padding: "32px 36px",
         marginBottom: 20,
       }}>
@@ -248,7 +233,7 @@ function ExportMode() {
           fontSize: 11,
           letterSpacing: "0.32em",
           textTransform: "uppercase",
-          color: C.gold,
+          color: "var(--cf-gold)",
           marginBottom: 14,
         }}>
           Full Assessment (72 questions)
@@ -267,7 +252,7 @@ function ExportMode() {
               fontFamily: "'Inter', sans-serif",
               fontSize: 14,
               lineHeight: 1.75,
-              color: C.muted,
+              color: "var(--cf-ivory-62)",
               margin: "0 0 20px",
             }}>
               {selfComplete
@@ -282,8 +267,8 @@ function ExportMode() {
                   to="/field-guide/gifts/results"
                   style={{
                     display: "inline-block",
-                    background: C.gold,
-                    color: C.bg,
+                    background: "var(--cf-gold)",
+                    color: "var(--cf-hero-bg)",
                     fontFamily: "'Barlow Condensed', sans-serif",
                     fontSize: 12,
                     letterSpacing: "0.22em",
@@ -299,8 +284,8 @@ function ExportMode() {
                 onClick={buildSelfUrl}
                 style={{
                   background: "transparent",
-                  border: `1px solid ${C.goldDim}`,
-                  color: C.gold,
+                  border: `1px solid ${"var(--cf-gold-mid)"}`,
+                  color: "var(--cf-gold)",
                   fontFamily: "'Barlow Condensed', sans-serif",
                   fontSize: 12,
                   letterSpacing: "0.22em",
@@ -321,7 +306,7 @@ function ExportMode() {
               fontFamily: "'Inter', sans-serif",
               fontSize: 14,
               lineHeight: 1.75,
-              color: C.muted,
+              color: "var(--cf-ivory-62)",
               margin: 0,
             }}>
               This device does not have a saved assessment. Check the device and
@@ -334,8 +319,8 @@ function ExportMode() {
 
       {/* Trusted-person responses section */}
       <div style={{
-        background: C.bgCard,
-        border: `1px solid ${C.border}`,
+        background: "var(--cf-obsidian)",
+        border: `1px solid ${"var(--cf-white-8)"}`,
         padding: "32px 36px",
         marginBottom: 40,
       }}>
@@ -344,7 +329,7 @@ function ExportMode() {
           fontSize: 11,
           letterSpacing: "0.32em",
           textTransform: "uppercase",
-          color: C.gold,
+          color: "var(--cf-gold)",
           marginBottom: 14,
         }}>
           Observer Responses (17 questions)
@@ -360,7 +345,7 @@ function ExportMode() {
               fontFamily: "'Inter', sans-serif",
               fontSize: 14,
               lineHeight: 1.75,
-              color: C.muted,
+              color: "var(--cf-ivory-62)",
               margin: "0 0 20px",
             }}>
               Your observer responses are saved here. Generate a recovery link
@@ -371,8 +356,8 @@ function ExportMode() {
                 onClick={buildTrustedUrl}
                 style={{
                   background: "transparent",
-                  border: `1px solid ${C.goldDim}`,
-                  color: C.gold,
+                  border: `1px solid ${"var(--cf-gold-mid)"}`,
+                  color: "var(--cf-gold)",
                   fontFamily: "'Barlow Condensed', sans-serif",
                   fontSize: 12,
                   letterSpacing: "0.22em",
@@ -393,7 +378,7 @@ function ExportMode() {
               fontFamily: "'Inter', sans-serif",
               fontSize: 14,
               lineHeight: 1.75,
-              color: C.muted,
+              color: "var(--cf-ivory-62)",
               margin: 0,
             }}>
               This device did not complete an observer assessment, or the data
@@ -410,8 +395,8 @@ function ExportMode() {
           onClick={runDiag}
           style={{
             background: "transparent",
-            border: `1px solid ${C.border}`,
-            color: C.dim,
+            border: `1px solid ${"var(--cf-white-8)"}`,
+            color: "var(--cf-ivory-35)",
             fontFamily: "'Inter', sans-serif",
             fontSize: 12,
             letterSpacing: "0.08em",
@@ -424,8 +409,8 @@ function ExportMode() {
         </button>
         {showDiag && (
           <div style={{
-            background: C.bgCardSoft,
-            border: `1px solid ${C.border}`,
+            background: "var(--cf-surface-raised)",
+            border: `1px solid ${"var(--cf-white-8)"}`,
             padding: "20px 24px",
             marginTop: 8,
           }}>
@@ -434,13 +419,13 @@ function ExportMode() {
               fontSize: 10,
               letterSpacing: "0.3em",
               textTransform: "uppercase",
-              color: C.gold,
+              color: "var(--cf-gold)",
               marginBottom: 12,
             }}>
               All localStorage keys on this device ({diagKeys.length} total)
             </div>
             {diagKeys.length === 0 ? (
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: C.dim, margin: 0 }}>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: "var(--cf-ivory-35)", margin: 0 }}>
                 localStorage is empty -- no data at all on this device.
               </p>
             ) : (
@@ -459,7 +444,7 @@ function ExportMode() {
                         <span style={{
                           fontFamily: "'Inter', sans-serif",
                           fontSize: 12,
-                          color: key.startsWith("cf-") ? C.ivory : C.dim,
+                          color: key.startsWith("cf-") ? "var(--cf-ivory)" : "var(--cf-ivory-35)",
                           fontWeight: key.startsWith("cf-") ? 600 : 400,
                           wordBreak: "break-all",
                           flex: 1,
@@ -469,7 +454,7 @@ function ExportMode() {
                         <span style={{
                           fontFamily: "'Barlow Condensed', sans-serif",
                           fontSize: 11,
-                          color: C.dim,
+                          color: "var(--cf-ivory-35)",
                           flexShrink: 0,
                         }}>
                           {size.toLocaleString()} chars
@@ -479,7 +464,7 @@ function ExportMode() {
                         <span style={{
                           fontFamily: "'Inter', sans-serif",
                           fontSize: 11,
-                          color: C.gold,
+                          color: "var(--cf-gold)",
                           paddingLeft: 2,
                         }}>
                           {detail}
@@ -493,7 +478,7 @@ function ExportMode() {
             <p style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: 12,
-              color: C.dim,
+              color: "var(--cf-ivory-35)",
               margin: "16px 0 0",
               lineHeight: 1.6,
             }}>
@@ -509,7 +494,7 @@ function ExportMode() {
         <Link
           to="/field-guide/gifts"
           style={{
-            color: C.dim,
+            color: "var(--cf-ivory-35)",
             fontFamily: "'Inter', sans-serif",
             fontSize: 13,
             letterSpacing: "0.04em",
@@ -586,7 +571,7 @@ function ImportMode({ rawParam }) {
           fontFamily: "'Cormorant Garamond', serif",
           fontStyle: "italic",
           fontSize: "clamp(28px, 4vw, 42px)",
-          color: C.ivory,
+          color: "var(--cf-ivory)",
           margin: "0 0 20px",
           fontWeight: 400,
         }}>
@@ -596,7 +581,7 @@ function ImportMode({ rawParam }) {
           fontFamily: "'Inter', sans-serif",
           fontSize: 15,
           lineHeight: 1.8,
-          color: C.muted,
+          color: "var(--cf-ivory-62)",
           margin: "0 0 32px",
         }}>
           The link may have been truncated or corrupted. Ask the person who sent
@@ -607,8 +592,8 @@ function ImportMode({ rawParam }) {
           style={{
             display: "inline-block",
             background: "transparent",
-            border: `1px solid ${C.goldDim}`,
-            color: C.gold,
+            border: `1px solid ${"var(--cf-gold-mid)"}`,
+            color: "var(--cf-gold)",
             fontFamily: "'Barlow Condensed', sans-serif",
             fontSize: 12,
             letterSpacing: "0.22em",
@@ -632,7 +617,7 @@ function ImportMode({ rawParam }) {
           fontFamily: "'Cormorant Garamond', serif",
           fontStyle: "italic",
           fontSize: "clamp(28px, 4vw, 42px)",
-          color: C.ivory,
+          color: "var(--cf-ivory)",
           margin: "0 0 20px",
           fontWeight: 400,
         }}>
@@ -642,7 +627,7 @@ function ImportMode({ rawParam }) {
           fontFamily: "'Inter', sans-serif",
           fontSize: 15,
           lineHeight: 1.8,
-          color: C.muted,
+          color: "var(--cf-ivory-62)",
           margin: "0 0 32px",
         }}>
           {isSelf
@@ -656,8 +641,8 @@ function ImportMode({ rawParam }) {
             to={summary.complete ? "/field-guide/gifts/results" : "/field-guide/gifts/take"}
             style={{
               display: "inline-block",
-              background: C.gold,
-              color: C.bg,
+              background: "var(--cf-gold)",
+              color: "var(--cf-hero-bg)",
               fontFamily: "'Barlow Condensed', sans-serif",
               fontSize: 12,
               letterSpacing: "0.22em",
@@ -673,8 +658,8 @@ function ImportMode({ rawParam }) {
             to="/field-guide/gifts/results"
             style={{
               display: "inline-block",
-              background: C.gold,
-              color: C.bg,
+              background: "var(--cf-gold)",
+              color: "var(--cf-hero-bg)",
               fontFamily: "'Barlow Condensed', sans-serif",
               fontSize: 12,
               letterSpacing: "0.22em",
@@ -713,7 +698,7 @@ function ImportMode({ rawParam }) {
         fontFamily: "'Cormorant Garamond', serif",
         fontStyle: "italic",
         fontSize: "clamp(28px, 4vw, 42px)",
-        color: C.ivory,
+        color: "var(--cf-ivory)",
         margin: "0 0 20px",
         fontWeight: 400,
         lineHeight: 1.15,
@@ -722,8 +707,8 @@ function ImportMode({ rawParam }) {
       </h1>
 
       <div style={{
-        background: C.bgCard,
-        border: `1px solid ${C.goldDim}`,
+        background: "var(--cf-obsidian)",
+        border: `1px solid ${"var(--cf-gold-mid)"}`,
         padding: "28px 32px",
         marginBottom: 28,
       }}>
@@ -732,7 +717,7 @@ function ImportMode({ rawParam }) {
           fontSize: 11,
           letterSpacing: "0.28em",
           textTransform: "uppercase",
-          color: C.gold,
+          color: "var(--cf-gold)",
           marginBottom: 16,
         }}>
           What will be imported
@@ -765,7 +750,7 @@ function ImportMode({ rawParam }) {
         fontFamily: "'Inter', sans-serif",
         fontSize: 14,
         lineHeight: 1.75,
-        color: C.muted,
+        color: "var(--cf-ivory-62)",
         margin: "0 0 24px",
       }}>
         {isSelf
@@ -776,8 +761,8 @@ function ImportMode({ rawParam }) {
       <button
         onClick={doImport}
         style={{
-          background: C.gold,
-          color: C.bg,
+          background: "var(--cf-gold)",
+          color: "var(--cf-hero-bg)",
           border: "none",
           fontFamily: "'Barlow Condensed', sans-serif",
           fontSize: 12,
@@ -801,7 +786,7 @@ function DataRow({ label, value }) {
         fontSize: 11,
         letterSpacing: "0.22em",
         textTransform: "uppercase",
-        color: C.dim,
+        color: "var(--cf-ivory-35)",
         flexShrink: 0,
         minWidth: 100,
       }}>
@@ -810,7 +795,7 @@ function DataRow({ label, value }) {
       <span style={{
         fontFamily: "'Inter', sans-serif",
         fontSize: 14,
-        color: C.muted,
+        color: "var(--cf-ivory-62)",
       }}>
         {value}
       </span>
@@ -826,8 +811,8 @@ export default function GiftsRecover() {
 
   return (
     <main style={{
-      background: C.bg,
-      color: C.ivory,
+      background: "var(--cf-hero-bg)",
+      color: "var(--cf-ivory)",
       minHeight: "100vh",
       display: "flex",
       alignItems: "flex-start",

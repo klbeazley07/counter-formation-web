@@ -6,7 +6,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, X } from "lucide-react";
 
 import {
-  FieldGuideStyles,
   FGLanding,
   FGOffice,
   FGPath,
@@ -29,7 +28,7 @@ import { SiteNav } from "./components/SiteNav";
 import { SiteFooter } from "./components/SiteFooter";
 import { MobileTabBar } from "./components/MobileTabBar";
 import { CampaignBanner } from "./components/CampaignBanner";
-import FruitAssessment, { FAStyles } from "./FruitAssessment";
+import FruitAssessment from "./FruitAssessment";
 import GiftsProcessing from "./components/field-guide/gifts/GiftsProcessing";
 import GiftsResults from "./components/field-guide/gifts/GiftsResults";
 import GiftsRecover from "./components/field-guide/gifts/GiftsRecover";
@@ -1827,8 +1826,6 @@ export default function App() {
     <FormationProfileProvider>
     <BrowserRouter>
       <ScrollToTop />
-      <FieldGuideStyles />
-      <FAStyles />
       <ChallengeStyles />
       <RuleStyles />
       <ArchitectureStyles />

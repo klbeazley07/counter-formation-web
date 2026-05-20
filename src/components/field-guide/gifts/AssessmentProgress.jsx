@@ -1,9 +1,5 @@
 import React from "react";
 
-const C = {
-  trackBg: "rgba(201,168,76,0.14)",
-  fill: "#C9A84C",
-};
 
 // Thin Champagne Gold progress bar. Fills as the user advances.
 // No percentage shown -- the bar itself is the indicator.
@@ -22,7 +18,7 @@ export default function AssessmentProgress({ current, total }) {
       style={{
         width: "100%",
         height: 2,
-        background: C.trackBg,
+        background: "var(--cf-gold-faint)",
         position: "relative",
         borderRadius: 1,
       }}
@@ -34,7 +30,7 @@ export default function AssessmentProgress({ current, total }) {
           left: 0,
           height: "100%",
           width: `${pct}%`,
-          background: C.fill,
+          background: "var(--cf-gold)",
           borderRadius: 1,
           transition: "width 540ms cubic-bezier(0.2, 0.7, 0.2, 1)",
           boxShadow: "0 0 6px rgba(201,168,76,0.35)",

@@ -18,6 +18,7 @@
   --cf-field-bg:        #111009;
   --cf-card-warm:       #1A1612;
   --cf-card-warm-2:     #201C17;
+  --cf-surface-raised:  #110F0D;
 
   /* Ink */
   --cf-ivory:           #FAF8F5;
@@ -38,6 +39,7 @@
   --cf-gold-soft:       rgba(201, 168, 76, 0.20);
   --cf-gold-faint:      rgba(201, 168, 76, 0.15);
   --cf-gold-hairline:   rgba(201, 168, 76, 0.12);
+  --cf-gold-10:         rgba(201, 168, 76, 0.10);
   --cf-gold-glow:       rgba(201, 168, 76, 0.06);
   --cf-gold-bg:         rgba(201, 168, 76, 0.08);
   --cf-gold-muted:      rgba(201, 168, 76, 0.50);

@@ -1,19 +1,13 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 
-const C = {
-  bg: "#06050A",
-  ivory: "#FAF8F5",
-  gold: "#C9A84C",
-  muted: "rgba(250,248,245,0.58)",
-};
 
 function Frame({ eyebrow, title, route, children }) {
   return (
     <main
       style={{
-        background: C.bg,
-        color: C.ivory,
+        background: "var(--cf-hero-bg)",
+        color: "var(--cf-ivory)",
         minHeight: "100vh",
         padding: "120px 24px 80px",
         display: "flex",
@@ -27,7 +21,7 @@ function Frame({ eyebrow, title, route, children }) {
             fontSize: 11,
             letterSpacing: "0.36em",
             textTransform: "uppercase",
-            color: C.gold,
+            color: "var(--cf-gold)",
             marginBottom: 18,
           }}
         >
@@ -49,20 +43,20 @@ function Frame({ eyebrow, title, route, children }) {
             display: "inline-block",
             padding: "4px 10px",
             border: "1px solid rgba(201,168,76,0.30)",
-            color: C.muted,
+            color: "var(--cf-ivory-58)",
             fontSize: 13,
             marginBottom: 32,
           }}
         >
           {route}
         </code>
-        <div style={{ color: C.muted, lineHeight: 1.7, fontSize: 16 }}>
+        <div style={{ color: "var(--cf-ivory-58)", lineHeight: 1.7, fontSize: 16 }}>
           {children}
         </div>
         <div style={{ marginTop: 40 }}>
           <Link
             to="/field-guide/scripture-before-scroll"
-            style={{ color: C.gold, textDecoration: "none", letterSpacing: "0.05em" }}
+            style={{ color: "var(--cf-gold)", textDecoration: "none", letterSpacing: "0.05em" }}
           >
             ← Back to Field Guide
           </Link>

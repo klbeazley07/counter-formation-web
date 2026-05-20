@@ -4,11 +4,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const C = {
-  bg: "#06050A",
-  ivory: "#FAF8F5",
-  gold: "#C9A84C",
-};
 
 const STYLES = `
   @keyframes cf-proc-rotate {
@@ -36,7 +31,7 @@ export default function GiftsProcessing() {
       <style>{STYLES}</style>
       <main
         style={{
-          background: C.bg,
+          background: "var(--cf-hero-bg)",
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
@@ -57,31 +52,31 @@ export default function GiftsProcessing() {
             {/* Outer ring */}
             <circle
               cx="34" cy="34" r="30"
-              stroke={C.gold} strokeWidth="0.75" strokeOpacity="0.45"
+              stroke={"var(--cf-gold)"} strokeWidth="0.75" strokeOpacity="0.45"
             />
             {/* Mid ring */}
             <circle
               cx="34" cy="34" r="18"
-              stroke={C.gold} strokeWidth="0.5" strokeOpacity="0.2"
+              stroke={"var(--cf-gold)"} strokeWidth="0.5" strokeOpacity="0.2"
             />
             {/* Cross arms */}
-            <line x1="34" y1="4"  x2="34" y2="64" stroke={C.gold} strokeWidth="0.6" strokeOpacity="0.25" />
-            <line x1="4"  y1="34" x2="64" y2="34" stroke={C.gold} strokeWidth="0.6" strokeOpacity="0.25" />
+            <line x1="34" y1="4"  x2="34" y2="64" stroke={"var(--cf-gold)"} strokeWidth="0.6" strokeOpacity="0.25" />
+            <line x1="4"  y1="34" x2="64" y2="34" stroke={"var(--cf-gold)"} strokeWidth="0.6" strokeOpacity="0.25" />
             {/* Diagonal cross */}
-            <line x1="13" y1="13" x2="55" y2="55" stroke={C.gold} strokeWidth="0.4" strokeOpacity="0.12" />
-            <line x1="55" y1="13" x2="13" y2="55" stroke={C.gold} strokeWidth="0.4" strokeOpacity="0.12" />
+            <line x1="13" y1="13" x2="55" y2="55" stroke={"var(--cf-gold)"} strokeWidth="0.4" strokeOpacity="0.12" />
+            <line x1="55" y1="13" x2="13" y2="55" stroke={"var(--cf-gold)"} strokeWidth="0.4" strokeOpacity="0.12" />
             {/* Cardinal points -- the four outer stars */}
-            <circle cx="34" cy="4"  r="2.8" fill={C.gold} fillOpacity="0.85" />
-            <circle cx="64" cy="34" r="2.8" fill={C.gold} fillOpacity="0.85" />
-            <circle cx="34" cy="64" r="2.8" fill={C.gold} fillOpacity="0.85" />
-            <circle cx="4"  cy="34" r="2.8" fill={C.gold} fillOpacity="0.85" />
+            <circle cx="34" cy="4"  r="2.8" fill={"var(--cf-gold)"} fillOpacity="0.85" />
+            <circle cx="64" cy="34" r="2.8" fill={"var(--cf-gold)"} fillOpacity="0.85" />
+            <circle cx="34" cy="64" r="2.8" fill={"var(--cf-gold)"} fillOpacity="0.85" />
+            <circle cx="4"  cy="34" r="2.8" fill={"var(--cf-gold)"} fillOpacity="0.85" />
             {/* Diagonal points -- dimmer */}
-            <circle cx="13" cy="13" r="1.8" fill={C.gold} fillOpacity="0.4" />
-            <circle cx="55" cy="13" r="1.8" fill={C.gold} fillOpacity="0.4" />
-            <circle cx="55" cy="55" r="1.8" fill={C.gold} fillOpacity="0.4" />
-            <circle cx="13" cy="55" r="1.8" fill={C.gold} fillOpacity="0.4" />
+            <circle cx="13" cy="13" r="1.8" fill={"var(--cf-gold)"} fillOpacity="0.4" />
+            <circle cx="55" cy="13" r="1.8" fill={"var(--cf-gold)"} fillOpacity="0.4" />
+            <circle cx="55" cy="55" r="1.8" fill={"var(--cf-gold)"} fillOpacity="0.4" />
+            <circle cx="13" cy="55" r="1.8" fill={"var(--cf-gold)"} fillOpacity="0.4" />
             {/* Center */}
-            <circle cx="34" cy="34" r="2.2" fill={C.gold} />
+            <circle cx="34" cy="34" r="2.2" fill={"var(--cf-gold)"} />
           </svg>
         </div>
 
@@ -92,7 +87,7 @@ export default function GiftsProcessing() {
             fontSize: "clamp(17px, 2.2vw, 21px)",
             fontStyle: "italic",
             lineHeight: 1.75,
-            color: C.ivory,
+            color: "var(--cf-ivory)",
             textAlign: "center",
             maxWidth: 500,
             margin: 0,

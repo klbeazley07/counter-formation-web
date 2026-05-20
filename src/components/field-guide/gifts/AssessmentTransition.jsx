@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-const C = {
-  bg: "#06050A",
-  gold: "#C9A84C",
-  goldDim: "rgba(201,168,76,0.32)",
-  ivory: "#FAF8F5",
-  muted: "rgba(250,248,245,0.62)",
-};
 
 const F = {
   display: "'Cormorant Garamond', serif",
@@ -49,8 +42,8 @@ export function GiftTransition({ gift, durationMs = 2200, onComplete }) {
     <main
       onClick={onComplete}
       style={{
-        background: C.bg,
-        color: C.ivory,
+        background: "var(--cf-hero-bg)",
+        color: "var(--cf-ivory)",
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
@@ -77,7 +70,7 @@ export function GiftTransition({ gift, durationMs = 2200, onComplete }) {
             fontSize: 11,
             letterSpacing: "0.42em",
             textTransform: "uppercase",
-            color: C.gold,
+            color: "var(--cf-gold)",
             marginBottom: 22,
             animation: "cf-trans-fade 420ms ease-out 80ms both",
           }}
@@ -89,7 +82,7 @@ export function GiftTransition({ gift, durationMs = 2200, onComplete }) {
           style={{
             width: 40,
             height: 1,
-            background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)`,
+            background: `linear-gradient(90deg, transparent, ${"var(--cf-gold)"}, transparent)`,
             margin: "0 auto 26px",
             animation: "cf-trans-fade 540ms ease-out 200ms both",
           }}
@@ -102,7 +95,7 @@ export function GiftTransition({ gift, durationMs = 2200, onComplete }) {
             fontSize: "clamp(36px, 5.4vw, 54px)",
             lineHeight: 1.1,
             margin: 0,
-            color: C.ivory,
+            color: "var(--cf-ivory)",
             animation: "cf-trans-rise 640ms cubic-bezier(0.2, 0.7, 0.2, 1) 240ms both",
           }}
         >
@@ -134,8 +127,8 @@ export function CharismaticIntro({ onContinue }) {
   return (
     <main
       style={{
-        background: C.bg,
-        color: C.ivory,
+        background: "var(--cf-hero-bg)",
+        color: "var(--cf-ivory)",
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
@@ -161,7 +154,7 @@ export function CharismaticIntro({ onContinue }) {
             fontSize: 11,
             letterSpacing: "0.42em",
             textTransform: "uppercase",
-            color: C.gold,
+            color: "var(--cf-gold)",
             marginBottom: 22,
             textAlign: "center",
             animation: "cf-trans-fade 420ms ease-out both",
@@ -177,7 +170,7 @@ export function CharismaticIntro({ onContinue }) {
             fontSize: "clamp(32px, 4.8vw, 44px)",
             lineHeight: 1.18,
             margin: "0 0 30px",
-            color: C.ivory,
+            color: "var(--cf-ivory)",
             textAlign: "center",
             animation: "cf-trans-rise 520ms cubic-bezier(0.2, 0.7, 0.2, 1) 120ms both",
           }}
@@ -189,7 +182,7 @@ export function CharismaticIntro({ onContinue }) {
           style={{
             width: 60,
             height: 1,
-            background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)`,
+            background: `linear-gradient(90deg, transparent, ${"var(--cf-gold)"}, transparent)`,
             margin: "0 auto 36px",
           }}
         />
@@ -199,7 +192,7 @@ export function CharismaticIntro({ onContinue }) {
             fontFamily: F.display,
             fontSize: 19,
             lineHeight: 1.75,
-            color: C.ivory,
+            color: "var(--cf-ivory)",
             margin: "0 0 18px",
             animation: "cf-trans-rise 580ms cubic-bezier(0.2, 0.7, 0.2, 1) 220ms both",
           }}
@@ -211,7 +204,7 @@ export function CharismaticIntro({ onContinue }) {
             fontFamily: F.display,
             fontSize: 19,
             lineHeight: 1.75,
-            color: C.muted,
+            color: "var(--cf-ivory-62)",
             margin: "0 0 18px",
             animation: "cf-trans-rise 580ms cubic-bezier(0.2, 0.7, 0.2, 1) 320ms both",
           }}
@@ -223,7 +216,7 @@ export function CharismaticIntro({ onContinue }) {
             fontFamily: F.display,
             fontSize: 19,
             lineHeight: 1.75,
-            color: C.muted,
+            color: "var(--cf-ivory-62)",
             margin: "0 0 44px",
             animation: "cf-trans-rise 580ms cubic-bezier(0.2, 0.7, 0.2, 1) 420ms both",
           }}
@@ -237,9 +230,9 @@ export function CharismaticIntro({ onContinue }) {
             onMouseEnter={() => setHov(true)}
             onMouseLeave={() => setHov(false)}
             style={{
-              background: hov ? C.gold : "transparent",
-              color: hov ? C.bg : C.gold,
-              border: `1px solid ${C.gold}`,
+              background: hov ? "var(--cf-gold)" : "transparent",
+              color: hov ? "var(--cf-hero-bg)" : "var(--cf-gold)",
+              border: `1px solid ${"var(--cf-gold)"}`,
               padding: "16px 36px",
               fontFamily: F.caps,
               fontSize: 13,

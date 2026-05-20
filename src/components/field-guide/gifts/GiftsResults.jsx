@@ -25,18 +25,6 @@ const TRUSTED_RESPONSES_KEY = "cf-gifts-trusted-responses";
 
 const RESULTS_STORAGE_KEY = "cf-gifts-results";
 
-const C = {
-  bg: "#06050A",
-  bgCard: "#0E0C0A",
-  bgCardSoft: "#110F0D",
-  gold: "#C9A84C",
-  goldDim: "rgba(201,168,76,0.30)",
-  goldFaint: "rgba(201,168,76,0.12)",
-  ivory: "#FAF8F5",
-  muted: "rgba(250,248,245,0.62)",
-  dim: "rgba(250,248,245,0.34)",
-  border: "rgba(255,255,255,0.07)",
-};
 
 const STYLES = `
   @keyframes cf-res-fade {
@@ -44,23 +32,23 @@ const STYLES = `
     to   { opacity: 1; transform: translateY(0); }
   }
   .cf-gift-card {
-    background: ${C.bgCard};
-    border: 1px solid ${C.border};
+    background: ${"var(--cf-obsidian)"};
+    border: 1px solid ${"var(--cf-white-8)"};
     padding: 36px 40px 32px;
     margin-bottom: 16px;
     transition: border-color 220ms ease;
   }
   .cf-gift-card:hover {
-    border-color: ${C.goldDim};
+    border-color: ${"var(--cf-gold-mid)"};
   }
   .cf-quiet-item {
     background: transparent;
-    border-bottom: 1px solid ${C.border};
+    border-bottom: 1px solid ${"var(--cf-white-8)"};
     padding: 14px 0;
     cursor: pointer;
   }
   .cf-quiet-item:first-child {
-    border-top: 1px solid ${C.border};
+    border-top: 1px solid ${"var(--cf-white-8)"};
   }
   .cf-quiet-detail {
     overflow: hidden;
@@ -74,7 +62,7 @@ const STYLES = `
     background: rgba(6,5,10,0.96);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-top: 1px solid ${C.goldDim};
+    border-top: 1px solid ${"var(--cf-gold-mid)"};
     padding: 14px 24px;
     display: flex;
     align-items: center;
@@ -120,7 +108,7 @@ function Eyebrow({ children, style }) {
         fontSize: 11,
         letterSpacing: "0.36em",
         textTransform: "uppercase",
-        color: C.gold,
+        color: "var(--cf-gold)",
         marginBottom: 12,
         ...style,
       }}
@@ -138,8 +126,8 @@ function SectionHeader({ children }) {
         fontSize: "clamp(11px, 1.4vw, 13px)",
         letterSpacing: "0.22em",
         textTransform: "uppercase",
-        color: C.ivory,
-        borderBottom: `1px solid ${C.goldDim}`,
+        color: "var(--cf-ivory)",
+        borderBottom: `1px solid ${"var(--cf-gold-mid)"}`,
         paddingBottom: 16,
         marginBottom: 32,
       }}
@@ -154,8 +142,8 @@ function PendingBadge() {
     <span
       style={{
         display: "inline-block",
-        border: `1px solid ${C.goldDim}`,
-        color: C.gold,
+        border: `1px solid ${"var(--cf-gold-mid)"}`,
+        color: "var(--cf-gold)",
         fontFamily: "'Barlow Condensed', sans-serif",
         fontSize: 10,
         letterSpacing: "0.22em",
@@ -186,7 +174,7 @@ function GiftCard({ gift, showPending, formationText, onReadMore }) {
           fontFamily: "'Cormorant Garamond', serif",
           fontSize: "clamp(26px, 3vw, 34px)",
           lineHeight: 1.15,
-          color: C.ivory,
+          color: "var(--cf-ivory)",
           margin: "0 0 10px",
           fontWeight: 400,
         }}
@@ -198,7 +186,7 @@ function GiftCard({ gift, showPending, formationText, onReadMore }) {
           fontFamily: "'Cormorant Garamond', serif",
           fontSize: "clamp(17px, 1.9vw, 20px)",
           fontStyle: "italic",
-          color: C.muted,
+          color: "var(--cf-ivory-62)",
           lineHeight: 1.6,
           margin: "0 0 20px",
         }}
@@ -210,7 +198,7 @@ function GiftCard({ gift, showPending, formationText, onReadMore }) {
           fontFamily: "'Inter', sans-serif",
           fontSize: 15,
           lineHeight: 1.75,
-          color: C.muted,
+          color: "var(--cf-ivory-62)",
           margin: "0 0 24px",
         }}
       >
@@ -221,7 +209,7 @@ function GiftCard({ gift, showPending, formationText, onReadMore }) {
         style={{
           background: "transparent",
           border: "none",
-          color: C.gold,
+          color: "var(--cf-gold)",
           fontFamily: "'Barlow Condensed', sans-serif",
           fontSize: 13,
           letterSpacing: "0.12em",
@@ -257,7 +245,7 @@ function GapSection({ gaps, onReadMore }) {
           fontFamily: "'Inter', sans-serif",
           fontSize: 15,
           lineHeight: 1.8,
-          color: C.muted,
+          color: "var(--cf-ivory-62)",
           marginBottom: 32,
         }}
       >
@@ -276,8 +264,8 @@ function GapSection({ gaps, onReadMore }) {
           <div
             key={gift.key}
             style={{
-              background: C.bgCardSoft,
-              border: `1px solid ${C.goldDim}`,
+              background: "var(--cf-surface-raised)",
+              border: `1px solid ${"var(--cf-gold-mid)"}`,
               padding: "32px 36px 28px",
               marginBottom: 16,
             }}
@@ -292,7 +280,7 @@ function GapSection({ gaps, onReadMore }) {
                 fontFamily: "'Cormorant Garamond', serif",
                 fontSize: "clamp(22px, 2.6vw, 28px)",
                 lineHeight: 1.2,
-                color: C.ivory,
+                color: "var(--cf-ivory)",
                 margin: "0 0 16px",
                 fontWeight: 400,
               }}
@@ -305,7 +293,7 @@ function GapSection({ gaps, onReadMore }) {
                   fontFamily: "'Inter', sans-serif",
                   fontSize: 15,
                   lineHeight: 1.8,
-                  color: C.muted,
+                  color: "var(--cf-ivory-62)",
                   margin: "0 0 20px",
                 }}
               >
@@ -317,7 +305,7 @@ function GapSection({ gaps, onReadMore }) {
               style={{
                 background: "transparent",
                 border: "none",
-                color: C.gold,
+                color: "var(--cf-gold)",
                 fontFamily: "'Barlow Condensed', sans-serif",
                 fontSize: 13,
                 letterSpacing: "0.12em",
@@ -358,7 +346,7 @@ function QuietSection({ quietGifts, charismaticNotPresent }) {
           fontFamily: "'Inter', sans-serif",
           fontSize: 15,
           lineHeight: 1.8,
-          color: C.muted,
+          color: "var(--cf-ivory-62)",
           marginBottom: 32,
         }}
       >
@@ -409,7 +397,7 @@ function QuietSection({ quietGifts, charismaticNotPresent }) {
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     fontSize: 18,
-                    color: C.dim,
+                    color: "var(--cf-ivory-35)",
                     fontStyle: "italic",
                   }}
                 >
@@ -417,7 +405,7 @@ function QuietSection({ quietGifts, charismaticNotPresent }) {
                 </span>
                 <span
                   style={{
-                    color: C.dim,
+                    color: "var(--cf-ivory-35)",
                     fontSize: 18,
                     lineHeight: 1,
                     transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
@@ -440,7 +428,7 @@ function QuietSection({ quietGifts, charismaticNotPresent }) {
                       fontFamily: "'Inter', sans-serif",
                       fontSize: 14,
                       lineHeight: 1.75,
-                      color: C.muted,
+                      color: "var(--cf-ivory-62)",
                       margin: 0,
                     }}
                   >
@@ -473,7 +461,7 @@ function CharismaticSection({ activeCharismatic, emergingCharismatic, onReadMore
           fontFamily: "'Inter', sans-serif",
           fontSize: 15,
           lineHeight: 1.8,
-          color: C.muted,
+          color: "var(--cf-ivory-62)",
           marginBottom: 32,
         }}
       >
@@ -519,8 +507,8 @@ function TrustedPersonCTA({ sticky }) {
               maxWidth: 760,
               margin: "0 auto 120px",
               padding: "48px 48px 44px",
-              border: `1px solid ${C.goldDim}`,
-              background: C.bgCardSoft,
+              border: `1px solid ${"var(--cf-gold-mid)"}`,
+              background: "var(--cf-surface-raised)",
               animation: "cf-res-fade 700ms ease-out 500ms both",
             }
       }
@@ -532,7 +520,7 @@ function TrustedPersonCTA({ sticky }) {
             style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: "clamp(24px, 2.8vw, 30px)",
-              color: C.ivory,
+              color: "var(--cf-ivory)",
               margin: "0 0 16px",
               fontWeight: 400,
             }}
@@ -544,7 +532,7 @@ function TrustedPersonCTA({ sticky }) {
               fontFamily: "'Inter', sans-serif",
               fontSize: 15,
               lineHeight: 1.8,
-              color: C.muted,
+              color: "var(--cf-ivory-62)",
               margin: "0 0 28px",
             }}
           >
@@ -560,8 +548,8 @@ function TrustedPersonCTA({ sticky }) {
         to="/field-guide/gifts/invite"
         style={{
           display: "inline-block",
-          background: C.gold,
-          color: C.bg,
+          background: "var(--cf-gold)",
+          color: "var(--cf-hero-bg)",
           fontFamily: "'Michroma', sans-serif",
           fontSize: 12,
           letterSpacing: "0.22em",
@@ -739,8 +727,8 @@ export default function GiftsResults() {
 
       <main
         style={{
-          background: C.bg,
-          color: C.ivory,
+          background: "var(--cf-hero-bg)",
+          color: "var(--cf-ivory)",
           minHeight: "100vh",
           paddingBottom: 80,
         }}
@@ -750,7 +738,7 @@ export default function GiftsResults() {
           ref={heroRef}
           style={{
             padding: "120px 24px 80px",
-            borderBottom: `1px solid ${C.border}`,
+            borderBottom: `1px solid ${"var(--cf-white-8)"}`,
             animation: "cf-res-fade 600ms ease-out both",
           }}
         >
@@ -778,8 +766,8 @@ export default function GiftsResults() {
                   margin: "0 0 24px",
                   padding: "14px 18px",
                   background: "rgba(201,168,76,0.07)",
-                  borderLeft: `2px solid ${C.gold}`,
-                  color: C.ivory,
+                  borderLeft: `2px solid ${"var(--cf-gold)"}`,
+                  color: "var(--cf-ivory)",
                 }}
               >
                 Updated with input from {totalTrustedPersons} trusted person
@@ -790,7 +778,7 @@ export default function GiftsResults() {
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontSize: "clamp(18px, 2vw, 22px)",
-                  color: C.muted,
+                  color: "var(--cf-ivory-62)",
                   lineHeight: 1.65,
                   margin: "0 0 28px",
                   maxWidth: 620,
@@ -807,11 +795,11 @@ export default function GiftsResults() {
                 style={{
                   fontFamily: "'Inter', sans-serif",
                   fontSize: 14,
-                  color: C.dim,
+                  color: "var(--cf-ivory-35)",
                   lineHeight: 1.7,
                   margin: 0,
                   padding: "14px 18px",
-                  borderLeft: `2px solid ${C.goldDim}`,
+                  borderLeft: `2px solid ${"var(--cf-gold-mid)"}`,
                 }}
               >
                 Results are draft until at least two trusted-person responses are
@@ -915,8 +903,8 @@ export default function GiftsResults() {
                 maxWidth: 760,
                 margin: "0 auto 80px",
                 padding: "32px 40px",
-                border: `1px solid ${C.border}`,
-                background: C.bgCardSoft,
+                border: `1px solid ${"var(--cf-white-8)"}`,
+                background: "var(--cf-surface-raised)",
               }}
             >
               <div
@@ -925,7 +913,7 @@ export default function GiftsResults() {
                   fontSize: 11,
                   letterSpacing: "0.36em",
                   textTransform: "uppercase",
-                  color: C.gold,
+                  color: "var(--cf-gold)",
                   marginBottom: 12,
                 }}
               >
@@ -936,7 +924,7 @@ export default function GiftsResults() {
                   fontFamily: "'Inter', sans-serif",
                   fontSize: 15,
                   lineHeight: 1.8,
-                  color: C.muted,
+                  color: "var(--cf-ivory-62)",
                   margin: "0 0 24px",
                 }}
               >
@@ -949,8 +937,8 @@ export default function GiftsResults() {
                 style={{
                   display: "inline-block",
                   background: "transparent",
-                  color: C.gold,
-                  border: `1px solid ${C.goldDim}`,
+                  color: "var(--cf-gold)",
+                  border: `1px solid ${"var(--cf-gold-mid)"}`,
                   fontFamily: "'Michroma', sans-serif",
                   fontSize: 12,
                   letterSpacing: "0.22em",
@@ -973,7 +961,7 @@ export default function GiftsResults() {
             style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: 13,
-              color: C.muted,
+              color: "var(--cf-ivory-62)",
               lineHeight: 1.5,
             }}
           >
@@ -984,7 +972,7 @@ export default function GiftsResults() {
                 fontSize: 10,
                 letterSpacing: "0.28em",
                 textTransform: "uppercase",
-                color: C.gold,
+                color: "var(--cf-gold)",
                 marginBottom: 2,
               }}
             >

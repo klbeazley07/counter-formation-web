@@ -12,27 +12,6 @@ import { FRUITS } from "./fruitAssessmentData";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
 
-const C = {
-  bg:       "#06050A",
-  bgSurf:   "#0E0C0A",
-  bgCard:   "#17140F",
-  gold:     "#C9A84C",
-  goldMid:  "rgba(201,168,76,0.30)",
-  goldDim:  "rgba(201,168,76,0.12)",
-  ivory:    "#FAF8F5",
-  muted:    "rgba(250,248,245,0.58)",
-  dim:      "rgba(250,248,245,0.24)",
-  border:   "rgba(255,255,255,0.08)",
-
-  // Card theme — warm espresso
-  cardBg:      "#1A1612",
-  cardBg2:     "#201C17",
-  cardText:    "#FAF8F5",
-  cardMuted:   "rgba(250,248,245,0.58)",
-  cardDim:     "rgba(250,248,245,0.28)",
-  cardBorder:  "rgba(201,168,76,0.14)",
-};
-
 /* ─── MARKDOWN STYLES ────────────────────────────────────────────── */
 
 const DG_CSS = `
@@ -152,7 +131,7 @@ function FieldInput({ label, hint, value, onChange, placeholder, multiline }) {
             fontFamily: "'Cormorant Garamond',serif",
             fontSize: 16,
             lineHeight: 1.5,
-            color: C.cardMuted,
+            color: "var(--cf-ivory-58)",
           }}>
             {hint}
           </p>
@@ -167,7 +146,7 @@ function FieldInput({ label, hint, value, onChange, placeholder, multiline }) {
           className="dg-input"
           style={{ ...sharedStyle, resize: "vertical", minHeight: 136 }}
           onFocus={e => {
-            e.target.style.borderColor = C.gold;
+            e.target.style.borderColor = "var(--cf-gold)";
             e.target.style.background = "#F3EDE1";
           }}
           onBlur={e => {
@@ -184,7 +163,7 @@ function FieldInput({ label, hint, value, onChange, placeholder, multiline }) {
           className="dg-input"
           style={sharedStyle}
           onFocus={e => {
-            e.target.style.borderColor = C.gold;
+            e.target.style.borderColor = "var(--cf-gold)";
             e.target.style.background = "#F3EDE1";
           }}
           onBlur={e => {
@@ -240,7 +219,7 @@ function ContextIndicator({ slugs }) {
         fontFamily: "'Cormorant Garamond',serif",
         fontSize: 16,
         fontStyle: "italic",
-        color: C.gold,
+        color: "var(--cf-gold)",
       }}>
         {labels.join(", ")}
       </span>
@@ -342,7 +321,7 @@ export default function DevotionGuide() {
   const captureImage = async () => {
     if (!resultRef.current) return null;
     const canvas = await html2canvas(resultRef.current, {
-      backgroundColor: C.bg,
+      backgroundColor: "var(--cf-hero-bg)",
       scale: 2,
       useCORS: true,
     });
@@ -392,7 +371,7 @@ export default function DevotionGuide() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: C.bg, color: C.ivory }}>
+    <div style={{ minHeight: "100vh", backgroundColor: "var(--cf-hero-bg)", color: "var(--cf-ivory)" }}>
       <style>{DG_CSS}</style>
 
       {/* ── Nav ── */}
@@ -402,7 +381,7 @@ export default function DevotionGuide() {
         zIndex:          100,
         backgroundColor: scrolled ? "rgba(6,5,10,0.92)" : "transparent",
         backdropFilter:  scrolled ? "blur(16px)" : "none",
-        borderBottom:    scrolled ? `1px solid ${C.border}` : "1px solid transparent",
+        borderBottom:    scrolled ? `1px solid ${"var(--cf-white-8)"}` : "1px solid transparent",
         padding:         "14px 24px",
         display:         "flex",
         alignItems:      "center",
@@ -411,7 +390,7 @@ export default function DevotionGuide() {
       }}>
         <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
           <img src="/helmet.png" style={{ width: 32, height: 32, objectFit: "contain" }} alt="Counter Formation" />
-          <span style={{ fontFamily: "'Michroma',sans-serif", fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: C.ivory }}>
+          <span style={{ fontFamily: "'Michroma',sans-serif", fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--cf-ivory)" }}>
             Counter Formation
           </span>
         </Link>
@@ -431,7 +410,7 @@ export default function DevotionGuide() {
               textTransform: "uppercase",
               letterSpacing: "0.06em",
               lineHeight:    1.0,
-              color:         C.ivory,
+              color:         "var(--cf-ivory)",
               margin:        "0 0 10px",
             }}>
               Counter Formation
@@ -441,7 +420,7 @@ export default function DevotionGuide() {
               fontSize:      "clamp(13px,2vw,18px)",
               textTransform: "uppercase",
               letterSpacing: "0.3em",
-              color:         C.gold,
+              color:         "var(--cf-gold)",
               fontWeight:    600,
               margin:        0,
             }}>
@@ -453,7 +432,7 @@ export default function DevotionGuide() {
           fontFamily: "'Cormorant Garamond',serif",
           fontStyle:  "italic",
           fontSize:   "clamp(16px,2.5vw,20px)",
-          color:      C.muted,
+          color:      "var(--cf-ivory-58)",
           lineHeight: 1.8,
           maxWidth:   560,
           margin:     "0 auto 32px",
@@ -463,16 +442,16 @@ export default function DevotionGuide() {
         <div style={{
           display:         "inline-block",
           background:      "rgba(201,168,76,0.05)",
-          borderLeft:      `3px solid ${C.gold}`,
+          borderLeft:      `3px solid ${"var(--cf-gold)"}`,
           borderRadius:    "0 12px 12px 0",
           padding:         "22px 30px",
           textAlign:       "left",
           maxWidth:        560,
         }}>
-          <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase", color: C.gold, fontWeight: 700, marginBottom: 14 }}>
+          <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase", color: "var(--cf-gold)", fontWeight: 700, marginBottom: 14 }}>
             How to use
           </p>
-          <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 16, color: C.muted, lineHeight: 1.75, margin: 0 }}>
+          <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 16, color: "var(--cf-ivory-58)", lineHeight: 1.75, margin: 0 }}>
             Input all three — <em>1) Scripture Reference, 2) Devotion Theme, 3) Subject, Topic, or Question</em> — for the most complete guide. Or choose just one and the tool will produce a custom devotion for the day.
           </p>
         </div>
@@ -481,7 +460,7 @@ export default function DevotionGuide() {
       <main style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px 96px" }}>
 
         {!isLoaded && (
-          <div style={{ textAlign: "center", padding: "48px 0", color: C.dim, fontFamily: "'Barlow Condensed',sans-serif", fontSize: 11, letterSpacing: "0.3em", textTransform: "uppercase" }}>
+          <div style={{ textAlign: "center", padding: "48px 0", color: "var(--cf-ivory-24)", fontFamily: "'Barlow Condensed',sans-serif", fontSize: 11, letterSpacing: "0.3em", textTransform: "uppercase" }}>
             Loading…
           </div>
         )}
@@ -497,7 +476,7 @@ export default function DevotionGuide() {
         {/* ── Input card ── */}
         <div style={{
           background:    "radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 60%), #1C1813",
-          border:        `1px solid ${C.cardBorder}`,
+          border:        `1px solid ${"var(--cf-gold-faint)"}`,
           borderRadius:  24,
           padding:       "clamp(30px,5vw,56px)",
           position:      "relative",
@@ -506,7 +485,7 @@ export default function DevotionGuide() {
           boxShadow:     "0 18px 44px rgba(0,0,0,0.24)",
         }}>
           {/* gold top line */}
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${C.goldMid},transparent)` }} />
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${"var(--cf-gold-mid)"},transparent)` }} />
 
           <div style={{ maxWidth: 640, margin: "0 auto" }}>
             <div style={{ marginBottom: 28 }}>
@@ -516,7 +495,7 @@ export default function DevotionGuide() {
                 fontSize: 12,
                 letterSpacing: "0.28em",
                 textTransform: "uppercase",
-                color: C.gold,
+                color: "var(--cf-gold)",
                 fontWeight: 700,
               }}>
                 Build today&apos;s guide
@@ -526,7 +505,7 @@ export default function DevotionGuide() {
                 fontFamily: "'Cormorant Garamond',serif",
                 fontSize: "clamp(18px,2.4vw,24px)",
                 lineHeight: 1.55,
-                color: C.cardMuted,
+                color: "var(--cf-ivory-58)",
                 maxWidth: 540,
               }}>
                 Use one field for a quick devotion, or combine all three for a more shaped and specific formation prompt.
@@ -574,7 +553,7 @@ export default function DevotionGuide() {
                     justifyContent: "center",
                     padding: "15px 32px",
                     borderRadius: 18,
-                    background: loading || !canGenerate ? "rgba(201,168,76,0.24)" : C.gold,
+                    background: loading || !canGenerate ? "rgba(201,168,76,0.24)" : "var(--cf-gold)",
                     color: "#120F08",
                     border: "1px solid rgba(201,168,76,0.30)",
                     fontFamily: "'Barlow Condensed',sans-serif",
@@ -600,7 +579,7 @@ export default function DevotionGuide() {
                 fontFamily: "'Cormorant Garamond',serif",
                 fontSize: 16,
                 lineHeight: 1.5,
-                color: C.cardMuted,
+                color: "var(--cf-ivory-58)",
               }}>
                 Start with whatever you have. A verse, a theme, or a question is enough.
               </p>
@@ -622,11 +601,11 @@ export default function DevotionGuide() {
               { label: "Life Steps",  text: "Concrete actions to resist the drift of the world." },
               { label: "Deep Formation",   text: "Structured methods for profound spiritual growth." },
             ].map(item => (
-              <div key={item.label} style={{ background: C.cardBg, border: `1px solid ${C.cardBorder}`, borderRadius: 16, padding: 32 }}>
-                <p style={{ fontFamily: "'Michroma',sans-serif", fontSize: 12, textTransform: "uppercase", color: C.cardText, marginBottom: 12 }}>
+              <div key={item.label} style={{ background: "var(--cf-card-warm)", border: `1px solid ${"var(--cf-gold-faint)"}`, borderRadius: 16, padding: 32 }}>
+                <p style={{ fontFamily: "'Michroma',sans-serif", fontSize: 12, textTransform: "uppercase", color: "var(--cf-ivory)", marginBottom: 12 }}>
                   {item.label}
                 </p>
-                <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "normal", fontWeight: 300, fontSize: 17, color: C.cardMuted, lineHeight: 1.8 }}>
+                <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "normal", fontWeight: 300, fontSize: 17, color: "var(--cf-ivory-58)", lineHeight: 1.8 }}>
                   {item.text}
                 </p>
               </div>
@@ -647,8 +626,8 @@ export default function DevotionGuide() {
                     padding:       "10px 20px",
                     borderRadius:  999,
                     background:    copied === "shared" ? "rgba(201,168,76,0.12)" : "rgba(255,255,255,0.03)",
-                    border:        `1px solid ${copied === "shared" ? C.goldMid : C.border}`,
-                    color:         copied === "shared" ? C.gold : C.muted,
+                    border:        `1px solid ${copied === "shared" ? "var(--cf-gold-mid)" : "var(--cf-white-8)"}`,
+                    color:         copied === "shared" ? "var(--cf-gold)" : "var(--cf-ivory-58)",
                     fontFamily:    "'Barlow Condensed',sans-serif",
                     fontSize:      11,
                     fontWeight:    700,
@@ -667,8 +646,8 @@ export default function DevotionGuide() {
                     padding:       "10px 20px",
                     borderRadius:  999,
                     background:    copied === "downloaded" ? "rgba(201,168,76,0.12)" : "rgba(255,255,255,0.03)",
-                    border:        `1px solid ${copied === "downloaded" ? C.goldMid : C.border}`,
-                    color:         copied === "downloaded" ? C.gold : C.muted,
+                    border:        `1px solid ${copied === "downloaded" ? "var(--cf-gold-mid)" : "var(--cf-white-8)"}`,
+                    color:         copied === "downloaded" ? "var(--cf-gold)" : "var(--cf-ivory-58)",
                     fontFamily:    "'Barlow Condensed',sans-serif",
                     fontSize:      11,
                     fontWeight:    700,
@@ -683,8 +662,8 @@ export default function DevotionGuide() {
               </div>
             </div>
 
-            <div style={{ background: C.bgSurf, border: `1px solid ${C.border}`, borderRadius: 24, padding: "clamp(32px,5vw,80px)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${C.goldMid},transparent)` }} />
+            <div style={{ background: "var(--cf-obsidian)", border: `1px solid ${"var(--cf-white-8)"}`, borderRadius: 24, padding: "clamp(32px,5vw,80px)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${"var(--cf-gold-mid)"},transparent)` }} />
               <div className="dg-markdown">
                 {/* TODO: Convert to ScriptureRef when this section is refactored —
                     AI-generated devotional content may include scripture references as plain
@@ -694,7 +673,7 @@ export default function DevotionGuide() {
                 <ReactMarkdown>{devotional}</ReactMarkdown>
               </div>
               <div style={{ marginTop: 64, paddingTop: 48, borderTop: "1px solid rgba(255,255,255,0.05)", textAlign: "center" }}>
-                <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.3em", color: C.dim, textTransform: "uppercase" }}>
+                <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.3em", color: "var(--cf-ivory-24)", textTransform: "uppercase" }}>
                   Go with conviction.
                 </p>
               </div>
@@ -720,7 +699,7 @@ export default function DevotionGuide() {
       </main>
 
       {/* ── Footer ── */}
-      <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 40, paddingBottom: 48, textAlign: "center", backgroundColor: C.bgSurf }}>
+      <div style={{ borderTop: `1px solid ${"var(--cf-white-8)"}`, paddingTop: 40, paddingBottom: 48, textAlign: "center", backgroundColor: "var(--cf-obsidian)" }}>
         <img src="/helmet.png" style={{ width: 20, height: 20, objectFit: "contain", opacity: 0.2, filter: "invert(1)", display: "block", margin: "0 auto 16px" }} alt="" />
         <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 9, letterSpacing: "0.32em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)", marginBottom: 6 }}>
           Counter Formation · Daily Devotion Guide

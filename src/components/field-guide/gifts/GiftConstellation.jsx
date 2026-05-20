@@ -4,19 +4,6 @@ import { gsap } from "gsap";
 import { gifts, giftsByKey, giftsByCategory } from "../../../data/gifts";
 import { ScriptureRef } from "../../../ScriptureRef";
 
-const C = {
-  bg: "#06050A",
-  bgCard: "#0E0C0A",
-  bgCardSoft: "#100E0C",
-  gold: "#C9A84C",
-  goldDim: "rgba(201,168,76,0.32)",
-  goldFaint: "rgba(201,168,76,0.14)",
-  goldGhost: "rgba(201,168,76,0.06)",
-  ivory: "#FAF8F5",
-  muted: "rgba(250,248,245,0.62)",
-  dim: "rgba(250,248,245,0.34)",
-  border: "rgba(255,255,255,0.08)",
-};
 
 const CATEGORY_LABEL = {
   manifestation: "Manifestation",
@@ -141,7 +128,7 @@ function ConstellationPoint({ giftKey, pos, isHovered, isPairedToHover, onEnter,
         cx={pos.x}
         cy={pos.y}
         r={glowR}
-        fill={C.gold}
+        fill={"var(--cf-gold)"}
         opacity={isHovered ? 0.22 : 0.10}
         style={{ transition: "r 280ms ease, opacity 280ms ease" }}
       />
@@ -150,7 +137,7 @@ function ConstellationPoint({ giftKey, pos, isHovered, isPairedToHover, onEnter,
         cx={pos.x}
         cy={pos.y}
         r={radius}
-        fill={C.gold}
+        fill={"var(--cf-gold)"}
         opacity={opacity}
         style={{ transition: "r 240ms cubic-bezier(0.2, 0.7, 0.2, 1), opacity 240ms ease" }}
       />
@@ -200,8 +187,8 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
         aria-modal="true"
         aria-label={`${gift.name} profile`}
         style={{
-          background: C.bgCard,
-          border: `1px solid ${C.goldDim}`,
+          background: "var(--cf-obsidian)",
+          border: `1px solid ${"var(--cf-gold-mid)"}`,
           maxWidth: 760,
           width: "100%",
           maxHeight: "92vh",
@@ -222,7 +209,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
             marginRight: -36,
             background: "transparent",
             border: "none",
-            color: C.muted,
+            color: "var(--cf-ivory-62)",
             fontSize: 28,
             lineHeight: 1,
             cursor: "pointer",
@@ -240,7 +227,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
             fontSize: 11,
             letterSpacing: "0.36em",
             textTransform: "uppercase",
-            color: C.gold,
+            color: "var(--cf-gold)",
             marginBottom: 12,
             marginTop: -32,
           }}
@@ -256,7 +243,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
             lineHeight: 1.08,
             margin: 0,
             marginBottom: 18,
-            color: C.ivory,
+            color: "var(--cf-ivory)",
             letterSpacing: "-0.005em",
           }}
         >
@@ -270,7 +257,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
             fontStyle: "italic",
             fontSize: 20,
             lineHeight: 1.55,
-            color: C.ivory,
+            color: "var(--cf-ivory)",
             margin: 0,
             marginBottom: 28,
             opacity: 0.92,
@@ -284,7 +271,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
           style={{
             width: 60,
             height: 1,
-            background: `linear-gradient(90deg, ${C.gold}, transparent)`,
+            background: `linear-gradient(90deg, ${"var(--cf-gold)"}, transparent)`,
             marginBottom: 28,
           }}
         />
@@ -315,7 +302,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
                       fontStyle: "italic",
                       fontSize: 15.5,
                       lineHeight: 1.7,
-                      color: C.muted,
+                      color: "var(--cf-ivory-62)",
                       margin: "10px 0 0 18px",
                     }}
                   >
@@ -343,7 +330,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
                   fontStyle: "italic",
                   fontSize: 15.5,
                   lineHeight: 1.7,
-                  color: C.muted,
+                  color: "var(--cf-ivory-62)",
                   margin: "10px 0 26px 18px",
                 }}
               >
@@ -377,7 +364,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
             style={{
               marginTop: 32,
               paddingTop: 28,
-              borderTop: `1px solid ${C.border}`,
+              borderTop: `1px solid ${"var(--cf-white-8)"}`,
             }}
           >
             <SectionLabel>See Related Gifts</SectionLabel>
@@ -392,8 +379,8 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
                     className="cf-related-pill"
                     style={{
                       background: "transparent",
-                      border: `1px solid ${C.goldDim}`,
-                      color: C.gold,
+                      border: `1px solid ${"var(--cf-gold-mid)"}`,
+                      color: "var(--cf-gold)",
                       fontFamily: "'Barlow Condensed', sans-serif",
                       fontSize: 12,
                       letterSpacing: "0.22em",
@@ -416,7 +403,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
           style={{
             marginTop: 40,
             paddingTop: 28,
-            borderTop: `1px solid ${C.border}`,
+            borderTop: `1px solid ${"var(--cf-white-8)"}`,
             textAlign: "center",
           }}
         >
@@ -426,7 +413,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
               fontStyle: "italic",
               fontSize: 17,
               lineHeight: 1.55,
-              color: C.muted,
+              color: "var(--cf-ivory-62)",
               margin: "0 0 18px 0",
             }}
           >
@@ -439,8 +426,8 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
             style={{
               display: "inline-block",
               background: "transparent",
-              color: C.gold,
-              border: `1px solid ${C.gold}`,
+              color: "var(--cf-gold)",
+              border: `1px solid ${"var(--cf-gold)"}`,
               padding: "14px 28px",
               fontFamily: "'Barlow Condensed', sans-serif",
               fontSize: 12,
@@ -468,7 +455,7 @@ function SectionLabel({ children }) {
         fontSize: 11,
         letterSpacing: "0.32em",
         textTransform: "uppercase",
-        color: C.gold,
+        color: "var(--cf-gold)",
         margin: "26px 0 12px 0",
       }}
     >
@@ -484,7 +471,7 @@ function SubLabel({ children }) {
         fontFamily: "'Cormorant Garamond', serif",
         fontStyle: "italic",
         fontSize: 17,
-        color: C.ivory,
+        color: "var(--cf-ivory)",
         margin: "18px 0 8px 0",
         opacity: 0.92,
       }}
@@ -502,7 +489,7 @@ function BodyProse({ children }) {
         fontFamily: "'Cormorant Garamond', serif",
         fontSize: 17,
         lineHeight: 1.75,
-        color: C.ivory,
+        color: "var(--cf-ivory)",
         margin: "0 0 18px 0",
         opacity: 0.88,
       }}
@@ -516,7 +503,7 @@ function BlockQuote({ reference, text }) {
   return (
     <div
       style={{
-        borderLeft: `2px solid ${C.goldDim}`,
+        borderLeft: `2px solid ${"var(--cf-gold-mid)"}`,
         paddingLeft: 18,
         margin: "0 0 16px 0",
       }}
@@ -527,7 +514,7 @@ function BlockQuote({ reference, text }) {
           fontStyle: "italic",
           fontSize: 17,
           lineHeight: 1.65,
-          color: C.ivory,
+          color: "var(--cf-ivory)",
           margin: 0,
           marginBottom: 8,
           opacity: 0.94,
@@ -535,7 +522,7 @@ function BlockQuote({ reference, text }) {
       >
         "{text}"
       </p>
-      <div style={{ fontSize: 13, color: C.muted }}>
+      <div style={{ fontSize: 13, color: "var(--cf-ivory-62)" }}>
         — <ScriptureRef reference={reference} text={text} />
       </div>
     </div>
@@ -572,7 +559,7 @@ function PreviewPanel({ gift, anchor, viewportSize }) {
       <div
         style={{
           background: "rgba(14,12,10,0.95)",
-          border: `1px solid ${C.goldDim}`,
+          border: `1px solid ${"var(--cf-gold-mid)"}`,
           padding: "16px 18px 18px",
           backdropFilter: "blur(6px)",
           WebkitBackdropFilter: "blur(6px)",
@@ -584,7 +571,7 @@ function PreviewPanel({ gift, anchor, viewportSize }) {
             fontSize: 10,
             letterSpacing: "0.32em",
             textTransform: "uppercase",
-            color: C.gold,
+            color: "var(--cf-gold)",
             marginBottom: 8,
           }}
         >
@@ -596,7 +583,7 @@ function PreviewPanel({ gift, anchor, viewportSize }) {
             fontSize: 18,
             letterSpacing: "0.18em",
             textTransform: "uppercase",
-            color: C.ivory,
+            color: "var(--cf-ivory)",
             marginBottom: 12,
           }}
         >
@@ -608,7 +595,7 @@ function PreviewPanel({ gift, anchor, viewportSize }) {
             fontStyle: "italic",
             fontSize: 15,
             lineHeight: 1.55,
-            color: C.ivory,
+            color: "var(--cf-ivory)",
             margin: 0,
             marginBottom: 12,
             opacity: 0.9,
@@ -622,7 +609,7 @@ function PreviewPanel({ gift, anchor, viewportSize }) {
             fontSize: 11,
             letterSpacing: "0.18em",
             textTransform: "uppercase",
-            color: C.gold,
+            color: "var(--cf-gold)",
           }}
         >
           {gift.scriptureAnchor}
@@ -645,7 +632,7 @@ function MobileCategoryList({ onSelect }) {
               fontSize: 11,
               letterSpacing: "0.36em",
               textTransform: "uppercase",
-              color: C.gold,
+              color: "var(--cf-gold)",
               marginBottom: 16,
               textAlign: "center",
             }}
@@ -664,12 +651,12 @@ function MobileCategoryList({ onSelect }) {
                 key={g.key}
                 onClick={() => onSelect(g.key)}
                 style={{
-                  background: C.bgCardSoft,
-                  border: `1px solid ${C.goldFaint}`,
+                  background: "var(--cf-surface-raised)",
+                  border: `1px solid ${"var(--cf-gold-faint)"}`,
                   padding: "16px 14px",
                   textAlign: "left",
                   cursor: "pointer",
-                  color: C.ivory,
+                  color: "var(--cf-ivory)",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "flex-start",
@@ -682,8 +669,8 @@ function MobileCategoryList({ onSelect }) {
                     width: 6,
                     height: 6,
                     borderRadius: "50%",
-                    background: C.gold,
-                    boxShadow: `0 0 10px ${C.goldDim}`,
+                    background: "var(--cf-gold)",
+                    boxShadow: `0 0 10px ${"var(--cf-gold-mid)"}`,
                     flexShrink: 0,
                   }}
                 />
@@ -693,7 +680,7 @@ function MobileCategoryList({ onSelect }) {
                     fontSize: 13,
                     letterSpacing: "0.18em",
                     textTransform: "uppercase",
-                    color: C.ivory,
+                    color: "var(--cf-ivory)",
                   }}
                 >
                   {g.name}
@@ -787,13 +774,13 @@ export default function GiftConstellation({ onReturn }) {
           from { opacity: 0; transform: translateY(12px) }
           to { opacity: 1; transform: translateY(0) }
         }
-        .cf-primary-cta:hover { background: ${C.gold}; color: ${C.bg}; }
-        .cf-related-pill:hover { background: ${C.goldGhost}; color: ${C.ivory}; }
-        .cf-return-link:hover { color: ${C.gold}; }
+        .cf-primary-cta:hover { background: ${"var(--cf-gold)"}; color: ${"var(--cf-hero-bg)"}; }
+        .cf-related-pill:hover { background: ${"var(--cf-gold-glow)"}; color: ${"var(--cf-ivory)"}; }
+        .cf-return-link:hover { color: ${"var(--cf-gold)"}; }
         .cf-gift-modal::-webkit-scrollbar { width: 8px; }
         .cf-gift-modal::-webkit-scrollbar-track { background: transparent; }
-        .cf-gift-modal::-webkit-scrollbar-thumb { background: ${C.goldFaint}; border-radius: 4px; }
-        .cf-gift-modal::-webkit-scrollbar-thumb:hover { background: ${C.goldDim}; }
+        .cf-gift-modal::-webkit-scrollbar-thumb { background: ${"var(--cf-gold-faint)"}; border-radius: 4px; }
+        .cf-gift-modal::-webkit-scrollbar-thumb:hover { background: ${"var(--cf-gold-mid)"}; }
       `}</style>
 
       {/* Header */}
@@ -804,7 +791,7 @@ export default function GiftConstellation({ onReturn }) {
             fontSize: 11,
             letterSpacing: "0.42em",
             textTransform: "uppercase",
-            color: C.gold,
+            color: "var(--cf-gold)",
             marginBottom: 18,
           }}
         >
@@ -816,7 +803,7 @@ export default function GiftConstellation({ onReturn }) {
             fontStyle: "italic",
             fontSize: "clamp(34px, 5vw, 48px)",
             lineHeight: 1.12,
-            color: C.ivory,
+            color: "var(--cf-ivory)",
             margin: 0,
             marginBottom: 18,
             letterSpacing: "-0.005em",
@@ -828,7 +815,7 @@ export default function GiftConstellation({ onReturn }) {
           style={{
             width: 80,
             height: 1,
-            background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)`,
+            background: `linear-gradient(90deg, transparent, ${"var(--cf-gold)"}, transparent)`,
             margin: "0 auto 22px",
           }}
         />
@@ -837,7 +824,7 @@ export default function GiftConstellation({ onReturn }) {
             fontFamily: "'Inter', sans-serif",
             fontSize: 15,
             lineHeight: 1.7,
-            color: C.muted,
+            color: "var(--cf-ivory-62)",
             maxWidth: 580,
             margin: "0 auto",
           }}
@@ -890,7 +877,7 @@ export default function GiftConstellation({ onReturn }) {
                     y1={pa.y}
                     x2={pb.x}
                     y2={pb.y}
-                    stroke={C.gold}
+                    stroke={"var(--cf-gold)"}
                     strokeWidth={isHighlighted ? 1.2 : 0.6}
                     opacity={isHighlighted ? 0.85 : 0.32}
                     style={{
@@ -914,7 +901,7 @@ export default function GiftConstellation({ onReturn }) {
                     fontSize: 11,
                     letterSpacing: "0.42em",
                     textTransform: "uppercase",
-                    fill: C.gold,
+                    fill: "var(--cf-gold)",
                     opacity: 0.7,
                   }}
                 >
@@ -960,7 +947,7 @@ export default function GiftConstellation({ onReturn }) {
                       fontSize: 11,
                       letterSpacing: "0.22em",
                       textTransform: "uppercase",
-                      fill: isActive ? C.ivory : C.gold,
+                      fill: isActive ? "var(--cf-ivory)" : "var(--cf-gold)",
                       opacity: isActive ? 1 : 0.78,
                       transition: "fill 220ms ease, opacity 220ms ease",
                       pointerEvents: "none",
@@ -989,7 +976,7 @@ export default function GiftConstellation({ onReturn }) {
         style={{
           marginTop: isMobile ? 48 : 56,
           paddingTop: 36,
-          borderTop: `1px solid ${C.border}`,
+          borderTop: `1px solid ${"var(--cf-white-8)"}`,
           textAlign: "center",
         }}
       >
@@ -999,7 +986,7 @@ export default function GiftConstellation({ onReturn }) {
             fontSize: 11,
             letterSpacing: "0.36em",
             textTransform: "uppercase",
-            color: C.gold,
+            color: "var(--cf-gold)",
             marginBottom: 14,
           }}
         >
@@ -1011,7 +998,7 @@ export default function GiftConstellation({ onReturn }) {
             fontStyle: "italic",
             fontSize: 18,
             lineHeight: 1.55,
-            color: C.muted,
+            color: "var(--cf-ivory-62)",
             maxWidth: 520,
             margin: "0 auto 24px",
           }}
@@ -1032,8 +1019,8 @@ export default function GiftConstellation({ onReturn }) {
             className="cf-primary-cta"
             style={{
               background: "transparent",
-              color: C.gold,
-              border: `1px solid ${C.gold}`,
+              color: "var(--cf-gold)",
+              border: `1px solid ${"var(--cf-gold)"}`,
               padding: "16px 32px",
               fontFamily: "'Barlow Condensed', sans-serif",
               fontSize: 13,
@@ -1053,7 +1040,7 @@ export default function GiftConstellation({ onReturn }) {
             style={{
               background: "transparent",
               border: "none",
-              color: C.dim,
+              color: "var(--cf-ivory-35)",
               fontFamily: "'Inter', sans-serif",
               fontSize: 13,
               letterSpacing: "0.04em",

@@ -17,18 +17,6 @@ import { ScriptureRef } from "../../../ScriptureRef";
 
 /* ─── TOKENS ──────────────────────────────────────────────────────── */
 
-const C = {
-  bg: "#06050A",
-  bgCard: "#0E0C0A",
-  bgCardSoft: "#110F0D",
-  gold: "#C9A84C",
-  goldDim: "rgba(201,168,76,0.30)",
-  goldFaint: "rgba(201,168,76,0.10)",
-  ivory: "#FAF8F5",
-  muted: "rgba(250,248,245,0.62)",
-  dim: "rgba(250,248,245,0.34)",
-  border: "rgba(255,255,255,0.07)",
-};
 
 const STYLES = `
   @keyframes cf-fp-fade {
@@ -36,13 +24,13 @@ const STYLES = `
     to   { opacity: 1; transform: translateY(0); }
   }
   .cf-fp-card {
-    background: ${C.bgCard};
-    border: 1px solid ${C.border};
+    background: ${"var(--cf-obsidian)"};
+    border: 1px solid ${"var(--cf-white-8)"};
     padding: 36px 40px 32px;
     margin-bottom: 16px;
     transition: border-color 220ms ease;
   }
-  .cf-fp-card:hover { border-color: ${C.goldDim}; }
+  .cf-fp-card:hover { border-color: ${"var(--cf-gold-mid)"}; }
   @media (max-width: 600px) {
     .cf-fp-card { padding: 28px 24px 24px; }
   }
@@ -67,7 +55,7 @@ function Eyebrow({ children, style }) {
         fontSize: 11,
         letterSpacing: "0.36em",
         textTransform: "uppercase",
-        color: C.gold,
+        color: "var(--cf-gold)",
         marginBottom: 12,
         ...style,
       }}
@@ -85,8 +73,8 @@ function SectionHeader({ children }) {
         fontSize: "clamp(11px, 1.4vw, 13px)",
         letterSpacing: "0.22em",
         textTransform: "uppercase",
-        color: C.ivory,
-        borderBottom: `1px solid ${C.goldDim}`,
+        color: "var(--cf-ivory)",
+        borderBottom: `1px solid ${"var(--cf-gold-mid)"}`,
         paddingBottom: 16,
         marginBottom: 32,
       }}
@@ -108,7 +96,7 @@ function FruitCard({ fruitKey }) {
           fontFamily: "'Cormorant Garamond', serif",
           fontSize: "clamp(26px, 3vw, 34px)",
           lineHeight: 1.15,
-          color: C.ivory,
+          color: "var(--cf-ivory)",
           margin: "0 0 14px",
           fontWeight: 400,
         }}
@@ -120,7 +108,7 @@ function FruitCard({ fruitKey }) {
           fontFamily: "'Inter', sans-serif",
           fontSize: 15,
           lineHeight: 1.8,
-          color: C.muted,
+          color: "var(--cf-ivory-62)",
           margin: "0 0 20px",
         }}
       >
@@ -131,7 +119,7 @@ function FruitCard({ fruitKey }) {
           fontFamily: "'Cormorant Garamond', serif",
           fontSize: 15,
           fontStyle: "italic",
-          color: C.dim,
+          color: "var(--cf-ivory-35)",
           margin: 0,
           lineHeight: 1.6,
         }}
@@ -160,7 +148,7 @@ function GiftCard({ gift }) {
           fontFamily: "'Cormorant Garamond', serif",
           fontSize: "clamp(26px, 3vw, 34px)",
           lineHeight: 1.15,
-          color: C.ivory,
+          color: "var(--cf-ivory)",
           margin: "0 0 10px",
           fontWeight: 400,
         }}
@@ -172,7 +160,7 @@ function GiftCard({ gift }) {
           fontFamily: "'Cormorant Garamond', serif",
           fontSize: "clamp(17px, 1.9vw, 20px)",
           fontStyle: "italic",
-          color: C.muted,
+          color: "var(--cf-ivory-62)",
           lineHeight: 1.6,
           margin: "0 0 16px",
         }}
@@ -184,7 +172,7 @@ function GiftCard({ gift }) {
           fontFamily: "'Inter', sans-serif",
           fontSize: 15,
           lineHeight: 1.75,
-          color: C.muted,
+          color: "var(--cf-ivory-62)",
           margin: 0,
         }}
       >
@@ -210,8 +198,8 @@ function PrerequisiteScreen({ fruitDone, giftsDone }) {
   return (
     <main
       style={{
-        background: C.bg,
-        color: C.ivory,
+        background: "var(--cf-hero-bg)",
+        color: "var(--cf-ivory)",
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
@@ -238,7 +226,7 @@ function PrerequisiteScreen({ fruitDone, giftsDone }) {
             fontFamily: "'Inter', sans-serif",
             fontSize: 15,
             lineHeight: 1.8,
-            color: C.muted,
+            color: "var(--cf-ivory-62)",
             margin: "0 0 36px",
           }}
         >
@@ -254,8 +242,8 @@ function PrerequisiteScreen({ fruitDone, giftsDone }) {
               to={path}
               style={{
                 display: "inline-block",
-                background: C.gold,
-                color: C.bg,
+                background: "var(--cf-gold)",
+                color: "var(--cf-hero-bg)",
                 fontFamily: "'Michroma', sans-serif",
                 fontSize: 12,
                 letterSpacing: "0.22em",
@@ -347,13 +335,13 @@ export default function FormationPictureView() {
     <>
       <style>{STYLES}</style>
 
-      <main style={{ background: C.bg, color: C.ivory, minHeight: "100vh", paddingBottom: 80 }}>
+      <main style={{ background: "var(--cf-hero-bg)", color: "var(--cf-ivory)", minHeight: "100vh", paddingBottom: 80 }}>
 
         {/* ── HERO ────────────────────────────────────────────────── */}
         <div
           style={{
             padding: "120px 24px 80px",
-            borderBottom: `1px solid ${C.border}`,
+            borderBottom: `1px solid ${"var(--cf-white-8)"}`,
             animation: "cf-fp-fade 600ms ease-out both",
           }}
         >
@@ -375,7 +363,7 @@ export default function FormationPictureView() {
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 fontSize: "clamp(18px, 2vw, 22px)",
-                color: C.muted,
+                color: "var(--cf-ivory-62)",
                 lineHeight: 1.65,
                 margin: 0,
                 maxWidth: 620,
@@ -403,7 +391,7 @@ export default function FormationPictureView() {
                 fontFamily: "'Inter', sans-serif",
                 fontSize: 15,
                 lineHeight: 1.8,
-                color: C.muted,
+                color: "var(--cf-ivory-62)",
                 marginBottom: 32,
               }}
             >
@@ -432,7 +420,7 @@ export default function FormationPictureView() {
                     fontFamily: "'Inter', sans-serif",
                     fontSize: 15,
                     lineHeight: 1.8,
-                    color: C.muted,
+                    color: "var(--cf-ivory-62)",
                     marginBottom: 32,
                   }}
                 >
@@ -449,7 +437,7 @@ export default function FormationPictureView() {
                   fontFamily: "'Cormorant Garamond', serif",
                   fontSize: "clamp(17px, 1.9vw, 20px)",
                   fontStyle: "italic",
-                  color: C.muted,
+                  color: "var(--cf-ivory-62)",
                   lineHeight: 1.65,
                   margin: 0,
                 }}
@@ -459,7 +447,7 @@ export default function FormationPictureView() {
                 would shift the picture.{" "}
                 <Link
                   to="/field-guide/gifts/results"
-                  style={{ color: C.gold, textDecoration: "none" }}
+                  style={{ color: "var(--cf-gold)", textDecoration: "none" }}
                 >
                   Review your gifts results →
                 </Link>
@@ -484,7 +472,7 @@ export default function FormationPictureView() {
                   fontFamily: "'Inter', sans-serif",
                   fontSize: 15,
                   lineHeight: 1.85,
-                  color: C.muted,
+                  color: "var(--cf-ivory-62)",
                   margin: "0 0 24px",
                 }}
               >
@@ -498,8 +486,8 @@ export default function FormationPictureView() {
                 style={{
                   marginTop: 40,
                   padding: "32px 36px",
-                  background: C.bgCardSoft,
-                  borderLeft: `3px solid ${C.gold}`,
+                  background: "var(--cf-surface-raised)",
+                  borderLeft: `3px solid ${"var(--cf-gold)"}`,
                   animation: reflection ? "cf-fp-fade 600ms ease-out both" : undefined,
                 }}
               >
@@ -512,7 +500,7 @@ export default function FormationPictureView() {
                       fontFamily: "'Cormorant Garamond', serif",
                       fontSize: 17,
                       fontStyle: "italic",
-                      color: C.dim,
+                      color: "var(--cf-ivory-35)",
                       margin: 0,
                     }}
                   >
@@ -524,7 +512,7 @@ export default function FormationPictureView() {
                       fontFamily: "'Cormorant Garamond', serif",
                       fontSize: "clamp(17px, 1.9vw, 20px)",
                       fontStyle: "italic",
-                      color: C.ivory,
+                      color: "var(--cf-ivory)",
                       lineHeight: 1.75,
                       margin: 0,
                     }}
@@ -542,8 +530,8 @@ export default function FormationPictureView() {
               maxWidth: 760,
               margin: "0 auto 80px",
               padding: "48px 48px 44px",
-              border: `1px solid ${C.goldDim}`,
-              background: C.bgCardSoft,
+              border: `1px solid ${"var(--cf-gold-mid)"}`,
+              background: "var(--cf-surface-raised)",
               animation: "cf-fp-fade 700ms ease-out 400ms both",
             }}
           >
@@ -553,15 +541,15 @@ export default function FormationPictureView() {
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontSize: "clamp(18px, 2vw, 22px)",
-                  color: C.ivory,
+                  color: "var(--cf-ivory)",
                   lineHeight: 1.65,
                   margin: "0 0 20px",
                 }}
               >
                 Your results suggest the Spirit is forming{" "}
-                <span style={{ color: C.gold }}>{topFormationFruit.label}</span>{" "}
+                <span style={{ color: "var(--cf-gold)" }}>{topFormationFruit.label}</span>{" "}
                 in you while moving through you in{" "}
-                <span style={{ color: C.gold }}>{topActiveGift.name}</span>. The
+                <span style={{ color: "var(--cf-gold)" }}>{topActiveGift.name}</span>. The
                 next step is to find the place where both can be exercised
                 together -- where you can serve in your gift while your character
                 is being shaped further.
@@ -571,7 +559,7 @@ export default function FormationPictureView() {
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontSize: "clamp(18px, 2vw, 22px)",
-                  color: C.ivory,
+                  color: "var(--cf-ivory)",
                   lineHeight: 1.65,
                   margin: "0 0 20px",
                 }}
@@ -585,7 +573,7 @@ export default function FormationPictureView() {
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontSize: 14,
-                color: C.dim,
+                color: "var(--cf-ivory-35)",
                 lineHeight: 1.7,
                 margin: "0 0 28px",
               }}
@@ -597,8 +585,8 @@ export default function FormationPictureView() {
               to="/field-guide"
               style={{
                 display: "inline-block",
-                background: C.gold,
-                color: C.bg,
+                background: "var(--cf-gold)",
+                color: "var(--cf-hero-bg)",
                 fontFamily: "'Michroma', sans-serif",
                 fontSize: 12,
                 letterSpacing: "0.22em",

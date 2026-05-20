@@ -11,20 +11,6 @@ import { useFormationProfile } from "../../../hooks/useFormationProfile";
 
 /* ─── TOKENS ────────────────────────────────────────────────────────────── */
 
-const C = {
-  bg: "#06050A",
-  bgCard: "#0E0C0A",
-  bgInput: "#130F0C",
-  gold: "#C9A84C",
-  goldDim: "rgba(201,168,76,0.30)",
-  goldFaint: "rgba(201,168,76,0.12)",
-  ivory: "#FAF8F5",
-  muted: "rgba(250,248,245,0.62)",
-  dim: "rgba(250,248,245,0.34)",
-  border: "rgba(255,255,255,0.08)",
-  borderGold: "rgba(201,168,76,0.22)",
-  error: "#E57373",
-};
 
 const F = {
   display: "'Cormorant Garamond', serif",
@@ -121,9 +107,9 @@ const RELATIONSHIPS = [
 /* ─── INPUT STYLES ──────────────────────────────────────────────────────── */
 
 const inputBase = {
-  background: C.bgInput,
-  border: `1px solid ${C.border}`,
-  color: C.ivory,
+  background: "var(--cf-surface-raised)",
+  border: `1px solid ${"var(--cf-white-8)"}`,
+  color: "var(--cf-ivory)",
   fontFamily: F.body,
   fontSize: 15,
   padding: "12px 14px",
@@ -135,14 +121,14 @@ const inputBase = {
 };
 
 const inputError = {
-  borderColor: C.error,
+  borderColor: "#E57373",
 };
 
 /* ─── SUBCOMPONENTS ─────────────────────────────────────────────────────── */
 
 function Eyebrow({ children }) {
   return (
-    <div style={{ fontFamily: F.caps, fontSize: 11, letterSpacing: "0.38em", textTransform: "uppercase", color: C.gold, marginBottom: 16 }}>
+    <div style={{ fontFamily: F.caps, fontSize: 11, letterSpacing: "0.38em", textTransform: "uppercase", color: "var(--cf-gold)", marginBottom: 16 }}>
       {children}
     </div>
   );
@@ -150,7 +136,7 @@ function Eyebrow({ children }) {
 
 function GoldRule() {
   return (
-    <div style={{ height: 1, background: `linear-gradient(90deg, ${C.gold}, transparent)`, marginBottom: 40, maxWidth: 80 }} />
+    <div style={{ height: 1, background: `linear-gradient(90deg, ${"var(--cf-gold)"}, transparent)`, marginBottom: 40, maxWidth: 80 }} />
   );
 }
 
@@ -163,9 +149,9 @@ function PrimaryButton({ onClick, disabled, children, style }) {
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        background: hov && !disabled ? C.gold : "transparent",
-        color: hov && !disabled ? C.bg : C.gold,
-        border: `1px solid ${disabled ? C.goldDim : C.gold}`,
+        background: hov && !disabled ? "var(--cf-gold)" : "transparent",
+        color: hov && !disabled ? "var(--cf-hero-bg)" : "var(--cf-gold)",
+        border: `1px solid ${disabled ? "var(--cf-gold-mid)" : "var(--cf-gold)"}`,
         padding: "15px 36px",
         fontFamily: F.caps,
         fontSize: 13,
@@ -194,20 +180,20 @@ function RecipientRow({ person, index, onChange, onRemove, showRemove }) {
     onBlur: () => setFocused(null),
     style: {
       ...inputBase,
-      borderColor: focused === key ? C.goldDim : (person._errors?.[key] ? C.error : C.border),
+      borderColor: focused === key ? "var(--cf-gold-mid)" : (person._errors?.[key] ? "#E57373" : "var(--cf-white-8)"),
     },
   });
 
   return (
-    <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, padding: "24px 28px 20px", marginBottom: 12 }}>
+    <div style={{ background: "var(--cf-obsidian)", border: `1px solid ${"var(--cf-white-8)"}`, padding: "24px 28px 20px", marginBottom: 12 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-        <div style={{ fontFamily: F.caps, fontSize: 11, letterSpacing: "0.36em", textTransform: "uppercase", color: C.muted }}>
+        <div style={{ fontFamily: F.caps, fontSize: 11, letterSpacing: "0.36em", textTransform: "uppercase", color: "var(--cf-ivory-62)" }}>
           Person {index + 1}
         </div>
         {showRemove && (
           <button
             onClick={() => onRemove(index)}
-            style={{ background: "none", border: "none", color: C.dim, cursor: "pointer", fontFamily: F.body, fontSize: 13, padding: "2px 6px" }}
+            style={{ background: "none", border: "none", color: "var(--cf-ivory-35)", cursor: "pointer", fontFamily: F.body, fontSize: 13, padding: "2px 6px" }}
           >
             Remove
           </button>
@@ -217,11 +203,11 @@ function RecipientRow({ person, index, onChange, onRemove, showRemove }) {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
         <div>
           <input {...field("name", "text", "Full name *")} />
-          {person._errors?.name && <div style={{ fontSize: 12, color: C.error, marginTop: 4 }}>{person._errors.name}</div>}
+          {person._errors?.name && <div style={{ fontSize: 12, color: "#E57373", marginTop: 4 }}>{person._errors.name}</div>}
         </div>
         <div>
           <input {...field("email", "email", "Email address *")} />
-          {person._errors?.email && <div style={{ fontSize: 12, color: C.error, marginTop: 4 }}>{person._errors.email}</div>}
+          {person._errors?.email && <div style={{ fontSize: 12, color: "#E57373", marginTop: 4 }}>{person._errors.email}</div>}
         </div>
       </div>
 
@@ -230,14 +216,14 @@ function RecipientRow({ person, index, onChange, onRemove, showRemove }) {
         onChange={(e) => onChange(index, "relationship", e.target.value)}
         style={{
           ...inputBase,
-          color: person.relationship ? C.ivory : C.dim,
+          color: person.relationship ? "var(--cf-ivory)" : "var(--cf-ivory-35)",
           appearance: "none",
           WebkitAppearance: "none",
           cursor: "pointer",
         }}
       >
         {RELATIONSHIPS.map((r) => (
-          <option key={r.value} value={r.value} style={{ background: C.bgCard, color: C.ivory }}>
+          <option key={r.value} value={r.value} style={{ background: "var(--cf-obsidian)", color: "var(--cf-ivory)" }}>
             {r.label}
           </option>
         ))}
@@ -293,21 +279,21 @@ function StepCollect({ userName, setUserName, recipients, setRecipients, onConti
       <Eyebrow>Complete the picture</Eyebrow>
       <GoldRule />
 
-      <h1 style={{ fontFamily: F.display, fontStyle: "italic", fontSize: "clamp(32px, 5vw, 52px)", lineHeight: 1.12, margin: "0 0 18px", color: C.ivory }}>
+      <h1 style={{ fontFamily: F.display, fontStyle: "italic", fontSize: "clamp(32px, 5vw, 52px)", lineHeight: 1.12, margin: "0 0 18px", color: "var(--cf-ivory)" }}>
         Who knows you well?
       </h1>
 
-      <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 18, lineHeight: 1.72, color: C.muted, margin: "0 0 12px", maxWidth: 620 }}>
+      <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 18, lineHeight: 1.72, color: "var(--cf-ivory-62)", margin: "0 0 12px", maxWidth: 620 }}>
         Choose two or three people in your life who know you well enough to have observed how the Spirit is at work through you. They will receive a brief assessment (5 to 7 minutes) about what they have seen. Their responses will integrate into your results to complete the picture.
       </p>
 
-      <p style={{ fontFamily: F.body, fontSize: 14, lineHeight: 1.7, color: C.dim, margin: "0 0 36px", maxWidth: 600 }}>
+      <p style={{ fontFamily: F.body, fontSize: 14, lineHeight: 1.7, color: "var(--cf-ivory-35)", margin: "0 0 36px", maxWidth: 600 }}>
         The best people to invite are those who have known you for at least a year, have seen you in more than one context (church, work, family, friendship), and will give you honest answers rather than flattering ones. A spouse alone is usually not enough -- include at least one person outside your household.
       </p>
 
       {/* Sender name */}
       <div style={{ marginBottom: 28 }}>
-        <label style={{ display: "block", fontFamily: F.caps, fontSize: 11, letterSpacing: "0.34em", textTransform: "uppercase", color: C.gold, marginBottom: 8 }}>
+        <label style={{ display: "block", fontFamily: F.caps, fontSize: 11, letterSpacing: "0.34em", textTransform: "uppercase", color: "var(--cf-gold)", marginBottom: 8 }}>
           Your name
         </label>
         <input
@@ -320,17 +306,17 @@ function StepCollect({ userName, setUserName, recipients, setRecipients, onConti
           style={{
             ...inputBase,
             maxWidth: 360,
-            borderColor: senderFocused ? C.goldDim : (submitted && !userName.trim() ? C.error : C.border),
+            borderColor: senderFocused ? "var(--cf-gold-mid)" : (submitted && !userName.trim() ? "#E57373" : "var(--cf-white-8)"),
           }}
         />
         {submitted && !userName.trim() && (
-          <div style={{ fontSize: 12, color: C.error, marginTop: 4 }}>Your name is required for the invitation.</div>
+          <div style={{ fontSize: 12, color: "#E57373", marginTop: 4 }}>Your name is required for the invitation.</div>
         )}
       </div>
 
       {/* Recipients */}
       <div style={{ marginBottom: 8 }}>
-        <label style={{ display: "block", fontFamily: F.caps, fontSize: 11, letterSpacing: "0.34em", textTransform: "uppercase", color: C.gold, marginBottom: 12 }}>
+        <label style={{ display: "block", fontFamily: F.caps, fontSize: 11, letterSpacing: "0.34em", textTransform: "uppercase", color: "var(--cf-gold)", marginBottom: 12 }}>
           Trusted people
         </label>
         {recipients.map((p, i) => (
@@ -348,7 +334,7 @@ function StepCollect({ userName, setUserName, recipients, setRecipients, onConti
       {recipients.length < 4 && (
         <button
           onClick={handleAddAnother}
-          style={{ background: "none", border: "none", color: C.gold, fontFamily: F.caps, fontSize: 12, letterSpacing: "0.28em", textTransform: "uppercase", cursor: "pointer", padding: "8px 0", marginBottom: 36 }}
+          style={{ background: "none", border: "none", color: "var(--cf-gold)", fontFamily: F.caps, fontSize: 12, letterSpacing: "0.28em", textTransform: "uppercase", cursor: "pointer", padding: "8px 0", marginBottom: 36 }}
         >
           + Add another person
         </button>
@@ -358,7 +344,7 @@ function StepCollect({ userName, setUserName, recipients, setRecipients, onConti
       <PrimaryButton onClick={handleContinue}>Continue</PrimaryButton>
 
       <div style={{ marginTop: 20 }}>
-        <Link to="/field-guide/gifts/results" style={{ fontFamily: F.body, fontSize: 13, color: C.dim, textDecoration: "none" }}>
+        <Link to="/field-guide/gifts/results" style={{ fontFamily: F.body, fontSize: 13, color: "var(--cf-ivory-35)", textDecoration: "none" }}>
           Return to your results
         </Link>
       </div>
@@ -385,11 +371,11 @@ function StepPersonalize({ userName, recipients, message, setMessage, onBack, on
       <Eyebrow>Complete the picture</Eyebrow>
       <GoldRule />
 
-      <h1 style={{ fontFamily: F.display, fontStyle: "italic", fontSize: "clamp(28px, 4.5vw, 46px)", lineHeight: 1.15, margin: "0 0 14px", color: C.ivory }}>
+      <h1 style={{ fontFamily: F.display, fontStyle: "italic", fontSize: "clamp(28px, 4.5vw, 46px)", lineHeight: 1.15, margin: "0 0 14px", color: "var(--cf-ivory)" }}>
         Personalize your invitation
       </h1>
 
-      <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.7, color: C.muted, margin: "0 0 28px", maxWidth: 580 }}>
+      <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.7, color: "var(--cf-ivory-62)", margin: "0 0 28px", maxWidth: 580 }}>
         Here is the default message that will be sent. You can edit it to make it more personal -- the more specific you can be about why you are asking this person, the more they will value being asked.
       </p>
 
@@ -403,12 +389,12 @@ function StepPersonalize({ userName, recipients, message, setMessage, onBack, on
           ...inputBase,
           resize: "vertical",
           lineHeight: 1.75,
-          borderColor: focused ? C.goldDim : C.border,
+          borderColor: focused ? "var(--cf-gold-mid)" : "var(--cf-white-8)",
           marginBottom: 16,
         }}
       />
 
-      <p style={{ fontFamily: F.body, fontSize: 13, lineHeight: 1.6, color: C.dim, margin: "0 0 32px" }}>
+      <p style={{ fontFamily: F.body, fontSize: 13, lineHeight: 1.6, color: "var(--cf-ivory-35)", margin: "0 0 32px" }}>
         Your trusted persons will receive a link to a brief assessment specifically about you. They will not see your results or your responses. Their responses will integrate into your final results.
       </p>
 
@@ -416,7 +402,7 @@ function StepPersonalize({ userName, recipients, message, setMessage, onBack, on
         <PrimaryButton onClick={onContinue}>Review and send</PrimaryButton>
         <button
           onClick={onBack}
-          style={{ background: "none", border: "none", color: C.muted, fontFamily: F.body, fontSize: 14, cursor: "pointer", padding: 0 }}
+          style={{ background: "none", border: "none", color: "var(--cf-ivory-62)", fontFamily: F.body, fontSize: 14, cursor: "pointer", padding: 0 }}
         >
           ← Back
         </button>
@@ -437,11 +423,11 @@ function StepReview({ userName, recipients, setRecipients, message, onBack, onSe
       <Eyebrow>Complete the picture</Eyebrow>
       <GoldRule />
 
-      <h1 style={{ fontFamily: F.display, fontStyle: "italic", fontSize: "clamp(28px, 4.5vw, 46px)", lineHeight: 1.15, margin: "0 0 14px", color: C.ivory }}>
+      <h1 style={{ fontFamily: F.display, fontStyle: "italic", fontSize: "clamp(28px, 4.5vw, 46px)", lineHeight: 1.15, margin: "0 0 14px", color: "var(--cf-ivory)" }}>
         Review and send
       </h1>
 
-      <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.7, color: C.muted, margin: "0 0 28px", maxWidth: 560 }}>
+      <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.7, color: "var(--cf-ivory-62)", margin: "0 0 28px", maxWidth: 560 }}>
         Check your recipient list. You can remove anyone before sending.
       </p>
 
@@ -450,13 +436,13 @@ function StepReview({ userName, recipients, setRecipients, message, onBack, onSe
         {recipients.map((p, i) => (
           <div
             key={i}
-            style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 0", borderBottom: `1px solid ${C.border}` }}
+            style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 0", borderBottom: `1px solid ${"var(--cf-white-8)"}` }}
           >
             <div>
-              <div style={{ fontFamily: F.body, fontSize: 15, color: C.ivory, marginBottom: 2 }}>{p.name}</div>
-              <div style={{ fontFamily: F.body, fontSize: 13, color: C.muted }}>{p.email}</div>
+              <div style={{ fontFamily: F.body, fontSize: 15, color: "var(--cf-ivory)", marginBottom: 2 }}>{p.name}</div>
+              <div style={{ fontFamily: F.body, fontSize: 13, color: "var(--cf-ivory-62)" }}>{p.email}</div>
               {p.relationship && (
-                <div style={{ fontFamily: F.caps, fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginTop: 2 }}>
+                <div style={{ fontFamily: F.caps, fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--cf-ivory-35)", marginTop: 2 }}>
                   {RELATIONSHIPS.find((r) => r.value === p.relationship)?.label || p.relationship}
                 </div>
               )}
@@ -464,7 +450,7 @@ function StepReview({ userName, recipients, setRecipients, message, onBack, onSe
             {recipients.length > 1 && (
               <button
                 onClick={() => handleRemove(i)}
-                style={{ background: "none", border: "none", color: C.dim, cursor: "pointer", fontFamily: F.body, fontSize: 13, padding: "4px 8px" }}
+                style={{ background: "none", border: "none", color: "var(--cf-ivory-35)", cursor: "pointer", fontFamily: F.body, fontSize: 13, padding: "4px 8px" }}
               >
                 Remove
               </button>
@@ -474,11 +460,11 @@ function StepReview({ userName, recipients, setRecipients, message, onBack, onSe
       </div>
 
       {/* Message preview */}
-      <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, padding: "24px 28px", marginBottom: 36 }}>
-        <div style={{ fontFamily: F.caps, fontSize: 11, letterSpacing: "0.36em", textTransform: "uppercase", color: C.gold, marginBottom: 14 }}>
+      <div style={{ background: "var(--cf-obsidian)", border: `1px solid ${"var(--cf-white-8)"}`, padding: "24px 28px", marginBottom: 36 }}>
+        <div style={{ fontFamily: F.caps, fontSize: 11, letterSpacing: "0.36em", textTransform: "uppercase", color: "var(--cf-gold)", marginBottom: 14 }}>
           Your message
         </div>
-        <pre style={{ fontFamily: F.body, fontSize: 14, lineHeight: 1.8, color: C.muted, margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+        <pre style={{ fontFamily: F.body, fontSize: 14, lineHeight: 1.8, color: "var(--cf-ivory-62)", margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
           {message}
         </pre>
       </div>
@@ -487,7 +473,7 @@ function StepReview({ userName, recipients, setRecipients, message, onBack, onSe
         <PrimaryButton onClick={onSend}>Send invitations</PrimaryButton>
         <button
           onClick={onBack}
-          style={{ background: "none", border: "none", color: C.muted, fontFamily: F.body, fontSize: 14, cursor: "pointer", padding: 0 }}
+          style={{ background: "none", border: "none", color: "var(--cf-ivory-62)", fontFamily: F.body, fontSize: 14, cursor: "pointer", padding: 0 }}
         >
           ← Back
         </button>
@@ -516,15 +502,15 @@ function StepSent({ pairings, onReturn }) {
       <Eyebrow>Invitations ready</Eyebrow>
       <GoldRule />
 
-      <h1 style={{ fontFamily: F.display, fontStyle: "italic", fontSize: "clamp(28px, 4.5vw, 46px)", lineHeight: 1.15, margin: "0 0 14px", color: C.ivory }}>
+      <h1 style={{ fontFamily: F.display, fontStyle: "italic", fontSize: "clamp(28px, 4.5vw, 46px)", lineHeight: 1.15, margin: "0 0 14px", color: "var(--cf-ivory)" }}>
         Your invitations are ready to send
       </h1>
 
-      <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.7, color: C.muted, margin: "0 0 10px", maxWidth: 580 }}>
+      <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.7, color: "var(--cf-ivory-62)", margin: "0 0 10px", maxWidth: 580 }}>
         Copy each link below and share it with the corresponding person by email or message. Each link is unique to that person and will tie their responses to your results.
       </p>
 
-      <p style={{ fontFamily: F.body, fontSize: 14, lineHeight: 1.65, color: C.dim, margin: "0 0 32px", maxWidth: 540 }}>
+      <p style={{ fontFamily: F.body, fontSize: 14, lineHeight: 1.65, color: "var(--cf-ivory-35)", margin: "0 0 32px", maxWidth: 540 }}>
         Allow your trusted persons several days to complete -- the assessment is brief but the questions require thoughtful answers.
       </p>
 
@@ -535,14 +521,14 @@ function StepSent({ pairings, onReturn }) {
         return (
           <div
             key={p.token}
-            style={{ background: C.bgCard, border: `1px solid ${C.border}`, padding: "20px 24px", marginBottom: 12 }}
+            style={{ background: "var(--cf-obsidian)", border: `1px solid ${"var(--cf-white-8)"}`, padding: "20px 24px", marginBottom: 12 }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: F.body, fontSize: 15, color: C.ivory, marginBottom: 4 }}>{p.name}</div>
-                <div style={{ fontFamily: F.body, fontSize: 13, color: C.muted, marginBottom: 8 }}>{p.email}</div>
+                <div style={{ fontFamily: F.body, fontSize: 15, color: "var(--cf-ivory)", marginBottom: 4 }}>{p.name}</div>
+                <div style={{ fontFamily: F.body, fontSize: 13, color: "var(--cf-ivory-62)", marginBottom: 8 }}>{p.email}</div>
                 <div
-                  style={{ fontFamily: "'Courier New', monospace", fontSize: 12, color: C.gold, wordBreak: "break-all", lineHeight: 1.5 }}
+                  style={{ fontFamily: "'Courier New', monospace", fontSize: 12, color: "var(--cf-gold)", wordBreak: "break-all", lineHeight: 1.5 }}
                 >
                   {url}
                 </div>
@@ -550,9 +536,9 @@ function StepSent({ pairings, onReturn }) {
               <button
                 onClick={() => copyToClipboard(url, p.token)}
                 style={{
-                  background: isCopied ? C.gold : "transparent",
-                  color: isCopied ? C.bg : C.gold,
-                  border: `1px solid ${isCopied ? C.gold : C.goldDim}`,
+                  background: isCopied ? "var(--cf-gold)" : "transparent",
+                  color: isCopied ? "var(--cf-hero-bg)" : "var(--cf-gold)",
+                  border: `1px solid ${isCopied ? "var(--cf-gold)" : "var(--cf-gold-mid)"}`,
                   padding: "9px 18px",
                   fontFamily: F.caps,
                   fontSize: 11,
@@ -630,8 +616,8 @@ export default function TrustedPersonInvitationFlow() {
   return (
     <main
       style={{
-        background: C.bg,
-        color: C.ivory,
+        background: "var(--cf-hero-bg)",
+        color: "var(--cf-ivory)",
         minHeight: "100vh",
         padding: "120px 24px 100px",
         display: "flex",
@@ -657,7 +643,7 @@ export default function TrustedPersonInvitationFlow() {
                 width: 6,
                 height: 6,
                 borderRadius: "50%",
-                background: step >= s ? C.gold : C.border,
+                background: step >= s ? "var(--cf-gold)" : "var(--cf-white-8)",
                 transition: "background 300ms ease",
               }}
             />

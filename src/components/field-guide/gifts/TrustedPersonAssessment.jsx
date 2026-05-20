@@ -16,18 +16,6 @@ import { supabase } from "../../../utils/supabaseClient";
 
 /* ─── TOKENS ────────────────────────────────────────────────────────────── */
 
-const C = {
-  bg: "#06050A",
-  bgCard: "#0E0C0A",
-  gold: "#C9A84C",
-  goldDim: "rgba(201,168,76,0.45)",
-  goldFaint: "rgba(201,168,76,0.18)",
-  goldMid: "rgba(201,168,76,0.08)",
-  ivory: "#FAF8F5",
-  muted: "rgba(250,248,245,0.62)",
-  dim: "rgba(250,248,245,0.34)",
-  border: "rgba(255,255,255,0.08)",
-};
 
 const F = {
   display: "'Cormorant Garamond', serif",
@@ -149,7 +137,7 @@ function LandingScreen({ userName, onBegin }) {
 
   return (
     <main
-      style={{ background: C.bg, color: C.ivory, minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "96px 24px" }}
+      style={{ background: "var(--cf-hero-bg)", color: "var(--cf-ivory)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "96px 24px" }}
     >
       <style>{`
         @keyframes cf-tp-fade { from { opacity: 0; } to { opacity: 1; } }
@@ -157,31 +145,31 @@ function LandingScreen({ userName, onBegin }) {
       `}</style>
 
       <div style={{ maxWidth: 640, width: "100%" }}>
-        <div style={{ fontFamily: F.caps, fontSize: 11, letterSpacing: "0.40em", textTransform: "uppercase", color: C.gold, marginBottom: 20, animation: "cf-tp-fade 400ms ease-out both" }}>
+        <div style={{ fontFamily: F.caps, fontSize: 11, letterSpacing: "0.40em", textTransform: "uppercase", color: "var(--cf-gold)", marginBottom: 20, animation: "cf-tp-fade 400ms ease-out both" }}>
           Counter Formation -- Spiritual Gifts Assessment
         </div>
 
-        <div style={{ height: 1, background: `linear-gradient(90deg, ${C.gold}, transparent)`, marginBottom: 28, maxWidth: 72, animation: "cf-tp-fade 500ms ease-out 80ms both" }} />
+        <div style={{ height: 1, background: `linear-gradient(90deg, ${"var(--cf-gold)"}, transparent)`, marginBottom: 28, maxWidth: 72, animation: "cf-tp-fade 500ms ease-out 80ms both" }} />
 
-        <h1 style={{ fontFamily: F.display, fontStyle: "italic", fontSize: "clamp(30px, 5vw, 52px)", lineHeight: 1.12, margin: "0 0 28px", color: C.ivory, animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 120ms both" }}>
+        <h1 style={{ fontFamily: F.display, fontStyle: "italic", fontSize: "clamp(30px, 5vw, 52px)", lineHeight: 1.12, margin: "0 0 28px", color: "var(--cf-ivory)", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 120ms both" }}>
           {displayFirstName
             ? <>You have been invited to weigh in on {displayFirstName}</>
             : <>You have been invited to weigh in</>}
         </h1>
 
-        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 18, lineHeight: 1.75, color: C.ivory, margin: "0 0 16px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 200ms both" }}>
+        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 18, lineHeight: 1.75, color: "var(--cf-ivory)", margin: "0 0 16px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 200ms both" }}>
           {displayFirstName ? `${displayFirstName} has invited` : "Someone has invited"} you to take a brief assessment about how God seems to be at work through them. Your honest observations will integrate into their results. This will take about 5 to 7 minutes.
         </p>
 
-        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: C.muted, margin: "0 0 14px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 280ms both" }}>
+        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: "var(--cf-ivory-62)", margin: "0 0 14px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 280ms both" }}>
           The New Testament's logic is that spiritual gifts are confirmed in the body of Christ, not just discovered by the individual believer.{displayFirstName ? ` ${displayFirstName} is asking` : " They are asking"} you to participate in that confirmation.
         </p>
 
-        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: C.muted, margin: "0 0 14px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 340ms both" }}>
+        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: "var(--cf-ivory-62)", margin: "0 0 14px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 340ms both" }}>
           You will be asked one question per gift, with a five-point scale. There is also an "I haven't been in a position to see this" option for any question where you genuinely have not observed what is being asked about. Please use that option freely -- it is more helpful than guessing.
         </p>
 
-        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: C.muted, margin: "0 0 44px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 400ms both" }}>
+        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: "var(--cf-ivory-62)", margin: "0 0 44px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 400ms both" }}>
           You will not see {displayFirstName ? `${displayFirstName}'s` : "their"} own responses or their results. Your role is to weigh in on what you have seen, not to compare or evaluate.
         </p>
 
@@ -191,9 +179,9 @@ function LandingScreen({ userName, onBegin }) {
             onMouseEnter={() => setHov(true)}
             onMouseLeave={() => setHov(false)}
             style={{
-              background: hov ? C.gold : "transparent",
-              color: hov ? C.bg : C.gold,
-              border: `1px solid ${C.gold}`,
+              background: hov ? "var(--cf-gold)" : "transparent",
+              color: hov ? "var(--cf-hero-bg)" : "var(--cf-gold)",
+              border: `1px solid ${"var(--cf-gold)"}`,
               padding: "16px 44px",
               fontFamily: F.caps,
               fontSize: 13,
@@ -218,33 +206,33 @@ function CompletionScreen({ userName }) {
   const displayFirstName = firstNameOf(userName);
 
   return (
-    <main style={{ background: C.bg, color: C.ivory, minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "96px 24px" }}>
+    <main style={{ background: "var(--cf-hero-bg)", color: "var(--cf-ivory)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "96px 24px" }}>
       <style>{`
         @keyframes cf-tp-fade { from { opacity: 0; } to { opacity: 1; } }
         @keyframes cf-tp-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
       `}</style>
 
       <div style={{ maxWidth: 560, width: "100%", textAlign: "center" }}>
-        <div style={{ fontFamily: F.caps, fontSize: 11, letterSpacing: "0.40em", textTransform: "uppercase", color: C.gold, marginBottom: 20, animation: "cf-tp-fade 400ms ease-out both" }}>
+        <div style={{ fontFamily: F.caps, fontSize: 11, letterSpacing: "0.40em", textTransform: "uppercase", color: "var(--cf-gold)", marginBottom: 20, animation: "cf-tp-fade 400ms ease-out both" }}>
           Counter Formation
         </div>
 
-        <div style={{ width: 40, height: 1, background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)`, margin: "0 auto 28px", animation: "cf-tp-fade 500ms ease-out 80ms both" }} />
+        <div style={{ width: 40, height: 1, background: `linear-gradient(90deg, transparent, ${"var(--cf-gold)"}, transparent)`, margin: "0 auto 28px", animation: "cf-tp-fade 500ms ease-out 80ms both" }} />
 
-        <h1 style={{ fontFamily: F.display, fontStyle: "italic", fontSize: "clamp(30px, 5vw, 50px)", lineHeight: 1.15, margin: "0 0 24px", color: C.ivory, animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 120ms both" }}>
+        <h1 style={{ fontFamily: F.display, fontStyle: "italic", fontSize: "clamp(30px, 5vw, 50px)", lineHeight: 1.15, margin: "0 0 24px", color: "var(--cf-ivory)", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 120ms both" }}>
           Thank you for weighing in
         </h1>
 
-        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 18, lineHeight: 1.75, color: C.ivory, margin: "0 0 14px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 200ms both" }}>
+        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 18, lineHeight: 1.75, color: "var(--cf-ivory)", margin: "0 0 14px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 200ms both" }}>
           Your responses have been recorded.{" "}
           {displayFirstName ? `${displayFirstName} will` : "They will"} receive an updated picture of where the Spirit is at work through them, now informed by what you have observed.
         </p>
 
-        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: C.muted, margin: "0 0 40px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 280ms both" }}>
+        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: "var(--cf-ivory-62)", margin: "0 0 40px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 280ms both" }}>
           They will not see your individual answers -- only the aggregated result combined with the responses of the others they invited.
         </p>
 
-        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: C.muted, margin: "0 0 36px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 340ms both" }}>
+        <p className="cf-prose" style={{ fontFamily: F.display, fontSize: 17, lineHeight: 1.75, color: "var(--cf-ivory-62)", margin: "0 0 36px", animation: "cf-tp-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 340ms both" }}>
           If you are curious about the assessment yourself, you are welcome to take it. Counter Formation is a free Field Guide for Christian formation.
         </p>
 
@@ -255,9 +243,9 @@ function CompletionScreen({ userName }) {
             onMouseLeave={() => setHov(false)}
             style={{
               display: "inline-block",
-              background: hov ? C.gold : "transparent",
-              color: hov ? C.bg : C.gold,
-              border: `1px solid ${C.gold}`,
+              background: hov ? "var(--cf-gold)" : "transparent",
+              color: hov ? "var(--cf-hero-bg)" : "var(--cf-gold)",
+              border: `1px solid ${"var(--cf-gold)"}`,
               padding: "15px 40px",
               fontFamily: F.caps,
               fontSize: 12,
@@ -289,7 +277,7 @@ function QuestionScreen({ qIdx, responses, userName, onAnswer, onBack, onSkip, o
   };
 
   return (
-    <main style={{ background: C.bg, color: C.ivory, minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <main style={{ background: "var(--cf-hero-bg)", color: "var(--cf-ivory)", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <style>{`
         @keyframes cf-tp-btn-in {
           from { opacity: 0; transform: translateY(6px); }
@@ -307,15 +295,15 @@ function QuestionScreen({ qIdx, responses, userName, onAnswer, onBack, onSkip, o
           text-align: left;
           transition: border-color 140ms ease, background 140ms ease;
           margin-bottom: 8px;
-          color: ${C.ivory};
+          color: ${"var(--cf-ivory)"};
         }
         .cf-tp-scale-btn:hover {
-          border-color: ${C.goldDim};
-          background: ${C.goldMid};
+          border-color: ${"var(--cf-gold-45)"};
+          background: ${"var(--cf-gold-bg)"};
         }
         .cf-tp-scale-btn.selected {
-          border-color: ${C.gold};
-          background: ${C.goldFaint};
+          border-color: ${"var(--cf-gold)"};
+          background: ${"var(--cf-gold-soft)"};
         }
         .cf-tp-no-data-btn {
           display: flex;
@@ -328,15 +316,15 @@ function QuestionScreen({ qIdx, responses, userName, onAnswer, onBack, onSkip, o
           padding: 14px 20px 14px 0;
           cursor: pointer;
           text-align: left;
-          color: ${C.dim};
+          color: ${"var(--cf-ivory-35)"};
           transition: color 140ms ease;
           margin-top: 4px;
         }
         .cf-tp-no-data-btn:hover {
-          color: ${C.muted};
+          color: ${"var(--cf-ivory-62)"};
         }
         .cf-tp-no-data-btn.selected {
-          color: ${C.gold};
+          color: ${"var(--cf-gold)"};
         }
         @media (max-width: 640px) {
           .cf-tp-scale-btn { padding: 14px 16px; }
@@ -351,17 +339,17 @@ function QuestionScreen({ qIdx, responses, userName, onAnswer, onBack, onSkip, o
       <div style={{ flex: 1, display: "flex", justifyContent: "center", padding: "48px 24px 80px" }}>
         <div style={{ maxWidth: 600, width: "100%", ...slideStyle }}>
           {/* Category eyebrow */}
-          <div style={{ fontFamily: F.caps, fontSize: 10, letterSpacing: "0.44em", textTransform: "uppercase", color: C.dim, marginBottom: 10 }}>
+          <div style={{ fontFamily: F.caps, fontSize: 10, letterSpacing: "0.44em", textTransform: "uppercase", color: "var(--cf-ivory-35)", marginBottom: 10 }}>
             {category}
           </div>
 
           {/* Gift eyebrow */}
-          <div style={{ fontFamily: F.caps, fontSize: 13, letterSpacing: "0.30em", textTransform: "uppercase", color: C.gold, marginBottom: 24 }}>
+          <div style={{ fontFamily: F.caps, fontSize: 13, letterSpacing: "0.30em", textTransform: "uppercase", color: "var(--cf-gold)", marginBottom: 24 }}>
             {gift.name.toUpperCase()} -- {qIdx + 1} OF {TOTAL_TP_QUESTIONS}
           </div>
 
           {/* Question */}
-          <p style={{ fontFamily: F.display, fontStyle: "italic", fontSize: "clamp(20px, 3.2vw, 26px)", lineHeight: 1.65, color: C.ivory, margin: "0 0 36px" }}>
+          <p style={{ fontFamily: F.display, fontStyle: "italic", fontSize: "clamp(20px, 3.2vw, 26px)", lineHeight: 1.65, color: "var(--cf-ivory)", margin: "0 0 36px" }}>
             {questionText(gift, userName)}
           </p>
 
@@ -376,11 +364,11 @@ function QuestionScreen({ qIdx, responses, userName, onAnswer, onBack, onSkip, o
                   onClick={() => onAnswer(opt.value)}
                   style={{ animationDelay: `${i * 40}ms` }}
                 >
-                  <span style={{ fontFamily: F.caps, fontSize: 13, color: isSelected ? C.gold : C.dim, letterSpacing: "0.12em", minWidth: 20 }}>
+                  <span style={{ fontFamily: F.caps, fontSize: 13, color: isSelected ? "var(--cf-gold)" : "var(--cf-ivory-35)", letterSpacing: "0.12em", minWidth: 20 }}>
                     {String(opt.value + 1).padStart(2, "0")}
                   </span>
                   <span style={{ fontFamily: F.body, fontSize: 15, lineHeight: 1.4 }}>{opt.label}</span>
-                  <span style={{ marginLeft: "auto", width: 8, height: 8, borderRadius: "50%", background: isSelected ? C.gold : "transparent", border: `1px solid ${isSelected ? C.gold : C.border}`, flexShrink: 0, transition: "background 120ms ease, border-color 120ms ease" }} />
+                  <span style={{ marginLeft: "auto", width: 8, height: 8, borderRadius: "50%", background: isSelected ? "var(--cf-gold)" : "transparent", border: `1px solid ${isSelected ? "var(--cf-gold)" : "var(--cf-white-8)"}`, flexShrink: 0, transition: "background 120ms ease, border-color 120ms ease" }} />
                 </button>
               );
             })}
@@ -399,18 +387,18 @@ function QuestionScreen({ qIdx, responses, userName, onAnswer, onBack, onSkip, o
           {/* Navigation */}
           <div style={{ display: "flex", gap: 24, marginTop: 32, alignItems: "center" }}>
             {qIdx > 0 && (
-              <button onClick={onBack} style={{ background: "none", border: "none", color: C.muted, fontFamily: F.body, fontSize: 13, cursor: "pointer", padding: 0 }}>
+              <button onClick={onBack} style={{ background: "none", border: "none", color: "var(--cf-ivory-62)", fontFamily: F.body, fontSize: 13, cursor: "pointer", padding: 0 }}>
                 ← Previous
               </button>
             )}
-            <button onClick={onSkip} style={{ background: "none", border: "none", color: C.dim, fontFamily: F.body, fontSize: 13, cursor: "pointer", padding: 0 }}>
+            <button onClick={onSkip} style={{ background: "none", border: "none", color: "var(--cf-ivory-35)", fontFamily: F.body, fontSize: 13, cursor: "pointer", padding: 0 }}>
               Skip this question →
             </button>
           </div>
 
           {/* Save and return */}
           <div style={{ marginTop: 48 }}>
-            <button onClick={onSaveAndExit} style={{ background: "none", border: "none", color: C.dim, fontFamily: F.body, fontSize: 12, cursor: "pointer", padding: 0, textDecoration: "underline", textDecorationColor: "rgba(250,248,245,0.18)" }}>
+            <button onClick={onSaveAndExit} style={{ background: "none", border: "none", color: "var(--cf-ivory-35)", fontFamily: F.body, fontSize: 12, cursor: "pointer", padding: 0, textDecoration: "underline", textDecorationColor: "rgba(250,248,245,0.18)" }}>
               Save and return later
             </button>
           </div>
@@ -625,12 +613,12 @@ export default function TrustedPersonAssessment() {
 
   if (!token) {
     return (
-      <main style={{ background: C.bg, color: C.ivory, minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <main style={{ background: "var(--cf-hero-bg)", color: "var(--cf-ivory)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
         <div style={{ textAlign: "center", maxWidth: 400 }}>
-          <p style={{ fontFamily: F.display, fontStyle: "italic", fontSize: 22, color: C.muted }}>
+          <p style={{ fontFamily: F.display, fontStyle: "italic", fontSize: 22, color: "var(--cf-ivory-62)" }}>
             This link does not appear to be valid.
           </p>
-          <Link to="/" style={{ fontFamily: F.caps, fontSize: 12, letterSpacing: "0.30em", color: C.gold, textDecoration: "none", textTransform: "uppercase" }}>
+          <Link to="/" style={{ fontFamily: F.caps, fontSize: 12, letterSpacing: "0.30em", color: "var(--cf-gold)", textDecoration: "none", textTransform: "uppercase" }}>
             Visit Counter Formation →
           </Link>
         </div>
@@ -658,9 +646,9 @@ export default function TrustedPersonAssessment() {
       <div>
         <LandingScreen userName={userName} onBegin={handleBegin} />
         {hasSaved && (
-          <div style={{ position: "fixed", bottom: 20, left: "50%", transform: "translateX(-50%)", background: C.bgCard, border: `1px solid ${C.goldDim}`, padding: "10px 20px", display: "flex", gap: 16, alignItems: "center", zIndex: 90 }}>
-            <span style={{ fontFamily: F.body, fontSize: 13, color: C.muted }}>Saved progress found.</span>
-            <button onClick={() => { setScreen("question"); }} style={{ background: "none", border: "none", color: C.gold, fontFamily: F.caps, fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", cursor: "pointer" }}>
+          <div style={{ position: "fixed", bottom: 20, left: "50%", transform: "translateX(-50%)", background: "var(--cf-obsidian)", border: `1px solid ${"var(--cf-gold-45)"}`, padding: "10px 20px", display: "flex", gap: 16, alignItems: "center", zIndex: 90 }}>
+            <span style={{ fontFamily: F.body, fontSize: 13, color: "var(--cf-ivory-62)" }}>Saved progress found.</span>
+            <button onClick={() => { setScreen("question"); }} style={{ background: "none", border: "none", color: "var(--cf-gold)", fontFamily: F.caps, fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", cursor: "pointer" }}>
               Resume →
             </button>
           </div>

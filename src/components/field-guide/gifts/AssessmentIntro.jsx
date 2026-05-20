@@ -8,17 +8,6 @@ import {
   TOTAL_QUESTIONS,
 } from "../../../utils/giftsAssessmentStorage";
 
-const C = {
-  bg: "#06050A",
-  bgCard: "#0E0C0A",
-  gold: "#C9A84C",
-  goldDim: "rgba(201,168,76,0.32)",
-  goldFaint: "rgba(201,168,76,0.14)",
-  ivory: "#FAF8F5",
-  muted: "rgba(250,248,245,0.62)",
-  dim: "rgba(250,248,245,0.34)",
-  border: "rgba(255,255,255,0.08)",
-};
 
 function useBodyScrollLock(locked) {
   useEffect(() => {
@@ -87,8 +76,8 @@ function WhatThisIsNotModal({ open, onClose }) {
         aria-modal="true"
         aria-label="What this assessment is not"
         style={{
-          background: C.bgCard,
-          border: `1px solid ${C.goldDim}`,
+          background: "var(--cf-obsidian)",
+          border: `1px solid ${"var(--cf-gold-mid)"}`,
           maxWidth: 620,
           width: "100%",
           padding: "44px 44px 40px",
@@ -105,7 +94,7 @@ function WhatThisIsNotModal({ open, onClose }) {
             right: 14,
             background: "transparent",
             border: "none",
-            color: C.muted,
+            color: "var(--cf-ivory-62)",
             fontSize: 24,
             lineHeight: 1,
             cursor: "pointer",
@@ -121,7 +110,7 @@ function WhatThisIsNotModal({ open, onClose }) {
             fontSize: 10,
             letterSpacing: "0.36em",
             textTransform: "uppercase",
-            color: C.gold,
+            color: "var(--cf-gold)",
             marginBottom: 14,
           }}
         >
@@ -135,7 +124,7 @@ function WhatThisIsNotModal({ open, onClose }) {
             lineHeight: 1.2,
             margin: 0,
             marginBottom: 24,
-            color: C.ivory,
+            color: "var(--cf-ivory)",
           }}
         >
           What this assessment is not
@@ -151,7 +140,7 @@ function WhatThisIsNotModal({ open, onClose }) {
                 gap: 14,
                 paddingBottom: i === points.length - 1 ? 0 : 20,
                 marginBottom: i === points.length - 1 ? 0 : 20,
-                borderBottom: i === points.length - 1 ? "none" : `1px solid ${C.border}`,
+                borderBottom: i === points.length - 1 ? "none" : `1px solid ${"var(--cf-white-8)"}`,
               }}
             >
               <div
@@ -159,7 +148,7 @@ function WhatThisIsNotModal({ open, onClose }) {
                   fontFamily: "'Barlow Condensed', sans-serif",
                   fontSize: 14,
                   letterSpacing: "0.18em",
-                  color: C.gold,
+                  color: "var(--cf-gold)",
                   paddingTop: 4,
                 }}
               >
@@ -171,13 +160,13 @@ function WhatThisIsNotModal({ open, onClose }) {
                     fontFamily: "'Cormorant Garamond', serif",
                     fontStyle: "italic",
                     fontSize: 19,
-                    color: C.ivory,
+                    color: "var(--cf-ivory)",
                     marginBottom: 6,
                   }}
                 >
                   {p.lead}
                 </div>
-                <p style={{ fontSize: 14.5, lineHeight: 1.75, color: C.muted, margin: 0 }}>
+                <p style={{ fontSize: 14.5, lineHeight: 1.75, color: "var(--cf-ivory-62)", margin: 0 }}>
                   {p.body}
                 </p>
               </div>
@@ -217,8 +206,8 @@ export default function AssessmentIntro() {
   return (
     <main
       style={{
-        background: C.bg,
-        color: C.ivory,
+        background: "var(--cf-hero-bg)",
+        color: "var(--cf-ivory)",
         minHeight: "100vh",
         padding: "110px 24px 100px",
       }}
@@ -230,8 +219,8 @@ export default function AssessmentIntro() {
           from { opacity: 0; transform: translateY(12px) }
           to { opacity: 1; transform: translateY(0) }
         }
-        .cf-primary-cta:hover { background: ${C.gold}; color: ${C.bg}; }
-        .cf-secondary-cta:hover { color: ${C.ivory}; }
+        .cf-primary-cta:hover { background: ${"var(--cf-gold)"}; color: ${"var(--cf-hero-bg)"}; }
+        .cf-secondary-cta:hover { color: ${"var(--cf-ivory)"}; }
         .cf-secondary-cta:hover .cf-arrow { transform: translateX(4px); }
       `}</style>
 
@@ -247,7 +236,7 @@ export default function AssessmentIntro() {
                 fontSize: 11,
                 letterSpacing: "0.42em",
                 textTransform: "uppercase",
-                color: C.gold,
+                color: "var(--cf-gold)",
                 textAlign: "center",
                 marginBottom: 24,
               }}
@@ -262,7 +251,7 @@ export default function AssessmentIntro() {
                 fontStyle: "italic",
                 fontSize: "clamp(40px, 6.5vw, 60px)",
                 lineHeight: 1.08,
-                color: C.ivory,
+                color: "var(--cf-ivory)",
                 textAlign: "center",
                 margin: 0,
                 marginBottom: 20,
@@ -277,7 +266,7 @@ export default function AssessmentIntro() {
               style={{
                 width: 80,
                 height: 1,
-                background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)`,
+                background: `linear-gradient(90deg, transparent, ${"var(--cf-gold)"}, transparent)`,
                 margin: "0 auto 28px",
               }}
             />
@@ -288,7 +277,7 @@ export default function AssessmentIntro() {
                 fontFamily: "'Inter', sans-serif",
                 fontSize: 16,
                 lineHeight: 1.6,
-                color: C.muted,
+                color: "var(--cf-ivory-62)",
                 textAlign: "center",
                 margin: "0 auto 56px",
                 maxWidth: 560,
@@ -308,7 +297,7 @@ export default function AssessmentIntro() {
                     fontFamily: "'Cormorant Garamond', serif",
                     fontSize: 18.5,
                     lineHeight: 1.75,
-                    color: C.ivory,
+                    color: "var(--cf-ivory)",
                     textAlign: "left",
                     margin: 0,
                     marginBottom: i === paragraphs.length - 1 ? 0 : 22,
@@ -325,7 +314,7 @@ export default function AssessmentIntro() {
                 maxWidth: 600,
                 margin: "0 auto 48px",
                 padding: "20px 28px",
-                border: `1px solid ${C.goldFaint}`,
+                border: `1px solid ${"var(--cf-gold-faint)"}`,
                 background: "rgba(201,168,76,0.04)",
                 textAlign: "center",
               }}
@@ -336,7 +325,7 @@ export default function AssessmentIntro() {
                   fontSize: 10,
                   letterSpacing: "0.32em",
                   textTransform: "uppercase",
-                  color: C.gold,
+                  color: "var(--cf-gold)",
                   marginBottom: 8,
                 }}
               >
@@ -348,7 +337,7 @@ export default function AssessmentIntro() {
                   fontStyle: "italic",
                   fontSize: 16,
                   lineHeight: 1.6,
-                  color: C.muted,
+                  color: "var(--cf-ivory-62)",
                   margin: 0,
                 }}
               >
@@ -363,7 +352,7 @@ export default function AssessmentIntro() {
                   maxWidth: 600,
                   margin: "0 auto 36px",
                   padding: "18px 24px",
-                  border: `1px solid ${C.goldDim}`,
+                  border: `1px solid ${"var(--cf-gold-mid)"}`,
                   background: "rgba(201,168,76,0.06)",
                   display: "flex",
                   flexWrap: "wrap",
@@ -379,7 +368,7 @@ export default function AssessmentIntro() {
                       fontSize: 10,
                       letterSpacing: "0.32em",
                       textTransform: "uppercase",
-                      color: C.gold,
+                      color: "var(--cf-gold)",
                       marginBottom: 4,
                     }}
                   >
@@ -390,7 +379,7 @@ export default function AssessmentIntro() {
                       fontFamily: "'Cormorant Garamond', serif",
                       fontStyle: "italic",
                       fontSize: 17,
-                      color: C.ivory,
+                      color: "var(--cf-ivory)",
                     }}
                   >
                     You're on question {resumeAt} of {TOTAL_QUESTIONS}.
@@ -401,21 +390,21 @@ export default function AssessmentIntro() {
                   style={{
                     background: "transparent",
                     border: "none",
-                    color: C.muted,
+                    color: "var(--cf-ivory-62)",
                     fontFamily: "'Inter', sans-serif",
                     fontSize: 12,
                     letterSpacing: "0.06em",
                     cursor: "pointer",
-                    borderBottom: `1px solid ${C.border}`,
+                    borderBottom: `1px solid ${"var(--cf-white-8)"}`,
                     paddingBottom: 2,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.color = C.ivory;
-                    e.currentTarget.style.borderBottomColor = C.goldDim;
+                    e.currentTarget.style.color = "var(--cf-ivory)";
+                    e.currentTarget.style.borderBottomColor = "var(--cf-gold-mid)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.color = C.muted;
-                    e.currentTarget.style.borderBottomColor = C.border;
+                    e.currentTarget.style.color = "var(--cf-ivory-62)";
+                    e.currentTarget.style.borderBottomColor = "var(--cf-white-8)";
                   }}
                 >
                   Start over
@@ -439,8 +428,8 @@ export default function AssessmentIntro() {
                 to="/field-guide/gifts/take"
                 style={{
                   background: "transparent",
-                  color: C.gold,
-                  border: `1px solid ${C.gold}`,
+                  color: "var(--cf-gold)",
+                  border: `1px solid ${"var(--cf-gold)"}`,
                   padding: "16px 32px",
                   fontFamily: "'Barlow Condensed', sans-serif",
                   fontSize: 13,
@@ -460,7 +449,7 @@ export default function AssessmentIntro() {
                 style={{
                   background: "transparent",
                   border: "none",
-                  color: C.muted,
+                  color: "var(--cf-ivory-62)",
                   fontFamily: "'Cormorant Garamond', serif",
                   fontStyle: "italic",
                   fontSize: 17,
@@ -486,22 +475,22 @@ export default function AssessmentIntro() {
                 style={{
                   background: "transparent",
                   border: "none",
-                  color: C.dim,
+                  color: "var(--cf-ivory-35)",
                   fontFamily: "'Inter', sans-serif",
                   fontSize: 13,
                   letterSpacing: "0.04em",
                   cursor: "pointer",
-                  borderBottom: `1px solid ${C.border}`,
+                  borderBottom: `1px solid ${"var(--cf-white-8)"}`,
                   paddingBottom: 2,
                   transition: "color 200ms ease, border-color 200ms ease",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = C.muted;
-                  e.currentTarget.style.borderBottomColor = C.goldDim;
+                  e.currentTarget.style.color = "var(--cf-ivory-62)";
+                  e.currentTarget.style.borderBottomColor = "var(--cf-gold-mid)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = C.dim;
-                  e.currentTarget.style.borderBottomColor = C.border;
+                  e.currentTarget.style.color = "var(--cf-ivory-35)";
+                  e.currentTarget.style.borderBottomColor = "var(--cf-white-8)";
                 }}
               >
                 Before you begin -- what this assessment is not
@@ -513,7 +502,7 @@ export default function AssessmentIntro() {
               <Link
                 to="/field-guide/scripture-before-scroll"
                 style={{
-                  color: C.dim,
+                  color: "var(--cf-ivory-35)",
                   textDecoration: "none",
                   fontFamily: "'Inter', sans-serif",
                   fontSize: 13,
