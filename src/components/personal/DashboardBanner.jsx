@@ -51,7 +51,7 @@ function formatFormationLine(profile) {
 const STYLES = `
   .cf-banner {
     position: relative;
-    padding: 28px 24px 24px;
+    padding: calc(var(--banner-height, 0px) + 108px) 24px 24px;
     background:
       radial-gradient(ellipse at 50% 0%, var(--cf-gold-glow) 0%, transparent 70%),
       var(--cf-hero-bg);
