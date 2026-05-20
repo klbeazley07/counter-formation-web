@@ -4,6 +4,38 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 17 -- Phase 10: const C continuation + FG_CSS/FA_CSS extraction (2026-05-20)
+
+**Status:** Complete. Build passes (2068 modules, JS 2049 kB (-8 kB), CSS 76.9 kB (+7.7 kB -- inline styles moved to CSS bundle)). Pushed to `main`.
+
+**Items completed:**
+
+**Nav overlap fix (bonus):** `DashboardBanner.jsx` was rendering behind the fixed `SiteNav` on the personalized home. The nav sits at `top: calc(1.5rem + var(--banner-height, 0px))` with ~72px height. Fixed by setting `.cf-banner` top padding to `calc(var(--banner-height, 0px) + 108px)` so content always clears the floating nav and responds correctly when CampaignBanner is present.
+
+**const C cleanup -- SevenDayChallenge.jsx:** `const C` was defined with 5 keys but had zero usages in the file. Deleted the entire dead block.
+
+**const C cleanup -- DevotionGuide.jsx (32 usages):** Removed `const C` (16 keys). Key distinctions: `bgCard: "#17140F"` maps to `--cf-rule-bg` (not `--cf-obsidian` as in gifts files), `cardBorder (0.14)` rounded to `--cf-gold-faint (0.15)`. One prefix collision fixed during replacement (`C.gold` clobbered `C.goldMid` before it was replaced -- fixed with a targeted correction pass).
+
+**const C cleanup -- gifts tree (12 files, 402 usages):** All 12 files cleaned. Two new tokens added to `tokens.css`:
+- `--cf-surface-raised: #110F0D` -- used for `bgCardSoft` across FormationPictureView, GiftConstellation, GiftsResults, GiftsRecover, TrustedPersonInvitationFlow.
+- `--cf-gold-10: rgba(201, 168, 76, 0.10)` -- used for `goldFaint (0.10)` in FormationPictureView and GiftsRecover.
+Hardcoded inline values retained: `green/greenFaint/red` in GiftsRecover; `error: #E57373` in TrustedPersonInvitationFlow. These are state-specific colors with no matching design token.
+
+**FG_CSS extraction:** `FieldGuide.jsx`'s 245-line inline CSS string extracted to `src/styles/field-guide.css`. Vite CSS import added. `FieldGuideStyles` export and `<FieldGuideStyles />` usage in App.jsx removed.
+
+**FA_CSS extraction:** `FruitAssessment.jsx`'s ~100-line inline CSS string extracted to `src/styles/fruit-assessment.css`. Vite CSS import added. `FAStyles` export and `<FAStyles />` usage in App.jsx removed.
+
+**Key decisions:**
+1. Prefix collision gotcha confirmed again: always replace longer key names (e.g., `C.goldMid`) before shorter prefix subsets (e.g., `C.gold`). The Phase 9 gotcha note holds.
+2. CSS extraction moves styles from JS bundle to CSS bundle -- correct placement. JS decreases, CSS increases; net effect is better caching since CSS and JS invalidate independently.
+3. `DG_CSS` template string in DevotionGuide.jsx deferred (same pattern as FG_CSS/FA_CSS was). Carry to Phase 11.
+
+**Remaining const C files:** 10 files -- `App.jsx`, agent components (AgentHistory, AgentOnboarding, ShortFormationAssessment), DevotionHistory, DevotionOnboarding, MobileTabBar, FruitStrata, GiftConstellationCompact, ArrowLogWidget.
+
+**Bundle:** 2068 modules (+2 from new CSS files), JS 2049 kB (-8 kB), CSS 77 kB (+8 kB).
+
+---
+
 ## Session 16 -- Phase 9: ApparelLane v2 lite + const C batch cleanup (2026-05-19)
 
 **Status:** Complete. Build passes (2066 modules, 2057 kB -- ~3 kB increase from token string literals). Pushed to `main`.
