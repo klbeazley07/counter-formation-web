@@ -19,21 +19,6 @@ import { getAllRhythms } from "../content/loader";
  *                           completes. Required.
  */
 
-const C = {
-  bg:       "#06050A",
-  cardBg:   "#1C1813",
-  gold:     "#C9A84C",
-  goldMid:  "rgba(201,168,76,0.30)",
-  goldDim:  "rgba(201,168,76,0.12)",
-  ivory:    "#FAF8F5",
-  muted:    "rgba(250,248,245,0.62)",
-  dim:      "rgba(250,248,245,0.28)",
-  border:   "rgba(201,168,76,0.14)",
-  inputBg:  "#EEE7DA",
-  inputBg2: "#F3EDE1",
-  inputText:"#17140F",
-};
-
 const RHYTHMS = getAllRhythms().map(r => ({ slug: r.slug, label: r.title, hint: r.sub }));
 
 const RHYTHM_SLUGS = RHYTHMS.map(r => r.slug);
@@ -302,7 +287,7 @@ export default function DevotionOnboarding({ onComplete }) {
                   setFormationFocus(slug);
                   setStep("question-2");
                 }}
-                style={formationFocus === slug ? { background: "rgba(201,168,76,0.12)", borderColor: C.gold } : null}
+                style={formationFocus === slug ? { background: "rgba(201,168,76,0.12)", borderColor: "var(--cf-gold)" } : null}
               >
                 {FRUITS[slug].label}
               </button>
@@ -331,7 +316,7 @@ export default function DevotionOnboarding({ onComplete }) {
                   setRhythmPreference(r.slug);
                   setStep("question-3");
                 }}
-                style={rhythmPreference === r.slug ? { background: "rgba(201,168,76,0.12)", borderColor: C.gold } : null}
+                style={rhythmPreference === r.slug ? { background: "rgba(201,168,76,0.12)", borderColor: "var(--cf-gold)" } : null}
               >
                 {r.label}
                 <span className="dgo-option-hint">{r.hint}</span>

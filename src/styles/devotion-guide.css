@@ -1,0 +1,84 @@
+.dg-markdown { font-family: 'Cormorant Garamond', serif; }
+
+.dg-input::placeholder { color: rgba(23,20,15,0.42); }
+.dg-input:focus {
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.18), 0 18px 32px rgba(0,0,0,0.16);
+  transform: translateY(-1px);
+}
+
+.dg-markdown h1 {
+  font-family: 'Michroma', sans-serif;
+  font-size: clamp(22px, 4vw, 38px);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #FAF8F5;
+  text-align: center;
+  margin: 0 0 40px;
+  line-height: 1.1;
+}
+
+.dg-markdown h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: #C9A84C;
+  font-weight: 700;
+  text-align: center;
+  margin: 48px 0 16px;
+}
+
+.dg-markdown h3 {
+  font-family: 'Michroma', sans-serif;
+  font-size: clamp(14px, 2vw, 18px);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(250,248,245,0.9);
+  margin: 32px 0 16px;
+}
+
+.dg-markdown p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(17px, 2.5vw, 21px);
+  font-weight: 300;
+  font-style: normal;
+  line-height: 1.9;
+  color: rgba(250,248,245,0.62);
+  margin-bottom: 28px;
+}
+
+.dg-markdown ul, .dg-markdown ol {
+  margin: 0 0 28px 24px;
+}
+
+.dg-markdown li {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(17px, 2.2vw, 21px);
+  font-weight: 300;
+  font-style: normal;
+  line-height: 1.9;
+  color: rgba(250,248,245,0.62);
+  margin-bottom: 10px;
+}
+
+.dg-markdown blockquote {
+  border-left: 2px solid #C9A84C;
+  background: rgba(201,168,76,0.08);
+  border-radius: 0 12px 12px 0;
+  padding: 16px 24px;
+  margin: 28px 0;
+  font-style: italic;
+  color: rgba(250,248,245,0.80);
+}
+
+.dg-markdown hr {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
+  border: none;
+  margin: 40px 0;
+}
+
+.dg-markdown strong {
+  color: rgba(250,248,245,0.85);
+  font-weight: 600;
+}

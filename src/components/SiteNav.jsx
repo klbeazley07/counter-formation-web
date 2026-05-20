@@ -3,12 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { useFormationProfile } from "../hooks/useFormationProfile";
 import { hasMeaningfulActivity } from "./personal/HomeRouter";
 
-const C = {
-  bg: "rgba(6,5,10,0.88)",
-  gold: "#C9A84C",
-  ivory: "#FAF8F5",
-};
-
 function getNavConfig(pathname) {
   if (pathname.startsWith("/identity")) {
     return {
@@ -97,7 +91,7 @@ export function SiteNav() {
   return (
     <nav
       className="hidden md:flex fixed left-1/2 -translate-x-1/2 z-[100] w-[94%] max-w-5xl px-5 py-4 backdrop-blur-2xl border border-white/10 rounded-2xl items-center justify-between"
-      style={{ backgroundColor: C.bg, top: "calc(1.5rem + var(--banner-height, 0px))" }}
+      style={{ backgroundColor: "rgba(6,5,10,0.88)", top: "calc(1.5rem + var(--banner-height, 0px))" }}
     >
         <Link to="/" className="flex items-center gap-2 md:gap-3" style={{ textDecoration: "none" }}>
           <img
@@ -108,7 +102,7 @@ export function SiteNav() {
           />
           <span
             className="text-[11px] md:text-sm tracking-[0.2em] md:tracking-[0.28em] uppercase whitespace-nowrap"
-            style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, color: C.ivory }}
+            style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, color: "var(--cf-ivory)" }}
           >
             Counter Formation
           </span>
@@ -122,7 +116,7 @@ export function SiteNav() {
                 to={toggleLink.href}
                 className="transition-colors py-2"
                 style={{
-                  color: C.gold,
+                  color: "var(--cf-gold)",
                   textDecoration: "none",
                   minHeight: "44px",
                   display: "inline-flex",
@@ -143,7 +137,7 @@ export function SiteNav() {
                   {...props}
                   className="transition-colors py-2"
                   style={{
-                    color: isActive ? C.gold : C.ivory,
+                    color: isActive ? "var(--cf-gold)" : "var(--cf-ivory)",
                     textDecoration: "none",
                     minHeight: "44px",
                     display: "inline-flex",
@@ -162,8 +156,8 @@ export function SiteNav() {
             className="px-5 py-2 rounded-full border transition-all text-[9px] md:text-[10px] hidden md:block uppercase tracking-widest font-bold"
             style={{
               fontFamily: "'Barlow Condensed', sans-serif",
-              borderColor: `${C.gold}66`,
-              color: C.gold,
+              borderColor: `#C9A84C66`,
+              color: "var(--cf-gold)",
               textDecoration: "none",
             }}
           >

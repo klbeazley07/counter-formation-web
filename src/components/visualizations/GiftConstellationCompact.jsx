@@ -17,13 +17,6 @@ import { gifts } from "../../data/gifts";
  *                           Default true.
  */
 
-const C = {
-  gold:      "#C9A84C",
-  goldDim:   "rgba(201,168,76,0.32)",
-  goldFaint: "rgba(201,168,76,0.18)",
-  ivory:     "#FAF8F5",
-};
-
 const VB_W = 1000;
 const VB_H = 620;
 
@@ -107,7 +100,7 @@ export default function GiftConstellationCompact({
                   key={`${a}-${b}-${i}`}
                   x1={pa.x} y1={pa.y}
                   x2={pb.x} y2={pb.y}
-                  stroke={C.gold}
+                  stroke={"var(--cf-gold)"}
                   strokeWidth={0.6}
                   opacity={0.22}
                 />
@@ -128,7 +121,7 @@ export default function GiftConstellationCompact({
                     fontSize: 11,
                     letterSpacing: "0.42em",
                     textTransform: "uppercase",
-                    fill: C.gold,
+                    fill: "var(--cf-gold)",
                     opacity: 0.55,
                   }}
                 >
@@ -152,14 +145,14 @@ export default function GiftConstellationCompact({
                     <circle
                       cx={pos.x} cy={pos.y}
                       r={r + 8}
-                      fill={C.gold}
+                      fill={"var(--cf-gold)"}
                       opacity={0.18}
                     />
                   )}
                   <circle
                     cx={pos.x} cy={pos.y}
                     r={r}
-                    fill={isTop ? C.gold : C.goldDim}
+                    fill={isTop ? "var(--cf-gold)" : "var(--cf-gold-mid)"}
                     opacity={opacity}
                   />
                 </g>

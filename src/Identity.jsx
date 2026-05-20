@@ -18,13 +18,6 @@ import { getArmorPiece, getAllArmorPieces } from "./content/loader";
 
 const SHOPIFY_URL = "https://shop.counterformed.com/collections/armor-of-god-collection";
 
-const C = {
-  heroBg: "#06050A",
-  ruleBg: "#17140F",
-  gold:   "#C9A84C",
-  ivory:  "#FAF8F5",
-};
-
 const ARMOR_PIECES = getAllArmorPieces();
 
 
@@ -322,7 +315,7 @@ function HeroSection() {
       id="hero"
       ref={sectionRef}
       className="relative min-h-screen flex flex-col items-center justify-center pt-16 md:pt-0"
-      style={{ backgroundColor: C.heroBg }}
+      style={{ backgroundColor: "var(--cf-hero-bg)" }}
     >
       {/* Clipping wrapper for background layers â€” keeps overflow-hidden off the section itself to avoid iOS scroll trap */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -340,7 +333,7 @@ function HeroSection() {
       <div
         className="absolute inset-0"
         style={{
-          background: `linear-gradient(to top, ${C.heroBg} 0%, ${C.heroBg}ee 30%, ${C.heroBg}88 60%, ${C.heroBg}22 100%)`,
+          background: `linear-gradient(to top, #06050A 0%, #06050Aee 30%, #06050A88 60%, #06050A22 100%)`,
         }}
       />
 
@@ -385,7 +378,7 @@ function HeroSection() {
         <span
           ref={eyebrowRef}
           className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase font-bold mb-8 opacity-0"
-          style={{ color: C.gold }}
+          style={{ color: "var(--cf-gold)" }}
         >
           The Identity Pillar Â· Ephesians 6:10â€“18
         </span>
@@ -403,7 +396,7 @@ function HeroSection() {
             fontSize: "clamp(0.95rem, 2.5vw, 1.3rem)",
             fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
-            color: `${C.ivory}88`,
+            color: `#FAF8F588`,
           }}
         >
           Every satisfying explanation for your identity that doesn't start with God will eventually collapse under its own weight.
@@ -417,9 +410,9 @@ function HeroSection() {
       >
         <div
           className="w-[1px] h-8"
-          style={{ background: `linear-gradient(to bottom, transparent, ${C.gold}66)` }}
+          style={{ background: `linear-gradient(to bottom, transparent, #C9A84C66)` }}
         />
-        <ChevronDown size={16} color={C.gold} strokeWidth={1.5} />
+        <ChevronDown size={16} color={"var(--cf-gold)"} strokeWidth={1.5} />
       </div>
     </section>
   );
@@ -485,7 +478,7 @@ function ArmorIntroSection() {
   }, []);
 
   return (
-    <section id="scripture" ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: C.heroBg }}>
+    <section id="scripture" ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: "var(--cf-hero-bg)" }}>
       <div className="max-w-[1100px] mx-auto">
         <div className="grid md:grid-cols-[55fr_45fr] gap-16 md:gap-24 items-start">
 
@@ -494,7 +487,7 @@ function ArmorIntroSection() {
             <span
               ref={eyebrowBRef}
               className="block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
-              style={{ color: C.gold }}
+              style={{ color: "var(--cf-gold)" }}
             >
               Ephesians 6:10â€“18
             </span>
@@ -505,7 +498,7 @@ function ArmorIntroSection() {
                 fontStyle: "italic",
                 fontSize: "clamp(17px, 1.9vw, 24px)",
                 lineHeight: 1.85,
-                color: `${C.ivory}cc`,
+                color: `#FAF8F5cc`,
               }}
             >
               <p className="mb-5">
@@ -525,7 +518,7 @@ function ArmorIntroSection() {
             <div
               ref={goldRuleRef}
               className="h-[1px] mb-10"
-              style={{ background: `linear-gradient(to right, ${C.gold}55, transparent)` }}
+              style={{ background: `linear-gradient(to right, #C9A84C55, transparent)` }}
             />
             <p
               className="armor-para mb-10"
@@ -534,19 +527,19 @@ function ArmorIntroSection() {
                 fontStyle: "italic",
                 fontSize: "clamp(20px, 2.2vw, 28px)",
                 lineHeight: 1.55,
-                color: `${C.ivory}bb`,
+                color: `#FAF8F5bb`,
               }}
             >
               The armor is not something you build. It is something you receive and put on.
             </p>
             <div className="space-y-8">
-              <p className="armor-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}99` }}>
+              <p className="armor-para text-sm md:text-base leading-relaxed font-light" style={{ color: `#FAF8F599` }}>
                 Paul is writing to people under real pressure â€” not offering a metaphor for self-improvement but a survival framework for people living inside a hostile formation system. Rome's empire was total: emperor worship, cultural assimilation, a comprehensive narrative about power, identity, and worth. The parallel to the modern formation environment is not metaphorical. It is structural.
               </p>
-              <p className="armor-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}99` }}>
+              <p className="armor-para text-sm md:text-base leading-relaxed font-light" style={{ color: `#FAF8F599` }}>
                 Identity in Christ is given, not constructed. The belt, the breastplate, the shield â€” each piece represents a dimension of God's own character that He extends to those who are in Christ. You are not assembling virtue through effort. You are stepping into what has already been provided.
               </p>
-              <p className="armor-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}99` }}>
+              <p className="armor-para text-sm md:text-base leading-relaxed font-light" style={{ color: `#FAF8F599` }}>
                 "Putting on" is a daily, deliberate act. You drift without it by default. The armor does not go on automatically â€” it requires intentional return, morning by morning, to the reality of who you are in Christ before the world has a chance to tell you otherwise. That is why this collection pairs every piece with a formation pathway.
               </p>
             </div>
@@ -611,8 +604,8 @@ function GodsArmorSection() {
 
       // --- Background color transition: Hero Black â†’ Rule Brown via scrub ---
       gsap.fromTo(sectionRef.current,
-        { backgroundColor: C.heroBg },
-        { backgroundColor: C.ruleBg, ease: "none",
+        { backgroundColor: "var(--cf-hero-bg)" },
+        { backgroundColor: "var(--cf-rule-bg)", ease: "none",
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top bottom",
@@ -630,7 +623,7 @@ function GodsArmorSection() {
       id="revelation"
       ref={sectionRef}
       className="py-24 md:py-40 px-5"
-      style={{ backgroundColor: C.heroBg }}
+      style={{ backgroundColor: "var(--cf-hero-bg)" }}
     >
       <div className="max-w-[1100px] mx-auto">
         <div className="grid md:grid-cols-2 gap-16 md:gap-24 items-start">
@@ -638,30 +631,30 @@ function GodsArmorSection() {
           <div ref={leftColRef}>
             <span
               className="block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
-              style={{ color: C.gold }}
+              style={{ color: "var(--cf-gold)" }}
             >
               The Revelation
             </span>
-            <p className="text-sm md:text-base leading-relaxed font-light mb-6" style={{ color: `${C.ivory}77` }}>
+            <p className="text-sm md:text-base leading-relaxed font-light mb-6" style={{ color: `#FAF8F577` }}>
               The armor Paul describes is not a metaphor invented for the church. It is drawn from Isaiah's descriptions of God Himself. Isaiah 59:17 describes God putting on righteousness as a breastplate, salvation as a helmet. Isaiah 11:5 pictures the belt of faithfulness. Isaiah 52:7 speaks of feet bringing good news of peace.
             </p>
-            <p className="text-sm md:text-base leading-relaxed font-light mb-12" style={{ color: `${C.ivory}77` }}>
+            <p className="text-sm md:text-base leading-relaxed font-light mb-12" style={{ color: `#FAF8F577` }}>
               When you put on the armor of God, you are not assembling your own defenses. You are stepping into God's own character â€” the same righteousness, the same salvation, the same peace that belong to Him. The armor is His before it is yours.
             </p>
             <p
               ref={brandLineRef}
               className="text-lg md:text-2xl tracking-[0.12em] uppercase font-bold leading-tight"
-              style={{ fontFamily: "'Michroma', sans-serif", color: C.gold }}
+              style={{ fontFamily: "'Michroma', sans-serif", color: "var(--cf-gold)" }}
             >
               "You are not inventing identity. You are receiving it."
             </p>
           </div>
 
           <div ref={rightColRef}>
-            <div className="border-l-2 pl-8" style={{ borderColor: `${C.gold}33` }}>
+            <div className="border-l-2 pl-8" style={{ borderColor: `#C9A84C33` }}>
               <span
                 className="block text-[9px] tracking-[0.4em] uppercase mb-6"
-                style={{ color: `${C.gold}77` }}
+                style={{ color: `#C9A84C77` }}
               >
                 Isaiah 59:17
               </span>
@@ -671,7 +664,7 @@ function GodsArmorSection() {
                   fontStyle: "italic",
                   fontSize: "clamp(22px, 3.5vw, 48px)",
                   lineHeight: 1.3,
-                  color: `${C.ivory}bb`,
+                  color: `#FAF8F5bb`,
                 }}
               >
                 He put on righteousness as his breastplate, and the helmet of salvation on his head.
@@ -824,7 +817,7 @@ function ArmorRingSection() {
   const piece = activePiece !== null ? ARMOR_PIECES[activePiece] : null;
 
   return (
-    <section id="six-pieces" ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: C.ruleBg }}>
+    <section id="six-pieces" ref={sectionRef} className="py-24 md:py-40 px-5" style={{ backgroundColor: "var(--cf-rule-bg)" }}>
       <style>{`
         @keyframes ringRotate {
           from { transform: rotate(0deg); }
@@ -861,7 +854,7 @@ function ArmorRingSection() {
 
         {/* Section header */}
         <div className="mb-12 md:mb-16">
-          <span className="block text-[10px] tracking-[0.5em] uppercase font-bold mb-4" style={{ color: C.gold }}>
+          <span className="block text-[10px] tracking-[0.5em] uppercase font-bold mb-4" style={{ color: "var(--cf-gold)" }}>
             The Six Pieces
           </span>
           <h2 className="font-brand text-3xl md:text-6xl uppercase tracking-[0.1em] text-white leading-none">
@@ -880,7 +873,7 @@ function ArmorRingSection() {
               minHeight: "clamp(280px, 42vw, 520px)",
               borderRadius: "1.5rem",
               overflow: "hidden",
-              background: C.heroBg,
+              background: "var(--cf-hero-bg)",
               alignSelf: "flex-start",
               margin: "0 auto",
             }}
@@ -901,7 +894,7 @@ function ArmorRingSection() {
             {/* Radial overlay â€” darkens edges, keeps center readable */}
             <div style={{
               position: "absolute", inset: 0,
-              background: `radial-gradient(ellipse at center, ${C.heroBg}33 0%, ${C.heroBg}88 60%, ${C.heroBg}CC 100%)`,
+              background: `radial-gradient(ellipse at center, #06050A33 0%, #06050A88 60%, #06050ACC 100%)`,
               pointerEvents: "none",
               zIndex: 1,
             }} />
@@ -929,7 +922,7 @@ function ArmorRingSection() {
                     className="ring-arc"
                     cx="50" cy="50" r={ICON_R}
                     fill="none"
-                    stroke={C.gold}
+                    stroke={"var(--cf-gold)"}
                     strokeOpacity="0.15"
                     strokeWidth="0.4"
                   />
@@ -942,9 +935,9 @@ function ArmorRingSection() {
                       : "particleDriftB 5s ease-in-out infinite alternate";
                     return (
                       <g key={segIdx}>
-                        <circle cx={p1.x} cy={p1.y} r="0.35" fill={C.gold} opacity="0.08"
+                        <circle cx={p1.x} cy={p1.y} r="0.35" fill={"var(--cf-gold)"} opacity="0.08"
                           style={{ animation: prefersReduced ? "none" : anim }} />
-                        <circle cx={p2.x} cy={p2.y} r="0.35" fill={C.gold} opacity="0.06"
+                        <circle cx={p2.x} cy={p2.y} r="0.35" fill={"var(--cf-gold)"} opacity="0.06"
                           style={{ animation: prefersReduced ? "none" : anim }} />
                       </g>
                     );
@@ -958,7 +951,7 @@ function ArmorRingSection() {
                 transform: "translate(-50%, -50%)",
                 width: "45%", height: "45%",
                 borderRadius: "50%",
-                background: `radial-gradient(circle, ${C.gold}22 0%, transparent 70%)`,
+                background: `radial-gradient(circle, #C9A84C22 0%, transparent 70%)`,
                 animation: prefersReduced ? "none" : "centerGlow 3s ease-in-out infinite",
                 pointerEvents: "none",
               }} />
@@ -978,7 +971,7 @@ function ArmorRingSection() {
                   <span style={{
                     fontFamily: "'Michroma', sans-serif",
                     fontSize: "clamp(16px, 1.6vw, 20px)",
-                    color: C.gold,
+                    color: "var(--cf-gold)",
                     textTransform: "uppercase",
                     letterSpacing: "0.08em",
                     lineHeight: 1.3,
@@ -1000,7 +993,7 @@ function ArmorRingSection() {
                       fontFamily: "'Cormorant Garamond', serif",
                       fontStyle: "italic",
                       fontSize: "clamp(26px, 2.8vw, 36px)",
-                      color: C.gold,
+                      color: "var(--cf-gold)",
                       opacity: 0.9,
                     }}>
                       Armor Up.
@@ -1038,7 +1031,7 @@ function ArmorRingSection() {
                       <div style={{
                         position: "absolute", inset: "-8px",
                         borderRadius: "50%",
-                        border: `1px solid ${C.gold}`,
+                        border: `1px solid #C9A84C`,
                         animation: prefersReduced ? "none" : "haloPulse 1.5s ease-in-out infinite",
                         pointerEvents: "none",
                       }} />
@@ -1050,7 +1043,7 @@ function ArmorRingSection() {
                         width: "clamp(52px, 5.5vw, 76px)", height: "clamp(52px, 5.5vw, 76px)",
                         objectFit: "contain",
                         opacity: isActive ? 1 : 0.65,
-                        filter: isActive ? `drop-shadow(0 0 8px ${C.gold}88)` : "none",
+                        filter: isActive ? `drop-shadow(0 0 8px #C9A84C88)` : "none",
                         transition: "opacity 0.3s ease, filter 0.3s ease",
                       }}
                     />
@@ -1067,7 +1060,7 @@ function ArmorRingSection() {
                 fontSize: "10px",
                 letterSpacing: "0.3em",
                 textTransform: "uppercase",
-                color: `${C.ivory}33`,
+                color: `#FAF8F533`,
                 fontFamily: "'Michroma', sans-serif",
                 zIndex: 4,
                 pointerEvents: "none",
@@ -1085,40 +1078,40 @@ function ArmorRingSection() {
             {piece ? (
               <div ref={contentRef} style={{ width: "100%", opacity: 0 }}>
                 <div className="flex items-center gap-4 mb-6">
-                  <span className="text-[11px] tracking-[0.4em] uppercase" style={{ color: `${C.gold}77` }}>
+                  <span className="text-[11px] tracking-[0.4em] uppercase" style={{ color: `#C9A84C77` }}>
                     {piece.num}
                   </span>
-                  <div className="h-[1px] flex-1" style={{ background: `${C.gold}22` }} />
+                  <div className="h-[1px] flex-1" style={{ background: `#C9A84C22` }} />
                 </div>
                 <h3 className="font-brand text-2xl md:text-4xl uppercase tracking-[0.1em] text-white mb-3">
                   {piece.title}
                 </h3>
-                <p className="text-[12px] tracking-[0.3em] uppercase mb-8" style={{ color: `${C.gold}99` }}>
+                <p className="text-[12px] tracking-[0.3em] uppercase mb-8" style={{ color: `#C9A84C99` }}>
                   <ScriptureRef reference={piece.scripture} text={piece.scriptureText} />
                 </p>
 
                 <div className="space-y-7">
                   <div>
-                    <span className="text-[11px] tracking-[0.3em] uppercase block mb-2" style={{ color: `${C.ivory}55` }}>
+                    <span className="text-[11px] tracking-[0.3em] uppercase block mb-2" style={{ color: `#FAF8F555` }}>
                       Theology
                     </span>
-                    <p className="text-base md:text-lg leading-relaxed font-light" style={{ color: `${C.ivory}88` }}>
+                    <p className="text-base md:text-lg leading-relaxed font-light" style={{ color: `#FAF8F588` }}>
                       {piece.theology}
                     </p>
                   </div>
                   <div>
-                    <span className="text-[11px] tracking-[0.3em] uppercase block mb-2" style={{ color: `${C.ivory}55` }}>
+                    <span className="text-[11px] tracking-[0.3em] uppercase block mb-2" style={{ color: `#FAF8F555` }}>
                       Modern Tension
                     </span>
-                    <p className="text-base md:text-lg leading-relaxed font-light" style={{ color: `${C.ivory}66` }}>
+                    <p className="text-base md:text-lg leading-relaxed font-light" style={{ color: `#FAF8F566` }}>
                       {piece.tension}
                     </p>
                   </div>
                   <div>
-                    <span className="text-[11px] tracking-[0.3em] uppercase block mb-2" style={{ color: `${C.ivory}55` }}>
+                    <span className="text-[11px] tracking-[0.3em] uppercase block mb-2" style={{ color: `#FAF8F555` }}>
                       Daily Practice
                     </span>
-                    <p className="text-base md:text-lg leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+                    <p className="text-base md:text-lg leading-relaxed font-light" style={{ color: `#FAF8F577` }}>
                       {piece.practice}
                     </p>
                   </div>
@@ -1127,11 +1120,11 @@ function ArmorRingSection() {
                 <blockquote
                   className="mt-8 pl-4 border-l"
                   style={{
-                    borderColor: `${C.gold}33`,
+                    borderColor: `#C9A84C33`,
                     fontFamily: "'Cormorant Garamond', serif",
                     fontStyle: "italic",
                     fontSize: "clamp(17px, 1.6vw, 22px)",
-                    color: `${C.ivory}99`,
+                    color: `#FAF8F599`,
                   }}
                 >
                   "{piece.hook}"
@@ -1141,13 +1134,13 @@ function ArmorRingSection() {
                   <Link
                     to={`/identity/${piece.slug}`}
                     className="text-[12px] tracking-[0.28em] uppercase font-bold flex items-center gap-2 transition-opacity hover:opacity-100"
-                    style={{ color: C.gold, textDecoration: "none" }}
+                    style={{ color: "var(--cf-gold)", textDecoration: "none" }}
                   >
                     Explore this piece
                     <ArrowRight size={14} />
                   </Link>
                   {piece.product && (
-                    <span className="text-[11px] tracking-[0.24em] uppercase" style={{ color: `${C.ivory}44` }}>
+                    <span className="text-[11px] tracking-[0.24em] uppercase" style={{ color: `#FAF8F544` }}>
                       {piece.product}
                     </span>
                   )}
@@ -1158,7 +1151,7 @@ function ArmorRingSection() {
                 fontFamily: "'Cormorant Garamond', serif",
                 fontStyle: "italic",
                 fontSize: "clamp(16px, 1.8vw, 22px)",
-                color: `${C.ivory}22`,
+                color: `#FAF8F522`,
                 lineHeight: 1.6,
               }}>
                 Select a piece from the ring to explore its theology, tension, and daily practice.
@@ -1245,24 +1238,24 @@ function ClosingSection() {
       id="why"
       ref={sectionRef}
       className="px-5"
-      style={{ backgroundColor: C.ruleBg }}
+      style={{ backgroundColor: "var(--cf-rule-bg)" }}
     >
       {/* â”€â”€ Part 1: Why the Armor (prose) â”€â”€ */}
       <div className="max-w-[740px] mx-auto pt-24 md:pt-40">
         <span
           className="closing-para block text-[10px] tracking-[0.5em] uppercase font-bold mb-8"
-          style={{ color: C.gold }}
+          style={{ color: "var(--cf-gold)" }}
         >
           Why the Armor
         </span>
         <div className="space-y-8">
-          <p className="closing-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+          <p className="closing-para text-sm md:text-base leading-relaxed font-light" style={{ color: `#FAF8F577` }}>
             The armor is not a costume. It is what God has provided for people who are being formed in a system that is actively working against them. Every culture in history has had a comprehensive formation project â€” a set of values, narratives, and practices designed to shape people into its image. The digital age is no different, except that its reach is total and its pace is unprecedented.
           </p>
-          <p className="closing-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+          <p className="closing-para text-sm md:text-base leading-relaxed font-light" style={{ color: `#FAF8F577` }}>
             The gear is not the armor. It is a marker â€” a daily reminder that you belong to a different formation project. The QR code connects to the formation content: the theology, the practice, the community. The garment anchors the identity. The content forms it.
           </p>
-          <p className="closing-para text-sm md:text-base leading-relaxed font-light" style={{ color: `${C.ivory}77` }}>
+          <p className="closing-para text-sm md:text-base leading-relaxed font-light" style={{ color: `#FAF8F577` }}>
             The gear is the entry point. The content is the formation. The practice is the armor. These three move together, or they don't move at all.
           </p>
         </div>
@@ -1271,7 +1264,7 @@ function ClosingSection() {
         <p
           ref={pivotRef}
           className="mt-16 text-lg md:text-2xl tracking-[0.14em] uppercase font-bold leading-tight"
-          style={{ fontFamily: "'Michroma', sans-serif", color: C.gold }}
+          style={{ fontFamily: "'Michroma', sans-serif", color: "var(--cf-gold)" }}
         >
           "The gear is not the mission. It's a marker of it."
         </p>
@@ -1285,7 +1278,7 @@ function ClosingSection() {
           style={{
             width: "48px",
             height: "1px",
-            background: `linear-gradient(to right, transparent, ${C.gold}55, transparent)`,
+            background: `linear-gradient(to right, transparent, #C9A84C55, transparent)`,
           }}
         />
 
@@ -1296,7 +1289,7 @@ function ClosingSection() {
             fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
             fontSize: "clamp(32px, 6vw, 56px)",
-            color: C.gold,
+            color: "var(--cf-gold)",
             lineHeight: 1.2,
             marginBottom: "1.5rem",
           }}
@@ -1326,9 +1319,9 @@ function ClosingSection() {
             className="inline-flex items-center justify-center gap-3 px-9 py-3 rounded-full font-bold text-[10px] tracking-[0.28em] uppercase transition-all hover:scale-105 w-full sm:w-auto"
             style={{
               fontFamily: "'Barlow Condensed', sans-serif",
-              backgroundColor: C.gold,
+              backgroundColor: "var(--cf-gold)",
               color: "#0A0A0A",
-              boxShadow: `0 4px 24px ${C.gold}44`,
+              boxShadow: `0 4px 24px #C9A84C44`,
               textDecoration: "none",
             }}
           >
@@ -1339,8 +1332,8 @@ function ClosingSection() {
             className="inline-flex items-center justify-center gap-3 px-9 py-3 rounded-full font-bold text-[10px] tracking-[0.28em] uppercase transition-all hover:bg-white/5 w-full sm:w-auto"
             style={{
               fontFamily: "'Barlow Condensed', sans-serif",
-              color: C.gold,
-              border: `1px solid ${C.gold}44`,
+              color: "var(--cf-gold)",
+              border: `1px solid #C9A84C44`,
               textDecoration: "none",
             }}
           >
@@ -1379,7 +1372,7 @@ function ClosingSection() {
           style={{
             width: "32px",
             height: "1px",
-            background: `${C.gold}22`,
+            background: `#C9A84C22`,
           }}
         />
 
@@ -1388,14 +1381,14 @@ function ClosingSection() {
           style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
-            color: `${C.ivory}44`,
+            color: `#FAF8F544`,
           }}
         >
           "Be strong in the Lord and in his mighty power. Put on the full armor of God."
         </p>
         <p
           className="text-[9px] tracking-[0.4em] uppercase mb-12"
-          style={{ color: `${C.ivory}25` }}
+          style={{ color: `#FAF8F525` }}
         >
           Ephesians 6:10â€“11
         </p>
@@ -1408,7 +1401,7 @@ function ClosingSection() {
         />
         <p
           className="text-[8px] tracking-[0.4em] uppercase"
-          style={{ color: `${C.ivory}18` }}
+          style={{ color: `#FAF8F518` }}
         >
           Discipline Â· Presence Â· Formation
         </p>
@@ -1583,7 +1576,7 @@ export function IdentityLanding() {
     };
   }, []);
   return (
-    <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: C.heroBg }}>
+    <div className="text-[#FAF8F5] overflow-x-hidden" style={{ backgroundColor: "var(--cf-hero-bg)" }}>
       <SectionProgressNav />
       <HeroSection />
       <ArmorIntroSection />

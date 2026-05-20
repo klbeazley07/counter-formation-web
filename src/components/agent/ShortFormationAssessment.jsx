@@ -12,17 +12,6 @@ import { useState } from "react";
  *   loading           -- disables the submit button when the parent is awaiting the API
  */
 
-const C = {
-  bg:      "#06050A",
-  bgCard:  "#17140F",
-  gold:    "#C9A84C",
-  goldDim: "rgba(201,168,76,0.14)",
-  ivory:   "#FAF8F5",
-  muted:   "rgba(250,248,245,0.62)",
-  dim:     "rgba(250,248,245,0.28)",
-  border:  "rgba(255,255,255,0.08)",
-};
-
 const QUESTIONS = [
   {
     key:         "formingRight",
@@ -68,7 +57,7 @@ export default function ShortFormationAssessment({ onSubmit, loading }) {
             fontSize:      11,
             letterSpacing: "0.28em",
             textTransform: "uppercase",
-            color:         C.gold,
+            color:         "var(--cf-gold)",
             fontWeight:    700,
             margin:        "0 0 6px",
           }}>
@@ -78,7 +67,7 @@ export default function ShortFormationAssessment({ onSubmit, loading }) {
             fontFamily: "'Cormorant Garamond', serif",
             fontStyle:  "italic",
             fontSize:   16,
-            color:      C.dim,
+            color:      "var(--cf-ivory-28)",
             margin:     "0 0 12px",
             lineHeight: 1.5,
           }}>
@@ -92,14 +81,14 @@ export default function ShortFormationAssessment({ onSubmit, loading }) {
             style={{
               width:         "100%",
               boxSizing:     "border-box",
-              background:    C.bgCard,
-              border:        `1px solid ${answers[q.key].trim() ? "rgba(201,168,76,0.30)" : C.border}`,
+              background:    "var(--cf-rule-bg)",
+              border:        `1px solid ${answers[q.key].trim() ? "rgba(201,168,76,0.30)" : "var(--cf-white-8)"}`,
               borderRadius:  12,
               padding:       "14px 16px",
               fontFamily:    "'Cormorant Garamond', serif",
               fontSize:      17,
               lineHeight:    1.6,
-              color:         C.ivory,
+              color:         "var(--cf-ivory)",
               resize:        "vertical",
               outline:       "none",
               transition:    "border-color 0.2s",
@@ -115,8 +104,8 @@ export default function ShortFormationAssessment({ onSubmit, loading }) {
           alignSelf:     "flex-start",
           padding:       "14px 32px",
           borderRadius:  999,
-          background:    allFilled && !loading ? C.gold : C.goldDim,
-          color:         allFilled && !loading ? "#0A0A0A" : C.dim,
+          background:    allFilled && !loading ? "var(--cf-gold)" : "var(--cf-gold-faint)",
+          color:         allFilled && !loading ? "#0A0A0A" : "var(--cf-ivory-28)",
           border:        "none",
           fontFamily:    "'Barlow Condensed', sans-serif",
           fontSize:      11,

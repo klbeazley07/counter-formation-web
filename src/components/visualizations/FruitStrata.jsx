@@ -18,12 +18,6 @@ import { FRUITS } from "../../fruitAssessmentData";
  *                            eyebrow labels above and below the chart. Default true.
  */
 
-const C = {
-  gold:      "#C9A84C",
-  goldFaint: "rgba(201,168,76,0.15)",
-  bgSurf:    "#0E0C0A",
-};
-
 const F = {
   brand: "'Barlow Condensed', sans-serif",
   body:  "'Inter', sans-serif",
@@ -151,7 +145,7 @@ export default function FruitStrata({ scores, maxWidth = 560, reduceMotion = fal
     <div style={{ maxWidth, margin: "0 auto", position: "relative", width: "100%" }}>
       {showLabels && (
         <div ref={topLabelRef} style={{ marginBottom: 12, paddingLeft: 8, opacity: 0 }}>
-          <span style={{ fontFamily: F.brand, fontSize: 10, letterSpacing: "0.32em", textTransform: "uppercase", color: C.gold }}>
+          <span style={{ fontFamily: F.brand, fontSize: 10, letterSpacing: "0.32em", textTransform: "uppercase", color: "var(--cf-gold)" }}>
             Evidence of Abiding
           </span>
         </div>
@@ -160,7 +154,7 @@ export default function FruitStrata({ scores, maxWidth = 560, reduceMotion = fal
       <div
         ref={containerRef}
         style={{
-          background: C.bgSurf,
+          background: "var(--cf-obsidian)",
           height: CONTAINER_H,
           position: "relative",
           opacity: 0,
@@ -173,7 +167,7 @@ export default function FruitStrata({ scores, maxWidth = 560, reduceMotion = fal
             left: 0, right: 0,
             top: Math.floor(CONTAINER_H / 2),
             height: 1,
-            background: C.goldFaint,
+            background: "var(--cf-gold-faint)",
             transformOrigin: "center",
             opacity: 0,
             pointerEvents: "none",
@@ -207,7 +201,7 @@ export default function FruitStrata({ scores, maxWidth = 560, reduceMotion = fal
                   left: 0, right: 0,
                   top: topPx,
                   height: ROW_H,
-                  borderBottom: rank < 8 ? `1px solid ${C.goldFaint}` : "none",
+                  borderBottom: rank < 8 ? `1px solid var(--cf-gold-faint)` : "none",
                   opacity: 0,
                   display: "flex",
                   alignItems: "center",
@@ -268,7 +262,7 @@ export default function FruitStrata({ scores, maxWidth = 560, reduceMotion = fal
 
       {showLabels && (
         <div ref={botLabelRef} style={{ marginTop: 12, paddingLeft: 8, opacity: 0 }}>
-          <span style={{ fontFamily: F.brand, fontSize: 10, letterSpacing: "0.32em", textTransform: "uppercase", color: C.gold }}>
+          <span style={{ fontFamily: F.brand, fontSize: 10, letterSpacing: "0.32em", textTransform: "uppercase", color: "var(--cf-gold)" }}>
             Formation Edge
           </span>
         </div>

@@ -3,8 +3,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useFormationProfile } from "../hooks/useFormationProfile";
 import { hasMeaningfulActivity } from "./personal/HomeRouter";
 
-const C = { gold: "#C9A84C", ivory: "#FAF8F5" };
-
 const TABS = [
   { key: "home",      label: "Home",       path: "/",          icon: "home" },
   { key: "formation", label: "Formation",   path: "https://counterformed.com/#architecture", icon: "formation" },
@@ -36,7 +34,7 @@ function getRouteTab(pathname) {
 }
 
 function TabIcon({ name, active }) {
-  const color = active ? C.gold : "rgba(250,248,245,0.35)";
+  const color = active ? "var(--cf-gold)" : "rgba(250,248,245,0.35)";
   const sw = 1.5;
   switch (name) {
     case "home":
@@ -256,7 +254,7 @@ export function MobileTabBar() {
                   fontSize: "11px",
                   letterSpacing: "0.18em",
                   textTransform: "uppercase",
-                  color: isActive ? C.gold : "rgba(250,248,245,0.38)",
+                  color: isActive ? "var(--cf-gold)" : "rgba(250,248,245,0.38)",
                   fontWeight: isActive ? 700 : 400,
                   transition: "color 0.2s",
                 }}>
@@ -296,7 +294,7 @@ export function MobileTabBar() {
               right: 0,
               zIndex: 89,
               background: "#111",
-              borderTop: `1px solid ${C.gold}22`,
+              borderTop: `1px solid #C9A84C22`,
               borderRadius: "20px 20px 0 0",
               padding: "16px 20px 20px",
               animation: dragY === 0 ? "moreSheetUp 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards" : "none",
@@ -314,16 +312,16 @@ export function MobileTabBar() {
                 style={{
                   display: "flex", alignItems: "center", gap: "14px",
                   padding: "14px 16px", borderRadius: "12px",
-                  background: location.pathname.startsWith("/7-day-challenge") ? `${C.gold}12` : "transparent",
-                  border: `1px solid ${location.pathname.startsWith("/7-day-challenge") ? C.gold + "33" : "rgba(255,255,255,0.05)"}`,
+                  background: location.pathname.startsWith("/7-day-challenge") ? `#C9A84C12` : "transparent",
+                  border: `1px solid ${location.pathname.startsWith("/7-day-challenge") ? "#C9A84C33" : "rgba(255,255,255,0.05)"}`,
                   textDecoration: "none",
                 }}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={location.pathname.startsWith("/7-day-challenge") ? C.gold : "rgba(250,248,245,0.4)"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={location.pathname.startsWith("/7-day-challenge") ? "var(--cf-gold)" : "rgba(250,248,245,0.4)"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
                 </svg>
                 <div>
-                  <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: location.pathname.startsWith("/7-day-challenge") ? C.ivory : "rgba(250,248,245,0.5)", margin: 0 }}>
+                  <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: location.pathname.startsWith("/7-day-challenge") ? "var(--cf-ivory)" : "rgba(250,248,245,0.5)", margin: 0 }}>
                     7-Day Challenge
                   </p>
                   <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "12px", color: "rgba(250,248,245,0.25)", margin: "2px 0 0" }}>
@@ -338,16 +336,16 @@ export function MobileTabBar() {
                 style={{
                   display: "flex", alignItems: "center", gap: "14px",
                   padding: "14px 16px", borderRadius: "12px",
-                  background: location.pathname.startsWith("/field-guide") ? `${C.gold}12` : "transparent",
-                  border: `1px solid ${location.pathname.startsWith("/field-guide") ? C.gold + "33" : "rgba(255,255,255,0.05)"}`,
+                  background: location.pathname.startsWith("/field-guide") ? `#C9A84C12` : "transparent",
+                  border: `1px solid ${location.pathname.startsWith("/field-guide") ? "#C9A84C33" : "rgba(255,255,255,0.05)"}`,
                   textDecoration: "none",
                 }}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={location.pathname.startsWith("/field-guide") ? C.gold : "rgba(250,248,245,0.4)"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={location.pathname.startsWith("/field-guide") ? "var(--cf-gold)" : "rgba(250,248,245,0.4)"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
                 </svg>
                 <div>
-                  <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: location.pathname.startsWith("/field-guide") ? C.ivory : "rgba(250,248,245,0.5)", margin: 0 }}>
+                  <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: location.pathname.startsWith("/field-guide") ? "var(--cf-ivory)" : "rgba(250,248,245,0.5)", margin: 0 }}>
                     Field Guide
                   </p>
                   <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "12px", color: "rgba(250,248,245,0.25)", margin: "2px 0 0" }}>
@@ -368,7 +366,7 @@ export function MobileTabBar() {
                     textDecoration: "none",
                   }}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={"var(--cf-gold)"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     {isWelcomePath ? (
                       <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                     ) : (

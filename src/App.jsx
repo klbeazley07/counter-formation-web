@@ -62,17 +62,6 @@ function ScrollToTop() {
 
 const FG_BASE     = "/field-guide/scripture-before-scroll";
 
-const C = {
-  heroBg:   "#06050A",
-  darkBg:   "#0E0C0A",
-  ruleBg:   "#17140F",
-  fieldBg:  "#111009",
-  lightMid: "#F0EDE6",
-  gearBg:   "#F5F2EC",
-  gold:     "#C9A84C",
-  ivory:    "#FAF8F5",
-};
-
 /* ─── UTILITIES ───────────────────────────────────────────────────── */
 
 function useBodyScrollLock(locked) {
@@ -158,7 +147,7 @@ function AnimatedCounter({ target, suffix = "", prefix = "", duration = 2 }) {
 function SectionDivider() {
   return (
     <div className="flex items-center justify-center py-6 px-4"
-      style={{ backgroundColor: C.darkBg }}>
+      style={{ backgroundColor: "var(--cf-obsidian)" }}>
       <div className="flex-1 h-[1px] bg-white/5" />
       <div className="mx-4 md:mx-8 opacity-[0.12]">
         <SafeImg src="/helmet.png" className="w-6 h-6 md:w-8 md:h-8 grayscale invert" alt="" />
@@ -256,7 +245,7 @@ function CinematicHero() {
   return (
     <section ref={heroRef} id="top"
       className="relative overflow-hidden flex items-center justify-center text-center"
-      style={{ backgroundColor: C.heroBg, minHeight: "100svh" }}>
+      style={{ backgroundColor: "var(--cf-hero-bg)", minHeight: "100svh" }}>
       <div className="absolute inset-0"
         style={{ background: "radial-gradient(circle at 20% 12%,rgba(171,122,68,0.10),transparent 26%),radial-gradient(circle at 55% 48%,rgba(32,64,120,0.06),transparent 32%)" }} />
       <div ref={bgGlowRef} className="absolute inset-0 opacity-0 pointer-events-none"
@@ -373,7 +362,7 @@ function RuleOfLifeSection() {
 
   return (
     <section id="rule" className="md:py-48 md:px-6 relative md:overflow-hidden overflow-hidden"
-      style={{ backgroundColor: C.ruleBg }}>
+      style={{ backgroundColor: "var(--cf-rule-bg)" }}>
       <div className="section-bg-parallax section-glow absolute inset-0 pointer-events-none" />
       <div className="hidden md:block max-w-7xl mx-auto relative z-10 lg:px-4 xl:px-8">
         <div className="mb-32 flex flex-col md:flex-row items-start md:items-end justify-between gap-8 md:gap-12">
@@ -397,7 +386,7 @@ function RuleOfLifeSection() {
         <div className="rhythm-intro-slide md:hidden">
           <div className="absolute inset-0 z-0">
             <img src="/Rule of Life_Hero.png" alt="" className="w-full h-full object-cover" />
-            <div className="absolute inset-0" style={{ background: `linear-gradient(to top,${C.ruleBg} 30%,${C.ruleBg}88 60%,${C.ruleBg}33)` }} />
+            <div className="absolute inset-0" style={{ background: `linear-gradient(to top,#17140F 30%,#17140F88 60%,#17140F33)` }} />
           </div>
           <div className="relative z-10">
             <span style={{
@@ -407,7 +396,7 @@ function RuleOfLifeSection() {
               fontWeight: 700,
               letterSpacing: "0.5em",
               textTransform: "uppercase",
-              color: C.gold,
+              color: "var(--cf-gold)",
               marginBottom: "16px",
             }}>The Pattern</span>
             <h2 style={{
@@ -436,14 +425,14 @@ function RuleOfLifeSection() {
               alignItems: "center",
               gap: "8px",
               padding: "10px 20px",
-              border: `1px solid ${C.gold}55`,
+              border: `1px solid #C9A84C55`,
               borderRadius: "999px",
               fontFamily: "'Barlow Condensed', sans-serif",
               fontSize: "11px",
               fontWeight: 700,
               letterSpacing: "0.22em",
               textTransform: "uppercase",
-              color: C.gold,
+              color: "var(--cf-gold)",
             }}>
               Swipe to Explore
               <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
@@ -470,7 +459,7 @@ function RuleOfLifeSection() {
                 className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
             </div>
             <div className="absolute inset-0 z-0"
-              style={{ background: `linear-gradient(to top,${C.ruleBg} 35%,${C.ruleBg}77 60%,transparent)` }} />
+              style={{ background: `linear-gradient(to top,#17140F 35%,#17140F77 60%,transparent)` }} />
             <div className="rhythm-card-content relative z-10 p-6 md:p-8 flex flex-col" style={{ flex: 1 }}>
               {/* Desktop: eyebrow + title at top */}
               <div className="space-y-3 md:block hidden">
@@ -515,14 +504,14 @@ function RuleOfLifeSection() {
                   alignItems: "center",
                   gap: "8px",
                   padding: "9px 18px",
-                  border: `1px solid ${C.gold}44`,
+                  border: `1px solid #C9A84C44`,
                   borderRadius: "999px",
                   fontFamily: "'Barlow Condensed', sans-serif",
                   fontSize: "11px",
                   fontWeight: 700,
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
-                  color: C.gold,
+                  color: "var(--cf-gold)",
                   alignSelf: "flex-start",
                   marginTop: "4px",
                 }}>
@@ -552,7 +541,7 @@ function RuleOfLifeSection() {
 
 function DarkTransition() {
   return (
-    <section className="py-16 md:py-24 text-center" style={{ backgroundColor: C.darkBg }}>
+    <section className="py-16 md:py-24 text-center" style={{ backgroundColor: "var(--cf-obsidian)" }}>
       <div className="w-[1px] h-12 mx-auto bg-gradient-to-b from-transparent via-[#C9A84C]/40 to-transparent mb-6" />
       <p className="text-[11px] md:text-[12px] tracking-[0.35em] uppercase text-white/20 font-light">
         Formation begins in the gear
@@ -609,7 +598,7 @@ function FieldGuideSection() {
 
   return (
     <section id="field-guide" className="py-24 md:py-40 px-4 md:px-6 relative overflow-hidden"
-      style={{ backgroundColor: C.fieldBg }}>
+      style={{ backgroundColor: "var(--cf-field-bg)" }}>
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 18%,rgba(201,168,76,0.07) 0%,transparent 35%), radial-gradient(ellipse at 50% 82%,rgba(201,168,76,0.04) 0%,transparent 60%)" }} />
       <div className="absolute inset-0 pointer-events-none opacity-[0.025]"
@@ -821,7 +810,7 @@ function QRAnimation() {
 function GearBridgeSection() {
   return (
     <section id="gear-bridge" className="relative py-24 md:py-40 px-6 overflow-hidden"
-      style={{ backgroundColor: C.darkBg }}>
+      style={{ backgroundColor: "var(--cf-obsidian)" }}>
       <div className="section-bg-parallax absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 50%,rgba(201,168,76,0.05) 0%,transparent 58%)" }} />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-b from-transparent to-white/10 pointer-events-none" />
@@ -1112,7 +1101,7 @@ function GearSection() {
 
   return (
     <section id="shop" ref={sectionRef} className="py-24 md:py-48 px-4 md:px-6 relative overflow-hidden gear-section-mobile"
-      style={{ backgroundColor: C.darkBg }}>
+      style={{ backgroundColor: "var(--cf-obsidian)" }}>
       <style>{`
         .gear-shelf::-webkit-scrollbar { display: none; }
         .gear-lookbook { display: none; }
@@ -1771,7 +1760,7 @@ function MainSite() {
   return (
     <div ref={mainRef}
       className="text-[#FAF8F5] selection:bg-[#C9A84C] selection:text-black min-h-screen overflow-x-hidden font-sans"
-      style={{ backgroundColor: C.darkBg }}>
+      style={{ backgroundColor: "var(--cf-obsidian)" }}>
       <ChallengeModal open={isChallengeOpen} onClose={closeChallenge} />
       <ChallengeSlideBar />
 

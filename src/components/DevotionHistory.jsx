@@ -9,16 +9,6 @@ import { useFormationProfile } from "../hooks/useFormationProfile";
  * indicator, not a re-entry point. Re-entry can be added later.
  */
 
-const C = {
-  gold:    "#C9A84C",
-  goldDim: "rgba(201,168,76,0.12)",
-  ivory:   "#FAF8F5",
-  muted:   "rgba(250,248,245,0.62)",
-  dim:     "rgba(250,248,245,0.42)",
-  border:  "rgba(201,168,76,0.14)",
-  cardBg:  "#1A1612",
-};
-
 const DH_CSS = `
   .dh-wrap {
     margin-bottom: 28px;
