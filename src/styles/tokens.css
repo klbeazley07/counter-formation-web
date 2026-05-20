@@ -17,7 +17,6 @@
   --cf-rule-bg:         #17140F;
   --cf-field-bg:        #111009;
   --cf-card-warm:       #1A1612;
-  --cf-card-warm-2:     #201C17;
   --cf-surface-raised:  #110F0D;
 
   /* Ink */
@@ -48,14 +47,11 @@
   /* Neutral overlays */
   --cf-white-5:         rgba(255, 255, 255, 0.05);
   --cf-white-8:         rgba(255, 255, 255, 0.08);
-  --cf-white-10:        rgba(255, 255, 255, 0.10);
 
   /* Radii */
   --cf-radius-card:     20px;
-  --cf-radius-card-lg:  24px;
   --cf-radius-pill:     999px;
   --cf-radius-input:    10px;
-  --cf-radius-input-lg: 14px;
 
   /* Type */
   --cf-font-display:    'Michroma', sans-serif;

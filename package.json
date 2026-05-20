@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "npm run lint:tokens",
     "build": "vite build && cp dist/index.html dist/404.html",
     "lint": "eslint .",
+    "lint:tokens": "node scripts/check-no-const-c.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
