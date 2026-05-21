@@ -22,7 +22,7 @@ import {
   PracticePage,
   CommunityPage,
 } from "./Architecture";
-import { IdentityLanding, ArmorPiecePage, ArmorStyles } from "./Identity";
+import { IdentityLanding, ArmorPiecePage } from "./Identity";
 import AboutPage from "./About";
 import { SiteNav } from "./components/SiteNav";
 import { SiteFooter } from "./components/SiteFooter";
@@ -1817,7 +1817,6 @@ export default function App() {
       <ScrollToTop />
       <RuleStyles />
       <ArchitectureStyles />
-      <ArmorStyles />
       <CampaignBanner />
       <SiteNav />
       <Routes>
