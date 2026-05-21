@@ -1,4 +1,4 @@
-.dg-markdown { font-family: 'Cormorant Garamond', serif; }
+.dg-markdown { font-family: var(--cf-font-devotional); }
 
 .dg-input::placeholder { color: rgba(23,20,15,0.42); }
 .dg-input:focus {
@@ -38,7 +38,7 @@
 }
 
 .dg-markdown p {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--cf-font-devotional);
   font-size: clamp(17px, 2.5vw, 21px);
   font-weight: 300;
   font-style: normal;
@@ -52,7 +52,7 @@
 }
 
 .dg-markdown li {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--cf-font-devotional);
   font-size: clamp(17px, 2.2vw, 21px);
   font-weight: 300;
   font-style: normal;

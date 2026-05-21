@@ -1,4 +1,4 @@
-﻿import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { gsap } from "gsap";
 import Button from "./components/primitives/Button";
@@ -1346,11 +1346,11 @@ function ShareModal({ fruitKey, evidenceFruitKey, scores, format, setFormat, var
     const midY = isStory ? H / 2 - 120 : H / 2 - 80;
 
     ctx.fillStyle = "#FAF8F5";
-    ctx.font = "italic 400 48px 'Cormorant Garamond', serif";
+    ctx.font = "italic 400 48px var(--cf-font-devotional)";
     ctx.fillText("I am cultivating", W / 2, midY);
 
     ctx.fillStyle = "#C9A84C";
-    ctx.font = `italic 700 ${fruitSize}px 'Cormorant Garamond', serif`;
+    ctx.font = `italic 700 ${fruitSize}px var(--cf-font-devotional)`;
     ctx.fillText(fruitData.label, W / 2, midY + fruitSize + 12);
 
     ctx.fillStyle = "rgba(250,248,245,0.62)";
@@ -1360,7 +1360,7 @@ function ShareModal({ fruitKey, evidenceFruitKey, scores, format, setFormat, var
     // Scripture
     const scriptY = midY + fruitSize + 140;
     ctx.fillStyle = "rgba(250,248,245,0.62)";
-    ctx.font = "italic 400 22px 'Cormorant Garamond', serif";
+    ctx.font = "italic 400 22px var(--cf-font-devotional)";
     const scriptText = `\u201C${fruitData.scripture.text}\u201D`;
     const lineY = wrapCanvasText(ctx, scriptText, W / 2, scriptY, 720, 34);
 
@@ -1415,7 +1415,7 @@ function ShareModal({ fruitKey, evidenceFruitKey, scores, format, setFormat, var
     ctx.fillText("EVIDENCE", W / 2, upperY);
 
     ctx.fillStyle = "#FAF8F5";
-    ctx.font = `italic 400 ${decLineSize}px 'Cormorant Garamond', serif`;
+    ctx.font = `italic 400 ${decLineSize}px var(--cf-font-devotional)`;
     ctx.fillText("The Spirit is producing", W / 2, upperY + 12 * mult + decLineSize);
 
     ctx.fillStyle = "#FAF8F5";
@@ -1438,7 +1438,7 @@ function ShareModal({ fruitKey, evidenceFruitKey, scores, format, setFormat, var
     ctx.fillText("FORMATION EDGE", W / 2, lowerY);
 
     ctx.fillStyle = "#FAF8F5";
-    ctx.font = `italic 400 ${decLineSize}px 'Cormorant Garamond', serif`;
+    ctx.font = `italic 400 ${decLineSize}px var(--cf-font-devotional)`;
     ctx.fillText("I am cultivating", W / 2, lowerY + 12 * mult + decLineSize);
 
     ctx.fillStyle = "#C9A84C";

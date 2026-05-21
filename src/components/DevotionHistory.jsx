@@ -41,7 +41,7 @@ const DH_CSS = `
     font-weight: 700;
   }
   .dh-toggle-count {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--cf-font-devotional);
     font-style: italic;
     font-size: 15px;
     color: rgba(250,248,245,0.62);
@@ -87,7 +87,7 @@ const DH_CSS = `
     font-weight: 700;
   }
   .dh-entry-passage {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--cf-font-devotional);
     font-size: 17px;
     line-height: 1.4;
     color: #FAF8F5;
@@ -95,14 +95,14 @@ const DH_CSS = `
     font-style: italic;
   }
   .dh-entry-summary {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--cf-font-devotional);
     font-size: 16px;
     line-height: 1.7;
     color: rgba(250,248,245,0.62);
     margin: 0;
   }
   .dh-empty-passage {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--cf-font-devotional);
     font-size: 16px;
     color: rgba(250,248,245,0.42);
     font-style: italic;

@@ -238,7 +238,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
         {/* Gift name */}
         <h2
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--cf-font-devotional)",
             fontSize: "clamp(38px, 5vw, 52px)",
             lineHeight: 1.08,
             margin: 0,
@@ -253,7 +253,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
         {/* Essence statement */}
         <p
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--cf-font-devotional)",
             fontStyle: "italic",
             fontSize: 20,
             lineHeight: 1.55,
@@ -298,7 +298,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
                   <p
                     className="cf-prose"
                     style={{
-                      fontFamily: "'Cormorant Garamond', serif",
+                      fontFamily: "var(--cf-font-devotional)",
                       fontStyle: "italic",
                       fontSize: 15.5,
                       lineHeight: 1.7,
@@ -326,7 +326,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
               <p
                 className="cf-prose"
                 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "var(--cf-font-devotional)",
                   fontStyle: "italic",
                   fontSize: 15.5,
                   lineHeight: 1.7,
@@ -409,7 +409,7 @@ export function GiftProfileModal({ giftKey, onClose, onSwitchGift }) {
         >
           <p
             style={{
-              fontFamily: "'Cormorant Garamond', serif",
+              fontFamily: "var(--cf-font-devotional)",
               fontStyle: "italic",
               fontSize: 17,
               lineHeight: 1.55,
@@ -468,7 +468,7 @@ function SubLabel({ children }) {
   return (
     <div
       style={{
-        fontFamily: "'Cormorant Garamond', serif",
+        fontFamily: "var(--cf-font-devotional)",
         fontStyle: "italic",
         fontSize: 17,
         color: "var(--cf-ivory)",
@@ -486,7 +486,7 @@ function BodyProse({ children }) {
     <p
       className="cf-prose"
       style={{
-        fontFamily: "'Cormorant Garamond', serif",
+        fontFamily: "var(--cf-font-devotional)",
         fontSize: 17,
         lineHeight: 1.75,
         color: "var(--cf-ivory)",
@@ -510,7 +510,7 @@ function BlockQuote({ reference, text }) {
     >
       <p
         style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "var(--cf-font-devotional)",
           fontStyle: "italic",
           fontSize: 17,
           lineHeight: 1.65,
@@ -591,7 +591,7 @@ function PreviewPanel({ gift, anchor, viewportSize }) {
         </div>
         <p
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--cf-font-devotional)",
             fontStyle: "italic",
             fontSize: 15,
             lineHeight: 1.55,
@@ -799,7 +799,7 @@ export default function GiftConstellation({ onReturn }) {
         </div>
         <h1
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--cf-font-devotional)",
             fontStyle: "italic",
             fontSize: "clamp(34px, 5vw, 48px)",
             lineHeight: 1.12,
@@ -994,7 +994,7 @@ export default function GiftConstellation({ onReturn }) {
         </div>
         <p
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--cf-font-devotional)",
             fontStyle: "italic",
             fontSize: 18,
             lineHeight: 1.55,

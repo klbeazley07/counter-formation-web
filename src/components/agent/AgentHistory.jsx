@@ -58,7 +58,7 @@ function ProfileSummary({ profile }) {
         marginBottom:  "2.5rem",
       }}>
         <p style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "var(--cf-font-devotional)",
           fontStyle:  "italic",
           fontSize:   "clamp(16px, 2.8vw, 18px)",
           color:      "var(--cf-ivory-62)",
@@ -127,7 +127,7 @@ function ProfileSummary({ profile }) {
             {r.label}
           </span>
           <span style={{
-            fontFamily: r.italic ? "'Cormorant Garamond', serif" : "'Barlow Condensed', sans-serif",
+            fontFamily: r.italic ? "var(--cf-font-devotional)" : "'Barlow Condensed', sans-serif",
             fontStyle:  r.italic ? "italic" : "normal",
             fontSize:   r.italic ? "clamp(16px, 2.8vw, 19px)" : 14,
             lineHeight: 1.55,
@@ -181,7 +181,7 @@ function AssessmentCard({ entry }) {
         </span>
       </div>
       <p style={{
-        fontFamily: "'Cormorant Garamond', serif",
+        fontFamily: "var(--cf-font-devotional)",
         fontStyle:  "italic",
         fontSize:   "clamp(16px, 2.8vw, 19px)",
         color:      "var(--cf-ivory-62)",
@@ -259,7 +259,7 @@ function DevotionCard({ entry }) {
 
       {expanded && hasFull ? (
         <div className="dh-devotion-body" style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "var(--cf-font-devotional)",
           fontSize:   "clamp(16px, 2.8vw, 19px)",
           color:      "var(--cf-ivory-72)",
           lineHeight: 1.75,
@@ -268,7 +268,7 @@ function DevotionCard({ entry }) {
         </div>
       ) : summary ? (
         <p style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "var(--cf-font-devotional)",
           fontStyle:  "italic",
           fontSize:   "clamp(16px, 2.8vw, 19px)",
           color:      "var(--cf-ivory-62)",
@@ -340,7 +340,7 @@ export default function AgentHistory() {
         <h1 style={{ fontFamily: "'Michroma', sans-serif", fontSize: "clamp(26px, 5vw, 44px)", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--cf-ivory)", lineHeight: 0.95, marginBottom: "1.25rem" }}>
           Your Formation Record
         </h1>
-        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "clamp(17px, 3.2vw, 21px)", color: "var(--cf-ivory-62)", lineHeight: 1.65, marginBottom: "2.5rem", maxWidth: 560 }}>
+        <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: "clamp(17px, 3.2vw, 21px)", color: "var(--cf-ivory-62)", lineHeight: 1.65, marginBottom: "2.5rem", maxWidth: 560 }}>
           A record of where you are and what the agent has spoken into your formation.
         </p>
 
@@ -359,7 +359,7 @@ export default function AgentHistory() {
           </p>
 
           {timeline.length === 0 ? (
-            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: 18, color: "var(--cf-ivory-28)", lineHeight: 1.6 }}>
+            <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: 18, color: "var(--cf-ivory-28)", lineHeight: 1.6 }}>
               No formation entries yet. Take the assessment or generate your first devotion to begin.
             </p>
           ) : (

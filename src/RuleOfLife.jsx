@@ -84,7 +84,7 @@ function ExamenWalkthrough() {
   if (!started) return (
     <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", padding: "3rem 2rem", textAlign: "center" }}>
       <p style={{ ...base, fontSize: "9px", letterSpacing: ".42em", textTransform: "uppercase", color: "rgba(201,168,76,0.7)", marginBottom: "1.5rem" }}>The Daily Examen · Ignatian Practice</p>
-      <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "20px", color: "rgba(250,248,245,0.75)", lineHeight: 1.7, maxWidth: "480px", margin: "0 auto 1.5rem" }}>
+      <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: "20px", color: "rgba(250,248,245,0.75)", lineHeight: 1.7, maxWidth: "480px", margin: "0 auto 1.5rem" }}>
         "At the end of each day, take ten minutes to review it in God's presence."
       </p>
       <p style={{ ...base, fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: "rgba(250,248,245,0.3)", marginBottom: "2.5rem" }}>5 steps · ~10 minutes · Gratitude → Presence → Sorrow → Forgiveness → Resolve</p>
@@ -105,10 +105,10 @@ function ExamenWalkthrough() {
   if (done) return (
     <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", padding: "3rem 2rem", textAlign: "center" }}>
       <p style={{ ...base, fontSize: "9px", letterSpacing: ".42em", textTransform: "uppercase", color: "rgba(201,168,76,0.7)", marginBottom: "1.5rem" }}>Examen Complete</p>
-      <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "22px", color: "rgba(250,248,245,0.82)", lineHeight: 1.6, marginBottom: "1rem" }}>
+      <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: "22px", color: "rgba(250,248,245,0.82)", lineHeight: 1.6, marginBottom: "1rem" }}>
         You have reviewed this day in God's presence.
       </p>
-      <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "16px", color: "rgba(250,248,245,0.45)", lineHeight: 1.7, maxWidth: "420px", margin: "0 auto 2.5rem" }}>
+      <p style={{ fontFamily: "var(--cf-font-devotional)", fontSize: "16px", color: "rgba(250,248,245,0.45)", lineHeight: 1.7, maxWidth: "420px", margin: "0 auto 2.5rem" }}>
         This is how formation happens — not by intensity, but by the daily, faithful act of return. Come back tomorrow.
       </p>
       <p style={{ ...base, fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)", marginBottom: "2rem" }}>— <ScriptureRef reference="Psalm 139:23–24" text="Search me, O God, and know my heart; test me and know my anxious thoughts. See if there is any offensive way in me, and lead me in the way everlasting." /></p>
@@ -133,20 +133,20 @@ function ExamenWalkthrough() {
       </div>
       <div style={{ padding: "2rem" }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: "14px", marginBottom: "1.5rem" }}>
-          <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "42px", color: "rgba(201,168,76,0.25)", lineHeight: 1 }}>{cur.num}</span>
+          <span style={{ fontFamily: "var(--cf-font-devotional)", fontSize: "42px", color: "rgba(201,168,76,0.25)", lineHeight: 1 }}>{cur.num}</span>
           <div>
             <p style={{ ...base, fontSize: "22px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: "#FAF8F5", lineHeight: 1 }}>{cur.title}</p>
             <p style={{ ...base, fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.55)", marginTop: "3px" }}>{cur.latin}</p>
           </div>
         </div>
-        <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "16px", color: "rgba(250,248,245,0.45)", lineHeight: 1.7, marginBottom: "1.25rem", borderLeft: "2px solid rgba(201,168,76,0.3)", paddingLeft: "1rem" }}>{cur.cue}</p>
-        <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "18px", color: "rgba(250,248,245,0.78)", lineHeight: 1.82, marginBottom: "1.5rem" }}>{cur.prompt}</p>
+        <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: "16px", color: "rgba(250,248,245,0.45)", lineHeight: 1.7, marginBottom: "1.25rem", borderLeft: "2px solid rgba(201,168,76,0.3)", paddingLeft: "1rem" }}>{cur.cue}</p>
+        <p style={{ fontFamily: "var(--cf-font-devotional)", fontSize: "18px", color: "rgba(250,248,245,0.78)", lineHeight: 1.82, marginBottom: "1.5rem" }}>{cur.prompt}</p>
         <textarea
           value={notes[step]}
           onChange={e => { const n = [...notes]; n[step] = e.target.value; setNotes(n); }}
           placeholder="Write your response here, or simply sit in silence..."
           rows={4}
-          style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", padding: "1rem", color: "rgba(250,248,245,0.7)", fontFamily: "'Cormorant Garamond',serif", fontSize: "16px", lineHeight: 1.7, resize: "none", outline: "none", transition: "border-color .2s", boxSizing: "border-box" }}
+          style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", padding: "1rem", color: "rgba(250,248,245,0.7)", fontFamily: "var(--cf-font-devotional)", fontSize: "16px", lineHeight: 1.7, resize: "none", outline: "none", transition: "border-color .2s", boxSizing: "border-box" }}
           onFocus={e => { e.target.style.borderColor = "rgba(201,168,76,0.4)"; }}
           onBlur={e => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; }}
         />
@@ -178,10 +178,10 @@ function LectioDivinaGuide() {
       </div>
       <div style={{ padding: "2.5rem 2rem" }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: "16px", marginBottom: "1.25rem" }}>
-          <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "36px", color: "rgba(201,168,76,0.4)" }}>{cur.num}</span>
+          <span style={{ fontFamily: "var(--cf-font-devotional)", fontSize: "36px", color: "rgba(201,168,76,0.4)" }}>{cur.num}</span>
           <div><p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "22px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: "#FAF8F5" }}>{cur.eng}</p><p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(201,168,76,0.6)" }}>{cur.latin}</p></div>
         </div>
-        <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "18px", lineHeight: 1.82, color: "rgba(250,248,245,0.7)" }}>{cur.desc}</p>
+        <p style={{ fontFamily: "var(--cf-font-devotional)", fontSize: "18px", lineHeight: 1.82, color: "rgba(250,248,245,0.7)" }}>{cur.desc}</p>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2rem" }}>
           <Button variant="ghost" size="sm" onClick={() => setActive(i => Math.max(0, i - 1))} disabled={active === 0}>← Prev</Button>
           <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)", alignSelf: "center" }}>{active + 1} of {steps.length}</span>
@@ -211,7 +211,7 @@ function PrayerPostures() {
       </div>
       <div style={{ padding: "2.5rem 2rem" }}>
         <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "24px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: "#FAF8F5", marginBottom: "1.25rem" }}>{cur.name}</p>
-        <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "18px", lineHeight: 1.82, color: "rgba(250,248,245,0.7)" }}>{cur.desc}</p>
+        <p style={{ fontFamily: "var(--cf-font-devotional)", fontSize: "18px", lineHeight: 1.82, color: "rgba(250,248,245,0.7)" }}>{cur.desc}</p>
       </div>
     </div>
   );
@@ -238,7 +238,7 @@ function SabbathIdeas() {
       <div style={{ padding: "2rem" }}>
         <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".38em", textTransform: "uppercase", color: "rgba(201,168,76,0.55)", marginBottom: "1.25rem" }}>{cur.label} · Sabbath Ideas</p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(180px, 100%), 1fr))", gap: "8px" }}>
-          {cur.ideas.map((idea, i) => (<div key={i} style={{ padding: "12px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "10px", fontFamily: "'Cormorant Garamond',serif", fontSize: "16px", color: "rgba(250,248,245,0.72)", lineHeight: 1.4 }}>{idea}</div>))}
+          {cur.ideas.map((idea, i) => (<div key={i} style={{ padding: "12px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "10px", fontFamily: "var(--cf-font-devotional)", fontSize: "16px", color: "rgba(250,248,245,0.72)", lineHeight: 1.4 }}>{idea}</div>))}
         </div>
         <p style={{ marginTop: "1.5rem", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)" }}>Ask: is this restful or worshipful? If not, it can wait. — John Mark Comer</p>
       </div>
@@ -269,7 +269,7 @@ function CommunityDepths() {
             <div style={{ height: "4px", background: "rgba(255,255,255,0.06)", borderRadius: "2px", overflow: "hidden", marginBottom: "5px" }}>
               <div style={{ height: "100%", width: `${l.pct}%`, background: i === 4 ? "#C9A84C" : `rgba(201,168,76,${0.15 + i * 0.1})`, borderRadius: "2px" }} />
             </div>
-            <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "15px", color: "rgba(250,248,245,0.42)", lineHeight: 1.5 }}>{l.desc}</p>
+            <p style={{ fontFamily: "var(--cf-font-devotional)", fontSize: "15px", color: "rgba(250,248,245,0.42)", lineHeight: 1.5 }}>{l.desc}</p>
           </div>
         ))}
       </div>
@@ -370,11 +370,11 @@ export function BookPage() {
     authorPhoto: { width: "36px", height: "36px", borderRadius: "50%", objectFit: "cover", border: "1px solid rgba(201,168,76,0.3)", flexShrink: 0 },
     authorName:  { fontSize: "10px", letterSpacing: ".22em", textTransform: "uppercase", color: "rgba(201,168,76,0.8)", fontWeight: 700 },
     whyLabel:  { fontSize: "9px", letterSpacing: ".42em", textTransform: "uppercase", color: "#C9A84C", marginBottom: "1.1rem", paddingBottom: ".7rem", borderBottom: "1px solid rgba(255,255,255,0.06)" },
-    desc:      { fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(17px,3.5vw,20px)", lineHeight: 1.86, color: "rgba(250,248,245,0.76)", marginBottom: "2.5rem" },
+    desc:      { fontFamily: "var(--cf-font-devotional)", fontSize: "clamp(17px,3.5vw,20px)", lineHeight: 1.86, color: "rgba(250,248,245,0.76)", marginBottom: "2.5rem" },
     bioWrap:   { background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "16px", padding: "1.4rem 1.5rem", marginBottom: "2rem", display: "flex", alignItems: "flex-start", gap: "14px" },
     bioPhoto:  { width: "52px", height: "52px", borderRadius: "50%", objectFit: "cover", border: "1px solid rgba(201,168,76,0.25)", flexShrink: 0 },
     bioName:   { fontSize: "10px", letterSpacing: ".22em", textTransform: "uppercase", color: "rgba(201,168,76,0.75)", fontWeight: 700, marginBottom: ".4rem" },
-    bioPara:   { fontFamily: "'Cormorant Garamond',serif", fontSize: "15px", lineHeight: 1.72, color: "rgba(250,248,245,0.5)" },
+    bioPara:   { fontFamily: "var(--cf-font-devotional)", fontSize: "15px", lineHeight: 1.72, color: "rgba(250,248,245,0.5)" },
     cta:       { display: "inline-flex", alignItems: "center", gap: "10px", padding: "15px 28px", borderRadius: "12px", border: "2px solid #C9A84C", background: "#C9A84C", textDecoration: "none", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".28em", textTransform: "uppercase", color: "#0A0A0A", fontWeight: 700, transition: "all .25s" },
     backBtn:   { display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginTop: "1.25rem", padding: "16px", borderRadius: "14px", border: "none", background: "#E8E4DC", textDecoration: "none", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "10px", letterSpacing: ".22em", textTransform: "uppercase", color: "#0A0A0A", fontWeight: 700, transition: "all .25s" },
   };
@@ -454,10 +454,10 @@ export function RuleStyles() {
       .rl-hero-logo { width: 32px; height: 32px; filter: invert(1) brightness(.9); opacity: .45; margin-bottom: .9rem; display: block; }
       .rl-hero-eye  { font-size: 9px; letter-spacing: .42em; text-transform: uppercase; color: rgba(201,168,76,0.75); margin-bottom: .5rem; }
       .rl-hero-h1   { font-size: clamp(44px,10vw,88px); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; line-height: .86; margin-bottom: 1rem; }
-      .rl-hero-sub  { font-family: 'Cormorant Garamond',serif; font-style: italic; font-size: clamp(16px,3.5vw,22px); color: rgba(250,248,245,0.35); }
+      .rl-hero-sub  { font-family: var(--cf-font-devotional); font-style: italic; font-size: clamp(16px,3.5vw,22px); color: rgba(250,248,245,0.35); }
 
       .rl-pullquote      { border-left: 2px solid #C9A84C; margin: 3rem 0; padding: 1.25rem 2rem; background: rgba(201,168,76,0.04); border-radius: 0 12px 12px 0; }
-      .rl-pullquote p    { font-family: 'Cormorant Garamond',serif; font-style: italic; font-size: clamp(20px,4.5vw,28px); color: rgba(250,248,245,0.82); line-height: 1.55; margin-bottom: .75rem; }
+      .rl-pullquote p    { font-family: var(--cf-font-devotional); font-style: italic; font-size: clamp(20px,4.5vw,28px); color: rgba(250,248,245,0.82); line-height: 1.55; margin-bottom: .75rem; }
       .rl-pullquote cite { font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: #C9A84C; font-style: normal; }
 
       .rl-content { max-width: 740px; margin: 0 auto; padding: 52px 24px 120px; }
@@ -466,12 +466,12 @@ export function RuleStyles() {
       .rl-rule      { height: 1px; background: linear-gradient(to right, #C9A84C, transparent); opacity: .25; margin: 2.5rem 0; }
       .rl-section   { margin-bottom: 3rem; }
       .rl-sec-label { font-size: 9px; letter-spacing: .42em; text-transform: uppercase; color: #C9A84C; margin-bottom: 1.25rem; padding-bottom: .75rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
-      .rl-body      { font-family: 'Cormorant Garamond',serif; font-size: clamp(17px,4vw,20px); line-height: 1.86; color: rgba(250,248,245,0.76); }
+      .rl-body      { font-family: var(--cf-font-devotional); font-size: clamp(17px,4vw,20px); line-height: 1.86; color: rgba(250,248,245,0.76); }
       .rl-body p    { margin-bottom: 1.25rem; }
       .rl-body em   { font-style: italic; color: rgba(250,248,245,0.95); }
 
       .rl-scripture      { background: rgba(255,255,255,0.03); border-left: 2px solid #C9A84C; border-radius: 0 12px 12px 0; padding: 1.4rem 1.5rem; margin: 1.25rem 0; }
-      .rl-scripture p    { font-family: 'Cormorant Garamond',serif; font-style: italic; font-size: clamp(15px,3.8vw,18px); color: rgba(250,248,245,0.72); line-height: 1.7; margin-bottom: .6rem; }
+      .rl-scripture p    { font-family: var(--cf-font-devotional); font-style: italic; font-size: clamp(15px,3.8vw,18px); color: rgba(250,248,245,0.72); line-height: 1.7; margin-bottom: .6rem; }
       .rl-scripture cite { font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: #C9A84C; font-style: normal; }
 
       .rl-steps      { display: flex; flex-direction: column; gap: 1.5rem; }
@@ -480,10 +480,10 @@ export function RuleStyles() {
       .rl-step-head  { display: flex; align-items: baseline; gap: 14px; margin-bottom: .9rem; }
       .rl-step-num   { font-size: 10px; letter-spacing: .32em; text-transform: uppercase; color: rgba(201,168,76,0.55); flex-shrink: 0; }
       .rl-step-title { font-size: clamp(16px,3.5vw,20px); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #FAF8F5; }
-      .rl-step-body  { font-family: 'Cormorant Garamond',serif; font-size: clamp(15px,3.5vw,17px); line-height: 1.82; color: rgba(250,248,245,0.65); }
+      .rl-step-body  { font-family: var(--cf-font-devotional); font-size: clamp(15px,3.5vw,17px); line-height: 1.82; color: rgba(250,248,245,0.65); }
 
       .rl-reflections { display: flex; flex-direction: column; gap: 1rem; }
-      .rl-reflect-q   { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.14); border-radius: 14px; padding: 1.25rem 1.5rem; font-family: 'Cormorant Garamond',serif; font-style: italic; font-size: clamp(15px,3.5vw,18px); color: rgba(250,248,245,0.65); line-height: 1.7; }
+      .rl-reflect-q   { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.14); border-radius: 14px; padding: 1.25rem 1.5rem; font-family: var(--cf-font-devotional); font-style: italic; font-size: clamp(15px,3.5vw,18px); color: rgba(250,248,245,0.65); line-height: 1.7; }
 
       .rl-further      { display: flex; flex-direction: column; gap: 12px; }
       .rl-book         { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; overflow: hidden; transition: border-color .3s, transform .3s; text-decoration: none; display: grid; grid-template-columns: 120px 1fr; cursor: pointer; align-items: stretch; }
@@ -493,7 +493,7 @@ export function RuleStyles() {
       .rl-book-body    { padding: 1rem 1.25rem; display: flex; flex-direction: column; justify-content: space-between; min-height: 130px; }
       .rl-book-title   { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #FAF8F5; margin-bottom: .25rem; line-height: 1.2; }
       .rl-book-author  { font-size: 9px; letter-spacing: .25em; text-transform: uppercase; color: rgba(201,168,76,0.65); margin-bottom: .5rem; }
-      .rl-book-desc    { font-family: 'Cormorant Garamond',serif; font-size: 13px; line-height: 1.6; color: rgba(250,248,245,0.45); margin-bottom: .75rem; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+      .rl-book-desc    { font-family: var(--cf-font-devotional); font-size: 13px; line-height: 1.6; color: rgba(250,248,245,0.45); margin-bottom: .75rem; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
       .rl-book-cta     { display: inline-flex; align-items: center; gap: 6px; font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(201,168,76,0.7); transition: color .2s; flex-shrink: 0; }
       .rl-book:hover .rl-book-cta { color: #C9A84C; }
 

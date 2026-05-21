@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -80,7 +80,7 @@ export function AboutStyles() {
 
       /* ── Hero headline ── */
       .about-hero-headline {
-        font-family: 'Cormorant Garamond', serif;
+        font-family: var(--cf-font-devotional);
         font-style: italic;
         font-weight: 400;
         font-size: clamp(1.6rem, 4.2vw, 3.2rem);
@@ -92,7 +92,7 @@ export function AboutStyles() {
 
       /* ── Scripture block ── */
       .about-scripture {
-        font-family: 'Cormorant Garamond', serif;
+        font-family: var(--cf-font-devotional);
         font-style: italic;
         font-size: clamp(0.9rem, 1.8vw, 1.1rem);
         color: rgba(250,248,245,0.45);
@@ -158,7 +158,7 @@ export function AboutStyles() {
 
       /* ── Pullquote ── */
       .about-pullquote {
-        font-family: 'Cormorant Garamond', serif;
+        font-family: var(--cf-font-devotional);
         font-style: italic;
         font-size: clamp(1.25rem, 2.8vw, 1.75rem);
         line-height: 1.5;
@@ -225,7 +225,7 @@ export function AboutStyles() {
         color: rgba(250,248,245,0.65);
       }
       .about-pillar-scripture {
-        font-family: 'Cormorant Garamond', serif;
+        font-family: var(--cf-font-devotional);
         font-style: italic;
         font-size: 0.85rem;
         color: rgba(201,168,76,0.5);
@@ -295,7 +295,7 @@ export function AboutStyles() {
         background: var(--cf-hero-bg);
       }
       .about-cta-headline {
-        font-family: 'Cormorant Garamond', serif;
+        font-family: var(--cf-font-devotional);
         font-style: italic;
         font-size: clamp(1.3rem, 3vw, 2rem);
         color: var(--cf-ivory);
@@ -706,14 +706,14 @@ export default function AboutPage() {
                   {r.name}
                 </span>
                 <span className="hidden md:inline" style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "var(--cf-font-devotional)",
                   fontStyle: "italic", fontSize: "0.9rem",
                   color: "rgba(250,248,245,0.4)",
                 }}>
                   {r.line}
                 </span>
                 <span style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "var(--cf-font-devotional)",
                   fontStyle: "italic", fontSize: "0.8rem",
                   color: "rgba(201,168,76,0.35)",
                   whiteSpace: "nowrap",
@@ -935,7 +935,7 @@ export default function AboutPage() {
         {/* Scripture close */}
         <div className="about-reveal" style={{ marginTop: "4rem" }}>
           <p style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--cf-font-devotional)",
             fontStyle: "italic",
             fontSize: "clamp(0.85rem, 1.5vw, 1rem)",
             color: "rgba(250,248,245,0.3)",

@@ -13,7 +13,7 @@ import { useFormationProfile } from "../../../hooks/useFormationProfile";
 
 
 const F = {
-  display: "'Cormorant Garamond', serif",
+  display: "var(--cf-font-devotional)",
   caps: "'Barlow Condensed', sans-serif",
   body: "'Inter', sans-serif",
 };

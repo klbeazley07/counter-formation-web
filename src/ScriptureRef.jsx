@@ -159,7 +159,7 @@ function ScripturePopover({ reference, text, translation, triggerRef, onClose, o
       {/* Verse text */}
       {text && (
         <p style={{
-          fontFamily:  "'Cormorant Garamond', Georgia, serif",
+          fontFamily:  "var(--cf-font-devotional)",
           fontStyle:   "italic",
           fontSize:    18,
           lineHeight:  1.75,

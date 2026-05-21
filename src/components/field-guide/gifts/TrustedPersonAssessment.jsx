@@ -18,7 +18,7 @@ import { supabase } from "../../../utils/supabaseClient";
 
 
 const F = {
-  display: "'Cormorant Garamond', serif",
+  display: "var(--cf-font-devotional)",
   caps: "'Barlow Condensed', sans-serif",
   body: "'Inter', sans-serif",
 };

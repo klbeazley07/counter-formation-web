@@ -83,7 +83,7 @@ export default function GiftsProcessing() {
         {/* Copy fades in after 1s, over 1.8s */}
         <p
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--cf-font-devotional)",
             fontSize: "clamp(17px, 2.2vw, 21px)",
             fontStyle: "italic",
             lineHeight: 1.75,

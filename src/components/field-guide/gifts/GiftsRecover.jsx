@@ -199,7 +199,7 @@ function ExportMode() {
     <div style={{ maxWidth: 680, width: "100%" }}>
       <Eyebrow>Data Recovery</Eyebrow>
       <h1 style={{
-        fontFamily: "'Cormorant Garamond', serif",
+        fontFamily: "var(--cf-font-devotional)",
         fontStyle: "italic",
         fontSize: "clamp(32px, 5vw, 50px)",
         lineHeight: 1.1,
@@ -568,7 +568,7 @@ function ImportMode({ rawParam }) {
       <div style={{ maxWidth: 560, width: "100%", textAlign: "center" }}>
         <Eyebrow>Recovery</Eyebrow>
         <h1 style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "var(--cf-font-devotional)",
           fontStyle: "italic",
           fontSize: "clamp(28px, 4vw, 42px)",
           color: "var(--cf-ivory)",
@@ -614,7 +614,7 @@ function ImportMode({ rawParam }) {
       <div style={{ maxWidth: 560, width: "100%", textAlign: "center" }}>
         <Eyebrow>Recovery</Eyebrow>
         <h1 style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "var(--cf-font-devotional)",
           fontStyle: "italic",
           fontSize: "clamp(28px, 4vw, 42px)",
           color: "var(--cf-ivory)",
@@ -695,7 +695,7 @@ function ImportMode({ rawParam }) {
     <div style={{ maxWidth: 600, width: "100%" }}>
       <Eyebrow>Recovery Import</Eyebrow>
       <h1 style={{
-        fontFamily: "'Cormorant Garamond', serif",
+        fontFamily: "var(--cf-font-devotional)",
         fontStyle: "italic",
         fontSize: "clamp(28px, 4vw, 42px)",
         color: "var(--cf-ivory)",

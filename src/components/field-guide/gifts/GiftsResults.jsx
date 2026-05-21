@@ -171,7 +171,7 @@ function GiftCard({ gift, showPending, formationText, onReadMore }) {
       <Eyebrow style={{ marginBottom: 8 }}>{categoryLabel}</Eyebrow>
       <h3
         style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "var(--cf-font-devotional)",
           fontSize: "clamp(26px, 3vw, 34px)",
           lineHeight: 1.15,
           color: "var(--cf-ivory)",
@@ -183,7 +183,7 @@ function GiftCard({ gift, showPending, formationText, onReadMore }) {
       </h3>
       <p
         style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "var(--cf-font-devotional)",
           fontSize: "clamp(17px, 1.9vw, 20px)",
           fontStyle: "italic",
           color: "var(--cf-ivory-62)",
@@ -277,7 +277,7 @@ function GapSection({ gaps, onReadMore }) {
             </Eyebrow>
             <h3
               style={{
-                fontFamily: "'Cormorant Garamond', serif",
+                fontFamily: "var(--cf-font-devotional)",
                 fontSize: "clamp(22px, 2.6vw, 28px)",
                 lineHeight: 1.2,
                 color: "var(--cf-ivory)",
@@ -395,7 +395,7 @@ function QuietSection({ quietGifts, charismaticNotPresent }) {
               >
                 <span
                   style={{
-                    fontFamily: "'Cormorant Garamond', serif",
+                    fontFamily: "var(--cf-font-devotional)",
                     fontSize: 18,
                     color: "var(--cf-ivory-35)",
                     fontStyle: "italic",
@@ -518,7 +518,7 @@ function TrustedPersonCTA({ sticky }) {
           <Eyebrow>Complete the picture</Eyebrow>
           <h2
             style={{
-              fontFamily: "'Cormorant Garamond', serif",
+              fontFamily: "var(--cf-font-devotional)",
               fontSize: "clamp(24px, 2.8vw, 30px)",
               color: "var(--cf-ivory)",
               margin: "0 0 16px",
@@ -746,7 +746,7 @@ export default function GiftsResults() {
             <Eyebrow>Your formation gifts</Eyebrow>
             <h1
               style={{
-                fontFamily: "'Cormorant Garamond', serif",
+                fontFamily: "var(--cf-font-devotional)",
                 fontSize: "clamp(36px, 5vw, 60px)",
                 lineHeight: 1.1,
                 margin: "0 0 20px",
@@ -776,7 +776,7 @@ export default function GiftsResults() {
             ) : (
               <p
                 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "var(--cf-font-devotional)",
                   fontSize: "clamp(18px, 2vw, 22px)",
                   color: "var(--cf-ivory-62)",
                   lineHeight: 1.65,

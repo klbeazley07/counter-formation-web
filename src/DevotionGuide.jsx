@@ -57,7 +57,7 @@ function FieldInput({ label, hint, value, onChange, placeholder, multiline }) {
         {hint && (
           <p style={{
             margin: 0,
-            fontFamily: "'Cormorant Garamond',serif",
+            fontFamily: "var(--cf-font-devotional)",
             fontSize: 16,
             lineHeight: 1.5,
             color: "var(--cf-ivory-58)",
@@ -145,7 +145,7 @@ function ContextIndicator({ slugs }) {
         Forming around
       </span>
       <span style={{
-        fontFamily: "'Cormorant Garamond',serif",
+        fontFamily: "var(--cf-font-devotional)",
         fontSize: 16,
         fontStyle: "italic",
         color: "var(--cf-gold)",
@@ -359,7 +359,7 @@ export default function DevotionGuide() {
           </div>
         </div>
         <p style={{
-          fontFamily: "'Cormorant Garamond',serif",
+          fontFamily: "var(--cf-font-devotional)",
           fontStyle:  "italic",
           fontSize:   "clamp(16px,2.5vw,20px)",
           color:      "var(--cf-ivory-58)",
@@ -381,7 +381,7 @@ export default function DevotionGuide() {
           <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase", color: "var(--cf-gold)", fontWeight: 700, marginBottom: 14 }}>
             How to use
           </p>
-          <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 16, color: "var(--cf-ivory-58)", lineHeight: 1.75, margin: 0 }}>
+          <p style={{ fontFamily: "var(--cf-font-devotional)", fontSize: 16, color: "var(--cf-ivory-58)", lineHeight: 1.75, margin: 0 }}>
             Input all three — <em>1) Scripture Reference, 2) Devotion Theme, 3) Subject, Topic, or Question</em> — for the most complete guide. Or choose just one and the tool will produce a custom devotion for the day.
           </p>
         </div>
@@ -420,7 +420,7 @@ export default function DevotionGuide() {
               Before you begin
             </p>
             <h2 style={{
-              fontFamily: "'Cormorant Garamond',serif",
+              fontFamily: "var(--cf-font-devotional)",
               fontSize: "clamp(22px,3.2vw,30px)",
               lineHeight: 1.35,
               color: "var(--cf-ivory)",
@@ -430,7 +430,7 @@ export default function DevotionGuide() {
               The devotions are more precise when formation context is in place.
             </h2>
             <p style={{
-              fontFamily: "'Cormorant Garamond',serif",
+              fontFamily: "var(--cf-font-devotional)",
               fontSize: "clamp(16px,2vw,18px)",
               lineHeight: 1.7,
               color: "var(--cf-ivory-58)",
@@ -517,7 +517,7 @@ export default function DevotionGuide() {
               </p>
               <p style={{
                 margin: 0,
-                fontFamily: "'Cormorant Garamond',serif",
+                fontFamily: "var(--cf-font-devotional)",
                 fontSize: "clamp(18px,2.4vw,24px)",
                 lineHeight: 1.55,
                 color: "var(--cf-ivory-58)",
@@ -591,7 +591,7 @@ export default function DevotionGuide() {
                 margin: "14px auto 0",
                 maxWidth: 460,
                 textAlign: "center",
-                fontFamily: "'Cormorant Garamond',serif",
+                fontFamily: "var(--cf-font-devotional)",
                 fontSize: 16,
                 lineHeight: 1.5,
                 color: "var(--cf-ivory-58)",
@@ -620,7 +620,7 @@ export default function DevotionGuide() {
                 <p style={{ fontFamily: "'Michroma',sans-serif", fontSize: 12, textTransform: "uppercase", color: "var(--cf-ivory)", marginBottom: 12 }}>
                   {item.label}
                 </p>
-                <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "normal", fontWeight: 300, fontSize: 17, color: "var(--cf-ivory-58)", lineHeight: 1.8 }}>
+                <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "normal", fontWeight: 300, fontSize: 17, color: "var(--cf-ivory-58)", lineHeight: 1.8 }}>
                   {item.text}
                 </p>
               </div>

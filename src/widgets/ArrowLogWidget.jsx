@@ -34,7 +34,7 @@ const EX = {
 };
 
 const barlow   = { fontFamily: "'Barlow Condensed', sans-serif" };
-const garamond = { fontFamily: "'Cormorant Garamond', serif" };
+const garamond = { fontFamily: "var(--cf-font-devotional)" };
 
 
 /* ─── SHARED CSS ──────────────────────────────────────────────────── */

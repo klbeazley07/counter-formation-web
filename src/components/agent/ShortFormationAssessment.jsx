@@ -64,7 +64,7 @@ export default function ShortFormationAssessment({ onSubmit, loading }) {
             {q.label}
           </p>
           <p style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--cf-font-devotional)",
             fontStyle:  "italic",
             fontSize:   16,
             color:      "var(--cf-ivory-28)",
@@ -85,7 +85,7 @@ export default function ShortFormationAssessment({ onSubmit, loading }) {
               border:        `1px solid ${answers[q.key].trim() ? "rgba(201,168,76,0.30)" : "var(--cf-white-8)"}`,
               borderRadius:  12,
               padding:       "14px 16px",
-              fontFamily:    "'Cormorant Garamond', serif",
+              fontFamily:    "var(--cf-font-devotional)",
               fontSize:      17,
               lineHeight:    1.6,
               color:         "var(--cf-ivory)",

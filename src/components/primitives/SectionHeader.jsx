@@ -4,8 +4,8 @@ import EyebrowLabel from "./EyebrowLabel";
  * SectionHeader — eyebrow + display title + optional subtitle.
  *
  * Used at the start of section blocks across the site. Title uses Michroma
- * display font. Subtitle uses Cormorant Garamond italic. Contract:
- * sessions/contracts.md "Primitive Component APIs > SectionHeader".
+ * display font. Subtitle uses the devotional font (var(--cf-font-devotional))
+ * in italic. Contract: sessions/contracts.md "Primitive Component APIs > SectionHeader".
  */
 
 const SECTION_HEADER_CSS = `

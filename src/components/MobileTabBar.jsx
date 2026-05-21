@@ -326,7 +326,7 @@ export function MobileTabBar() {
                   <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: location.pathname.startsWith("/7-day-challenge") ? "var(--cf-ivory)" : "rgba(250,248,245,0.5)", margin: 0 }}>
                     7-Day Challenge
                   </p>
-                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "12px", color: "rgba(250,248,245,0.25)", margin: "2px 0 0" }}>
+                  <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: "12px", color: "rgba(250,248,245,0.25)", margin: "2px 0 0" }}>
                     Start your formation journey
                   </p>
                 </div>
@@ -350,7 +350,7 @@ export function MobileTabBar() {
                   <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: location.pathname.startsWith("/field-guide") ? "var(--cf-ivory)" : "rgba(250,248,245,0.5)", margin: 0 }}>
                     Field Guide
                   </p>
-                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "12px", color: "rgba(250,248,245,0.25)", margin: "2px 0 0" }}>
+                  <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: "12px", color: "rgba(250,248,245,0.25)", margin: "2px 0 0" }}>
                     Scripture before scroll
                   </p>
                 </div>
@@ -379,7 +379,7 @@ export function MobileTabBar() {
                     <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "rgba(250,248,245,0.5)", margin: 0 }}>
                       {isWelcomePath ? "Your Formation" : "Welcome"}
                     </p>
-                    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "12px", color: "rgba(250,248,245,0.25)", margin: "2px 0 0" }}>
+                    <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: "12px", color: "rgba(250,248,245,0.25)", margin: "2px 0 0" }}>
                       {isWelcomePath ? "Return to your dashboard" : "View the Counter Formation home"}
                     </p>
                   </div>

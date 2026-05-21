@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback } from "react";
 
 const barlow   = { fontFamily: "'Barlow Condensed', sans-serif" };
-const garamond = { fontFamily: "'Cormorant Garamond', serif" };
+const garamond = { fontFamily: "var(--cf-font-devotional)" };
 
 /* ─── CANVAS HELPERS ─────────────────────────────────────────────── */
 
@@ -85,7 +85,7 @@ async function renderToCanvas(canvas, { userText, trackName, dayNumber, scriptur
   // ── Day 6: "Armor Up." header ──
   if (isLastDay) {
     ctx.fillStyle = "#C9A84C";
-    ctx.font = `italic ${isStory ? 88 : 72}px 'Cormorant Garamond', serif`;
+    ctx.font = `italic ${isStory ? 88 : 72}px var(--cf-font-devotional)`;
     ctx.textAlign = "center";
     ctx.fillText("Armor Up.", cx, H * topZone - (isStory ? 56 : 40));
   }
@@ -115,7 +115,7 @@ async function renderToCanvas(canvas, { userText, trackName, dayNumber, scriptur
   const userMaxW   = W - (isStory ? 220 : 180);
   const displayText = userText.trim() || "…";
 
-  ctx.font = `italic ${userSize}px 'Cormorant Garamond', serif`;
+  ctx.font = `italic ${userSize}px var(--cf-font-devotional)`;
   ctx.textAlign = "center";
   const lines = measureWrappedLines(ctx, displayText, userMaxW);
   const blockH = (lines.length - 1) * userLineH;
@@ -129,7 +129,7 @@ async function renderToCanvas(canvas, { userText, trackName, dayNumber, scriptur
   ctx.fillRect(0, H * midZone - (isStory ? 380 : 300), W, (isStory ? 760 : 600));
 
   ctx.fillStyle = "rgba(250,248,245,0.93)";
-  ctx.font = `italic ${userSize}px 'Cormorant Garamond', serif`;
+  ctx.font = `italic ${userSize}px var(--cf-font-devotional)`;
   lines.forEach((line, i) => {
     ctx.fillText(line, cx, textStartY + i * userLineH);
   });

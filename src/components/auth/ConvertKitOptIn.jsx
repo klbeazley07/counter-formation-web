@@ -37,7 +37,7 @@ const STYLES = `
     margin: 0 0 14px;
   }
   .cf-ck__head {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--cf-font-devotional);
     font-style: italic;
     font-weight: 400;
     font-size: clamp(24px, 4vw, 34px);

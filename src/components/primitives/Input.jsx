@@ -4,8 +4,9 @@ import { forwardRef } from "react";
  * Input — shared text/email/search input primitive.
  *
  * Controlled component. Dark rule-bg fill, gold-faint border, gold focus,
- * ivory Cormorant Garamond text. Used by newsletter capture forms and widget
- * inline inputs. Contract: sessions/contracts.md "Primitive Component APIs > Input".
+ * ivory text in the devotional font (var(--cf-font-devotional)). Used by
+ * newsletter capture forms and widget inline inputs. Contract:
+ * sessions/contracts.md "Primitive Component APIs > Input".
  */
 
 const INPUT_CSS = `

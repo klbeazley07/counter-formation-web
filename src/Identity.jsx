@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import { ScriptureRef } from "./ScriptureRef";
 import { gsap } from "gsap";
@@ -52,7 +52,7 @@ export function ArmorStyles() {
       .ap-hero-in  { position: relative; z-index: 2; padding: 2rem 24px 2.5rem; max-width: 860px; margin: 0 auto; width: 100%; }
       .ap-hero-eye { font-size: 10px; letter-spacing: .5em; text-transform: uppercase; color: #C9A84C; margin-bottom: .75rem; font-weight: 700; }
       .ap-hero-h1  { font-family: 'Michroma', sans-serif; font-size: clamp(36px, 8vw, 88px); text-transform: uppercase; letter-spacing: 0.1em; color: #FAF8F5; line-height: .9; margin-bottom: 1rem; }
-      .ap-hero-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(15px, 3vw, 20px); color: rgba(250,248,245,0.4); }
+      .ap-hero-sub { font-family: var(--cf-font-devotional); font-style: italic; font-size: clamp(15px, 3vw, 20px); color: rgba(250,248,245,0.4); }
 
       /* Content grid */
       .ap-content { max-width: 800px; margin: 0 auto; padding: 44px 20px 100px; }
@@ -71,34 +71,34 @@ export function ArmorStyles() {
       .ap-sec-label { font-size: 9px; letter-spacing: .45em; text-transform: uppercase; color: #C9A84C; margin-bottom: 1.25rem; padding-bottom: .75rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
 
       /* Stillness */
-      .ap-stillness { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(20px, 3.8vw, 22px); color: rgba(250,248,245,0.5); line-height: 1.8; margin-bottom: 2.5rem; padding-left: 1.25rem; border-left: 2px solid rgba(201,168,76,0.2); }
+      .ap-stillness { font-family: var(--cf-font-devotional); font-style: italic; font-size: clamp(20px, 3.8vw, 22px); color: rgba(250,248,245,0.5); line-height: 1.8; margin-bottom: 2.5rem; padding-left: 1.25rem; border-left: 2px solid rgba(201,168,76,0.2); }
 
       /* Scripture */
       .ap-scriptures { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2.5rem; }
       .ap-scripture  { background: rgba(255,255,255,0.025); border-left: 2px solid #C9A84C; border-radius: 0 12px 12px 0; padding: 1.25rem 1.5rem; overflow-wrap: break-word; word-break: break-word; }
-      .ap-scripture p    { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(20px, 3.8vw, 22px); color: rgba(250,248,245,0.72); line-height: 1.7; margin-bottom: .5rem; overflow-wrap: break-word; word-break: break-word; }
+      .ap-scripture p    { font-family: var(--cf-font-devotional); font-style: italic; font-size: clamp(20px, 3.8vw, 22px); color: rgba(250,248,245,0.72); line-height: 1.7; margin-bottom: .5rem; overflow-wrap: break-word; word-break: break-word; }
       .ap-scripture cite { font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: #C9A84C; font-style: normal; }
 
       /* Teaching */
       .ap-teaching { margin-bottom: 2.5rem; }
-      .ap-body { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 3.8vw, 22px); line-height: 1.88; color: rgba(250,248,245,0.74); margin-bottom: 1.25rem; }
+      .ap-body { font-family: var(--cf-font-devotional); font-size: clamp(20px, 3.8vw, 22px); line-height: 1.88; color: rgba(250,248,245,0.74); margin-bottom: 1.25rem; }
 
       /* Practice */
       .ap-practice { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.15); border-radius: 18px; padding: 1.75rem; margin-bottom: 2.5rem; }
       .ap-practice-head { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; }
       .ap-practice-badge { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(201,168,76,0.65); border: 1px solid rgba(201,168,76,0.25); border-radius: 999px; padding: 4px 12px; }
-      .ap-practice-body { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 3.5vw, 22px); line-height: 1.82; color: rgba(250,248,245,0.65); white-space: pre-line; }
+      .ap-practice-body { font-family: var(--cf-font-devotional); font-size: clamp(20px, 3.5vw, 22px); line-height: 1.82; color: rgba(250,248,245,0.65); white-space: pre-line; }
 
       /* Reflection */
-      .ap-reflection { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.12); border-radius: 14px; padding: 1.5rem; margin-bottom: 2.5rem; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(20px, 3.5vw, 22px); color: rgba(250,248,245,0.6); line-height: 1.7; }
+      .ap-reflection { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.12); border-radius: 14px; padding: 1.5rem; margin-bottom: 2.5rem; font-family: var(--cf-font-devotional); font-style: italic; font-size: clamp(20px, 3.5vw, 22px); color: rgba(250,248,245,0.6); line-height: 1.7; }
 
       /* Prayer */
-      .ap-prayer { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 2rem; margin-bottom: 2.5rem; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(20px, 3.5vw, 22px); color: rgba(250,248,245,0.62); line-height: 1.9; white-space: pre-line; }
+      .ap-prayer { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 2rem; margin-bottom: 2.5rem; font-family: var(--cf-font-devotional); font-style: italic; font-size: clamp(20px, 3.5vw, 22px); color: rgba(250,248,245,0.62); line-height: 1.9; white-space: pre-line; }
 
       /* Declare */
       .ap-declare { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 2rem; margin-bottom: 2.5rem; text-align: center; }
       .ap-declare-label { font-size: 9px; letter-spacing: .42em; text-transform: uppercase; color: rgba(201,168,76,0.55); margin-bottom: 1rem; }
-      .ap-declare-prompt { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(18px, 4vw, 24px); color: rgba(250,248,245,0.55); line-height: 1.6; }
+      .ap-declare-prompt { font-family: var(--cf-font-devotional); font-style: italic; font-size: clamp(18px, 4vw, 24px); color: rgba(250,248,245,0.55); line-height: 1.6; }
 
       /* Divider */
       .ap-rule { height: 1px; background: linear-gradient(to right, #C9A84C, transparent); opacity: .2; margin: 2rem 0; }
@@ -108,7 +108,7 @@ export function ArmorStyles() {
       .ap-widget-placeholder { background: rgba(201,168,76,0.05); border: 1px dashed rgba(201,168,76,0.25); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; }
       .ap-widget-label { font-size: 9px; letter-spacing: .4em; text-transform: uppercase; color: rgba(201,168,76,0.55); margin-bottom: .75rem; }
       .ap-widget-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #FAF8F5; margin-bottom: .5rem; }
-      .ap-widget-desc  { font-family: 'Cormorant Garamond', serif; font-size: 15px; color: rgba(250,248,245,0.4); line-height: 1.65; margin-bottom: 1rem; }
+      .ap-widget-desc  { font-family: var(--cf-font-devotional); font-size: 15px; color: rgba(250,248,245,0.4); line-height: 1.65; margin-bottom: 1rem; }
       .ap-widget-soon  { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(250,248,245,0.2); }
 
       .ap-armor-nav { display: flex; flex-direction: column; gap: 6px; }
@@ -395,7 +395,7 @@ function HeroSection() {
           className="leading-relaxed max-w-2xl opacity-0"
           style={{
             fontSize: "clamp(0.95rem, 2.5vw, 1.3rem)",
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--cf-font-devotional)",
             fontStyle: "italic",
             color: `#FAF8F588`,
           }}
@@ -495,7 +495,7 @@ function ArmorIntroSection() {
             <blockquote
               ref={scriptureBRef}
               style={{
-                fontFamily: "'Cormorant Garamond', serif",
+                fontFamily: "var(--cf-font-devotional)",
                 fontStyle: "italic",
                 fontSize: "clamp(17px, 1.9vw, 24px)",
                 lineHeight: 1.85,
@@ -524,7 +524,7 @@ function ArmorIntroSection() {
             <p
               className="armor-para mb-10"
               style={{
-                fontFamily: "'Cormorant Garamond', serif",
+                fontFamily: "var(--cf-font-devotional)",
                 fontStyle: "italic",
                 fontSize: "clamp(20px, 2.2vw, 28px)",
                 lineHeight: 1.55,
@@ -660,7 +660,7 @@ function GodsArmorSection() {
               </span>
               <p
                 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "var(--cf-font-devotional)",
                   fontStyle: "italic",
                   fontSize: "clamp(22px, 3.5vw, 48px)",
                   lineHeight: 1.3,
@@ -980,7 +980,7 @@ function ArmorRingSection() {
                       }}
                     />
                     <span style={{
-                      fontFamily: "'Cormorant Garamond', serif",
+                      fontFamily: "var(--cf-font-devotional)",
                       fontStyle: "italic",
                       fontSize: "clamp(26px, 2.8vw, 36px)",
                       color: "var(--cf-gold)",
@@ -1111,7 +1111,7 @@ function ArmorRingSection() {
                   className="mt-8 pl-4 border-l"
                   style={{
                     borderColor: `#C9A84C33`,
-                    fontFamily: "'Cormorant Garamond', serif",
+                    fontFamily: "var(--cf-font-devotional)",
                     fontStyle: "italic",
                     fontSize: "clamp(17px, 1.6vw, 22px)",
                     color: `#FAF8F599`,
@@ -1138,7 +1138,7 @@ function ArmorRingSection() {
               </div>
             ) : (
               <p style={{
-                fontFamily: "'Cormorant Garamond', serif",
+                fontFamily: "var(--cf-font-devotional)",
                 fontStyle: "italic",
                 fontSize: "clamp(16px, 1.8vw, 22px)",
                 color: `#FAF8F522`,
@@ -1276,7 +1276,7 @@ function ClosingSection() {
         <p
           ref={armorUpRef}
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--cf-font-devotional)",
             fontStyle: "italic",
             fontSize: "clamp(32px, 6vw, 56px)",
             color: "var(--cf-gold)",
@@ -1369,7 +1369,7 @@ function ClosingSection() {
         <p
           className="text-base md:text-lg leading-relaxed mb-3"
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--cf-font-devotional)",
             fontStyle: "italic",
             color: `#FAF8F544`,
           }}
@@ -1637,7 +1637,7 @@ function CrossLinkCard({ piece }) {
       <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "13px", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--cf-gold)", fontWeight: 700, marginBottom: "4px" }}>
         {link.rhythm}
       </p>
-      <p style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "14px", color: "rgba(250,248,245,0.45)", lineHeight: 1.4 }}>
+      <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: "14px", color: "rgba(250,248,245,0.45)", lineHeight: 1.4 }}>
         {link.tagline}
       </p>
     </Link>
@@ -1863,7 +1863,7 @@ export function ArmorPiecePage() {
         <h2 style={{ fontFamily: "'Michroma', sans-serif", fontSize: "clamp(28px, 6vw, 52px)", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--cf-ivory)", lineHeight: 0.9, marginBottom: "1rem" }}>
           {data.title}
         </h2>
-        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "clamp(15px, 3vw, 20px)", color: "rgba(250,248,245,0.4)", marginBottom: "3rem" }}>
+        <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: "clamp(15px, 3vw, 20px)", color: "rgba(250,248,245,0.4)", marginBottom: "3rem" }}>
           {data.trackTitle}
         </p>
         <Button variant="primary" size="lg" onClick={() => {

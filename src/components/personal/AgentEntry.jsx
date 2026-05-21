@@ -109,7 +109,7 @@ export default function AgentEntry({ profile, updateProfile }) {
         gap:          "0.75rem",
       }}>
         <p style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "var(--cf-font-devotional)",
           fontStyle:  "italic",
           fontSize:   "clamp(15px, 2.2vw, 17px)",
           color:      "rgba(250,248,245,0.75)",
@@ -166,7 +166,7 @@ export default function AgentEntry({ profile, updateProfile }) {
       flexWrap:       "wrap",
     }}>
       <p style={{
-        fontFamily: "'Cormorant Garamond', serif",
+        fontFamily: "var(--cf-font-devotional)",
         fontStyle:  "italic",
         fontSize:   "clamp(14px, 2vw, 16px)",
         color:      "rgba(250,248,245,0.62)",

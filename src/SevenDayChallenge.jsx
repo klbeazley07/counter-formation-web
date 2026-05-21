@@ -450,7 +450,7 @@ export function CFDevotion() {
                 border: "1px solid rgba(201,168,76,0.14)",
                 borderRadius: "14px",
                 padding: "1.25rem 1.5rem",
-                fontFamily: "'Cormorant Garamond', serif",
+                fontFamily: "var(--cf-font-devotional)",
                 fontStyle: "italic",
                 fontSize: "clamp(15px,3.5vw,18px)",
                 color: "rgba(250,248,245,0.65)",
@@ -462,7 +462,7 @@ export function CFDevotion() {
             <div className="cf7-dev-sec" style={{ marginTop: "2rem" }}>
               <p className="cf7-dev-sec-lbl">Day {d.n} of 7</p>
               <p style={{
-                fontFamily: "'Cormorant Garamond', serif",
+                fontFamily: "var(--cf-font-devotional)",
                 fontStyle: "italic",
                 fontSize: "16px",
                 color: "rgba(250,248,245,0.38)",

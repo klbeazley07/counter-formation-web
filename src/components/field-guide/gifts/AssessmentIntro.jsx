@@ -118,7 +118,7 @@ function WhatThisIsNotModal({ open, onClose }) {
         </div>
         <h2
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--cf-font-devotional)",
             fontStyle: "italic",
             fontSize: 30,
             lineHeight: 1.2,
@@ -157,7 +157,7 @@ function WhatThisIsNotModal({ open, onClose }) {
               <div>
                 <div
                   style={{
-                    fontFamily: "'Cormorant Garamond', serif",
+                    fontFamily: "var(--cf-font-devotional)",
                     fontStyle: "italic",
                     fontSize: 19,
                     color: "var(--cf-ivory)",
@@ -247,7 +247,7 @@ export default function AssessmentIntro() {
             {/* Title */}
             <h1
               style={{
-                fontFamily: "'Cormorant Garamond', serif",
+                fontFamily: "var(--cf-font-devotional)",
                 fontStyle: "italic",
                 fontSize: "clamp(40px, 6.5vw, 60px)",
                 lineHeight: 1.08,
@@ -294,7 +294,7 @@ export default function AssessmentIntro() {
                   key={i}
                   className="cf-prose"
                   style={{
-                    fontFamily: "'Cormorant Garamond', serif",
+                    fontFamily: "var(--cf-font-devotional)",
                     fontSize: 18.5,
                     lineHeight: 1.75,
                     color: "var(--cf-ivory)",
@@ -333,7 +333,7 @@ export default function AssessmentIntro() {
               </div>
               <p
                 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "var(--cf-font-devotional)",
                   fontStyle: "italic",
                   fontSize: 16,
                   lineHeight: 1.6,
@@ -376,7 +376,7 @@ export default function AssessmentIntro() {
                   </div>
                   <div
                     style={{
-                      fontFamily: "'Cormorant Garamond', serif",
+                      fontFamily: "var(--cf-font-devotional)",
                       fontStyle: "italic",
                       fontSize: 17,
                       color: "var(--cf-ivory)",
@@ -450,7 +450,7 @@ export default function AssessmentIntro() {
                   background: "transparent",
                   border: "none",
                   color: "var(--cf-ivory-62)",
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "var(--cf-font-devotional)",
                   fontStyle: "italic",
                   fontSize: 17,
                   cursor: "pointer",

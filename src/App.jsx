@@ -410,7 +410,7 @@ function RuleOfLifeSection() {
               marginBottom: "20px",
             }}>Rule of Life</h2>
             <p style={{
-              fontFamily: "'Cormorant Garamond', serif",
+              fontFamily: "var(--cf-font-devotional)",
               fontStyle: "italic",
               fontSize: "16px",
               lineHeight: 1.65,
@@ -493,7 +493,7 @@ function RuleOfLifeSection() {
                 }}>RHYTHM 0{i + 1}</span>
                 <h3 className="font-brand uppercase tracking-[0.1em] text-white">{r.title}</h3>
                 <p style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "var(--cf-font-devotional)",
                   fontStyle: "italic",
                   fontSize: "clamp(17px, 4.5vw, 22px)",
                   lineHeight: 1.55,
@@ -1211,7 +1211,7 @@ function GearSection() {
                   {col.title}
                 </p>
                 <p style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "var(--cf-font-devotional)",
                   fontStyle: "italic",
                   fontSize: "13px",
                   color: isActive ? "rgba(250,248,245,0.45)" : "rgba(250,248,245,0.15)",
@@ -1235,7 +1235,7 @@ function GearSection() {
               {active.title}
             </h3>
             {active.tagline && (
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "clamp(16px, 2.5vw, 22px)", color: `${active.accent}88`, marginBottom: "1rem" }}>
+              <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: "clamp(16px, 2.5vw, 22px)", color: `${active.accent}88`, marginBottom: "1rem" }}>
                 {active.tagline}
               </p>
             )}
@@ -1435,7 +1435,7 @@ function GearSection() {
                     <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: isCurrent ? "#FAF8F5" : "rgba(250,248,245,0.4)", margin: 0, lineHeight: 1.2 }}>
                       {col.title}
                     </p>
-                    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "12px", color: isCurrent ? "rgba(250,248,245,0.4)" : "rgba(250,248,245,0.15)", margin: "2px 0 0" }}>
+                    <p style={{ fontFamily: "var(--cf-font-devotional)", fontStyle: "italic", fontSize: "12px", color: isCurrent ? "rgba(250,248,245,0.4)" : "rgba(250,248,245,0.15)", margin: "2px 0 0" }}>
                       {col.subtitle}
                     </p>
                   </div>

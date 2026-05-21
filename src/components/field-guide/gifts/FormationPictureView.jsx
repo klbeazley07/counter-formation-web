@@ -93,7 +93,7 @@ function FruitCard({ fruitKey }) {
       <Eyebrow style={{ marginBottom: 8 }}>{fruit.greek}</Eyebrow>
       <h3
         style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "var(--cf-font-devotional)",
           fontSize: "clamp(26px, 3vw, 34px)",
           lineHeight: 1.15,
           color: "var(--cf-ivory)",
@@ -116,7 +116,7 @@ function FruitCard({ fruitKey }) {
       </p>
       <p
         style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "var(--cf-font-devotional)",
           fontSize: 15,
           fontStyle: "italic",
           color: "var(--cf-ivory-35)",
@@ -145,7 +145,7 @@ function GiftCard({ gift }) {
       <Eyebrow style={{ marginBottom: 8 }}>{categoryLabel}</Eyebrow>
       <h3
         style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "var(--cf-font-devotional)",
           fontSize: "clamp(26px, 3vw, 34px)",
           lineHeight: 1.15,
           color: "var(--cf-ivory)",
@@ -157,7 +157,7 @@ function GiftCard({ gift }) {
       </h3>
       <p
         style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "var(--cf-font-devotional)",
           fontSize: "clamp(17px, 1.9vw, 20px)",
           fontStyle: "italic",
           color: "var(--cf-ivory-62)",
@@ -211,7 +211,7 @@ function PrerequisiteScreen({ fruitDone, giftsDone }) {
         <Eyebrow>Your Formation Picture</Eyebrow>
         <h1
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--cf-font-devotional)",
             fontSize: "clamp(30px, 4.5vw, 52px)",
             lineHeight: 1.12,
             margin: "0 0 24px",
@@ -349,7 +349,7 @@ export default function FormationPictureView() {
             <Eyebrow>Your Formation Picture</Eyebrow>
             <h1
               style={{
-                fontFamily: "'Cormorant Garamond', serif",
+                fontFamily: "var(--cf-font-devotional)",
                 fontSize: "clamp(36px, 5vw, 62px)",
                 lineHeight: 1.1,
                 margin: "0 0 20px",
@@ -361,7 +361,7 @@ export default function FormationPictureView() {
             </h1>
             <p
               style={{
-                fontFamily: "'Cormorant Garamond', serif",
+                fontFamily: "var(--cf-font-devotional)",
                 fontSize: "clamp(18px, 2vw, 22px)",
                 color: "var(--cf-ivory-62)",
                 lineHeight: 1.65,
@@ -434,7 +434,7 @@ export default function FormationPictureView() {
             ) : (
               <p
                 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "var(--cf-font-devotional)",
                   fontSize: "clamp(17px, 1.9vw, 20px)",
                   fontStyle: "italic",
                   color: "var(--cf-ivory-62)",
@@ -497,7 +497,7 @@ export default function FormationPictureView() {
                 {reflectionLoading && !reflection ? (
                   <p
                     style={{
-                      fontFamily: "'Cormorant Garamond', serif",
+                      fontFamily: "var(--cf-font-devotional)",
                       fontSize: 17,
                       fontStyle: "italic",
                       color: "var(--cf-ivory-35)",
@@ -509,7 +509,7 @@ export default function FormationPictureView() {
                 ) : (
                   <p
                     style={{
-                      fontFamily: "'Cormorant Garamond', serif",
+                      fontFamily: "var(--cf-font-devotional)",
                       fontSize: "clamp(17px, 1.9vw, 20px)",
                       fontStyle: "italic",
                       color: "var(--cf-ivory)",
@@ -539,7 +539,7 @@ export default function FormationPictureView() {
             {topFormationFruit && topActiveGift ? (
               <p
                 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "var(--cf-font-devotional)",
                   fontSize: "clamp(18px, 2vw, 22px)",
                   color: "var(--cf-ivory)",
                   lineHeight: 1.65,
@@ -557,7 +557,7 @@ export default function FormationPictureView() {
             ) : (
               <p
                 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "var(--cf-font-devotional)",
                   fontSize: "clamp(18px, 2vw, 22px)",
                   color: "var(--cf-ivory)",
                   lineHeight: 1.65,

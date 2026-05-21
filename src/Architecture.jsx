@@ -193,7 +193,7 @@ export function ArchitectureStyles() {
       .arch-panel.is-active .arch-headline { opacity: 1; transform: none; }
 
       .arch-manifesto {
-        font-family: 'Cormorant Garamond', serif;
+        font-family: var(--cf-font-devotional);
         font-size: clamp(14px,1.6vw,19px);
         line-height: 1.82;
         color: rgba(250,248,245,0.55);
@@ -473,7 +473,7 @@ export function ArchitectureStyles() {
         color: #0E0C0A; margin-bottom: 1.25rem;
       }
       .camp-hero-line {
-        font-family: 'Cormorant Garamond', serif; font-style: italic;
+        font-family: var(--cf-font-devotional); font-style: italic;
         font-size: clamp(17px,2.2vw,24px); line-height: 1.65;
         color: rgba(14,12,10,0.82); max-width: 560px; margin-bottom: 2rem;
       }
@@ -502,7 +502,7 @@ export function ArchitectureStyles() {
         margin-bottom: clamp(3rem,5vw,4.5rem);
       }
       .camp-pull p {
-        font-family: 'Cormorant Garamond', serif; font-style: italic;
+        font-family: var(--cf-font-devotional); font-style: italic;
         font-size: clamp(22px,3.8vw,44px); line-height: 1.25;
         color: #0E0C0A; max-width: 780px;
       }
@@ -512,7 +512,7 @@ export function ArchitectureStyles() {
         margin-bottom: clamp(2.5rem,5vw,4rem);
       }
       .camp-scripture p {
-        font-family: 'Cormorant Garamond', serif; font-style: italic;
+        font-family: var(--cf-font-devotional); font-style: italic;
         font-size: clamp(16px,2vw,21px); color: rgba(14,12,10,0.75);
         line-height: 1.7; margin-bottom: .6rem;
       }
@@ -528,7 +528,7 @@ export function ArchitectureStyles() {
         line-height: 1.1; color: #0E0C0A; margin-bottom: .9rem;
       }
       .camp-sect-body {
-        font-family: 'Cormorant Garamond', serif; font-size: clamp(16px,2vw,20px);
+        font-family: var(--cf-font-devotional); font-size: clamp(16px,2vw,20px);
         line-height: 1.84; color: rgba(14,12,10,0.58);
       }
       .camp-ctas {

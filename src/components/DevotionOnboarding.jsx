@@ -47,7 +47,7 @@ const ONBOARDING_CSS = `
     margin: 0 0 8px;
   }
   .dgo-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--cf-font-devotional);
     font-size: clamp(22px, 3.2vw, 32px);
     line-height: 1.35;
     color: #FAF8F5;
@@ -55,7 +55,7 @@ const ONBOARDING_CSS = `
     font-weight: 400;
   }
   .dgo-hint {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--cf-font-devotional);
     font-size: clamp(16px, 2vw, 18px);
     line-height: 1.7;
     color: rgba(250,248,245,0.62);
@@ -102,7 +102,7 @@ const ONBOARDING_CSS = `
   }
   .dgo-option-hint {
     display: block;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--cf-font-devotional);
     font-size: 14px;
     letter-spacing: 0;
     text-transform: none;
@@ -117,7 +117,7 @@ const ONBOARDING_CSS = `
     border-radius: 16px;
     padding: 18px 20px;
     color: #17140F;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--cf-font-devotional);
     font-size: 17px;
     line-height: 1.6;
     outline: none;
@@ -190,7 +190,7 @@ const ONBOARDING_CSS = `
     margin-bottom: 12px;
   }
   .dgo-complete-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--cf-font-devotional);
     font-size: clamp(22px, 3vw, 28px);
     color: #FAF8F5;
     margin: 0;

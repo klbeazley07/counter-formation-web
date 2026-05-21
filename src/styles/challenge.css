@@ -48,7 +48,7 @@
 }
 .cf7-entry-label { display: block; font-size: 10px; letter-spacing: .45em; text-transform: uppercase; color: #C9A84C; margin-bottom: 1.75rem; }
 .cf7-h1 { font-size: clamp(64px,17vw,128px); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; line-height: .84; color: #FAF8F5; margin-bottom: 1.25rem; }
-.cf7-italic { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(17px,4vw,26px); color: rgba(250,248,245,0.28); margin-bottom: 1.5rem; }
+.cf7-italic { font-family: var(--cf-font-devotional); font-style: italic; font-size: clamp(17px,4vw,26px); color: rgba(250,248,245,0.28); margin-bottom: 1.5rem; }
 .cf7-sub { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: rgba(250,248,245,0.4); line-height: 2; margin-bottom: 2.5rem; max-width: 300px; margin-left: auto; margin-right: auto; }
 .cf7-cta {
   display: inline-flex; align-items: center; gap: 10px; padding: 16px 36px;
@@ -74,7 +74,7 @@
 }
 .cf7-eyebrow   { font-size: 10px; letter-spacing: .48em; text-transform: uppercase; color: #C9A84C; margin-bottom: 1rem; }
 .cf7-section-h2 { font-size: clamp(40px,10vw,70px); font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #FAF8F5; line-height: .9; margin-bottom: .75rem; text-align: center; }
-.cf7-section-italic { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(15px,3.5vw,22px); color: rgba(250,248,245,0.22); margin-bottom: 1rem; text-align: center; }
+.cf7-section-italic { font-family: var(--cf-font-devotional); font-style: italic; font-size: clamp(15px,3.5vw,22px); color: rgba(250,248,245,0.22); margin-bottom: 1rem; text-align: center; }
 .cf7-section-copy { max-width: 620px; margin: 0 auto 2.5rem; text-align: center; font-size: 10px; line-height: 1.95; letter-spacing: .18em; text-transform: uppercase; color: rgba(250,248,245,0.38); }
 @media (min-width: 1024px) {
   .cf7-section-h2 { text-align: left; }
@@ -126,7 +126,7 @@
 .cf7-card-body { position: absolute; inset: 0; padding: 12px 13px; display: flex; flex-direction: column; justify-content: flex-end; }
 .cf7-card-num   { font-size: 8px; letter-spacing: .32em; text-transform: uppercase; color: #C9A84C; margin-bottom: 3px; }
 .cf7-card-title { font-size: clamp(11px,2.4vw,13px); font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: #FAF8F5; line-height: 1.2; }
-.cf7-card-theme { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 10px; color: rgba(250,248,245,0.38); margin-top: 3px; }
+.cf7-card-theme { font-family: var(--cf-font-devotional); font-style: italic; font-size: 10px; color: rgba(250,248,245,0.38); margin-top: 3px; }
 .cf7-card-cta   { margin-top: 8px; display: inline-flex; align-items: center; gap: 5px; font-size: 7px; letter-spacing: .2em; text-transform: uppercase; color: #C9A84C; opacity: 0; transition: opacity .25s; }
 .cf7-card:hover .cf7-card-cta { opacity: 1; }
 .cf7-done-badge { position: absolute; top: 9px; left: 9px; z-index: 5; width: 22px; height: 22px; border-radius: 50%; background: #C9A84C; display: none; align-items: center; justify-content: center; }
@@ -207,7 +207,7 @@
   background: linear-gradient(to bottom, rgba(201,168,76,0.05), rgba(255,255,255,0.02));
 }
 .cf7-pull-quote p {
-  font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(24px,5vw,34px);
+  font-family: var(--cf-font-devotional); font-style: italic; font-size: clamp(24px,5vw,34px);
   line-height: 1.25; color: rgba(250,248,245,0.9); margin: 0 auto; max-width: 560px;
 }
 .cf7-pull-quote span {
@@ -217,13 +217,13 @@
 
 .cf7-dev-sec     { margin-bottom: 2.75rem; }
 .cf7-dev-sec-lbl { font-size: 9px; letter-spacing: .42em; text-transform: uppercase; color: #C9A84C; margin-top: 2.5rem; margin-bottom: 1.25rem; padding-bottom: .7rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
-.cf7-dev-body    { font-family: 'Cormorant Garamond', serif; font-size: clamp(18px,4vw,20px); line-height: 1.85; color: rgba(250,248,245,0.78); max-width: 620px; }
+.cf7-dev-body    { font-family: var(--cf-font-devotional); font-size: clamp(18px,4vw,20px); line-height: 1.85; color: rgba(250,248,245,0.78); max-width: 620px; }
 .cf7-dev-body p  { margin-bottom: 2rem; }
 .cf7-dev-body em { font-style: italic; color: rgba(250,248,245,0.96); }
 .cf7-dev-opening .cf7-dev-body > p:first-child { font-size: 20px; }
 
 .cf7-scripture-block { background: rgba(255,255,255,0.03); border-left: 2px solid #C9A84C; border-radius: 0 12px 12px 0; padding: 1.4rem 1.5rem; margin: 1.5rem 0; }
-.cf7-scripture-block p    { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(16px,4vw,19px); color: rgba(250,248,245,0.75); line-height: 1.7; margin-bottom: .7rem; }
+.cf7-scripture-block p    { font-family: var(--cf-font-devotional); font-style: italic; font-size: clamp(16px,4vw,19px); color: rgba(250,248,245,0.75); line-height: 1.7; margin-bottom: .7rem; }
 .cf7-scripture-block cite { font-family: 'Barlow Condensed', sans-serif; font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: #C9A84C; font-style: normal; }
 
 .cf7-practice-block { background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.18); border-radius: 16px; padding: 1.75rem; }

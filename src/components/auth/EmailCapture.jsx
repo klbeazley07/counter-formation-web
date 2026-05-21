@@ -72,7 +72,7 @@ const STYLES = `
     margin: 0 0 12px;
   }
   .cf-ecap__head {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--cf-font-devotional);
     font-style: italic;
     font-weight: 400;
     font-size: clamp(22px, 3.4vw, 28px);
@@ -143,7 +143,7 @@ const STYLES = `
     text-align: left;
   }
   .cf-ecap__success-head {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--cf-font-devotional);
     font-style: italic;
     font-weight: 400;
     font-size: clamp(20px, 3vw, 26px);

@@ -29,7 +29,7 @@ function Frame({ eyebrow, title, route, children }) {
         </div>
         <h1
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--cf-font-devotional)",
             fontSize: 44,
             lineHeight: 1.15,
             margin: 0,
