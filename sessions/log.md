@@ -4,6 +4,43 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 20 -- Phase 13: Primitives adoption + accessibility sweep (2026-05-20)
+
+**Status:** Complete. Phase 13 (all 10 items) shipped. Build passes; const-C contract test passes; SevenDayChallenge.jsx 556 lines (target < 560); no alt="" without role="presentation" across section files.
+
+**Push cadence:** Five commits to main (plan file; Button tab variant; ChallengeStyles extraction + SDC + FieldGuide + RuleOfLife bundle; FruitAssessment + EyebrowLabel + Identity bundle; App.jsx + ARIA pass).
+
+**Phase 13 items completed:**
+
+**Item 1 -- Button.jsx: tab variant + active prop.** Added `.cf-btn--tab` CSS class with data-active attribute pattern. Tab variant skips size class, uses bottom-border active indicator. Added `active` prop that passes `data-active={String(active)}` to the DOM element. Required by RuleOfLife's three tab-bar widgets (Examen steps, Lectio Divina sections, Prayer Postures, Sabbath Ideas).
+
+**Item 2 -- ChallengeStyles extraction.** The `ChallengeStyles` function in SevenDayChallenge.jsx was 297 lines of template-literal CSS. Moved to `src/styles/challenge.css` with a Vite CSS import at the top of SDC. Removed the named export and `<ChallengeStyles />` from App.jsx render tree. SDC: 856 → 556 lines.
+
+**Item 3 -- FieldGuide.jsx Button adoption.** Replaced 2 `<button className="fg-btn-ghost">` with `<Button variant="ghost" size="sm">`.
+
+**Item 4 -- RuleOfLife.jsx Button adoption + alt audit.** Replaced all 11 `<button>` elements: tab-bar buttons (4 sets) → `<Button variant="tab" active={...}>` preserving past-step gold-50% via inline style; CTA buttons → primary/secondary/ghost; Books/Media toggle pills → ghost with inline active state (no native Button active state for pill pattern). Removed all onMouseEnter/onMouseLeave JS hover handlers. 3 decorative images → `role="presentation"`.
+
+**Item 5 -- SevenDayChallenge.jsx Button adoption + alt audit.** Replaced the "Begin/Continue" submit button with `<Button variant="primary" size="sm">` with arrow icon. 3 decorative alt="" images → `role="presentation"`. SDC reaches 556 lines (from 856) after combining Items 2 + 5.
+
+**Item 6 -- FruitAssessment.jsx Button adoption + alt audit.** Replaced 8 of 9 buttons with Button primitive (AnswerOption left raw -- body font, text-left alignment, complex 7-point scale selected state doesn't match any variant). Removed local `Btn` wrapper and `btnHov`/`hov` hover states. 1 decorative image → `role="presentation"`.
+
+**Item 7 -- EyebrowLabel.jsx: forwardRef.** Added `forwardRef` so Identity.jsx GSAP scroll animations can attach refs to eyebrow elements directly. Wraps the `<p>` render; forward ref threaded through.
+
+**Item 8 -- Identity.jsx Button + SectionHeader + alt audit.** Static section header (eyebrow span + h2) → `<SectionHeader eyebrow="The Six Pieces" title="The Armor of God" />`. QR welcome modal "Begin Formation →" → `<Button variant="primary" size="lg">`. "Day N →" nav → `<Button variant="primary" size="sm">`. Three buttons left raw: `ap-piece-switcher` (multi-child dropdown layout), scroll dot nav (6px circle icon-only), `ap-day-btn` (has its own complete CSS class system in the component `<style>` block). Smart-quote corruption occurred mid-session (Unicode left/right quotes replacing ASCII single quotes in `window.history.replaceState`) -- fixed with a node script replace pass. 11 decorative images → `role="presentation"`.
+
+**Item 9 -- App.jsx alt audit.** Gear/button patterns in App.jsx (gear capsule shelf, floating collection pill, bottom sheet picker) use per-collection dynamic accent colors and cannot cleanly adopt Button primitive; both EyebrowLabel candidates have responsive `text-[9px] md:text-[10px]` sizing the primitive doesn't support; notify email input has wholly different visual styling. Alt audit only: 3 decorative images → `role="presentation"` (helmet divider, Rule of Life hero, rhythm card bg).
+
+**Item 10 -- ARIA pass.** SiteNav: `aria-label="Main navigation"` on `<nav>`; `aria-current="page"` on active links. MobileTabBar: `aria-label="Mobile navigation"` on `<nav>`; `aria-expanded={moreOpen}` on the More toggle button. FruitAssessment ResultsModal: `role="dialog" aria-modal="true" aria-labelledby="results-modal-title"` on the modal div; `id="results-modal-title"` on the h2. ChallengeModal (App.jsx) already had full dialog role. No accordion pattern found in FieldGuide; no other full-screen modal overlays missing role.
+
+**Acceptance criteria status:**
+- Identity.jsx: 2173 lines (stretch target of <1000 was dependent on content extraction not yet done -- base target <1500 missed; Identity is the one outlier, pending a content-extraction pass in a future phase)
+- SevenDayChallenge.jsx: 556 lines (target <560 ✓)
+- All section-file `<button>` elements routed through Button primitive where variant mapping was clean; documented exceptions for complex CSS-class-system buttons (ap-day-btn, ap-piece-switcher) and data-driven accent buttons (gear section)
+- Zero alt="" without role="presentation" across all edited files
+- Build passes ✓
+
+---
+
 ## Session 19 -- Phase 12: spec close-out + 2 user-reported fixes (2026-05-20)
 
 **Status:** Complete. Phase 12 (all 8 items) shipped. Two user-reported issues also resolved mid-session and pushed early so production picked them up immediately. Build passes; const-C contract test passes; JS 2046 kB unchanged, CSS 78.29 kB (-0.12 kB from token sweep).

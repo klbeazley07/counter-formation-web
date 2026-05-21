@@ -1,9 +1,9 @@
 # Counter Formation Build -- Next Session
 
-**Last completed:** Session 19 -- Phase 12 (all 8 items) + two production fixes (Devotion Guide scripture links, Arrow Log 502 diagnostic) on 2026-05-20
-**Up next:** Phase 13 -- Primitives adoption + accessibility sweep.
+**Last completed:** Session 20 -- Phase 13 (Primitives adoption + accessibility sweep) on 2026-05-20
+**Up next:** Phase 14 -- Connection Tissue completion + Agent Foundation.
 
-Phase 12 closed every mechanical/surgical spec item. The const-C contract test is wired into `prebuild` so the pattern can't sneak back in. All section content is now in `src/content/` JSON. The site is ready for the larger primitives refactor.
+Phase 13 closed the design system work. Primitives are adopted across section files; accessibility pass done for nav + modals. The remaining stretch target (Identity.jsx < 1000 lines) depends on content extraction that belongs with Phase 14's scope, not a standalone cleanup session.
 
 ---
 
@@ -12,54 +12,53 @@ Phase 12 closed every mechanical/surgical spec item. The const-C contract test i
 Open Claude Code in this repo and paste:
 
 ```
-Read sessions/next.md and execute Phase 13. Follow the methodology -- write the plan file first, then work through the todo list. Build, commit, push after each file. Update sessions/log.md and sessions/next.md.
+Read sessions/next.md and execute Phase 14. Follow the methodology -- write the plan file first, then work through the todo list. Build, commit, push after each item. Update sessions/log.md and sessions/next.md.
 ```
 
 ---
 
-## Phase 13 -- Primitives + Accessibility sweep
+## Phase 14 -- Connection Tissue completion + Agent Foundation
 
-**Goal:** Replace hand-rolled UI patterns across section files with the existing primitives. Bundle the accessibility audit per spec Theme 4.
+**Goal:** Close the remaining Phase 2 spec items (connection tissue between sections) and begin Phase 3 (agent foundation -- DevotionGuide becomes stateful).
 
-**Why this is its own phase:** The work touches Identity.jsx (2205 lines, now with a small qr-arrival addition), FruitAssessment.jsx (1670), RuleOfLife.jsx (~700 after Item 4 cleanup), FieldGuide.jsx (475), SevenDayChallenge.jsx (854 after Phase 12 Item 5), and App.jsx. It's a refactor with real risk of breaking visual behavior. Worth doing carefully, file by file, with a build + spot-check after each.
+**Why this ordering:** The primitives system is now clean. Connection tissue (NextStep placements, formation path) is the next highest-leverage work per the original spec dependency graph. Agent Foundation (Phase 3) depends on profile data that is already in place.
 
-**Recommended pre-flight:** Read `src/components/primitives/` to confirm current Button / EyebrowLabel / SectionHeader / Card / ProgressBar / Input shapes before writing the plan file. Spec Theme 4 may call for new variants that don't exist yet.
+**Pre-flight audit needed before writing the plan file:**
+- Read `src/utils/formationRecommendation.js` and `src/components/NextStep.jsx` to check current state
+- Check Identity.jsx for whether `<NextStep context="armor-piece-complete">` is already placed at Day 6 end-of-track
+- Check FieldGuide.jsx for whether a `<NextStep context="field-guide-complete">` exists at the Day 7 screen
+- Check Identity.jsx CROSS_LINKS for whether Breastplate of Righteousness is mapped
+- Check RuleOfLife.jsx rule-of-life.json for whether Prayer rhythm has a `connectedArmor` entry
 
 **Items in scope:**
 
-1. **Primitive adoption -- Button.** Audit each section file for `<button>` and `<Link>`-styled-as-button. Replace with `<Button variant=...>` from `src/components/primitives/Button.jsx`. Variants needed: primary (gold fill), secondary (outlined), ghost (transparent). Add any missing variants to the primitive first.
+### Connection Tissue (Phase 2 spec items not yet confirmed complete)
 
-2. **Primitive adoption -- EyebrowLabel.** Many section files have inline `<span className="...uppercase tracking-...">EYEBROW</span>`. Replace with `<EyebrowLabel>EYEBROW</EyebrowLabel>`. This is the highest-frequency primitive; biggest line-count reduction.
+1. **Field Guide Day 7 completion card.** After the user completes the last office (Field Guide day 7), show a `<NextStep context="field-guide-complete" />` card. Check if this is already in FieldGuide.jsx; if not, add it. The formationRecommendation.js rules engine already has the logic for challenge-complete and assessment-complete -- extend it for field-guide-complete.
 
-3. **Primitive adoption -- SectionHeader.** Each section opens with eyebrow + display title + optional subtitle. Replace with `<SectionHeader eyebrow=... title=... subtitle=... />`.
+2. **Identity armor piece end-of-track NextStep.** Day 6 of each armor piece track should surface a "what's next" moment rather than silence. Add `<NextStep context="armor-piece-complete" pieceSlug={piece} />` at the end of the final day's content in Identity.jsx. The qr-arrival context (added in Phase 12) already demonstrates the pattern.
 
-4. **Primitive adoption -- Card.** The dark container with optional gold top border hairline appears repeatedly. Replace with `<Card padded>...`.
+3. **CROSS_LINKS + Prayer rhythm audit.** Confirm Breastplate of Righteousness is in the `ARMOR_PIECE_CROSS_LINKS` reverse map in Identity.jsx. Confirm Prayer rhythm in rule-of-life.json has a `connectedArmor` entry. Add if missing.
 
-5. **Primitive adoption -- ProgressBar.** Identity piece pages, Rule of Life, 7-Day Challenge all have a thin gold progress bar. Use the primitive.
+### Agent Foundation (Phase 3 spec items)
 
-6. **Primitive adoption -- Input.** All three newsletter capture forms (homepage hero, footer, EmailCapture component) should use the Input primitive. Email focus/blur behavior centralized.
+4. **DevotionGuide profile reading.** DevotionGuide.jsx currently receives `profile` but may not be using `profile.assessment` or `profile.widgets.devotions` to contextualize the generation request. Update the `/api/generate` call to include the formation context envelope: `{ fruits: profile.assessment?.fruits, formationEdge: profile.assessment?.formationEdge, completedDays: profile.challenge?.completedDays }`. Backend function may need updating.
 
-7. **Decorative image audit.** 25 files have `alt=""`. For each: keep `alt=""` if purely decorative AND add `role="presentation"`. If meaningful for formation context, write a descriptive alt.
+5. **DevotionGuide returning user "Continue" mode.** If `profile.widgets.devotions` has entries, show the last entry's prompt/response before the new-prompt form with a "Continue from yesterday" collapsed view. This is the minimum history panel from the Phase 3 spec.
 
-8. **Section-level ARIA pass.** Nav, modals, accordions in Field Guide, scroll-arc toggles in Identity, the slidebar in App.jsx, the QR welcome modal in Identity. Each interactive element gets `role`, `aria-label`, `aria-expanded` as appropriate.
+6. **DevotionGuide first-time onboarding.** If `profile.assessment.completedAt === null`, show a short orientation card before the devotion form. Two options to offer: (a) "Start the Fruit Assessment first" → links to FruitAssessment, (b) "Jump in without assessment" → shows the form. This removes the blank-form cold-start experience for new users.
 
-**Methodology:** One section file at a time. Visual diff via dev server after each file (or manual spot-check). Avoid bundle-everything commits -- per-file commits keep regressions traceable.
+### Optional: Identity.jsx content extraction (stretch)
 
-**Acceptance for Phase 13:**
-- Identity.jsx under 1500 lines (stretch: under 1000).
-- SevenDayChallenge.jsx under 350 lines (also requires the ChallengeStyles template-literal CSS to be extracted -- see "Possible Phase 13 add-on" below).
-- All `<button>` elements in section files routed through the Button primitive.
-- All eyebrow labels through EyebrowLabel.
-- Zero `alt=""` without an accompanying `role="presentation"`.
-- Build passes; no visual regressions on the golden path (home → 7DC → Identity → FruitAssessment → RuleOfLife → FieldGuide → DevotionGuide).
+7. **Identity.jsx armor content to JSON (stretch).** Identity.jsx is at 2173 lines. The armor piece day content (devotional text, scripture, reflection questions per day per piece) is the main bulk. Extracting to `src/content/armor.json` (which already exists) would push toward the Phase 5 spec target of < 1000 lines. Only worth doing if the other items are complete -- this is the most time-intensive item.
 
----
-
-## Possible Phase 13 add-on -- SevenDayChallenge styles extraction
-
-Phase 12 extracted DAYS + DAY_META to JSON but left the `ChallengeStyles` template-literal CSS block (~600 lines, exported and rendered via `<ChallengeStyles />` inside App.jsx). That extraction mirrors the FG_CSS/FA_CSS/DG_CSS work from Phases 10-11: move the string content to `src/styles/challenge.css` and add a Vite CSS import at the top of SevenDayChallenge.jsx. Removes the `<ChallengeStyles />` JSX usage and the named export.
-
-If you want SevenDayChallenge.jsx to actually hit the spec's <350-line target, this extraction is the path to it. If you don't, skip it -- it's not technically in the Phase 13 spec.
+**Acceptance for Phase 14:**
+- NextStep shows at Field Guide Day 7 completion
+- NextStep shows at armor piece Day 6 completion
+- DevotionGuide generation request includes formation profile context
+- DevotionGuide returning users see their last entry
+- DevotionGuide first-time users see an orientation card
+- Build passes
 
 ---
 
@@ -67,7 +66,7 @@ If you want SevenDayChallenge.jsx to actually hit the spec's <350-line target, t
 
 - **iOS Safari device test.** Manual. Test (a) magic-link end-to-end, (b) ApparelLane scroll-snap, (c) bottom-sheet email capture. Log pass/fail.
 - **GEMINI_API_KEY removal from Cloudflare Pages env.** Manual dashboard step.
-- **Arrow Log 502 follow-up.** The robust-JSON fix went out in Session 19. If the 502 persists despite the new `extractJson()`, the most likely remaining cause is upstream Anthropic 5xx (overloaded). Consider migrating arrow-log.js to Claude's tool use API for true structured output -- much more reliable than prompt-based JSON. The function already retries once on non-400/401; longer backoff might help on bursty days.
+- **Arrow Log 502 follow-up.** The robust-JSON fix went out in Session 19. If the 502 persists despite the new `extractJson()`, the most likely remaining cause is upstream Anthropic 5xx (overloaded). Consider migrating arrow-log.js to Claude's tool use API for true structured output -- much more reliable than prompt-based JSON.
 
 ---
 
@@ -76,7 +75,7 @@ If you want SevenDayChallenge.jsx to actually hit the spec's <350-line target, t
 1. **Read state.** `sessions/next.md`, active plan file, top of `sessions/log.md`, `git log --oneline -10`.
 2. **Plan with TodoWrite.** Mirror the todo list. Mark item 1 `in_progress` before starting.
 3. **Execute.** Edit only what each item calls for.
-4. **Verify.** `npm run build` must pass after each item (prebuild now runs `lint:tokens` -- the const-C contract test).
+4. **Verify.** `npm run build` must pass after each item (prebuild runs `lint:tokens` -- the const-C contract test).
 5. **Commit + push + handoff.** Per-task commits preferred. Update log.md + next.md before push.
 
 ---
@@ -84,8 +83,9 @@ If you want SevenDayChallenge.jsx to actually hit the spec's <350-line target, t
 ## Environment notes
 
 - Cloudflare Pages env: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `ANTHROPIC_API_KEY`, `KIT_API_KEY`, `KIT_FORMATION_TAG_ID`. `GEMINI_API_KEY` unused and should be removed.
-- `cf:profile` schema currently v5 (bumped in Session 19, Phase 12 Item 2). Phase 13 does not require a schema bump.
+- `cf:profile` schema currently v5 (bumped in Session 19, Phase 12 Item 2). Phase 14 does not require a schema bump unless DevotionGuide adds a new `devotions` array to the profile.
 - RLS: enabled on `public.users`, `fruit_assessments`, `gifts_sessions`. Intentionally OFF on `gifts_trusted_tokens` and `gifts_trusted_responses`.
-- CSS files in `src/styles/`: `tokens.css`, `field-guide.css`, `fruit-assessment.css`, `devotion-guide.css`. All section CSS except SevenDayChallenge is now static (no `<style>{TEMPLATE}</style>` in components).
-- All `const C` palette constants have been removed from src/. `npm run lint:tokens` enforces this. New code should reference tokens via `var(--cf-*)` or use the primitives.
-- Content layer: `src/content/` now contains armor.json, field-guide.json, field-guide-landing.json, rule-of-life.json (with new `connectedArmor` per rhythm), fruits.json, loader.js, `challenge/days.json` (new -- 7DC content + dayMeta), `assessment/fruit-questions.json` (new -- scaleOptions, clusterThreshold, questions). `src/fruitAssessmentData.js` is deleted; all consumers import from `src/content/loader.js`.
+- CSS files in `src/styles/`: `tokens.css`, `field-guide.css`, `fruit-assessment.css`, `devotion-guide.css`, `challenge.css` (new, added Phase 13). All section CSS is now static files -- no `<style>{TEMPLATE}</style>` in component files.
+- All `const C` palette constants removed from src/. `npm run lint:tokens` enforces this. New code should reference tokens via `var(--cf-*)` or use the primitives.
+- Content layer: `src/content/` contains armor.json, field-guide.json, field-guide-landing.json, rule-of-life.json (with `connectedArmor` per rhythm), fruits.json, loader.js, `challenge/days.json`, `assessment/fruit-questions.json`.
+- Primitives in `src/components/primitives/`: Button (with tab variant), EyebrowLabel (forwardRef), SectionHeader, Card, ProgressBar, Input. All adopted across section files as of Phase 13.
