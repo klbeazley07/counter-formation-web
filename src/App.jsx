@@ -13,7 +13,7 @@ import {
   FGNewHere,
 } from "./FieldGuide";
 
-import { ChallengeStyles, CFLanding, CFDevotion } from "./SevenDayChallenge";
+import { CFLanding, CFDevotion } from "./SevenDayChallenge";
 import DevotionGuide from "./DevotionGuide";
 import { RuleStyles, RhythmPage, BookPage } from "./RuleOfLife";
 import {
@@ -1815,7 +1815,6 @@ export default function App() {
     <FormationProfileProvider>
     <BrowserRouter>
       <ScrollToTop />
-      <ChallengeStyles />
       <RuleStyles />
       <ArchitectureStyles />
       <ArmorStyles />

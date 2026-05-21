@@ -2,8 +2,9 @@
  * Button — shared CTA primitive.
  *
  * Contract: sessions/contracts.md "Primitive Component APIs > Button".
- * Three variants (primary | secondary | ghost), three sizes (sm | md | lg),
- * loading + disabled state. All values reference CSS variables from tokens.css.
+ * Four variants (primary | secondary | ghost | tab), three sizes (sm | md | lg),
+ * loading + disabled state. Tab variant uses active prop for bottom-border highlight.
+ * All values reference CSS variables from tokens.css.
  */
 
 const BUTTON_CSS = `
@@ -64,6 +65,25 @@ const BUTTON_CSS = `
     background: var(--cf-gold-glow);
   }
 
+  /* Tab variant — bottom-border active indicator, no radius, no transform */
+  .cf-btn--tab {
+    background: transparent;
+    color: var(--cf-ivory-42);
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    min-height: auto;
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .cf-btn--tab:not(:disabled):hover {
+    color: var(--cf-gold);
+    transform: none;
+  }
+  .cf-btn--tab[data-active="true"] {
+    color: var(--cf-gold);
+    border-bottom-color: var(--cf-gold);
+  }
+
   /* Sizes */
   .cf-btn--sm {
     font-size: 9px;
@@ -102,6 +122,7 @@ export default function Button({
   size    = "md",
   loading = false,
   disabled = false,
+  active,
   icon,
   type     = "button",
   className = "",
@@ -112,7 +133,7 @@ export default function Button({
   const cls = [
     "cf-btn",
     `cf-btn--${variant}`,
-    `cf-btn--${size}`,
+    variant !== "tab" ? `cf-btn--${size}` : "",
     className,
   ].filter(Boolean).join(" ");
 
@@ -126,6 +147,7 @@ export default function Button({
         className={cls}
         disabled={isDisabled}
         aria-busy={loading || undefined}
+        data-active={active != null ? String(active) : undefined}
         onClick={onClick}
         {...rest}
       >
