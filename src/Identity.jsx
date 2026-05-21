@@ -15,6 +15,8 @@ import { parseScriptureRefs } from "./utils/parseScriptureRefs";
 import { useFormationProfile } from "./hooks/useFormationProfile";
 import NextStep from "./components/NextStep";
 import { getArmorPiece, getAllArmorPieces } from "./content/loader";
+import Button from "./components/primitives/Button";
+import SectionHeader from "./components/primitives/SectionHeader";
 
 const SHOPIFY_URL = "https://shop.counterformed.com/collections/armor-of-god-collection";
 
@@ -273,7 +275,7 @@ function HeroSection() {
         .to(sublineRef.current,    { opacity: 0.55, y: 0, duration: 0.6 }, "+=0.1")
         .to(chevronRef.current,    { opacity: 0.6,  y: 0, duration: 0.5 }, "-=0.3");
 
-      // --- Scroll indicator pulse: opacity 0.4 â†’ 1.0 ---
+      // --- Scroll indicator pulse: opacity 0.4 â†' 1.0 ---
       gsap.fromTo(chevronRef.current,
         { opacity: 0.4 },
         { opacity: 1.0, duration: 1.4, ease: "sine.inOut", repeat: -1, yoyo: true, delay: 1.8 }
@@ -345,8 +347,7 @@ function HeroSection() {
       >
         <img
           src="/shield-white.png"
-          alt=""
-          style={{
+          alt="" role="presentation" style={{
             height: "clamp(28vw, 45vh, 45vh)",
             width: "auto",
             filter: "brightness(0) invert(1)",
@@ -550,8 +551,7 @@ function ArmorIntroSection() {
         <div className="mt-20 flex justify-center pointer-events-none">
           <img
             src="/helmet.png"
-            alt=""
-            style={{ height: "200px", filter: "brightness(0) invert(1)", opacity: 0.06 }}
+            alt="" role="presentation" style={{ height: "200px", filter: "brightness(0) invert(1)", opacity: 0.06 }}
           />
         </div>
       </div>
@@ -602,7 +602,7 @@ function GodsArmorSection() {
           });
       }
 
-      // --- Background color transition: Hero Black â†’ Rule Brown via scrub ---
+      // --- Background color transition: Hero Black â†' Rule Brown via scrub ---
       gsap.fromTo(sectionRef.current,
         { backgroundColor: "var(--cf-hero-bg)" },
         { backgroundColor: "var(--cf-rule-bg)", ease: "none",
@@ -852,15 +852,7 @@ function ArmorRingSection() {
 
       <div className="max-w-[1200px] mx-auto">
 
-        {/* Section header */}
-        <div className="mb-12 md:mb-16">
-          <span className="block text-[10px] tracking-[0.5em] uppercase font-bold mb-4" style={{ color: "var(--cf-gold)" }}>
-            The Six Pieces
-          </span>
-          <h2 className="font-brand text-3xl md:text-6xl uppercase tracking-[0.1em] text-white leading-none">
-            The Armor of God
-          </h2>
-        </div>
+        <SectionHeader eyebrow="The Six Pieces" title="The Armor of God" className="mb-12 md:mb-16" />
 
         {/* Side-by-side grid */}
         <div className="flex flex-col md:flex-row gap-0 md:gap-12 items-stretch">
@@ -882,8 +874,7 @@ function ArmorRingSection() {
             <img
               ref={imageRef}
               src={piece ? (getArmorPiece(piece.slug)?.img || "") : ""}
-              alt=""
-              style={{
+              alt="" role="presentation" style={{
                 position: "absolute", inset: 0,
                 width: "100%", height: "100%",
                 objectFit: "cover", objectPosition: "center top",
@@ -982,8 +973,7 @@ function ArmorRingSection() {
                   <>
                     <img
                       src="/shield-white.png"
-                      alt=""
-                      style={{
+                      alt="" role="presentation" style={{
                         width: "clamp(156px, 15vw, 204px)", height: "auto",
                         objectFit: "contain", opacity: 0.55,
                         display: "block", margin: "0 auto 0.75rem",
@@ -1356,7 +1346,7 @@ function ClosingSection() {
           onMouseEnter={e => { e.currentTarget.style.color = "rgba(250,248,245,0.6)"; }}
           onMouseLeave={e => { e.currentTarget.style.color = "rgba(250,248,245,0.3)"; }}
         >
-          New to Counter Formation? Start with the 7-Day Challenge â†’
+          New to Counter Formation? Start with the 7-Day Challenge â†'
         </Link>
       </div>
 
@@ -1395,8 +1385,7 @@ function ClosingSection() {
 
         <img
           src="/helmet.png"
-          alt=""
-          style={{ height: "36px", filter: "brightness(0) invert(1)", opacity: 0.06, margin: "0 auto 12px", display: "block" }}
+          alt="" role="presentation" style={{ height: "36px", filter: "brightness(0) invert(1)", opacity: 0.06, margin: "0 auto 12px", display: "block" }}
           onError={e => { e.target.style.display = "none"; }}
         />
         <p
@@ -1866,7 +1855,7 @@ export function ArmorPiecePage() {
         }}
       >
         {data.icon && (
-          <img src={data.icon} alt="" style={{ width: 40, mixBlendMode: "screen", opacity: 0.12, marginBottom: "2rem" }} />
+          <img src={data.icon} alt="" role="presentation" style={{ width: 40, mixBlendMode: "screen", opacity: 0.12, marginBottom: "2rem" }} />
         )}
         <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "10px", letterSpacing: "0.5em", textTransform: "uppercase", color: "var(--cf-gold)", marginBottom: "1.5rem", fontWeight: 700 }}>
           You're Wearing the Armor
@@ -1877,29 +1866,13 @@ export function ArmorPiecePage() {
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "clamp(15px, 3vw, 20px)", color: "rgba(250,248,245,0.4)", marginBottom: "3rem" }}>
           {data.trackTitle}
         </p>
-        <button
-          onClick={() => {
+        <Button variant="primary" size="lg" onClick={() => {
             setQRFadingOut(true);
             window.history.replaceState({}, '', window.location.pathname);
             setTimeout(() => setShowQRWelcome(false), 400);
-          }}
-          style={{
-            fontFamily: "'Barlow Condensed', sans-serif",
-            fontSize: "11px",
-            letterSpacing: "0.28em",
-            textTransform: "uppercase",
-            fontWeight: 700,
-            padding: "14px 36px",
-            borderRadius: "999px",
-            border: "none",
-            background: "#C9A84C",
-            color: "#0A0A0A",
-            cursor: "pointer",
-            boxShadow: "0 4px 32px rgba(201,168,76,0.3)",
-          }}
-        >
-          Begin Formation â†’
-        </button>
+          }}>
+          Begin Formation →
+        </Button>
       </div>
     )}
     <div className="ap-wrap" ref={wrapRef}>
@@ -1913,8 +1886,7 @@ export function ArmorPiecePage() {
           {data.icon && (
             <img
               src={data.icon}
-              alt=""
-              style={{ width: "100%", height: "100%", objectFit: "contain", mixBlendMode: "screen" }}
+              alt="" role="presentation" style={{ width: "100%", height: "100%", objectFit: "contain", mixBlendMode: "screen" }}
             />
           )}
         </div>
@@ -1941,8 +1913,7 @@ export function ArmorPiecePage() {
           {data.icon && (
             <img
               src={data.icon}
-              alt=""
-              className="ap-day-nav-icon"
+              alt="" role="presentation" className="ap-day-nav-icon"
               style={{
                 width: "28px",
                 height: "28px",
@@ -2060,8 +2031,7 @@ export function ArmorPiecePage() {
                     {p.icon && (
                       <img
                         src={p.icon}
-                        alt=""
-                        style={{
+                        alt="" role="presentation" style={{
                           width: "20px",
                           height: "20px",
                           objectFit: "contain",
@@ -2084,7 +2054,7 @@ export function ArmorPiecePage() {
         <div className="ap-piece-nav" ref={pieceNavRef}>
           {prevData ? (
             <Link to={`/identity/${prevSlug}`} className="ap-nav-btn">
-              {prevData.icon && <img src={prevData.icon} alt="" style={{ width: "64px", height: "64px", objectFit: "contain", mixBlendMode: "screen", opacity: 0.7, flexShrink: 0 }} />}
+              {prevData.icon && <img src={prevData.icon} alt="" role="presentation" style={{ width: "64px", height: "64px", objectFit: "contain", mixBlendMode: "screen", opacity: 0.7, flexShrink: 0 }} />}
               <span className="ap-nav-btn-text">
                 <span className="ap-nav-btn-dir">â† Piece {prevData.num}</span>
                 <span className="ap-nav-btn-title">{prevData.title}</span>
@@ -2094,10 +2064,10 @@ export function ArmorPiecePage() {
           {nextData ? (
             <Link to={`/identity/${nextSlug}`} className="ap-nav-btn next">
               <span className="ap-nav-btn-text">
-                <span className="ap-nav-btn-dir">Piece {nextData.num} â†’</span>
+                <span className="ap-nav-btn-dir">Piece {nextData.num} â†'</span>
                 <span className="ap-nav-btn-title">{nextData.title}</span>
               </span>
-              {nextData.icon && <img src={nextData.icon} alt="" style={{ width: "64px", height: "64px", objectFit: "contain", mixBlendMode: "screen", opacity: 0.7, flexShrink: 0 }} />}
+              {nextData.icon && <img src={nextData.icon} alt="" role="presentation" style={{ width: "64px", height: "64px", objectFit: "contain", mixBlendMode: "screen", opacity: 0.7, flexShrink: 0 }} />}
             </Link>
           ) : <div />}
         </div>
@@ -2159,7 +2129,7 @@ export function ArmorPiecePage() {
 
           {/* Next day / complete action */}
           {day < 6 ? (
-            <button
+            <Button variant="primary" size="sm" style={{ flexShrink: 0, whiteSpace: "nowrap" }}
               onClick={() => {
                 setDay(day + 1);
                 const contentEl = document.querySelector('.ap-main');
@@ -2168,25 +2138,9 @@ export function ArmorPiecePage() {
                   const top = contentEl.getBoundingClientRect().top + window.scrollY - navHeight - 16;
                   window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
                 }
-              }}
-              style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontSize: "9px",
-                letterSpacing: "0.24em",
-                textTransform: "uppercase",
-                fontWeight: 700,
-                padding: "8px 16px",
-                borderRadius: "999px",
-                border: "none",
-                background: "#C9A84C",
-                color: "#0A0A0A",
-                cursor: "pointer",
-                flexShrink: 0,
-                whiteSpace: "nowrap",
-              }}
-            >
-              Day {day + 1} â†’
-            </button>
+              }}>
+              Day {day + 1} →
+            </Button>
           ) : (
             <Link
               to={nextSlug ? `/identity/${nextSlug}` : "/identity"}
@@ -2206,7 +2160,7 @@ export function ArmorPiecePage() {
                 whiteSpace: "nowrap",
               }}
             >
-              {nextSlug ? "Next Piece â†’" : "â† Identity"}
+              {nextSlug ? "Next Piece â†'" : "â† Identity"}
             </Link>
           )}
         </div>

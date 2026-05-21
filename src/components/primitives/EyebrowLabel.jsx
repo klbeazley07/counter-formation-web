@@ -1,6 +1,9 @@
+import { forwardRef } from "react";
+
 /*
  * EyebrowLabel — gold uppercase tracking label used as eyebrow above titles.
  *
+ * forwardRef allows GSAP animations in Identity.jsx to attach refs directly.
  * Contract: sessions/contracts.md "Primitive Component APIs > EyebrowLabel".
  */
 
@@ -18,13 +21,13 @@ const EYEBROW_CSS = `
   .cf-eyebrow--muted { color: var(--cf-ivory-42); }
 `;
 
-export default function EyebrowLabel({
+const EyebrowLabel = forwardRef(function EyebrowLabel({
   size      = "sm",
   color     = "gold",
   className = "",
   children,
   ...rest
-}) {
+}, ref) {
   const cls = [
     "cf-eyebrow",
     `cf-eyebrow--${size}`,
@@ -35,7 +38,9 @@ export default function EyebrowLabel({
   return (
     <>
       <style>{EYEBROW_CSS}</style>
-      <p className={cls} {...rest}>{children}</p>
+      <p ref={ref} className={cls} {...rest}>{children}</p>
     </>
   );
-}
+});
+
+export default EyebrowLabel;
