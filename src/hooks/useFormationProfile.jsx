@@ -4,7 +4,7 @@ import { migrateFormationProfile } from "../utils/migrateFormationProfile";
 const PROFILE_KEY = "cf:profile";
 
 const DEFAULT_PROFILE = {
-  _version: 5,
+  _version: 6,
   _created: null,
   _updated: null,
   identity: {
@@ -164,9 +164,11 @@ export function FormationProfileProvider({ children }) {
             localStorage.removeItem("cf_books");
           } catch {}
         }
-        initialProfile._version = 5;
+        // v5 → v6: additive only — devotion entries gain an optional `full` field.
+        // Existing entries are left untouched; new writes populate `full`.
+        initialProfile._version = 6;
         // Persist the backfill so subsequent loads are cheap.
-        if (parsed._version !== 5) {
+        if (parsed._version !== 6) {
           localStorage.setItem(PROFILE_KEY, JSON.stringify(initialProfile));
         }
       } catch {

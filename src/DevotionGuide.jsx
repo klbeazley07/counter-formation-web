@@ -226,12 +226,14 @@ export default function DevotionGuide() {
       setDevotional(text);
 
       const summary = (text ?? "").slice(0, 200).trim();
+      const full    = (text ?? "").slice(0, 4000).trim();
       const newEntry = {
         generatedAt: new Date().toISOString(),
         passage,
         theme,
         bigIdea,
         summary,
+        full,
       };
       const prior = profile?.widgets?.devotions ?? [];
       updateProfile({
