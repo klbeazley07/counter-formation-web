@@ -90,6 +90,7 @@ export function SiteNav() {
 
   return (
     <nav
+      aria-label="Main navigation"
       className="hidden md:flex fixed left-1/2 -translate-x-1/2 z-[100] w-[94%] max-w-5xl px-5 py-4 backdrop-blur-2xl border border-white/10 rounded-2xl items-center justify-between"
       style={{ backgroundColor: "rgba(6,5,10,0.88)", top: "calc(1.5rem + var(--banner-height, 0px))" }}
     >
@@ -135,6 +136,7 @@ export function SiteNav() {
                 <El
                   key={l.label}
                   {...props}
+                  aria-current={isActive ? "page" : undefined}
                   className="transition-colors py-2"
                   style={{
                     color: isActive ? "var(--cf-gold)" : "var(--cf-ivory)",

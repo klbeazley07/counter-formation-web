@@ -204,6 +204,7 @@ export function MobileTabBar() {
     <>
       {/* Tab Bar */}
       <nav
+        aria-label="Mobile navigation"
         className="md:hidden"
         style={{
           position: "fixed",
@@ -247,6 +248,7 @@ export function MobileTabBar() {
                   transition: "all 0.2s",
                 }}
                 aria-label={tab.label}
+                aria-expanded={tab.key === "more" ? moreOpen : undefined}
               >
                 <TabIcon name={tab.icon} active={isActive} />
                 <span style={{

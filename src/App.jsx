@@ -150,7 +150,7 @@ function SectionDivider() {
       style={{ backgroundColor: "var(--cf-obsidian)" }}>
       <div className="flex-1 h-[1px] bg-white/5" />
       <div className="mx-4 md:mx-8 opacity-[0.12]">
-        <SafeImg src="/helmet.png" className="w-6 h-6 md:w-8 md:h-8 grayscale invert" alt="" />
+        <SafeImg src="/helmet.png" className="w-6 h-6 md:w-8 md:h-8 grayscale invert" alt="" role="presentation" />
       </div>
       <div className="flex-1 h-[1px] bg-white/5" />
     </div>
@@ -385,7 +385,7 @@ function RuleOfLifeSection() {
         {/* Mobile-only intro slide — slide 0 */}
         <div className="rhythm-intro-slide md:hidden">
           <div className="absolute inset-0 z-0">
-            <img src="/Rule of Life_Hero.png" alt="" className="w-full h-full object-cover" />
+            <img src="/Rule of Life_Hero.png" alt="" role="presentation" className="w-full h-full object-cover" />
             <div className="absolute inset-0" style={{ background: `linear-gradient(to top,#17140F 30%,#17140F88 60%,#17140F33)` }} />
           </div>
           <div className="relative z-10">
@@ -455,7 +455,7 @@ function RuleOfLifeSection() {
             style={{ minHeight: "320px", textDecoration: "none", display: "flex", flexDirection: "column" }}>
             <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C9A84C]/50 to-transparent z-10" />
             <div className="rhythm-img-wrap absolute inset-0 z-0 opacity-35 group-hover:opacity-60 transition-opacity duration-700">
-              <SafeImg src={r.bg} alt=""
+              <SafeImg src={r.bg} alt="" role="presentation"
                 className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
             </div>
             <div className="absolute inset-0 z-0"

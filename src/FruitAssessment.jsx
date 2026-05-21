@@ -1525,11 +1525,15 @@ function ShareModal({ fruitKey, evidenceFruitKey, scores, format, setFormat, var
       display: "flex", alignItems: "center", justifyContent: "center",
       zIndex: 1000, padding: 24,
     }}>
-      <div style={{
-        maxWidth: 560, width: "100%", background: "var(--cf-rule-bg)",
-        border: `1px solid var(--cf-gold-faint)`, padding: "32px 24px",
-        position: "relative", maxHeight: "90vh", overflowY: "auto",
-      }}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="results-modal-title"
+        style={{
+          maxWidth: 560, width: "100%", background: "var(--cf-rule-bg)",
+          border: `1px solid var(--cf-gold-faint)`, padding: "32px 24px",
+          position: "relative", maxHeight: "90vh", overflowY: "auto",
+        }}>
         <Button variant="ghost" size="sm" onClick={onClose}
           style={{ position: "absolute", top: 16, right: 16, border: "none", fontSize: 24, lineHeight: 1 }}>
           &times;
@@ -1538,7 +1542,7 @@ function ShareModal({ fruitKey, evidenceFruitKey, scores, format, setFormat, var
         <div style={{ fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.32em", color: "var(--cf-gold)", textTransform: "uppercase", marginBottom: 8 }}>
           Share Your Formation
         </div>
-        <h2 style={{ fontFamily: "var(--cf-font-display)", fontSize: 22, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--cf-ivory)", marginBottom: 24 }}>
+        <h2 id="results-modal-title" style={{ fontFamily: "var(--cf-font-display)", fontSize: 22, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--cf-ivory)", marginBottom: 24 }}>
           Generate Your Card
         </h2>
 
