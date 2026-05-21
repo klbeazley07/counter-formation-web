@@ -5,6 +5,7 @@ import { useFormationProfile } from "./hooks/useFormationProfile";
 import NextStep from "./components/NextStep";
 import { getFieldGuidePath, getFieldGuideDay, getFieldGuideLanding } from "./content/loader";
 import "./styles/field-guide.css";
+import Button from "./components/primitives/Button";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
 
@@ -310,8 +311,8 @@ export function FGOffice() {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 6, maxWidth: 420, margin: "0 auto" }}>
-            <button className="fg-btn-ghost" onClick={() => alert("Add the Field Guide to your home screen from your browser menu.")}>⊕ Save to Home Screen</button>
-            <button className="fg-btn-ghost" onClick={() => navigator.share ? navigator.share({ title: "Scripture Before Scroll", text: "Discipline before distraction.", url: window.location.href }) : navigator.clipboard?.writeText(window.location.href)}>↗ Share This Rhythm</button>
+            <Button variant="ghost" size="sm" onClick={() => alert("Add the Field Guide to your home screen from your browser menu.")}>⊕ Save to Home Screen</Button>
+            <Button variant="ghost" size="sm" onClick={() => navigator.share ? navigator.share({ title: "Scripture Before Scroll", text: "Discipline before distraction.", url: window.location.href }) : navigator.clipboard?.writeText(window.location.href)}>↗ Share This Rhythm</Button>
           </div>
 
           <div style={{ marginTop: 16, fontFamily: "'Barlow Condensed',sans-serif", fontSize: 10, letterSpacing: "0.30em", textTransform: "uppercase", color: "var(--cf-ivory-24)" }}>

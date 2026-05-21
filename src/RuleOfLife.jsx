@@ -4,6 +4,7 @@ import { ScriptureRef } from "./ScriptureRef";
 import { renderHtmlWithScriptureRefs } from "./utils/parseScriptureRefs";
 import { getAllRhythms, getRhythm } from "./content/loader";
 import NextStep from "./components/NextStep";
+import Button from "./components/primitives/Button";
 
 export const RULE_BASE = "/rule-of-life";
 
@@ -95,11 +96,9 @@ function ExamenWalkthrough() {
           </div>
         ))}
       </div>
-      <button onClick={() => setStarted(true)} style={{ padding: "14px 40px", borderRadius: "999px", border: "2px solid rgba(201,168,76,0.5)", background: "rgba(201,168,76,0.1)", color: "#C9A84C", ...base, fontSize: "10px", letterSpacing: ".3em", textTransform: "uppercase", cursor: "pointer", transition: "all .25s", fontWeight: 700 }}
-        onMouseEnter={e => { e.target.style.background = "rgba(201,168,76,0.2)"; e.target.style.borderColor = "#C9A84C"; }}
-        onMouseLeave={e => { e.target.style.background = "rgba(201,168,76,0.1)"; e.target.style.borderColor = "rgba(201,168,76,0.5)"; }}>
+      <Button variant="secondary" onClick={() => setStarted(true)}>
         Begin the Examen
-      </button>
+      </Button>
     </div>
   );
 
@@ -113,9 +112,9 @@ function ExamenWalkthrough() {
         This is how formation happens — not by intensity, but by the daily, faithful act of return. Come back tomorrow.
       </p>
       <p style={{ ...base, fontSize: "9px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)", marginBottom: "2rem" }}>— <ScriptureRef reference="Psalm 139:23–24" text="Search me, O God, and know my heart; test me and know my anxious thoughts. See if there is any offensive way in me, and lead me in the way everlasting." /></p>
-      <button onClick={handleRestart} style={{ padding: "12px 32px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.12)", background: "transparent", color: "rgba(250,248,245,0.4)", ...base, fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", cursor: "pointer" }}>
+      <Button variant="ghost" size="sm" onClick={handleRestart}>
         Begin Again
-      </button>
+      </Button>
     </div>
   );
 
@@ -126,9 +125,10 @@ function ExamenWalkthrough() {
       </div>
       <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
         {STEPS.map((s, i) => (
-          <button key={i} onClick={() => setStep(i)} className="rl-examen-tab" style={{ flex: 1, padding: "12px 4px", border: "none", background: step === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: step === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", ...base, fontSize: "8px", letterSpacing: ".18em", textTransform: "uppercase", color: i <= step ? (step === i ? "#C9A84C" : "rgba(201,168,76,0.5)") : "rgba(250,248,245,0.2)", transition: "all .2s" }}>
+          <Button key={i} variant="tab" active={step === i} onClick={() => setStep(i)}
+            style={{ flex: 1, ...(i < step ? { color: "rgba(201,168,76,0.5)" } : {}) }}>
             {s.title}
-          </button>
+          </Button>
         ))}
       </div>
       <div style={{ padding: "2rem" }}>
@@ -151,13 +151,9 @@ function ExamenWalkthrough() {
           onBlur={e => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; }}
         />
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1.5rem" }}>
-          <button onClick={handleBack} disabled={step === 0} style={{ padding: "10px 22px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "rgba(250,248,245,0.35)", ...base, fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", cursor: step === 0 ? "not-allowed" : "pointer", opacity: step === 0 ? .3 : 1 }}>← Back</button>
+          <Button variant="ghost" size="sm" onClick={handleBack} disabled={step === 0}>← Back</Button>
           <span style={{ ...base, fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)" }}>{step + 1} of {STEPS.length}</span>
-          <button onClick={handleNext} style={{ padding: "10px 22px", borderRadius: "999px", border: "none", background: "#C9A84C", color: "#0A0A0A", ...base, fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", cursor: "pointer", fontWeight: 700, transition: "background .2s" }}
-            onMouseEnter={e => { e.target.style.background = "#FAF8F5"; }}
-            onMouseLeave={e => { e.target.style.background = "#C9A84C"; }}>
-            {isLast ? "Complete" : "Continue →"}
-          </button>
+          <Button variant="primary" size="sm" onClick={handleNext}>{isLast ? "Complete" : "Continue →"}</Button>
         </div>
       </div>
     </div>
@@ -178,7 +174,7 @@ function LectioDivinaGuide() {
   return (
     <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", overflow: "hidden" }}>
       <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-        {steps.map((s, i) => (<button key={i} onClick={() => setActive(i)} style={{ flex: 1, padding: "16px 8px", border: "none", background: active === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: active === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", color: active === i ? "#C9A84C" : "rgba(250,248,245,0.3)", transition: "all .2s" }}>{s.latin}</button>))}
+        {steps.map((s, i) => (<Button key={i} variant="tab" active={active === i} onClick={() => setActive(i)} style={{ flex: 1 }}>{s.latin}</Button>))}
       </div>
       <div style={{ padding: "2.5rem 2rem" }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: "16px", marginBottom: "1.25rem" }}>
@@ -187,9 +183,9 @@ function LectioDivinaGuide() {
         </div>
         <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "18px", lineHeight: 1.82, color: "rgba(250,248,245,0.7)" }}>{cur.desc}</p>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2rem" }}>
-          <button onClick={() => setActive(i => Math.max(0, i - 1))} disabled={active === 0} style={{ padding: "10px 24px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "rgba(250,248,245,0.35)", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", cursor: active === 0 ? "not-allowed" : "pointer", opacity: active === 0 ? .3 : 1 }}>← Prev</button>
+          <Button variant="ghost" size="sm" onClick={() => setActive(i => Math.max(0, i - 1))} disabled={active === 0}>← Prev</Button>
           <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "8px", letterSpacing: ".3em", textTransform: "uppercase", color: "rgba(250,248,245,0.2)", alignSelf: "center" }}>{active + 1} of {steps.length}</span>
-          <button onClick={() => setActive(i => Math.min(steps.length - 1, i + 1))} disabled={active === steps.length - 1} style={{ padding: "10px 24px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "rgba(250,248,245,0.35)", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", cursor: active === steps.length - 1 ? "not-allowed" : "pointer", opacity: active === steps.length - 1 ? .3 : 1 }}>Next →</button>
+          <Button variant="ghost" size="sm" onClick={() => setActive(i => Math.min(steps.length - 1, i + 1))} disabled={active === steps.length - 1}>Next →</Button>
         </div>
       </div>
     </div>
@@ -211,7 +207,7 @@ function PrayerPostures() {
   return (
     <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", overflow: "hidden" }}>
       <div style={{ display: "flex", overflowX: "auto", borderBottom: "1px solid rgba(255,255,255,0.06)", scrollbarWidth: "none" }}>
-        {postures.map((p, i) => (<button key={i} onClick={() => setActive(i)} style={{ flexShrink: 0, padding: "14px 18px", border: "none", background: active === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: active === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".2em", textTransform: "uppercase", whiteSpace: "nowrap", color: active === i ? "#C9A84C" : "rgba(250,248,245,0.3)", transition: "all .2s" }}>{p.name}</button>))}
+        {postures.map((p, i) => (<Button key={i} variant="tab" active={active === i} onClick={() => setActive(i)} style={{ flexShrink: 0, whiteSpace: "nowrap" }}>{p.name}</Button>))}
       </div>
       <div style={{ padding: "2.5rem 2rem" }}>
         <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "24px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: "#FAF8F5", marginBottom: "1.25rem" }}>{cur.name}</p>
@@ -237,7 +233,7 @@ function SabbathIdeas() {
   return (
     <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "24px", overflow: "hidden" }}>
       <div style={{ display: "flex", flexWrap: "wrap", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-        {categories.map((c, i) => (<button key={i} onClick={() => setActive(i)} style={{ padding: "12px 16px", border: "none", background: active === i ? "rgba(201,168,76,0.1)" : "transparent", borderBottom: active === i ? "2px solid #C9A84C" : "2px solid transparent", cursor: "pointer", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".22em", textTransform: "uppercase", color: active === i ? "#C9A84C" : "rgba(250,248,245,0.3)", transition: "all .2s" }}>{c.label}</button>))}
+        {categories.map((c, i) => (<Button key={i} variant="tab" active={active === i} onClick={() => setActive(i)}>{c.label}</Button>))}
       </div>
       <div style={{ padding: "2rem" }}>
         <p style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".38em", textTransform: "uppercase", color: "rgba(201,168,76,0.55)", marginBottom: "1.25rem" }}>{cur.label} · Sabbath Ideas</p>
@@ -304,9 +300,10 @@ function GoDeeperSection({ data, rhythm }) {
       </div>
       <div style={{ display: "flex", gap: "4px", padding: "4px", background: "rgba(255,255,255,0.04)", borderRadius: "999px", marginBottom: "1.5rem", gridColumn: "1 / -1", width: "fit-content" }}>
         {["books", "media"].map(t => (
-          <button key={t} onClick={() => setTab(t)} style={{ padding: "8px 24px", borderRadius: "999px", border: "none", background: tab === t ? "rgba(201,168,76,0.15)" : "transparent", color: tab === t ? "#C9A84C" : "rgba(250,248,245,0.35)", fontFamily: "'Barlow Condensed',sans-serif", fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", cursor: "pointer", fontWeight: tab === t ? 700 : 400, transition: "all .2s" }}>
+          <Button key={t} variant="ghost" size="sm" onClick={() => setTab(t)}
+            style={tab === t ? { background: "rgba(201,168,76,0.15)", color: "var(--cf-gold)", fontWeight: 700 } : {}}>
             {t === "books" ? "Books" : "Media"}
-          </button>
+          </Button>
         ))}
       </div>
       {tab === "books" && data.further.map((b, i) => (
@@ -385,7 +382,7 @@ export function BookPage() {
   return (
     <div style={S.wrap}>
       <Link to="/" style={{ position: "fixed", top: "1rem", left: "50%", transform: "translateX(-50%)", zIndex: 200, display: "flex", alignItems: "center", gap: "10px", padding: "10px 20px 10px 14px", borderRadius: "999px", background: "rgba(14,12,10,0.88)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.08)", textDecoration: "none" }}>
-        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" style={{ width: "28px", height: "28px", objectFit: "contain", filter: "brightness(0) invert(1)" }} />
+        <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" role="presentation" style={{ width: "28px", height: "28px", objectFit: "contain", filter: "brightness(0) invert(1)" }} />
         <span style={{ fontSize: "9px", letterSpacing: ".28em", textTransform: "uppercase", color: "rgba(250,248,245,0.55)", fontWeight: 600 }}>Counter Formation</span>
       </Link>
       <div style={S.shell}>
@@ -577,6 +574,7 @@ function CornerNav() {
         className="rl-shield-mark"
         onError={e => { e.target.style.display = "none"; }}
         alt=""
+        role="presentation"
       />
     </>
   );
@@ -711,7 +709,7 @@ export function RhythmPage() {
         <GoDeeperSection data={data} rhythm={rhythm} />
 
         <div style={{ textAlign: "center", padding: "2rem 0 1rem", borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: "1rem" }}>
-          <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" style={{ width: "26px", height: "26px", opacity: .2, filter: "invert(1)", margin: "0 auto .75rem", display: "block" }} />
+          <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" role="presentation" style={{ width: "26px", height: "26px", opacity: .2, filter: "invert(1)", margin: "0 auto .75rem", display: "block" }} />
           <p style={{ fontSize: "8px", letterSpacing: ".32em", textTransform: "uppercase", color: "rgba(255,255,255,0.18)" }}>Counter Formation · Formed in Christ · Ephesians 6:10–18</p>
         </div>
 
