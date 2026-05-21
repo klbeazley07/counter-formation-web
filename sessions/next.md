@@ -1,9 +1,9 @@
 # Counter Formation Build -- Next Session
 
-**Last completed:** Session 20 -- Phase 13 (Primitives adoption + accessibility sweep) on 2026-05-20
-**Up next:** Phase 14 -- Connection Tissue completion + Agent Foundation.
+**Last completed:** Session 21 -- Phase 14 (Connection Tissue + Agent Foundation) on 2026-05-20
+**Up next:** Phase 15 -- Identity.jsx content extraction + Agent history page.
 
-Phase 13 closed the design system work. Primitives are adopted across section files; accessibility pass done for nav + modals. The remaining stretch target (Identity.jsx < 1000 lines) depends on content extraction that belongs with Phase 14's scope, not a standalone cleanup session.
+Phase 14 closed the remaining Phase 2 spec items and the Agent Foundation targets. The DevotionGuide orientation card is live; returning user history is in place; formation context envelope is complete. The two remaining open items from the broader spec are Identity.jsx content extraction (stretch from Phase 14) and the agent history page (flagged in project_agent_foundation memory as a known gap).
 
 ---
 
@@ -12,52 +12,48 @@ Phase 13 closed the design system work. Primitives are adopted across section fi
 Open Claude Code in this repo and paste:
 
 ```
-Read sessions/next.md and execute Phase 14. Follow the methodology -- write the plan file first, then work through the todo list. Build, commit, push after each item. Update sessions/log.md and sessions/next.md.
+Read sessions/next.md and execute Phase 15. Follow the methodology -- write the plan file first, then work through the todo list. Build, commit, push after each item. Update sessions/log.md and sessions/next.md.
 ```
 
 ---
 
-## Phase 14 -- Connection Tissue completion + Agent Foundation
+## Phase 15 -- Identity.jsx content extraction + Agent history page
 
-**Goal:** Close the remaining Phase 2 spec items (connection tissue between sections) and begin Phase 3 (agent foundation -- DevotionGuide becomes stateful).
+**Goal:** Push Identity.jsx below 1500 lines by extracting armor day content to `src/content/armor.json`, and build the `/agent` history page noted as a gap in the agent foundation.
 
-**Why this ordering:** The primitives system is now clean. Connection tissue (NextStep placements, formation path) is the next highest-leverage work per the original spec dependency graph. Agent Foundation (Phase 3) depends on profile data that is already in place.
+**Why this ordering:** Both items were deferred from prior phases. Identity.jsx at 2173 lines is the only section file significantly above the design system targets. The agent history page is the only flagged architectural gap in the agent foundation layer.
 
 **Pre-flight audit needed before writing the plan file:**
-- Read `src/utils/formationRecommendation.js` and `src/components/NextStep.jsx` to check current state
-- Check Identity.jsx for whether `<NextStep context="armor-piece-complete">` is already placed at Day 6 end-of-track
-- Check FieldGuide.jsx for whether a `<NextStep context="field-guide-complete">` exists at the Day 7 screen
-- Check Identity.jsx CROSS_LINKS for whether Breastplate of Righteousness is mapped
-- Check RuleOfLife.jsx rule-of-life.json for whether Prayer rhythm has a `connectedArmor` entry
+- Read `src/content/armor.json` to check its current schema and how much content is already there
+- Check Identity.jsx lines 1-100 for imports and state shape; lines 1900-2200 for armor day content structure
+- Check `src/App.jsx` for whether `/agent` route exists and what it currently renders
+- Check `src/components/agent/` directory for existing agent components
 
 **Items in scope:**
 
-### Connection Tissue (Phase 2 spec items not yet confirmed complete)
+### Identity.jsx content extraction
 
-1. **Field Guide Day 7 completion card.** After the user completes the last office (Field Guide day 7), show a `<NextStep context="field-guide-complete" />` card. Check if this is already in FieldGuide.jsx; if not, add it. The formationRecommendation.js rules engine already has the logic for challenge-complete and assessment-complete -- extend it for field-guide-complete.
+1. **Audit armor.json vs. Identity.jsx content.** Determine what's already in `armor.json` and what day-level content (devotional text, scripture, reflection questions) is still inline in Identity.jsx. Map the gap before writing code.
 
-2. **Identity armor piece end-of-track NextStep.** Day 6 of each armor piece track should surface a "what's next" moment rather than silence. Add `<NextStep context="armor-piece-complete" pieceSlug={piece} />` at the end of the final day's content in Identity.jsx. The qr-arrival context (added in Phase 12) already demonstrates the pattern.
+2. **Extract armor day content to armor.json.** Move the per-piece, per-day devotional text, scripture references, and reflection questions from Identity.jsx into `armor.json`. Update Identity.jsx to read from the JSON. Target: Identity.jsx < 1500 lines.
 
-3. **CROSS_LINKS + Prayer rhythm audit.** Confirm Breastplate of Righteousness is in the `ARMOR_PIECE_CROSS_LINKS` reverse map in Identity.jsx. Confirm Prayer rhythm in rule-of-life.json has a `connectedArmor` entry. Add if missing.
+3. **Verify Identity.jsx renders correctly.** Each armor piece's 6-day track should display identically before and after extraction. Build must pass.
 
-### Agent Foundation (Phase 3 spec items)
+### Agent history page
 
-4. **DevotionGuide profile reading.** DevotionGuide.jsx currently receives `profile` but may not be using `profile.assessment` or `profile.widgets.devotions` to contextualize the generation request. Update the `/api/generate` call to include the formation context envelope: `{ fruits: profile.assessment?.fruits, formationEdge: profile.assessment?.formationEdge, completedDays: profile.challenge?.completedDays }`. Backend function may need updating.
+4. **Build `/agent` route.** Check if the route exists in App.jsx. If not, add it. The page should show: a header ("Formation Agent"), the user's formation profile summary (formationEdge, completedPieces, completedDays, onboarding intention), and a scrollable list of past devotion entries from `profile.widgets.devotions` with full content (not just summaries -- this requires storing full text, or linking back to the shared devotion URL if available).
 
-5. **DevotionGuide returning user "Continue" mode.** If `profile.widgets.devotions` has entries, show the last entry's prompt/response before the new-prompt form with a "Continue from yesterday" collapsed view. This is the minimum history panel from the Phase 3 spec.
+5. **Surface agent entry point.** The spec notes an `AgentEntry` surface. Check if it's wired anywhere in the nav or Field Guide. If the `/agent` route exists but has no nav entry, add a link from the Field Guide hub or the DevotionGuide footer.
 
-6. **DevotionGuide first-time onboarding.** If `profile.assessment.completedAt === null`, show a short orientation card before the devotion form. Two options to offer: (a) "Start the Fruit Assessment first" → links to FruitAssessment, (b) "Jump in without assessment" → shows the form. This removes the blank-form cold-start experience for new users.
+### Stretch
 
-### Optional: Identity.jsx content extraction (stretch)
+6. **DevotionGuide: store full devotional text in profile.** Currently only the first 200 chars are stored as `summary`. The history page needs full text to be useful. Add a `full` field to the devotion entry object (capped at 4000 chars) so the history page can render complete devotions. Schema change: profile v6 bump + migration.
 
-7. **Identity.jsx armor content to JSON (stretch).** Identity.jsx is at 2173 lines. The armor piece day content (devotional text, scripture, reflection questions per day per piece) is the main bulk. Extracting to `src/content/armor.json` (which already exists) would push toward the Phase 5 spec target of < 1000 lines. Only worth doing if the other items are complete -- this is the most time-intensive item.
-
-**Acceptance for Phase 14:**
-- NextStep shows at Field Guide Day 7 completion
-- NextStep shows at armor piece Day 6 completion
-- DevotionGuide generation request includes formation profile context
-- DevotionGuide returning users see their last entry
-- DevotionGuide first-time users see an orientation card
+**Acceptance for Phase 15:**
+- Identity.jsx < 1500 lines
+- armor.json contains all day-level content
+- Identity.jsx renders correctly after extraction
+- `/agent` route exists and shows formation profile + devotion history
 - Build passes
 
 ---
@@ -66,7 +62,7 @@ Read sessions/next.md and execute Phase 14. Follow the methodology -- write the 
 
 - **iOS Safari device test.** Manual. Test (a) magic-link end-to-end, (b) ApparelLane scroll-snap, (c) bottom-sheet email capture. Log pass/fail.
 - **GEMINI_API_KEY removal from Cloudflare Pages env.** Manual dashboard step.
-- **Arrow Log 502 follow-up.** The robust-JSON fix went out in Session 19. If the 502 persists despite the new `extractJson()`, the most likely remaining cause is upstream Anthropic 5xx (overloaded). Consider migrating arrow-log.js to Claude's tool use API for true structured output -- much more reliable than prompt-based JSON.
+- **Arrow Log 502 follow-up.** The robust-JSON fix went out in Session 19. If the 502 persists despite the new `extractJson()`, consider migrating arrow-log.js to Claude's tool use API for true structured output.
 
 ---
 
@@ -83,9 +79,10 @@ Read sessions/next.md and execute Phase 14. Follow the methodology -- write the 
 ## Environment notes
 
 - Cloudflare Pages env: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `ANTHROPIC_API_KEY`, `KIT_API_KEY`, `KIT_FORMATION_TAG_ID`. `GEMINI_API_KEY` unused and should be removed.
-- `cf:profile` schema currently v5 (bumped in Session 19, Phase 12 Item 2). Phase 14 does not require a schema bump unless DevotionGuide adds a new `devotions` array to the profile.
+- `cf:profile` schema currently v5 (bumped in Session 19, Phase 12 Item 2). Phase 15 stretch item 6 would require a v6 bump.
 - RLS: enabled on `public.users`, `fruit_assessments`, `gifts_sessions`. Intentionally OFF on `gifts_trusted_tokens` and `gifts_trusted_responses`.
-- CSS files in `src/styles/`: `tokens.css`, `field-guide.css`, `fruit-assessment.css`, `devotion-guide.css`, `challenge.css` (new, added Phase 13). All section CSS is now static files -- no `<style>{TEMPLATE}</style>` in component files.
+- CSS files in `src/styles/`: `tokens.css`, `field-guide.css`, `fruit-assessment.css`, `devotion-guide.css`, `challenge.css`. All section CSS is static files.
 - All `const C` palette constants removed from src/. `npm run lint:tokens` enforces this. New code should reference tokens via `var(--cf-*)` or use the primitives.
-- Content layer: `src/content/` contains armor.json, field-guide.json, field-guide-landing.json, rule-of-life.json (with `connectedArmor` per rhythm), fruits.json, loader.js, `challenge/days.json`, `assessment/fruit-questions.json`.
+- Content layer: `src/content/` contains armor.json, field-guide.json, field-guide-landing.json, rule-of-life.json, fruits.json, loader.js, `challenge/days.json`, `assessment/fruit-questions.json`.
 - Primitives in `src/components/primitives/`: Button (with tab variant), EyebrowLabel (forwardRef), SectionHeader, Card, ProgressBar, Input. All adopted across section files as of Phase 13.
+- `DevotionOnboarding.jsx` component retained in `src/components/` but is no longer imported by DevotionGuide.jsx (removed in Phase 14 item 6). Available for reuse if a guided setup path is re-introduced.

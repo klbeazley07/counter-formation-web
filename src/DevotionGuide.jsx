@@ -4,7 +4,6 @@ import ReactMarkdown from "react-markdown";
 import html2canvas from "html2canvas";
 import { useFormationProfile } from "./hooks/useFormationProfile";
 import { buildDevotionContext } from "./utils/devotionContext";
-import DevotionOnboarding from "./components/DevotionOnboarding";
 import DevotionHistory from "./components/DevotionHistory";
 import EmailCapture from "./components/auth/EmailCapture";
 import NextStep from "./components/NextStep";
@@ -169,6 +168,7 @@ export default function DevotionGuide() {
   const [error, setError]       = useState(null);
   const [scrolled, setScrolled] = useState(false);
   const [firstDevotionDismissed, setFirstDevotionDismissed] = useState(false);
+  const [onboardingSkipped, setOnboardingSkipped] = useState(false);
   const resultRef = useRef(null);
 
   const { profile, updateProfile, isLoaded } = useFormationProfile();
@@ -393,13 +393,98 @@ export default function DevotionGuide() {
           </div>
         )}
 
-        {isLoaded && mode === "onboarding" && (
-          <DevotionOnboarding onComplete={() => { /* re-renders via profile change; mode recomputes */ }} />
+        {isLoaded && mode === "onboarding" && !onboardingSkipped && (
+          <div style={{
+            background: "radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 60%), #1C1813",
+            border: "1px solid var(--cf-gold-faint)",
+            borderRadius: 24,
+            padding: "clamp(30px,5vw,56px)",
+            position: "relative",
+            overflow: "hidden",
+            maxWidth: 640,
+            margin: "0 auto 64px",
+            boxShadow: "0 18px 44px rgba(0,0,0,0.24)",
+          }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "linear-gradient(90deg,transparent,var(--cf-gold-mid),transparent)" }} />
+            <p style={{
+              fontFamily: "'Barlow Condensed',sans-serif",
+              fontSize: 12,
+              letterSpacing: "0.28em",
+              textTransform: "uppercase",
+              color: "var(--cf-gold)",
+              fontWeight: 700,
+              margin: "0 0 12px",
+            }}>
+              Before you begin
+            </p>
+            <h2 style={{
+              fontFamily: "'Cormorant Garamond',serif",
+              fontSize: "clamp(22px,3.2vw,30px)",
+              lineHeight: 1.35,
+              color: "var(--cf-ivory)",
+              margin: "0 0 14px",
+              fontWeight: 400,
+            }}>
+              The devotions are more precise when formation context is in place.
+            </h2>
+            <p style={{
+              fontFamily: "'Cormorant Garamond',serif",
+              fontSize: "clamp(16px,2vw,18px)",
+              lineHeight: 1.7,
+              color: "var(--cf-ivory-58)",
+              margin: "0 0 32px",
+            }}>
+              The Fruit Assessment identifies where the Spirit is forming you -- your formation edge. That context shapes every devotion the guide generates. You can take it now (about ten minutes) or jump in and generate today&apos;s devotion without it.
+            </p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 14, alignItems: "center" }}>
+              <Link
+                to="/field-guide/fruit-assessment"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "14px 28px",
+                  borderRadius: 18,
+                  background: "var(--cf-gold)",
+                  color: "#120F08",
+                  border: "1px solid rgba(201,168,76,0.30)",
+                  fontFamily: "'Barlow Condensed',sans-serif",
+                  fontSize: 12,
+                  fontWeight: 800,
+                  letterSpacing: "0.24em",
+                  textTransform: "uppercase",
+                  textDecoration: "none",
+                  boxShadow: "0 10px 24px rgba(201,168,76,0.18)",
+                }}
+              >
+                Start the Fruit Assessment
+              </Link>
+              <button
+                onClick={() => setOnboardingSkipped(true)}
+                style={{
+                  padding: "12px 22px",
+                  borderRadius: 999,
+                  background: "transparent",
+                  color: "var(--cf-ivory-58)",
+                  border: "1px solid var(--cf-white-8)",
+                  fontFamily: "'Barlow Condensed',sans-serif",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                Jump in without assessment
+              </button>
+            </div>
+          </div>
         )}
 
         {isLoaded && mode === "returning" && <DevotionHistory />}
 
-        {isLoaded && mode !== "onboarding" && (
+        {isLoaded && (mode !== "onboarding" || onboardingSkipped) && (
         <>
         {/* ── Input card ── */}
         <div style={{

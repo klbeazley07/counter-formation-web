@@ -4,6 +4,33 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 21 -- Phase 14: Connection Tissue completion + Agent Foundation (2026-05-20)
+
+**Status:** Complete. Phase 14 shipped. Build passes; const-C contract test passes.
+
+**Push cadence:** One commit to main (plan + item 6 together; items 1-5 confirmed pre-existing).
+
+**Pre-flight audit findings:**
+All connection tissue items (1-3) and Agent Foundation items 4-5 were already in place from prior sessions. Only item 6 required new work.
+
+- Item 1 (Field Guide Day 7 NextStep): `FieldGuide.jsx:323` -- `{!next && <NextStep context="field-guide-complete" />}` already present.
+- Item 2 (Identity armor piece Day 6 NextStep): `Identity.jsx:2005` -- `<NextStep context="armor-piece-complete" pieceSlug={piece} />` already present.
+- Item 3 (CROSS_LINKS + Prayer connectedArmor): Breastplate in `ARMOR_PIECE_CROSS_LINKS`; Prayer rhythm in `rule-of-life.json` has `connectedArmor` entry. Both confirmed.
+- Item 4 (DevotionGuide profile reading): `buildDevotionContext` in `devotionContext.js` already sends `formationEdge`, `topGifts`, `currentArmorPiece`, `currentArmorDay`, `challengeComplete`, `recentArrowLog`, `recentDeclaration`, `agentFocus` -- more comprehensive than the spec required.
+- Item 5 (DevotionGuide returning user history): `DevotionHistory` component exists, rendered before the form when `mode === "returning"`, shows last 3 entries in a collapsed view.
+
+**Item 6 -- DevotionGuide first-time orientation card.** The existing `DevotionOnboarding` (3-question flow) was the only path for brand-new users but didn't offer a link to the full Fruit Assessment or a direct "jump in" bypass. Replaced the `mode === "onboarding"` → `<DevotionOnboarding>` block with an inline orientation card. Two options: "Start the Fruit Assessment" (Link to `/field-guide/fruit-assessment`) and "Jump in without assessment" (sets `onboardingSkipped` state, renders the generation form directly). Removed the now-unused `DevotionOnboarding` import from `DevotionGuide.jsx`. The `DevotionOnboarding` component file is retained for potential future use. Added `onboardingSkipped` boolean state; form render condition changed from `mode !== "onboarding"` to `mode !== "onboarding" || onboardingSkipped`.
+
+**Acceptance criteria status:**
+- NextStep shows at Field Guide Day 7 completion ✓ (pre-existing)
+- NextStep shows at armor piece Day 6 completion ✓ (pre-existing)
+- DevotionGuide generation request includes formation profile context ✓ (pre-existing)
+- DevotionGuide returning users see their last entry ✓ (pre-existing)
+- DevotionGuide first-time users see an orientation card ✓ (item 6)
+- Build passes ✓
+
+---
+
 ## Session 20 -- Phase 13: Primitives adoption + accessibility sweep (2026-05-20)
 
 **Status:** Complete. Phase 13 (all 10 items) shipped. Build passes; const-C contract test passes; SevenDayChallenge.jsx 556 lines (target < 560); no alt="" without role="presentation" across section files.
