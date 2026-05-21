@@ -4,6 +4,7 @@ import { ScriptureRef } from "./ScriptureRef";
 import { useFormationProfile } from "./hooks/useFormationProfile";
 import NextStep from "./components/NextStep";
 import { getChallengeDays, getChallengeDayMeta } from "./content/loader";
+import Button from "./components/primitives/Button";
 import "./styles/challenge.css";
 
 /* ─── CONSTANTS ───────────────────────────────────────────────────── */
@@ -60,6 +61,7 @@ function CornerNav() {
         className="cf7-shield-mark"
         onError={e => { e.target.style.display = "none"; }}
         alt=""
+        role="presentation"
       />
     </>
   );
@@ -287,12 +289,10 @@ export function CFLanding() {
                   onChange={e => setEmail(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && handleSubmit()}
                 />
-                <button className="cf7-begin-btn" onClick={handleSubmit}>
+                <Button variant="primary" size="sm" onClick={handleSubmit}
+                  icon={<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6.5 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>}>
                   {completionCount ? "Continue" : "Begin"}
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path d="M1 6h10M6.5 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                  </svg>
-                </button>
+                </Button>
               </div>
               <p className="cf7-form-note">One practice per day. No noise. No drift.</p>
             </>
@@ -394,6 +394,7 @@ export function CFDevotion() {
             src="/helmet.png"
             onError={e => { e.target.style.display = "none"; }}
             alt=""
+            role="presentation"
           />
           <p className="cf7-dev-img-eye">Day {d.n} of 7 · {d.theme}</p>
           <h1 className="cf7-dev-img-h1">{d.title}</h1>
@@ -515,7 +516,7 @@ export function CFDevotion() {
         )}
 
         <div className="cf7-brand-foot">
-          <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" />
+          <img src="/helmet.png" onError={e => { e.target.style.display = "none"; }} alt="" role="presentation" />
           <p>Counter Formation · Formed in Christ · Ephesians 6:10–18</p>
         </div>
 

@@ -1,6 +1,7 @@
 ﻿import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { gsap } from "gsap";
+import Button from "./components/primitives/Button";
 import { QUESTIONS, FRUITS, FRUIT_ORDER, CLUSTER_THRESHOLD, SCALE_OPTIONS } from "./content/loader";
 import { useFormationProfile } from "./hooks/useFormationProfile";
 import NextStep from "./components/NextStep";
@@ -374,28 +375,6 @@ function PreIntroScreen({ previous, onView, onRetake, onDelta }) {
   const isPast14Days = daysAgo(previous.completedAt) >= 14;
   const fruit = FRUITS[previous.primaryFruit];
 
-  function Btn({ onClick, soft, children }) {
-    const [hov, setHov] = useState(false);
-    return (
-      <button
-        onClick={onClick}
-        onMouseEnter={() => setHov(true)}
-        onMouseLeave={() => setHov(false)}
-        style={{
-          display: "block", width: "100%", padding: "14px 24px",
-          border: `1px solid ${soft ? "var(--cf-gold-45)" : "var(--cf-gold)"}`,
-          background: hov ? "var(--cf-gold-bg)" : "transparent",
-          color: soft ? "var(--cf-ivory-62)" : "var(--cf-gold)",
-          fontFamily: "var(--cf-font-display)", fontSize: 12, letterSpacing: "0.28em",
-          textTransform: "uppercase", cursor: "pointer",
-          transition: "background 0.2s ease",
-        }}
-      >
-        {children}
-      </button>
-    );
-  }
-
   return (
     <div style={{ minHeight: "100vh", background: "var(--cf-hero-bg)", display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px" }}>
       <div style={{ maxWidth: 520, width: "100%", textAlign: "center" }}>
@@ -409,9 +388,9 @@ function PreIntroScreen({ previous, onView, onRetake, onDelta }) {
           You completed this assessment on {formatDate(previous.completedAt)}. Your current area of formation was {fruit ? fruit.label : previous.primaryFruit}. The Spirit is still at work. You can revisit your last results, retake the assessment fresh, or see how you have moved.
         </p>
         <div className="fa-up-3" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <Btn onClick={onView}>View Previous Results</Btn>
-          <Btn onClick={onRetake} soft>Retake the Assessment</Btn>
-          {isPast14Days && <Btn onClick={onDelta} soft>See How I Have Moved</Btn>}
+          <Button variant="secondary" style={{ width: "100%" }} onClick={onView}>View Previous Results</Button>
+          <Button variant="ghost" style={{ width: "100%" }} onClick={onRetake}>Retake the Assessment</Button>
+          {isPast14Days && <Button variant="ghost" style={{ width: "100%" }} onClick={onDelta}>See How I Have Moved</Button>}
         </div>
       </div>
     </div>
@@ -422,7 +401,6 @@ function PreIntroScreen({ previous, onView, onRetake, onDelta }) {
 
 function IntroScreen({ onBegin }) {
   const FRUIT_NAMES = ["LOVE","JOY","PEACE","PATIENCE","KINDNESS","GOODNESS","FAITHFULNESS","GENTLENESS","SELF-CONTROL"];
-  const [btnHov, setBtnHov] = useState(false);
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--cf-hero-bg)", display: "flex", alignItems: "center", justifyContent: "center", padding: "96px 24px", position: "relative", overflow: "hidden" }}>
@@ -459,18 +437,7 @@ function IntroScreen({ onBegin }) {
           </div>
         </div>
         <div className="fa-up-5" style={{ textAlign: "center" }}>
-          <button
-            onClick={onBegin}
-            onMouseEnter={() => setBtnHov(true)}
-            onMouseLeave={() => setBtnHov(false)}
-            style={{
-              padding: "18px 40px", border: `1px solid var(--cf-gold)`, background: btnHov ? "var(--cf-gold-bg)" : "transparent",
-              color: "var(--cf-gold)", fontFamily: "var(--cf-font-display)", fontSize: 13, letterSpacing: "0.28em",
-              textTransform: "uppercase", cursor: "pointer", transition: "background 0.2s ease",
-            }}
-          >
-            Begin Assessment
-          </button>
+          <Button variant="secondary" size="lg" onClick={onBegin}>Begin Assessment</Button>
           <p style={{ fontFamily: "var(--cf-font-body)", fontWeight: 300, fontSize: 13, color: "var(--cf-ivory-62)", marginTop: 16 }}>
             27 questions &middot; approximately 6 minutes
           </p>
@@ -646,12 +613,7 @@ function QuestionScreen({ qExitClass, qEnterClass, answers, currentQuestion, sel
       {/* Navigation -- z-index 2 */}
       <div style={{ maxWidth: 640, width: "100%", margin: "32px auto 0", display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative", zIndex: 2 }}>
         {currentQuestion > 0 ? (
-          <button
-            onClick={goBack}
-            style={{ background: "none", border: "none", color: "var(--cf-ivory-62)", fontFamily: "var(--cf-font-body)", fontSize: 13, letterSpacing: "0.16em", textTransform: "uppercase", cursor: "pointer", padding: "8px 0" }}
-          >
-            &larr; Back
-          </button>
+          <Button variant="ghost" size="sm" onClick={goBack}>&larr; Back</Button>
         ) : <span />}
         <NextButton canAdvance={canAdvance} isLast={isLast} onClick={goNext} />
       </div>
@@ -681,22 +643,10 @@ function AnswerOption({ label, isSelected, onClick }) {
 }
 
 function NextButton({ canAdvance, isLast, onClick }) {
-  const [hov, setHov] = useState(false);
   return (
-    <button
-      onClick={onClick}
-      disabled={!canAdvance}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        padding: "16px 36px", border: `1px solid var(--cf-gold)`, background: hov && canAdvance ? "var(--cf-gold-bg)" : "transparent",
-        color: "var(--cf-gold)", fontFamily: "var(--cf-font-display)", fontSize: 13, letterSpacing: "0.28em",
-        textTransform: "uppercase", cursor: canAdvance ? "pointer" : "not-allowed",
-        opacity: canAdvance ? 1 : 0.4, transition: "background 0.2s ease, opacity 0.2s ease",
-      }}
-    >
+    <Button variant="secondary" disabled={!canAdvance} onClick={onClick}>
       {isLast ? "Complete Assessment \u2192" : "Next \u2192"}
-    </button>
+    </Button>
   );
 }
 
@@ -717,6 +667,7 @@ function ProcessingScreen({ onDone }) {
       <img
         src="/helmet.png"
         alt=""
+        role="presentation"
         className="fa-helmet-pulse"
         style={{ width: 48, height: 48, filter: "invert(1) grayscale(1)", marginBottom: 40 }}
       />
@@ -1255,21 +1206,7 @@ function FormationFruitCard({ fruitKey, isPrimary }) {
 /* ─── SHARED HELPER COMPONENTS ───────────────────────────────────────── */
 
 function GoldButton({ onClick, children }) {
-  const [hov, setHov] = useState(false);
-  return (
-    <button
-      onClick={onClick}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        padding: "16px 28px", border: `1px solid var(--cf-gold)`, background: hov ? "var(--cf-gold-bg)" : "transparent",
-        color: "var(--cf-gold)", fontFamily: "var(--cf-font-display)", fontSize: 12, letterSpacing: "0.28em",
-        textTransform: "uppercase", cursor: "pointer", transition: "background 0.2s ease",
-      }}
-    >
-      {children}
-    </button>
-  );
+  return <Button variant="secondary" onClick={onClick}>{children}</Button>;
 }
 
 function RuleOfLifeLink({ fruit }) {
@@ -1593,12 +1530,10 @@ function ShareModal({ fruitKey, evidenceFruitKey, scores, format, setFormat, var
         border: `1px solid var(--cf-gold-faint)`, padding: "32px 24px",
         position: "relative", maxHeight: "90vh", overflowY: "auto",
       }}>
-        <button
-          onClick={onClose}
-          style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", color: "var(--cf-ivory-62)", fontSize: 24, cursor: "pointer", padding: 8, lineHeight: 1 }}
-        >
+        <Button variant="ghost" size="sm" onClick={onClose}
+          style={{ position: "absolute", top: 16, right: 16, border: "none", fontSize: 24, lineHeight: 1 }}>
           &times;
-        </button>
+        </Button>
 
         <div style={{ fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.32em", color: "var(--cf-gold)", textTransform: "uppercase", marginBottom: 8 }}>
           Share Your Formation
@@ -1631,12 +1566,7 @@ function ShareModal({ fruitKey, evidenceFruitKey, scores, format, setFormat, var
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center" }}>
           <GoldButton onClick={handleDownload}>Download PNG</GoldButton>
-          <button
-            onClick={handleShare}
-            style={{ padding: "14px 24px", border: "none", background: "transparent", color: "var(--cf-ivory)", fontFamily: "var(--cf-font-body)", fontSize: 13, cursor: "pointer" }}
-          >
-            Share
-          </button>
+          <Button variant="ghost" size="sm" onClick={handleShare}>Share</Button>
         </div>
 
         {shareError && (
@@ -1651,18 +1581,6 @@ function ShareModal({ fruitKey, evidenceFruitKey, scores, format, setFormat, var
 
 function FormatPill({ label, active, onClick }) {
   return (
-    <button
-      onClick={onClick}
-      style={{
-        padding: "6px 16px",
-        border: `1px solid ${active ? "var(--cf-gold)" : "var(--cf-gold-faint)"}`,
-        background: "transparent",
-        color: active ? "var(--cf-gold)" : "var(--cf-ivory-62)",
-        fontFamily: "var(--cf-font-display)", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase",
-        cursor: "pointer", borderRadius: 999, transition: "all 0.2s ease",
-      }}
-    >
-      {label}
-    </button>
+    <Button variant={active ? "secondary" : "ghost"} size="sm" onClick={onClick}>{label}</Button>
   );
 }
