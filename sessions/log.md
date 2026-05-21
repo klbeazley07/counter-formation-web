@@ -4,6 +4,31 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 24 -- Phase 17 Option B: Identity.jsx structural refactor (2026-05-20)
+
+**Status:** Complete. Pushed to main. Build and lint:tokens pass.
+
+**What shipped.** Identity.jsx was 2173 lines -- the only section file that meaningfully violated the design system size target. Decomposed into focused modules with zero functional change.
+
+**New files:**
+- [src/components/identity/HeroSection.jsx](src/components/identity/HeroSection.jsx) -- landing hero with GSAP entrance animations + watermark parallax
+- [src/components/identity/ArmorIntroSection.jsx](src/components/identity/ArmorIntroSection.jsx) -- Ephesians 6 scripture block + teaching grid
+- [src/components/identity/GodsArmorSection.jsx](src/components/identity/GodsArmorSection.jsx) -- Isaiah revelation section with background color transition scrub
+- [src/components/identity/ArmorRingSection.jsx](src/components/identity/ArmorRingSection.jsx) -- interactive six-piece armor ring with GSAP selection animations
+- [src/components/identity/WhyItMattersSection.jsx](src/components/identity/WhyItMattersSection.jsx) -- closing section with "Armor Up" + dual CTAs
+- [src/components/identity/PiecePage.jsx](src/components/identity/PiecePage.jsx) -- ArmorPiecePage + BackNav + CrossLinkCard + PIECE_ORDER/WIDGET_COMPONENTS/CROSS_LINKS constants
+- [src/styles/identity.css](src/styles/identity.css) -- ArmorStyles CSS-in-JS extracted to a static CSS file
+
+**Trimmed files:**
+- `src/Identity.jsx` -- slimmed to ~160 lines: CSS import, SectionProgressNav + LANDING_SECTIONS, IdentityLanding, ArmorPiecePage re-export
+- `src/App.jsx` -- removed ArmorStyles component import and render call; identity.css now loads via the Identity.jsx import chain
+
+**GSAP safety.** Each landing section uses `gsap.context(..., sectionRef)` scoped to its own DOM root. No cross-section ScrollTrigger boundary risk after the split -- confirmed by reviewing all five animation contexts.
+
+**One commit:** `refactor: decompose Identity.jsx into src/components/identity/`
+
+---
+
 ## Session 23 -- Phase 16: Cormorant Garamond → Spectral font swap (2026-05-20)
 
 **Status:** Phases 1 & 2 complete and pushed. Phase 3 (tuning) deferred pending visual QA on the deployed site. Build passes; const-C contract test passes.
