@@ -4,6 +4,42 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 23 -- Phase 16: Cormorant Garamond → Spectral font swap (2026-05-20)
+
+**Status:** Phases 1 & 2 complete and pushed. Phase 3 (tuning) deferred pending visual QA on the deployed site. Build passes; const-C contract test passes.
+
+**Push cadence:** Two commits to main -- Phase 1 (mechanical token sweep, zero visual change); Phase 2 (font load + token swap, site-wide font change).
+
+**Context.** Luke flagged the legibility issue on the Identity → Shield of Faith Day 1 teaching block ("The Roman thureos was not a small shield..."). Cormorant Garamond is a display-leaning Garamond revival -- high stroke contrast, narrow letterforms, low x-height, calligraphic terminals -- designed for elegant book setting at smaller sizes, not for long-form body text on a dark screen at 22px. Evidence the team had felt this before: `src/index.css:629-642` already defined a `.cf-prose` class that swapped Cormorant to Inter at viewports below 600px to dodge the mobile case.
+
+**Decision.** Wholesale replacement with **Spectral** (by Production Type). Spectral preserves the literary character that defines Counter Formation's contemplative voice but its letterforms are wider, more open, and explicitly designed for screen body reading. Out of four candidates considered (Spectral, Source Serif Pro, Lora, Inter-for-prose), Spectral was the closest match to "same feel, less fight."
+
+**Phase 1 -- Token sweep (commit 1).** Mechanical conversion of 167 hardcoded inline `fontFamily: "'Cormorant Garamond', serif"` references across 33 src/ files to `var(--cf-font-devotional)`. PowerShell-driven find-and-replace with two patterns (with and without space after comma) plus three manual edits: [ScriptureRef.jsx:162](src/ScriptureRef.jsx#L162) (Georgia fallback dropped, token's fallback chain handles it); [primitives/Input.jsx](src/components/primitives/Input.jsx) and [primitives/SectionHeader.jsx](src/components/primitives/SectionHeader.jsx) JSDoc comments generalized to reference the token instead of naming Cormorant. Visual: zero change. The token still pointed at Cormorant.
+
+This sweep was also overdue cleanup -- the `--cf-font-devotional` token was added in the Phase 4 design system work but most files kept hardcoded refs from before the token existed. Now every devotional-font reference resolves through the token.
+
+**Phase 2 -- Font swap (commit 2).** Site-wide font change in 9 files:
+- Four Google Fonts @imports updated (one each in `src/index.css`, `src/styles/challenge.css`, in-JSX styles in `src/Architecture.jsx:66` and `src/RuleOfLife.jsx:439`) -- swapped `Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400` to `Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400`. Added weight 600 (semibold) for FruitAssessment canvas rendering.
+- [tokens.css:59](src/styles/tokens.css#L59): `--cf-font-devotional: 'Spectral', Georgia, serif`. Georgia added as a richer fallback now that the token is the single point of truth.
+- [tailwind.config.js:21](tailwind.config.js#L21): `devotional: ['Spectral', 'Georgia', 'serif']`.
+- [FruitAssessment.jsx:1285-1286](src/FruitAssessment.jsx#L1285-L1286): `document.fonts.load()` preloads switched. Weight 700 was not in our Spectral axis, dropped to 600 (semibold) -- the heaviest weight imported.
+- [App.jsx:476](src/App.jsx#L476): Tailwind arbitrary class `font-['Cormorant_Garamond']` on the gear-strip summary text converted to the `font-devotional` utility (now resolves through tailwind config). Bypass of the design system cleaned up.
+- `index.css:629-642` `.cf-prose` comment updated -- the mobile Inter override is retained as a safety net until Spectral's mobile read is verified across devices. Can be removed in a follow-up if Spectral at 16px reads cleanly.
+- `components/personal/DashboardBanner.jsx:9`: doc comment generalized.
+
+**Standalone sub-project intentionally not touched.** `src/widgets/Arrow Log Tool/` is a separate Vite project with its own package.json and CSS that imports Cormorant Garamond independently. Not part of the main app build. Left alone.
+
+**Acceptance criteria status:**
+- All hardcoded inline Cormorant references in src/ routed through `var(--cf-font-devotional)` ✓
+- Single token swap controls the font for the entire site ✓
+- Build passes (lint:tokens + vite build) ✓
+- No regressions in font loading -- all four Google Fonts @imports updated ✓
+- Visual QA on deployed site: **pending Luke's eyeball pass on production**
+
+**Phase 3 (tuning) -- deferred.** Spectral has a slightly higher x-height than Cormorant, so the same point size will read larger. Likely tuning candidates: drop `line-height` from 1.88 to ~1.7 on long prose blocks in Identity's `.ap-body`, FieldGuide office content, and DevotionGuide markdown. Possibly drop body `font-size` from `clamp(20px, 3.8vw, 22px)` to `clamp(18px, 3.5vw, 20px)`. Conditional on visual QA -- if Spectral lands well at current sizing, Phase 3 is unnecessary.
+
+---
+
 ## Session 22 -- Phase 15: Profile v6 + AgentHistory rebuild (2026-05-20)
 
 **Status:** Complete. Phase 15 (revised scope) shipped. Build passes; const-C contract test passes.
