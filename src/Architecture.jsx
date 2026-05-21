@@ -63,7 +63,7 @@ const PILLARS = [
 export function ArchitectureStyles() {
   return (
     <style>{`
-      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
 
       /* ══════════════════════════════════════════
          SLIDER

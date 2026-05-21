@@ -1282,8 +1282,8 @@ function ShareModal({ fruitKey, evidenceFruitKey, scores, format, setFormat, var
   async function loadFonts() {
     try {
       await Promise.all([
-        document.fonts.load("italic 700 72px 'Cormorant Garamond'"),
-        document.fonts.load("italic 400 48px 'Cormorant Garamond'"),
+        document.fonts.load("italic 600 72px 'Spectral'"),
+        document.fonts.load("italic 400 48px 'Spectral'"),
         document.fonts.load("400 20px 'Michroma'"),
         document.fonts.load("300 18px 'Inter'"),
       ]);

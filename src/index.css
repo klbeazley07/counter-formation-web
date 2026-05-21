@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Michroma&family=Inter:wght@300;400;500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Barlow+Condensed:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Michroma&family=Inter:wght@300;400;500;700;900&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Barlow+Condensed:wght@400;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -626,12 +626,14 @@ input[type="email"] {
   .fg-narrow     { max-width: 720px; }
 }
 
-/* ─── FORMATION PROSE — mobile legibility ────────────────────────── */
-/* Cormorant Garamond is designed for large display sizes. At body
-   scale on small screens its thin italic weight becomes hard to read.
-   On mobile, prose paragraphs switch to Inter with a comfortable
-   floor size. Short one-sentence essence statements and atmospheric
-   moments keep Cormorant -- only multi-sentence prose gets this class. */
+/* ─── FORMATION PROSE — mobile legibility override ───────────────── */
+/* Legacy override from the Cormorant Garamond era: at viewports below
+   600px, multi-sentence prose paragraphs marked .cf-prose switch to
+   Inter to dodge Cormorant's calligraphic letterforms at body scale.
+   After the Spectral swap this may be redundant -- Spectral was
+   designed for screen body reading. Leave in place as a safety net
+   until the Spectral mobile read is verified across devices; can be
+   removed in a follow-up if Spectral 16px mobile reads cleanly. */
 @media (max-width: 600px) {
   .cf-prose {
     font-family: 'Inter', sans-serif !important;

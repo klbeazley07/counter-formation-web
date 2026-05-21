@@ -6,7 +6,7 @@ import { recommendForDashboard } from "../../utils/formationRecommendation";
  *
  * Replaces the previous full-viewport FormationHero. Bounded to ~200px tall
  * so the workspace below is visible without scrolling on desktop. Time-of-day
- * Cormorant italic greeting, one-line formation focus, single gold CTA.
+ * devotional-italic greeting, one-line formation focus, single gold CTA.
  */
 
 function firstNameOf(displayName) {

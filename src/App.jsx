@@ -473,7 +473,7 @@ function RuleOfLifeSection() {
               <div className="mt-auto relative hidden md:block">
                 <p className="text-[12px] md:text-xs opacity-60 tracking-wide leading-[1.65] font-light">{r.desc}</p>
                 <p className="text-[13px] leading-[1.65] px-0 mt-2
-                  font-['Cormorant_Garamond'] italic text-[#FAF8F5]
+                  font-devotional italic text-[#FAF8F5]
                   md:absolute md:top-full md:left-0 md:right-0
                   md:opacity-0 md:translate-y-2 md:group-hover:opacity-85 md:group-hover:translate-y-0
                   transition-all duration-300 ease-out">

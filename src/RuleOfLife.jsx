@@ -436,7 +436,7 @@ export function BookPage() {
 export function RuleStyles() {
   return (
     <style>{`
-      @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
 
       .rl-wrap * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
       .rl-wrap   { font-family: 'Barlow Condensed',sans-serif; background: #0E0C0A; color: #FAF8F5; min-height: 100svh; overflow-x: hidden; }

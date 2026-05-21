@@ -18,7 +18,7 @@ export default {
       fontFamily: {
         display:    ['Michroma', 'sans-serif'],
         brand:      ['Barlow Condensed', 'sans-serif'],
-        devotional: ['Cormorant Garamond', 'serif'],
+        devotional: ['Spectral', 'Georgia', 'serif'],
       },
       borderRadius: {
         'cf-card':  '20px',
