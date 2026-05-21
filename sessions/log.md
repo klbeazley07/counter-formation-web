@@ -4,6 +4,46 @@ Rolling record of all build sessions. Most recent entry at top.
 
 ---
 
+## Session 22 -- Phase 15: Profile v6 + AgentHistory rebuild (2026-05-20)
+
+**Status:** Complete. Phase 15 (revised scope) shipped. Build passes; const-C contract test passes.
+
+**Push cadence:** Two commits to main -- Item 1 (profile v6 + devotion `full` field); Item 2 (AgentHistory rewrite).
+
+**Pre-flight audit findings -- spec divergence:**
+The Phase 15 spec in next.md was written before Session 21's pre-flight had been conducted, and several of its premises turned out to be already-done work:
+
+- **Armor day content extraction** (spec Items 1-3): Already complete. `armor.json` (1025 lines) holds every day's `stillness`, `scriptures`, `teaching`, `practice`, `reflection`, `prayer`. Identity.jsx reads `curDay.*` directly from the loader (lines 1948-1993). No inline day content remains. The 2173-line file size is from prose-and-GSAP landing sections (Hero, ArmorIntro, GodsArmor, ArmorRing, WhyItMatters), not duplicated data.
+- **`/agent` route** (spec Item 4): Already exists at App.jsx:1865. `AgentHistory.jsx` (132 lines pre-rewrite) was rendering `profile.agent.history` -- a sparse list of assessment events.
+- **AgentEntry surface** (spec Item 5): Already wired into PersonalizedHome.jsx:53.
+
+After surfacing the divergence, scope was narrowed to two items: the profile schema bump (formerly stretch Item 6) and the AgentHistory content rewrite to match the spec's actual intent (a Formation Record, not an assessment-events log). Identity.jsx ArmorStyles -> identity.css extraction was deferred -- the file would still be ~2010 lines after, and the cosmetic line-count target was not the underlying spiritual goal.
+
+**Item 1 -- Profile v6 + full devotion text.** Bumped `cf:profile` schema in [useFormationProfile.jsx](src/hooks/useFormationProfile.jsx) from v5 to v6. The migration is additive only: existing v5 profiles set `_version = 6` on load with no data transformation. Devotion entries written from this point forward gain a `full` field, capped at 4000 chars, alongside the existing `summary` (200 chars). [DevotionGuide.jsx](src/DevotionGuide.jsx) `generate()` was updated to compute `full = (text ?? "").slice(0, 4000).trim()` and include it on `newEntry` before pushing to `widgets.devotions`. Older v5 entries without `full` continue to render correctly (DevotionHistory + DevotionListPanel both only read `summary`, unaffected).
+
+**Item 2 -- AgentHistory rebuild as Formation Record.** Rewrote [AgentHistory.jsx](src/components/agent/AgentHistory.jsx) (132 -> 404 lines). New structure:
+1. Header (eyebrow + h1 "Your Formation Record" + tagline).
+2. `ProfileSummary` block reading `profile.assessment.formationEdge`, `profile.armor.completedPieces.length`, `profile.challenge.completedDays.length`, `profile.onboarding.intention`. Renders four rows with eyebrow/value pairs. Shows a dashed empty-state card when no data exists yet.
+3. Merged timeline: `agent.history` events (mapped to `{type: "assessment", at, entry}`) interleaved with `widgets.devotions` (mapped to `{type: "devotion", at: generatedAt, entry}`), sorted newest first. `AssessmentCard` retains the prior chip + summary render. New `DevotionCard` shows passage + theme + summary by default; when `full` is present (v6 entries), an "Read full devotion ▼" toggle expands the card to render the complete markdown with `ReactMarkdown` + `withScriptureRefs` (the same MARKDOWN_COMPONENTS pattern as DevotionGuide).
+4. Retained "Take a New Assessment" footer link to `/agent/onboarding`.
+
+The previous AgentHistory was effectively dead surface (most users have ≤1 assessment event). The rebuilt page actually reflects the user's devotional life back to them, which was the spiritual point of the discipleship agent surface from the start.
+
+**Acceptance criteria status:**
+- `cf:profile` v6 with additive `full` field ✓
+- New devotions store full markdown (≤4000 chars) ✓
+- `/agent` renders Formation Record: header + profile summary + merged timeline ✓
+- Old v5 entries gracefully fall back to summary, no toggle shown ✓
+- Build passes (lint:tokens + vite build) ✓
+- No regressions in AgentEntry, AgentOnboarding, DevotionHistory, DevotionListPanel ✓
+
+**Deferred to a future phase:**
+- ArmorStyles -> identity.css extraction (cosmetic; ~160 lines, no functional impact)
+- Identity.jsx structural refactor (Hero / ArmorIntro / GodsArmor / ArmorRing into own files -- multi-session move)
+- DevotionHistory / DevotionListPanel could later surface `full` for expandable previews on dashboard / DevotionGuide returning-user view
+
+---
+
 ## Session 21 -- Phase 14: Connection Tissue completion + Agent Foundation (2026-05-20)
 
 **Status:** Complete. Phase 14 shipped. Build passes; const-C contract test passes.
