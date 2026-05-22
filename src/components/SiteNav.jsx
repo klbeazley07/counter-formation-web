@@ -9,8 +9,8 @@ function getNavConfig(pathname) {
       context: "identity",
       links: [
         { label: "Identity", href: "/identity" },
-        { label: "Formation", href: "/#architecture" },
-        { label: "Rule of Life", href: "/#rule" },
+        { label: "Field Guide", href: "/field-guide" },
+        { label: "Rule of Life", href: "/rule-of-life" },
       ],
     };
   }
@@ -18,8 +18,8 @@ function getNavConfig(pathname) {
     return {
       context: "rule",
       links: [
-        { label: "Rule of Life", href: "/#rule" },
-        { label: "Formation", href: "/#architecture" },
+        { label: "Rule of Life", href: "/rule-of-life" },
+        { label: "Field Guide", href: "/field-guide" },
       ],
     };
   }
@@ -28,7 +28,7 @@ function getNavConfig(pathname) {
       context: "challenge",
       links: [
         { label: "7-Day Challenge", href: "/7-day-challenge" },
-        { label: "Formation", href: "/#architecture" },
+        { label: "Field Guide", href: "/field-guide" },
       ],
     };
   }
@@ -37,7 +37,7 @@ function getNavConfig(pathname) {
       context: "field-guide",
       links: [
         { label: "Field Guide", href: "/field-guide/scripture-before-scroll" },
-        { label: "Formation", href: "/#architecture" },
+        { label: "Identity", href: "/identity" },
       ],
     };
   }
@@ -46,7 +46,7 @@ function getNavConfig(pathname) {
       context: "about",
       links: [
         { label: "About", href: "/about" },
-        { label: "Formation", href: "/#architecture" },
+        { label: "Field Guide", href: "/field-guide" },
       ],
     };
   }
@@ -54,16 +54,16 @@ function getNavConfig(pathname) {
     return {
       context: "pillar",
       links: [
-        { label: "Formation", href: "/#architecture" },
-        { label: "Rule of Life", href: "/#rule" },
+        { label: "Field Guide", href: "/field-guide" },
+        { label: "Rule of Life", href: "/rule-of-life" },
       ],
     };
   }
   return {
     context: "home",
     links: [
-      { label: "Formation", href: "/#architecture" },
-      { label: "Rule of Life", href: "/#rule" },
+      { label: "Formation", href: "/field-guide" },
+      { label: "Rule of Life", href: "/rule-of-life" },
     ],
   };
 }
@@ -88,16 +88,7 @@ export function SiteNav() {
       ? { label: "Welcome", href: "/welcome" }
       : null;
 
-  // Hash links (/#architecture, /#rule, /#shop) target the public landing page.
-  // On the dashboard those anchors don't exist, so replace with real routes.
-  const navLinks = isDashboardPath
-    ? [
-        { label: "Formation", href: "/field-guide" },
-        { label: "Rule of Life", href: "/rule-of-life" },
-      ]
-    : config.links;
-
-  const shopHref = isDashboardPath ? "https://shop.counterformed.com" : "/#shop";
+  const navLinks = config.links;
 
   return (
     <nav
@@ -165,9 +156,9 @@ export function SiteNav() {
 
           {/* Shop CTA — desktop only */}
           <a
-            href={shopHref}
-            target={isDashboardPath ? "_blank" : undefined}
-            rel={isDashboardPath ? "noopener noreferrer" : undefined}
+            href="https://shop.counterformed.com"
+            target="_blank"
+            rel="noopener noreferrer"
             className="px-5 py-2 rounded-full border transition-all text-[9px] md:text-[10px] hidden md:block uppercase tracking-widest font-bold"
             style={{
               fontFamily: "'Barlow Condensed', sans-serif",

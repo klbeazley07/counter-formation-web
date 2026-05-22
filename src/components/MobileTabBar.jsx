@@ -4,11 +4,11 @@ import { useFormationProfile } from "../hooks/useFormationProfile";
 import { hasMeaningfulActivity } from "./personal/HomeRouter";
 
 const TABS = [
-  { key: "home",      label: "Home",       path: "/",          icon: "home" },
-  { key: "formation", label: "Formation",   path: "https://counterformed.com/#architecture", icon: "formation" },
-  { key: "identity",  label: "Rule of Life", path: "/#rule",    icon: "identity" },
-  { key: "gear",      label: "Gear",        path: "/#shop",     icon: "gear" },
-  { key: "more",      label: "More",        path: null,         icon: "more" },
+  { key: "home",      label: "Home",        path: "/",                                    icon: "home" },
+  { key: "formation", label: "Formation",   path: "/identity",                             icon: "formation" },
+  { key: "identity",  label: "Rule of Life", path: "/rule-of-life",                        icon: "identity" },
+  { key: "gear",      label: "Gear",        path: "https://shop.counterformed.com",        icon: "gear" },
+  { key: "more",      label: "More",        path: null,                                   icon: "more" },
 ];
 
 // Homepage section ID → tab key mapping (for scroll detection)
@@ -63,7 +63,6 @@ export function MobileTabBar() {
   const isHomepage = location.pathname === "/";
   const userHasActivity = hasMeaningfulActivity(profile);
   const isWelcomePath = location.pathname === "/welcome";
-  const isDashboardPath = isHomepage && userHasActivity;
 
   // Drag-to-close state
   const touchStartY = useRef(0);
@@ -133,15 +132,7 @@ export function MobileTabBar() {
       return;
     }
 
-    // On the dashboard, hash/external links point at the public landing page —
-    // those anchors don't exist on PersonalizedHome. Use real routes instead.
-    if (isDashboardPath) {
-      if (tab.key === "formation") { navigate("/identity"); return; }
-      if (tab.key === "identity")  { navigate("/rule-of-life"); return; }
-      if (tab.key === "gear")      { window.open("https://shop.counterformed.com", "_blank", "noopener,noreferrer"); return; }
-    }
-
-    // External URL (Formation on public landing)
+    // External URL — open in new tab
     if (tab.path.startsWith("http")) {
       setForcedActive(tab.key);
       window.location.href = tab.path;
