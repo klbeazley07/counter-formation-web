@@ -5,7 +5,7 @@ import { hasMeaningfulActivity } from "./personal/HomeRouter";
 
 const TABS = [
   { key: "home",      label: "Home",        path: "/",                                    icon: "home" },
-  { key: "formation", label: "Formation",   path: "/identity",                             icon: "formation" },
+  { key: "formation", label: "Formation",   path: "/welcome#architecture",                 icon: "formation" },
   { key: "identity",  label: "Rule of Life", path: "/rule-of-life/presence",                icon: "identity" },
   { key: "gear",      label: "Gear",        path: "/welcome#shop",                         icon: "gear" },
   { key: "more",      label: "More",        path: null,                                   icon: "more" },

@@ -4,7 +4,7 @@ import { useFormationProfile } from "../hooks/useFormationProfile";
 import { hasMeaningfulActivity } from "./personal/HomeRouter";
 
 const SECTION_LINKS = [
-  { label: "Formation",    href: "/identity",                            activeWhen: "/identity" },
+  { label: "Formation",    href: "/welcome#architecture",                activeWhen: "/identity" },
   { label: "Rule of Life", href: "/rule-of-life/presence",               activeWhen: "/rule-of-life" },
   { label: "Field Guide",  href: "/welcome#field-guide", activeWhen: "/field-guide" },
 ];
