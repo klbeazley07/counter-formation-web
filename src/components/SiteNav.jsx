@@ -6,7 +6,7 @@ import { hasMeaningfulActivity } from "./personal/HomeRouter";
 const SECTION_LINKS = [
   { label: "Formation",    href: "/identity",                            activeWhen: "/identity" },
   { label: "Rule of Life", href: "/rule-of-life/presence",               activeWhen: "/rule-of-life" },
-  { label: "Field Guide",  href: "/field-guide/scripture-before-scroll", activeWhen: "/field-guide" },
+  { label: "Field Guide",  href: "/welcome#field-guide", activeWhen: "/field-guide" },
 ];
 
 function getNavConfig(pathname) {
@@ -14,9 +14,9 @@ function getNavConfig(pathname) {
     return {
       context: "identity",
       links: [
-        { label: "Identity",      href: "/identity",                            activeWhen: "/identity" },
-        { label: "Rule of Life",  href: "/rule-of-life/presence",               activeWhen: "/rule-of-life" },
-        { label: "Field Guide",   href: "/field-guide/scripture-before-scroll", activeWhen: "/field-guide" },
+        { label: "Identity",      href: "/identity",            activeWhen: "/identity" },
+        { label: "Rule of Life",  href: "/rule-of-life/presence", activeWhen: "/rule-of-life" },
+        { label: "Field Guide",   href: "/welcome#field-guide", activeWhen: "/field-guide" },
       ],
     };
   }

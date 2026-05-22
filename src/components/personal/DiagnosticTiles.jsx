@@ -173,7 +173,7 @@ function ArmorTile({ profile }) {
     const count = Array.isArray(days) ? days.length : 0;
     const pct = Math.round((count / 6) * 100);
     return (
-      <Link to={`/identity/${inProgressPiece}`} className="cf-dt__tile">
+      <Link to="/identity" className="cf-dt__tile">
         <p className="cf-dt__eyebrow">Armor of God</p>
         <p className="cf-dt__summary">{ARMOR_LABELS[inProgressPiece]} · Day {count} of 6</p>
         <div className="cf-dt__track" aria-hidden="true">
