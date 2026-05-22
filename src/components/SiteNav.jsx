@@ -3,69 +3,36 @@ import { Link, useLocation } from "react-router-dom";
 import { useFormationProfile } from "../hooks/useFormationProfile";
 import { hasMeaningfulActivity } from "./personal/HomeRouter";
 
+const SECTION_LINKS = [
+  { label: "Formation",    href: "/identity",                            activeWhen: "/identity" },
+  { label: "Rule of Life", href: "/rule-of-life/presence",               activeWhen: "/rule-of-life" },
+  { label: "Field Guide",  href: "/field-guide/scripture-before-scroll", activeWhen: "/field-guide" },
+];
+
 function getNavConfig(pathname) {
   if (pathname.startsWith("/identity")) {
     return {
       context: "identity",
       links: [
-        { label: "Identity", href: "/identity" },
-        { label: "Field Guide", href: "/field-guide" },
-        { label: "Rule of Life", href: "/rule-of-life" },
+        { label: "Identity",      href: "/identity",                            activeWhen: "/identity" },
+        { label: "Rule of Life",  href: "/rule-of-life/presence",               activeWhen: "/rule-of-life" },
+        { label: "Field Guide",   href: "/field-guide/scripture-before-scroll", activeWhen: "/field-guide" },
       ],
     };
   }
-  if (pathname.startsWith("/rule-of-life")) {
+  if (pathname === "/") {
     return {
-      context: "rule",
+      context: "home",
       links: [
-        { label: "Rule of Life", href: "/rule-of-life" },
-        { label: "Field Guide", href: "/field-guide" },
+        { label: "Welcome", href: "/welcome", activeWhen: "/welcome" },
+        ...SECTION_LINKS,
       ],
     };
   }
-  if (pathname.startsWith("/7-day-challenge")) {
-    return {
-      context: "challenge",
-      links: [
-        { label: "7-Day Challenge", href: "/7-day-challenge" },
-        { label: "Field Guide", href: "/field-guide" },
-      ],
-    };
+  if (pathname === "/welcome") {
+    return { context: "welcome", links: SECTION_LINKS };
   }
-  if (pathname.startsWith("/field-guide")) {
-    return {
-      context: "field-guide",
-      links: [
-        { label: "Field Guide", href: "/field-guide" },
-        { label: "Identity", href: "/identity" },
-      ],
-    };
-  }
-  if (pathname.startsWith("/about")) {
-    return {
-      context: "about",
-      links: [
-        { label: "About", href: "/about" },
-        { label: "Field Guide", href: "/field-guide" },
-      ],
-    };
-  }
-  if (pathname.startsWith("/practice") || pathname.startsWith("/community")) {
-    return {
-      context: "pillar",
-      links: [
-        { label: "Field Guide", href: "/field-guide" },
-        { label: "Rule of Life", href: "/rule-of-life" },
-      ],
-    };
-  }
-  return {
-    context: "home",
-    links: [
-      { label: "Field Guide", href: "/field-guide" },
-      { label: "Rule of Life", href: "/rule-of-life" },
-    ],
-  };
+  return { context: "sub", links: SECTION_LINKS };
 }
 
 export function SiteNav() {
@@ -77,16 +44,11 @@ export function SiteNav() {
   const isPiecePage = /^\/identity\/[a-z]/.test(location.pathname) && location.pathname !== "/identity";
   if (isPiecePage) return null;
 
-  // Show "Welcome" toggle on the dashboard (path /) when the user has activity.
-  // On /welcome we instead surface a "Your formation" link back to the dashboard.
   const userHasActivity = hasMeaningfulActivity(profile);
-  const isWelcomePath = location.pathname === "/welcome";
-  const isDashboardPath = location.pathname === "/" && userHasActivity;
-  const toggleLink = isWelcomePath
-    ? { label: "Your formation", href: "/" }
-    : isDashboardPath
-      ? { label: "Welcome", href: "/welcome" }
-      : null;
+  const isSubPage = location.pathname !== "/";
+  const toggleLink = isSubPage && userHasActivity
+    ? { label: "Return to Your Formation", href: "/" }
+    : null;
 
   const navLinks = config.links;
 
@@ -96,7 +58,7 @@ export function SiteNav() {
       className="hidden md:flex fixed left-1/2 -translate-x-1/2 z-[100] w-[94%] max-w-5xl px-5 py-4 backdrop-blur-2xl border border-white/10 rounded-2xl items-center justify-between"
       style={{ backgroundColor: "rgba(6,5,10,0.88)", top: "calc(1.5rem + var(--banner-height, 0px))" }}
     >
-        <Link to="/" className="flex items-center gap-2 md:gap-3" style={{ textDecoration: "none" }}>
+        <Link to="/welcome" className="flex items-center gap-2 md:gap-3" style={{ textDecoration: "none" }}>
           <img
             src="/helmet.png"
             alt="Counter Formation"
@@ -131,7 +93,7 @@ export function SiteNav() {
             )}
             {navLinks.map(l => {
               const isHash = l.href.includes("#");
-              const isActive = !isHash && location.pathname === l.href;
+              const isActive = !isHash && location.pathname.startsWith(l.activeWhen || l.href);
               const El = isHash ? "a" : Link;
               const props = isHash ? { href: l.href } : { to: l.href };
               return (
@@ -155,10 +117,8 @@ export function SiteNav() {
           </div>
 
           {/* Shop CTA — desktop only */}
-          <a
-            href="https://shop.counterformed.com"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to="/welcome#shop"
             className="px-5 py-2 rounded-full border transition-all text-[9px] md:text-[10px] hidden md:block uppercase tracking-widest font-bold"
             style={{
               fontFamily: "'Barlow Condensed', sans-serif",
@@ -168,7 +128,7 @@ export function SiteNav() {
             }}
           >
             Shop the Gear
-          </a>
+          </Link>
 
         </div>
     </nav>

@@ -6,8 +6,8 @@ import { hasMeaningfulActivity } from "./personal/HomeRouter";
 const TABS = [
   { key: "home",      label: "Home",        path: "/",                                    icon: "home" },
   { key: "formation", label: "Formation",   path: "/identity",                             icon: "formation" },
-  { key: "identity",  label: "Rule of Life", path: "/rule-of-life",                        icon: "identity" },
-  { key: "gear",      label: "Gear",        path: "https://shop.counterformed.com",        icon: "gear" },
+  { key: "identity",  label: "Rule of Life", path: "/rule-of-life/presence",                icon: "identity" },
+  { key: "gear",      label: "Gear",        path: "/welcome#shop",                         icon: "gear" },
   { key: "more",      label: "More",        path: null,                                   icon: "more" },
 ];
 
@@ -27,7 +27,7 @@ function getRouteTab(pathname) {
   if (pathname.startsWith("/practice"))        return "formation";
   if (pathname.startsWith("/community"))       return "formation";
   if (pathname.startsWith("/rule-of-life"))    return "identity";
-  if (pathname.startsWith("/field-guide"))     return "identity";
+  if (pathname.startsWith("/field-guide"))     return "more";
   if (pathname.startsWith("/7-day-challenge")) return "more";
   if (pathname.startsWith("/about"))           return "more";
   return null;
