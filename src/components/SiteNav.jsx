@@ -45,7 +45,7 @@ export function SiteNav() {
   if (isPiecePage) return null;
 
   const userHasActivity = hasMeaningfulActivity(profile);
-  const isSubPage = location.pathname !== "/";
+  const isSubPage = location.pathname !== "/" && location.pathname !== "/welcome";
   const toggleLink = isSubPage && userHasActivity
     ? { label: "Return to Your Formation", href: "/" }
     : null;
