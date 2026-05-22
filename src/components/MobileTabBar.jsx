@@ -126,9 +126,9 @@ export function MobileTabBar() {
     }
     setMoreOpen(false);
 
-    // Home always scrolls to top
+    // Home navigates to the welcome/hero page
     if (tab.key === "home") {
-      navigate("/");
+      navigate("/welcome");
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
