@@ -4,7 +4,7 @@ import { useFormationProfile } from "../hooks/useFormationProfile";
 import { hasMeaningfulActivity } from "./personal/HomeRouter";
 
 const TABS = [
-  { key: "home",      label: "Home",        path: "/",                                    icon: "home" },
+  { key: "home",      label: "Home",        path: "/welcome",                             icon: "home" },
   { key: "formation", label: "Formation",   path: "/welcome#architecture",                 icon: "formation" },
   { key: "identity",  label: "Rule of Life", path: "/welcome#rule",                         icon: "identity" },
   { key: "gear",      label: "Gear",        path: "/welcome#shop",                         icon: "gear" },
@@ -23,6 +23,7 @@ const HOME_SECTION_TABS = {
 
 // Sub-page route prefix → tab key mapping
 function getRouteTab(pathname) {
+  if (pathname === "/" || pathname === "/welcome") return "home";
   if (pathname.startsWith("/identity"))        return "formation";
   if (pathname.startsWith("/practice"))        return "formation";
   if (pathname.startsWith("/community"))       return "formation";
