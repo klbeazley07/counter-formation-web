@@ -101,12 +101,14 @@ export default function AgentEntry({ profile, updateProfile }) {
   // Nudge result -- expanded display with the returned text
   if (showNudge && nudgePhase === "done") {
     return (
+      <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
       <div style={{
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
-        padding:      "18px clamp(16px, 4vw, 48px)",
-        display:      "flex",
+        maxWidth:      1280,
+        margin:        "0 auto",
+        padding:       "18px 24px",
+        display:       "flex",
         flexDirection: "column",
-        gap:          "0.75rem",
+        gap:           "0.75rem",
       }}>
         <p style={{
           fontFamily: "var(--cf-font-devotional)",
@@ -140,25 +142,28 @@ export default function AgentEntry({ profile, updateProfile }) {
           </svg>
         </Link>
       </div>
+      </div>
     );
   }
 
   const copy = showOnboardingCTA
-    ? "You have formation history. Ground it with a short assessment."
+    ? "You have formation history. Ground it with a formation assessment — a short exercise that helps the agent understand where you are."
     : showNudge
     ? "Your formation record has been quiet. Ready to check in?"
     : truncated;
 
   const ctaLabel = showOnboardingCTA
-    ? "Begin"
+    ? "Start Assessment"
     : showNudge
     ? (nudgePhase === "loading" ? "Forming…" : "Check In")
     : "Continue";
 
   return (
+    <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
     <div style={{
-      borderBottom:   "1px solid rgba(255,255,255,0.06)",
-      padding:        "14px clamp(16px, 4vw, 48px)",
+      maxWidth:       1280,
+      margin:         "0 auto",
+      padding:        "14px 24px",
       display:        "flex",
       alignItems:     "center",
       justifyContent: "space-between",
@@ -242,6 +247,7 @@ export default function AgentEntry({ profile, updateProfile }) {
           </svg>
         </Link>
       )}
+    </div>
     </div>
   );
 }
