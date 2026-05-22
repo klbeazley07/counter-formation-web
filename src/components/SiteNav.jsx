@@ -88,6 +88,17 @@ export function SiteNav() {
       ? { label: "Welcome", href: "/welcome" }
       : null;
 
+  // Hash links (/#architecture, /#rule, /#shop) target the public landing page.
+  // On the dashboard those anchors don't exist, so replace with real routes.
+  const navLinks = isDashboardPath
+    ? [
+        { label: "Formation", href: "/field-guide" },
+        { label: "Rule of Life", href: "/rule-of-life" },
+      ]
+    : config.links;
+
+  const shopHref = isDashboardPath ? "https://shop.counterformed.com" : "/#shop";
+
   return (
     <nav
       aria-label="Main navigation"
@@ -127,7 +138,7 @@ export function SiteNav() {
                 {toggleLink.label}
               </Link>
             )}
-            {config.links.map(l => {
+            {navLinks.map(l => {
               const isHash = l.href.includes("#");
               const isActive = !isHash && location.pathname === l.href;
               const El = isHash ? "a" : Link;
@@ -154,7 +165,9 @@ export function SiteNav() {
 
           {/* Shop CTA — desktop only */}
           <a
-            href="/#shop"
+            href={shopHref}
+            target={isDashboardPath ? "_blank" : undefined}
+            rel={isDashboardPath ? "noopener noreferrer" : undefined}
             className="px-5 py-2 rounded-full border transition-all text-[9px] md:text-[10px] hidden md:block uppercase tracking-widest font-bold"
             style={{
               fontFamily: "'Barlow Condensed', sans-serif",
