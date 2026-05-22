@@ -63,6 +63,7 @@ export function MobileTabBar() {
   const isHomepage = location.pathname === "/";
   const userHasActivity = hasMeaningfulActivity(profile);
   const isWelcomePath = location.pathname === "/welcome";
+  const isDashboardPath = isHomepage && userHasActivity;
 
   // Drag-to-close state
   const touchStartY = useRef(0);
@@ -132,7 +133,15 @@ export function MobileTabBar() {
       return;
     }
 
-    // External URL (Formation)
+    // On the dashboard, hash/external links point at the public landing page —
+    // those anchors don't exist on PersonalizedHome. Use real routes instead.
+    if (isDashboardPath) {
+      if (tab.key === "formation") { navigate("/identity"); return; }
+      if (tab.key === "identity")  { navigate("/rule-of-life"); return; }
+      if (tab.key === "gear")      { window.open("https://shop.counterformed.com", "_blank", "noopener,noreferrer"); return; }
+    }
+
+    // External URL (Formation on public landing)
     if (tab.path.startsWith("http")) {
       setForcedActive(tab.key);
       window.location.href = tab.path;
