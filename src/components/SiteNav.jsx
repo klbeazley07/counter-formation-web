@@ -36,7 +36,7 @@ function getNavConfig(pathname) {
     return {
       context: "field-guide",
       links: [
-        { label: "Field Guide", href: "/field-guide/scripture-before-scroll" },
+        { label: "Field Guide", href: "/field-guide" },
         { label: "Identity", href: "/identity" },
       ],
     };
@@ -62,7 +62,7 @@ function getNavConfig(pathname) {
   return {
     context: "home",
     links: [
-      { label: "Formation", href: "/field-guide" },
+      { label: "Field Guide", href: "/field-guide" },
       { label: "Rule of Life", href: "/rule-of-life" },
     ],
   };
