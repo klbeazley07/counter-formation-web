@@ -155,10 +155,11 @@ export function MobileTabBar() {
         const top = el.getBoundingClientRect().top + window.scrollY - 80;
         window.scrollTo({ top, behavior: "smooth" });
       };
-      if (location.pathname !== "/") {
-        setTimeout(doScroll, 150);
-      } else {
+      const targetPath = tab.path.split("#")[0];
+      if (location.pathname === targetPath) {
         doScroll();
+      } else {
+        setTimeout(doScroll, 300);
       }
     } else {
       navigate(tab.path);
